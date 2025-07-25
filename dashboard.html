@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard Game Mining</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Dashboard</h1>
+    <p>Selamat datang, <span id="user-display"></span>!</p>
+    <p>Saldo Koin: <span id="saldo">0</span></p>
+    <button id="claim-btn">Claim Koin</button>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    const username = localStorage.getItem("username");
+    if (!username) {
+      window.location.href = "index.html";
+    } else {
+      document.getElementById("user-display").textContent = username;
+      getSaldo(username);
+    }
+
+    document.getElementById("claim-btn").addEventListener("click", () => {
+      claimKoin(username);
+    });
+
+    function logout() {
+      localStorage.removeItem("username");
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+                            </html>
