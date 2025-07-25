@@ -1,113 +1,112 @@
-<!DOCTYPE html>
-<html lang="id">
+<!DOCTYPE html><html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard</title>
   <style>
     body {
       background-color: #000;
       color: #00ff00;
       font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
       margin: 0;
-    }
+      padding: 20px;
+    }.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-    h1 {
-      font-size: 24px;
-      margin-bottom: 10px;
-    }
+.rewards-box {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
 
-    .points {
-      font-size: 64px;
-      font-weight: bold;
-      margin: 20px 0;
-      color: #00ff00;
-    }
+.reward-card {
+  background-color: #111;
+  border-radius: 12px;
+  padding: 16px 24px;
+  text-align: center;
+  box-shadow: 0 0 10px #00ff0044;
+  min-width: 140px;
+}
 
-    button {
-      padding: 12px 24px;
-      font-size: 18px;
-      background-color: #00ff00;
-      color: #000;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
+.reward-card h3 {
+  margin: 0 0 10px;
+  font-size: 16px;
+}
 
-    button:disabled {
-      background-color: #444;
-      color: #999;
-      cursor: not-allowed;
-    }
+.reward-card .reward-value {
+  font-size: 20px;
+  font-weight: bold;
+}
 
-    .info {
-      margin-top: 20px;
-      font-size: 14px;
-    }
+#claim-btn {
+  margin-top: 30px;
+  padding: 10px 20px;
+  background-color: #00ff00;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#claim-btn:disabled {
+  background-color: #444;
+  color: #888;
+  cursor: not-allowed;
+}
+
   </style>
 </head>
 <body>
-  <h1>Total Rewards</h1>
-  <div class="points" id="pointDisplay">0.00</div>
-  <button id="claimBtn" disabled>Claim Koin</button>
-  <div class="info" id="statusText"></div>
+  <div class="container">
+    <div class="rewards-box">
+      <div class="reward-card">
+        <h3>Total Rewards</h3>
+        <div class="reward-value" id="total-rewards">0</div>
+      </div>
+      <div class="reward-card">
+        <h3>24h Rewards</h3>
+        <div class="reward-value" id="daily-rewards">0</div>
+      </div>
+    </div><button id="claim-btn" disabled>Klaim Reward</button>
 
-  <script>
-    const pointDisplay = document.getElementById("pointDisplay");
-    const claimBtn = document.getElementById("claimBtn");
-    const statusText = document.getElementById("statusText");
+  </div>  <script>
+    const totalRewardsEl = document.getElementById('total-rewards');
+    const dailyRewardsEl = document.getElementById('daily-rewards');
+    const claimBtn = document.getElementById('claim-btn');
 
-    const username = localStorage.getItem("currentUser") || "guest";
-    const startKey = `miningStart_${username}`;
-    const totalKey = `totalReward_${username}`;
+    const rewardPerSecond = 1000 / (24 * 60 * 60); // 1000 poin per 24 jam
+    let dailyReward = 0;
+    let totalReward = 0;
+    let secondsElapsed = 0;
+    const maxSeconds = 86400; // 24 jam
 
-    const MAX_POINT = 1000;
-    const TOTAL_SECONDS = 86400; // 24 jam
-    let startTime = parseInt(localStorage.getItem(startKey));
-    let totalReward = parseInt(localStorage.getItem(totalKey) || "0");
+    function updateRewards() {
+      if (secondsElapsed < maxSeconds) {
+        secondsElapsed++;
+        dailyReward = rewardPerSecond * secondsElapsed;
+        dailyRewardsEl.textContent = dailyReward.toFixed(2);
+      }
 
-    if (!startTime) {
-      startTime = Date.now();
-      localStorage.setItem(startKey, startTime);
-    }
-
-    function updatePoints() {
-      const now = Date.now();
-      const elapsed = (now - startTime) / 1000; // detik
-      let points = Math.min((elapsed / TOTAL_SECONDS) * MAX_POINT, MAX_POINT);
-      pointDisplay.textContent = points.toFixed(2);
-
-      if (points >= MAX_POINT) {
+      if (secondsElapsed >= maxSeconds) {
         claimBtn.disabled = false;
-        statusText.textContent = "Sudah bisa klaim!";
-      } else {
-        claimBtn.disabled = true;
-        const remaining = (MAX_POINT - points).toFixed(2);
-        statusText.textContent = `Menunggu ${remaining} poin lagi untuk klaim.`;
       }
     }
 
-    claimBtn.onclick = () => {
-      const now = Date.now();
-      const elapsed = (now - startTime) / 1000;
-      let points = Math.min((elapsed / TOTAL_SECONDS) * MAX_POINT, MAX_POINT);
-      if (points >= MAX_POINT) {
-        totalReward += MAX_POINT;
-        localStorage.setItem(totalKey, totalReward);
-        alert(`Kamu berhasil klaim ${MAX_POINT} koin! Total: ${totalReward}`);
-        startTime = Date.now();
-        localStorage.setItem(startKey, startTime);
-        claimBtn.disabled = true;
-      }
-    };
+    setInterval(updateRewards, 1000);
 
-    setInterval(updatePoints, 1000);
-    updatePoints();
-  </script>
-</body>
+    claimBtn.addEventListener('click', () => {
+      totalReward += dailyReward;
+      totalRewardsEl.textContent = totalReward.toFixed(2);
+      dailyReward = 0;
+      secondsElapsed = 0;
+      dailyRewardsEl.textContent = '0';
+      claimBtn.disabled = true;
+    });
+  </script></body>
 </html>
