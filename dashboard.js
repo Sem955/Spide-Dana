@@ -1,78 +1,70 @@
-// Ambil data dari localStorage
+// Ambil username dari localStorage
 const username = localStorage.getItem("username");
-const totalReward = parseInt(localStorage.getItem("totalReward") || "0");
-let startTime = parseInt(localStorage.getItem("startTime") || Date.now());
-
-// Elemen-elemen tampilan
-const welcome = document.getElementById("welcome");
-const totalRewardEl = document.getElementById("totalReward");
-const miningEl = document.getElementById("mining");
-const countdownEl = document.getElementById("countdown");
-const claimBtn = document.getElementById("claimBtn");
-const logoutBtn = document.getElementById("logout");
-
-// Cek login
 if (!username) {
   window.location.href = "index.html";
 }
 
-// Tampilkan username
-welcome.textContent = `Selamat datang, ${username}!`;
+// Tampilkan nama user
+document.getElementById("usernameDisplay").textContent = username;
 
-// Atur nilai awal
+// Elemen
+const miningAmount = document.getElementById("miningAmount");
+const claimButton = document.getElementById("claimButton");
+const totalRewardEl = document.getElementById("totalReward");
+const logoutButton = document.getElementById("logoutButton");
+
+// Data waktu dan poin
+const startTimeKey = `miningStartTime_${username}`;
+const totalRewardKey = `totalReward_${username}`;
+
+let startTime = localStorage.getItem(startTimeKey);
+let totalReward = parseInt(localStorage.getItem(totalRewardKey)) || 0;
+
+// Update tampilan awal
 totalRewardEl.textContent = totalReward;
-claimBtn.disabled = true;
 
-// Timer
-const totalDuration = 24 * 60 * 60 * 1000; // 24 jam dalam ms
-const updateInterval = 1000; // 1 detik
+// Kalau belum pernah mining, set waktu mulai sekarang
+if (!startTime) {
+  startTime = Date.now();
+  localStorage.setItem(startTimeKey, startTime);
+}
 
-function updateProgress() {
+// Hitung poin berdasarkan waktu berjalan
+function updateMining() {
   const now = Date.now();
   const elapsed = now - startTime;
+  const seconds = Math.floor(elapsed / 1000);
+  const reward = Math.min(seconds, 86400); // 24 jam = 86400 detik
 
-  if (elapsed >= totalDuration) {
-    miningEl.textContent = "1000";
-    countdownEl.textContent = "Sudah 24 jam! Silakan klaim poin.";
-    claimBtn.disabled = false;
+  miningAmount.textContent = reward;
+
+  // Aktifkan tombol klaim jika sudah 24 jam
+  if (reward >= 1000) {
+    claimButton.disabled = false;
   } else {
-    const percentage = elapsed / totalDuration;
-    const reward = Math.floor(percentage * 1000);
-    miningEl.textContent = reward.toString();
-
-    const remaining = totalDuration - elapsed;
-    const hours = Math.floor(remaining / (1000 * 60 * 60));
-    const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
-
-    countdownEl.textContent = `Tunggu ${hours}j ${minutes}m ${seconds}d lagi untuk klaim.`;
-    claimBtn.disabled = true;
+    claimButton.disabled = true;
   }
 }
 
-// Klaim Poin
-claimBtn.addEventListener("click", () => {
-  const earned = parseInt(miningEl.textContent);
-  const newTotal = totalReward + earned;
+setInterval(updateMining, 1000);
+updateMining();
 
-  localStorage.setItem("totalReward", newTotal);
-  totalRewardEl.textContent = newTotal;
+// Tombol klaim
+claimButton.addEventListener("click", () => {
+  const claimed = Math.min(parseInt(miningAmount.textContent), 1000);
+  totalReward += claimed;
+  totalRewardEl.textContent = totalReward;
+  localStorage.setItem(totalRewardKey, totalReward);
 
   // Reset waktu mulai
   startTime = Date.now();
-  localStorage.setItem("startTime", startTime);
-
-  // Reset tampilan
-  claimBtn.disabled = true;
-  updateProgress();
+  localStorage.setItem(startTimeKey, startTime);
+  miningAmount.textContent = "0";
+  claimButton.disabled = true;
 });
 
 // Tombol keluar
-logoutBtn.addEventListener("click", () => {
+logoutButton.addEventListener("click", () => {
   localStorage.removeItem("username");
   window.location.href = "index.html";
 });
-
-// Jalankan timer setiap detik
-updateProgress();
-setInterval(updateProgress, updateInterval);
