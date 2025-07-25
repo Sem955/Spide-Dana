@@ -1,62 +1,87 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const username = localStorage.getItem("username");
-  const welcome = document.getElementById("welcome");
-  const status = document.getElementById("status");
-  const totalRewardsEl = document.getElementById("totalRewards");
-  const dailyRewardsEl = document.getElementById("dailyRewards");
-  const claimBtn = document.getElementById("claimBtn");
+// Konfigurasi Supabase
+const supabaseUrl = 'https://YOUR_PROJECT.supabase.co';
+const supabaseKey = 'YOUR_SUPABASE_API_KEY';
+const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-  if (!username) {
-    window.location.href = "index.html";
+// Ambil username dari localStorage
+const username = localStorage.getItem('username');
+const CLAIM_REWARD = 1000;
+const COOLDOWN_HOURS = 24;
+
+const rewardEl = document.getElementById('reward');
+const totalRewardEl = document.getElementById('total-rewards-value');
+const statusText = document.getElementById('statusText');
+const claimBtn = document.getElementById('claimBtn');
+
+let userData = null;
+
+// Ambil data user dari Supabase
+async function fetchUserData() {
+  const { data, error } = await supabase
+    .from('users')
+    .select('*')
+    .eq('username', username)
+    .single();
+
+  if (error || !data) {
+    console.error('Gagal ambil data:', error);
     return;
   }
 
-  welcome.textContent = `Selamat datang, ${username}!`;
-
-  const rewardPer24h = 0.015;
-  let lastClaimTime = localStorage.getItem("lastClaimTime");
-  let dailyPoints = parseFloat(localStorage.getItem("dailyPoints") || "0");
-  let totalPoints = parseFloat(localStorage.getItem("totalPoints") || "0");
-
-  function updateUI() {
-    dailyRewardsEl.textContent = dailyPoints.toFixed(3);
-    totalRewardsEl.textContent = totalPoints.toFixed(3);
-
-    const now = Date.now();
-    if (!lastClaimTime || now - parseInt(lastClaimTime) >= 86400000) {
-      claimBtn.disabled = false;
-      status.textContent = "Klaim tersedia!";
-    } else {
-      claimBtn.disabled = true;
-      const remaining = 86400000 - (now - parseInt(lastClaimTime));
-      const hours = Math.floor(remaining / 3600000);
-      const minutes = Math.floor((remaining % 3600000) / 60000);
-      status.textContent = `Tunggu ${hours} jam ${minutes} menit untuk klaim lagi`;
-    }
-  }
-
-  function claimReward() {
-    const now = Date.now();
-    if (!lastClaimTime || now - parseInt(lastClaimTime) >= 86400000) {
-      totalPoints += dailyPoints;
-      dailyPoints = rewardPer24h;
-      lastClaimTime = now;
-
-      localStorage.setItem("lastClaimTime", lastClaimTime);
-      localStorage.setItem("dailyPoints", dailyPoints);
-      localStorage.setItem("totalPoints", totalPoints);
-
-      updateUI();
-    }
-  }
-
-  function logout() {
-    localStorage.removeItem("username");
-    window.location.href = "index.html";
-  }
-
+  userData = data;
   updateUI();
-  setInterval(updateUI, 60000);
-  window.claimReward = claimReward;
-  window.logout = logout;
+}
+
+function updateUI() {
+  const lastClaim = new Date(userData.last_claim_time);
+  const now = new Date();
+  const diffHours = (now - lastClaim) / (1000 * 60 * 60);
+
+  const canClaim = diffHours >= COOLDOWN_HOURS;
+
+  rewardEl.textContent = userData.total_reward.toFixed(2);
+  totalRewardEl.textContent = userData.total_reward.toFixed(2);
+
+  if (canClaim) {
+    claimBtn.disabled = false;
+    claimBtn.classList.add('enabled');
+    claimBtn.textContent = 'Claim Koin';
+    statusText.textContent = 'Kamu bisa klaim 1000 poin sekarang!';
+  } else {
+    const remaining = CLAIM_REWARD - (diffHours / COOLDOWN_HOURS) * CLAIM_REWARD;
+    claimBtn.disabled = true;
+    claimBtn.classList.remove('enabled');
+    claimBtn.textContent = 'Claim Koin';
+    statusText.textContent = `Menunggu ${remaining.toFixed(2)} poin lagi untuk klaim.`;
+  }
+}
+
+// Fungsi klaim koin
+async function claimReward() {
+  const now = new Date().toISOString();
+
+  const { error } = await supabase
+    .from('users')
+    .update({
+      total_reward: userData.total_reward + CLAIM_REWARD,
+      last_claim_time: now
+    })
+    .eq('username', username);
+
+  if (error) {
+    alert('Gagal klaim poin.');
+    return;
+  }
+
+  await fetchUserData();
+}
+
+// Event tombol
+claimBtn.addEventListener('click', async () => {
+  if (!claimBtn.disabled) {
+    await claimReward();
+  }
 });
+
+// Inisialisasi
+fetchUserData();
