@@ -1,129 +1,82 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard Mining</title>
   <style>
     body {
-      background-color: #111;
-      color: white;
+      background-color: black;
+      color: lime;
       font-family: Arial, sans-serif;
       text-align: center;
       padding: 20px;
     }
-    .reward-table {
-      margin-top: 20px;
-      border-collapse: collapse;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .reward-table td {
-      border: 1px solid white;
-      padding: 10px 20px;
-      color: white;
-    }
-    .reward-table .value {
-      color: limegreen;
+
+    .reward-box {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
       font-weight: bold;
-    }
-    #poinDisplay {
-      font-size: 48px;
-      margin: 40px 0;
-      color: limegreen;
-    }
-    button {
-      padding: 10px 30px;
       font-size: 18px;
+      margin-top: 40px;
+    }
+
+    .reward-box div {
+      text-align: center;
+    }
+
+    .big-reward {
+      font-size: 64px;
+      font-weight: bold;
+      margin: 30px 0;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 20px;
       border: none;
-      border-radius: 5px;
+      border-radius: 10px;
+      background-color: gray;
+      color: white;
+      cursor: not-allowed;
+    }
+
+    button.enabled {
+      background-color: lime;
+      color: black;
       cursor: pointer;
+    }
+
+    .status {
       margin-top: 20px;
-    }
-    #claimBtn {
-      background-color: green;
-      color: white;
-    }
-    #logoutBtn {
-      background-color: red;
-      color: white;
-      margin-top: 15px;
+      color: lime;
     }
   </style>
 </head>
 <body>
-  <h1>Selamat Datang, <span id="user"></span>!</h1>
+  <!-- Kolom tambahan -->
+  <div class="reward-box">
+    <div>
+      <div>Total Rewards</div>
+      <div id="total-rewards-value">0</div>
+    </div>
+    <div>
+      <div>24 Jam Rewards</div>
+      <div>1000</div>
+    </div>
+  </div>
 
-  <div id="poinDisplay">0</div>
+  <!-- Angka besar Total Reward -->
+  <div class="big-reward" id="reward">0.00</div>
 
-  <table class="reward-table">
-    <tr>
-      <td>Total Reward</td>
-      <td class="value" id="totalReward">0</td>
-    </tr>
-    <tr>
-      <td>24 Jam Reward</td>
-      <td class="value">1000</td>
-    </tr>
-  </table>
+  <!-- Tombol klaim -->
+  <button id="claimBtn" disabled>Claim Koin</button>
 
-  <button id="claimBtn" disabled onclick="claimReward()">CLAIM</button>
-  <br />
-  <button id="logoutBtn" onclick="logout()">Logout</button>
+  <!-- Status countdown -->
+  <div class="status" id="statusText">Menunggu 1000 poin lagi untuk klaim.</div>
 
-  <script>
-    const username = localStorage.getItem('username');
-    if (!username) window.location.href = 'index.html';
-    document.getElementById('user').textContent = username;
-
-    let startTime = localStorage.getItem('startTime');
-    let totalReward = parseInt(localStorage.getItem('totalReward')) || 0;
-    let claimed = localStorage.getItem('claimed') === 'true';
-
-    const poinDisplay = document.getElementById('poinDisplay');
-    const totalRewardDisplay = document.getElementById('totalReward');
-    const claimBtn = document.getElementById('claimBtn');
-
-    if (!startTime) {
-      startTime = Date.now();
-      localStorage.setItem('startTime', startTime);
-      localStorage.setItem('claimed', 'false');
-    }
-
-    function updatePoin() {
-      const now = Date.now();
-      const elapsed = Math.floor((now - startTime) / 1000);
-      let poin = Math.min(elapsed, 1000);
-      poinDisplay.textContent = poin;
-
-      if (poin >= 1000 && !claimed) {
-        claimBtn.disabled = false;
-      } else {
-        claimBtn.disabled = true;
-      }
-    }
-
-    function claimReward() {
-      totalReward += 1000;
-      totalRewardDisplay.textContent = totalReward;
-      localStorage.setItem('totalReward', totalReward);
-      localStorage.setItem('claimed', 'true');
-      claimBtn.disabled = true;
-    }
-
-    function logout() {
-      localStorage.removeItem('username');
-      localStorage.removeItem('startTime');
-      localStorage.removeItem('claimed');
-      window.location.href = 'index.html';
-    }
-
-    // Set total reward awal
-    totalRewardDisplay.textContent = totalReward;
-
-    // Jalankan poin updater
-    updatePoin();
-    setInterval(updatePoin, 1000);
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="dashboard.js"></script>
 </body>
 </html>
