@@ -1,21 +1,21 @@
-const CLAIM_REWARD = 1000;
-const COOLDOWN_HOURS = 24;
-
-const rewardEl = document.getElementById('dailyRewards');
-const totalRewardEl = document.getElementById('totalRewards');
+// Simulasi pertumbuhan reward dari 0 ke 1000 dalam 24 jam
 const startTime = localStorage.getItem('miningStart') || Date.now();
 localStorage.setItem('miningStart', startTime);
 
 function updateRewards() {
   const now = Date.now();
   const elapsed = now - startTime;
-  const progress = Math.min(elapsed / (COOLDOWN_HOURS * 60 * 60 * 1000), 1);
+  const totalMillisIn24h = 24 * 60 * 60 * 1000;
 
-  const dailyReward = CLAIM_REWARD * progress;
-  rewardEl.textContent = dailyReward.toFixed(3);
+  let progress = elapsed / totalMillisIn24h;
+  if (progress > 1) progress = 1;
 
+  const dailyReward = 1000 * progress;
+  document.getElementById('dailyRewards').innerText = dailyReward.toFixed(3);
+
+  // Contoh Total Rewards (bisa fetch dari Supabase jika diperlukan nanti)
   const total = parseFloat(localStorage.getItem('totalRewards') || 0);
-  totalRewardEl.textContent = total.toFixed(3);
+  document.getElementById('totalRewards').innerText = total.toFixed(3);
 }
 
 setInterval(updateRewards, 1000);
