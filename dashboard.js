@@ -17,3 +17,6 @@ function updateRewards() {
   const total = parseFloat(localStorage.getItem('totalRewards') || 0);
   document.getElementById('totalRewards').innerText = total.toFixed(3);
 }
+function handleWithdraw() {
+  alert("Fitur withdraw sedang dalam pengembangan.");
+}
