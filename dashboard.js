@@ -20,3 +20,6 @@ function updateRewards() {
 
 setInterval(updateRewards, 1000);
 updateRewards();
+function handleWithdraw() {
+  alert("Fitur withdraw sedang dalam pengembangan.");
+}
