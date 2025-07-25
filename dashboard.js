@@ -1,26 +1,21 @@
-// === KONFIGURASI ===
 const supabaseUrl = 'https://YOUR_PROJECT.supabase.co';
-const supabaseKey = 'YOUR_SUPABASE_API_KEY';
+const supabaseKey = 'YOUR_SUPABASE_KEY';
 const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-const username = localStorage.getItem('username');
 
-// === KONSTANTA ===
-const MAX_REWARD = 1000;
-const SECONDS_IN_24H = 86400;
-const REWARD_PER_SECOND = MAX_REWARD / SECONDS_IN_24H;
+const username = localStorage.getItem("username");
+if (!username) window.location.href = "index.html";
 
-let miningReward = 0;
-let canClaim = false;
-let lastClaimTime = null;
-let totalReward = 0;
+const totalRewardElem = document.getElementById("totalReward");
+const pointsDisplay = document.getElementById("pointsDisplay");
+const claimBtn = document.getElementById("claimBtn");
+const countdownElem = document.getElementById("countdown");
 
-// === ELEMENT HTML ===
-const miningEl = document.getElementById('mining-reward');
-const totalRewardEl = document.getElementById('total-rewards-value');
-const claimBtn = document.getElementById('claimBtn');
-const statusText = document.getElementById('statusText');
+const logoutBtn = document.getElementById("logoutBtn");
+logoutBtn.addEventListener("click", () => {
+  localStorage.removeItem("username");
+  window.location.href = "index.html";
+});
 
-// === AMBIL DATA USER ===
 async function loadUserData() {
   const { data, error } = await supabase
     .from('users')
@@ -28,67 +23,63 @@ async function loadUserData() {
     .eq('username', username)
     .single();
 
-  if (data) {
-    lastClaimTime = new Date(data.last_claim_time);
-    totalReward = data.total_reward || 0;
-    totalRewardEl.textContent = totalReward.toFixed(2);
-    startMiningLoop();
-  } else {
-    console.error("Gagal ambil data user:", error);
+  if (error || !data) {
+    alert("Data user tidak ditemukan!");
+    return;
   }
-}
 
-// === LOOP MINING REAL-TIME ===
-function startMiningLoop() {
-  setInterval(() => {
-    const now = new Date();
-    const elapsedSeconds = Math.floor((now - lastClaimTime) / 1000);
+  const lastClaim = new Date(data.last_claim_time);
+  const now = new Date();
+  const diffMs = now - lastClaim;
+  const diffSec = Math.floor(diffMs / 1000);
+  const totalSeconds = 86400;
 
-    if (elapsedSeconds >= SECONDS_IN_24H) {
-      miningReward = MAX_REWARD;
-      canClaim = true;
+  let miningProgress = Math.min(diffSec, totalSeconds);
+  const rewardPerSecond = 1000 / totalSeconds;
+
+  function updateMining() {
+    miningProgress++;
+    const earned = (miningProgress * rewardPerSecond).toFixed(2);
+    pointsDisplay.textContent = earned;
+
+    const remaining = totalSeconds - miningProgress;
+    if (remaining <= 0) {
+      countdownElem.textContent = "Bisa diklaim sekarang!";
       claimBtn.disabled = false;
-      claimBtn.classList.add('enabled');
-      statusText.textContent = "Klaim tersedia! Klik tombol untuk ambil 1000 poin.";
+      clearInterval(timer);
     } else {
-      miningReward = REWARD_PER_SECOND * elapsedSeconds;
-      canClaim = false;
+      const hrs = Math.floor(remaining / 3600);
+      const min = Math.floor((remaining % 3600) / 60);
+      const sec = remaining % 60;
+      countdownElem.textContent = `Klaim dalam ${hrs}j ${min}m ${sec}d`;
       claimBtn.disabled = true;
-      claimBtn.classList.remove('enabled');
-      statusText.textContent = "Menambang... " + miningReward.toFixed(2) + " / 1000";
     }
+  }
 
-    miningEl.textContent = miningReward.toFixed(2);
-  }, 1000);
+  updateMining();
+  const timer = setInterval(updateMining, 1000);
+
+  claimBtn.addEventListener("click", async () => {
+    if (miningProgress < totalSeconds) return;
+
+    const newTotal = data.total_reward + 1000;
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({
+        total_reward: newTotal,
+        last_claim_time: new Date().toISOString()
+      })
+      .eq('username', username);
+
+    if (!updateError) {
+      totalRewardElem.textContent = newTotal;
+      window.location.reload();
+    } else {
+      alert("Gagal klaim reward.");
+    }
+  });
+
+  totalRewardElem.textContent = data.total_reward;
 }
 
-// === KLAIM KOIN ===
-claimBtn.addEventListener('click', async () => {
-  if (!canClaim) return;
-
-  const now = new Date().toISOString();
-  const newTotal = totalReward + MAX_REWARD;
-
-  const { error } = await supabase
-    .from('users')
-    .update({
-      total_reward: newTotal,
-      last_claim_time: now
-    })
-    .eq('username', username);
-
-  if (!error) {
-    miningReward = 0;
-    totalReward = newTotal;
-    totalRewardEl.textContent = totalReward.toFixed(2);
-    lastClaimTime = new Date();
-    claimBtn.disabled = true;
-    claimBtn.classList.remove('enabled');
-    statusText.textContent = "Berhasil klaim. Mining dimulai ulang.";
-  } else {
-    alert("Gagal klaim reward.");
-  }
-});
-
-// === MULAI ===
 loadUserData();
