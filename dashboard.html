@@ -1,69 +1,90 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8" />
   <title>Dashboard</title>
   <style>
     body {
-      background-color: #f1eaf7;
-      color: #00aa00;
+      background-color: #f1eaf6;
       font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
       text-align: center;
+      padding-top: 50px;
     }
-
     .box {
-      display: inline-block;
-      width: 150px;
-      height: 100px;
-      margin: 10px;
-      padding: 10px;
+      background-color: white;
+      padding: 20px;
+      margin: auto;
+      width: 90%;
+      max-width: 400px;
       border-radius: 10px;
-      background-color: #000;
-      box-shadow: 0 0 10px green;
-      color: lime;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-
-    .button {
-      padding: 15px 30px;
-      margin: 15px;
-      font-size: 16px;
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      background-color: #4CAF50;
+      color: white;
       border: none;
-      border-radius: 8px;
+      border-radius: 5px;
       cursor: pointer;
-    }
-
-    .claim {
-      background-color: #444;
-      color: white;
-    }
-
-    .logout {
-      background-color: red;
-      color: white;
     }
   </style>
 </head>
 <body>
-  <h2 id="welcome"></h2>
-
   <div class="box">
-    <h3>Total Rewards</h3>
-    <p id="totalRewards">0</p>
+    <h2>Selamat Datang, <span id="username"></span></h2>
+    <p>Poin Harian: <span id="dailyPoints">0</span></p>
+    <p>Total Reward: <span id="totalReward">0</span></p>
+    <button onclick="claimPoints()">Klaim Poin</button>
+    <button onclick="logout()">Keluar</button>
   </div>
 
-  <div class="box">
-    <h3>24h Rewards</h3>
-    <p id="dailyRewards">0.000</p>
-  </div>
+  <script>
+    const username = localStorage.getItem("username");
+    const lastClaimTime = localStorage.getItem("lastClaimTime");
+    const now = new Date().getTime();
 
-  <br />
-  <button class="button claim" onclick="claimReward()" id="claimBtn" disabled>Klaim Poin</button>
-  <button class="button logout" onclick="logout()">Keluar</button>
+    if (!username) {
+      window.location.href = "index.html";
+    } else {
+      document.getElementById("username").innerText = username;
+    }
 
-  <p id="status">Memuat...</p>
+    let dailyPoints = parseInt(localStorage.getItem("dailyPoints")) || 0;
+    let totalReward = parseInt(localStorage.getItem("totalReward")) || 0;
 
-  <script src="dashboard.js"></script>
+    if (lastClaimTime) {
+      const elapsed = now - parseInt(lastClaimTime);
+      if (elapsed >= 24 * 60 * 60 * 1000) {
+        // 24 jam sudah lewat
+        totalReward += dailyPoints;
+        localStorage.setItem("totalReward", totalReward);
+        localStorage.setItem("dailyPoints", 0);
+        localStorage.removeItem("lastClaimTime");
+        dailyPoints = 0;
+      }
+    }
+
+    document.getElementById("dailyPoints").innerText = dailyPoints;
+    document.getElementById("totalReward").innerText = totalReward;
+
+    function claimPoints() {
+      const lastClaimTime = localStorage.getItem("lastClaimTime");
+      const now = new Date().getTime();
+      if (lastClaimTime && now - parseInt(lastClaimTime) < 24 * 60 * 60 * 1000) {
+        alert("Sudah klaim hari ini, silakan tunggu 24 jam.");
+        return;
+      }
+      dailyPoints = 100;
+      localStorage.setItem("dailyPoints", dailyPoints);
+      localStorage.setItem("lastClaimTime", now);
+      document.getElementById("dailyPoints").innerText = dailyPoints;
+      alert("Berhasil klaim 100 poin hari ini!");
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = "index.html";
+    }
+  </script>
 </body>
 </html>
