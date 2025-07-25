@@ -1,7 +1,8 @@
-<!DOCTYPE html><html lang="id">
+<!DOCTYPE html>
+<html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard</title>
   <style>
     body {
@@ -10,103 +11,73 @@
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 20px;
-    }.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+    }
 
-.rewards-box {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 20px;
-}
+    .rewards-top {
+      display: flex;
+      justify-content: space-around;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
 
-.reward-card {
-  background-color: #111;
-  border-radius: 12px;
-  padding: 16px 24px;
-  text-align: center;
-  box-shadow: 0 0 10px #00ff0044;
-  min-width: 140px;
-}
+    .reward-card {
+      background-color: #111;
+      border-radius: 12px;
+      padding: 16px 24px;
+      text-align: center;
+      box-shadow: 0 0 10px #00ff0044;
+      flex: 1;
+    }
 
-.reward-card h3 {
-  margin: 0 0 10px;
-  font-size: 16px;
-}
+    .reward-title {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
 
-.reward-card .reward-value {
-  font-size: 20px;
-  font-weight: bold;
-}
-
-#claim-btn {
-  margin-top: 30px;
-  padding: 10px 20px;
-  background-color: #00ff00;
-  color: #000;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-#claim-btn:disabled {
-  background-color: #444;
-  color: #888;
-  cursor: not-allowed;
-}
-
+    .reward-value {
+      font-size: 20px;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="rewards-box">
-      <div class="reward-card">
-        <h3>Total Rewards</h3>
-        <div class="reward-value" id="total-rewards">0</div>
-      </div>
-      <div class="reward-card">
-        <h3>24h Rewards</h3>
-        <div class="reward-value" id="daily-rewards">0</div>
-      </div>
-    </div><button id="claim-btn" disabled>Klaim Reward</button>
 
-  </div>  <script>
-    const totalRewardsEl = document.getElementById('total-rewards');
-    const dailyRewardsEl = document.getElementById('daily-rewards');
-    const claimBtn = document.getElementById('claim-btn');
+  <div class="rewards-top">
+    <div class="reward-card">
+      <div class="reward-title">Total Rewards</div>
+      <div class="reward-value" id="totalRewards">0</div>
+    </div>
+    <div class="reward-card">
+      <div class="reward-title">24h Rewards</div>
+      <div class="reward-value" id="dailyRewards">0.000</div>
+    </div>
+  </div>
 
-    const rewardPerSecond = 1000 / (24 * 60 * 60); // 1000 poin per 24 jam
-    let dailyReward = 0;
-    let totalReward = 0;
-    let secondsElapsed = 0;
-    const maxSeconds = 86400; // 24 jam
+  <!-- Konten dashboard lainnya di bawah sini -->
+
+  <script>
+    // Simulasi pertumbuhan reward dari 0 ke 1000 dalam 24 jam
+    const startTime = localStorage.getItem('miningStart') || Date.now();
+    localStorage.setItem('miningStart', startTime);
 
     function updateRewards() {
-      if (secondsElapsed < maxSeconds) {
-        secondsElapsed++;
-        dailyReward = rewardPerSecond * secondsElapsed;
-        dailyRewardsEl.textContent = dailyReward.toFixed(2);
-      }
+      const now = Date.now();
+      const elapsed = now - startTime;
+      const totalMillisIn24h = 24 * 60 * 60 * 1000;
 
-      if (secondsElapsed >= maxSeconds) {
-        claimBtn.disabled = false;
-      }
+      let progress = elapsed / totalMillisIn24h;
+      if (progress > 1) progress = 1;
+
+      const dailyReward = 1000 * progress;
+      document.getElementById('dailyRewards').innerText = dailyReward.toFixed(3);
+
+      // Contoh Total Rewards (nanti bisa fetch dari Supabase)
+      const total = parseFloat(localStorage.getItem('totalRewards') || 0);
+      document.getElementById('totalRewards').innerText = total.toFixed(3);
     }
 
     setInterval(updateRewards, 1000);
-
-    claimBtn.addEventListener('click', () => {
-      totalReward += dailyReward;
-      totalRewardsEl.textContent = totalReward.toFixed(2);
-      dailyReward = 0;
-      secondsElapsed = 0;
-      dailyRewardsEl.textContent = '0';
-      claimBtn.disabled = true;
-    });
-  </script></body>
+    updateRewards();
+  </script>
+</body>
 </html>
