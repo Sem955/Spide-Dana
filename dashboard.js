@@ -1,72 +1,78 @@
-// Cek login
+// Ambil data dari localStorage
 const username = localStorage.getItem("username");
+const totalReward = parseInt(localStorage.getItem("totalReward") || "0");
+let startTime = parseInt(localStorage.getItem("startTime") || Date.now());
+
+// Elemen-elemen tampilan
+const welcome = document.getElementById("welcome");
+const totalRewardEl = document.getElementById("totalReward");
+const miningEl = document.getElementById("mining");
+const countdownEl = document.getElementById("countdown");
+const claimBtn = document.getElementById("claimBtn");
+const logoutBtn = document.getElementById("logout");
+
+// Cek login
 if (!username) {
   window.location.href = "index.html";
 }
 
-// Elemen
-const totalRewardEl = document.getElementById("totalReward");
-const pointsDisplay = document.getElementById("pointsDisplay");
-const claimBtn = document.getElementById("claimBtn");
-const countdownEl = document.getElementById("countdown");
-const logoutBtn = document.getElementById("logoutBtn");
+// Tampilkan username
+welcome.textContent = `Selamat datang, ${username}!`;
 
-// Konstanta
-const MAX_POINTS = 1000;
-const MINING_DURATION = 24 * 60 * 60 * 1000; // 24 jam dalam ms
-let startTime = localStorage.getItem("startTime");
-let totalReward = parseInt(localStorage.getItem("totalReward")) || 0;
-
-// Set awal
+// Atur nilai awal
 totalRewardEl.textContent = totalReward;
+claimBtn.disabled = true;
 
-// Jika belum ada start time, buat baru
-if (!startTime) {
-  startTime = Date.now();
-  localStorage.setItem("startTime", startTime);
-}
+// Timer
+const totalDuration = 24 * 60 * 60 * 1000; // 24 jam dalam ms
+const updateInterval = 1000; // 1 detik
 
-// Fungsi untuk update poin
-function updatePoints() {
+function updateProgress() {
   const now = Date.now();
   const elapsed = now - startTime;
 
-  if (elapsed >= MINING_DURATION) {
-    pointsDisplay.textContent = MAX_POINTS.toFixed(2);
+  if (elapsed >= totalDuration) {
+    miningEl.textContent = "1000";
+    countdownEl.textContent = "Sudah 24 jam! Silakan klaim poin.";
     claimBtn.disabled = false;
-    countdownEl.textContent = "Siap untuk klaim!";
   } else {
-    const progress = elapsed / MINING_DURATION;
-    const currentPoints = progress * MAX_POINTS;
-    pointsDisplay.textContent = currentPoints.toFixed(2);
-    claimBtn.disabled = true;
+    const percentage = elapsed / totalDuration;
+    const reward = Math.floor(percentage * 1000);
+    miningEl.textContent = reward.toString();
 
-    const remaining = MINING_DURATION - elapsed;
+    const remaining = totalDuration - elapsed;
     const hours = Math.floor(remaining / (1000 * 60 * 60));
     const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
-    countdownEl.textContent = `Tunggu ${hours}j ${minutes}m ${seconds}d`;
+
+    countdownEl.textContent = `Tunggu ${hours}j ${minutes}m ${seconds}d lagi untuk klaim.`;
+    claimBtn.disabled = true;
   }
 }
 
-// Jalankan per detik
-setInterval(updatePoints, 1000);
-updatePoints();
-
-// Tombol klaim
+// Klaim Poin
 claimBtn.addEventListener("click", () => {
-  totalReward += MAX_POINTS;
-  localStorage.setItem("totalReward", totalReward);
-  totalRewardEl.textContent = totalReward;
+  const earned = parseInt(miningEl.textContent);
+  const newTotal = totalReward + earned;
+
+  localStorage.setItem("totalReward", newTotal);
+  totalRewardEl.textContent = newTotal;
+
+  // Reset waktu mulai
   startTime = Date.now();
   localStorage.setItem("startTime", startTime);
+
+  // Reset tampilan
   claimBtn.disabled = true;
-  updatePoints();
+  updateProgress();
 });
 
 // Tombol keluar
 logoutBtn.addEventListener("click", () => {
   localStorage.removeItem("username");
-  localStorage.removeItem("startTime");
   window.location.href = "index.html";
 });
+
+// Jalankan timer setiap detik
+updateProgress();
+setInterval(updateProgress, updateInterval);
