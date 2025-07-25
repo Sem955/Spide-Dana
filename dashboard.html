@@ -38,46 +38,62 @@
       font-size: 20px;
       font-weight: bold;
     }
+
+    .actions {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    #claimBtn {
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #00ff00;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+
+    #claimBtn:disabled {
+      background-color: #444;
+      cursor: not-allowed;
+    }
+
+    #logoutBtn {
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #ff4444;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    #statusText {
+      text-align: center;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
-
   <div class="rewards-top">
     <div class="reward-card">
       <div class="reward-title">Total Rewards</div>
-      <div class="reward-value" id="totalRewards">0</div>
+      <div class="reward-value" id="total-rewards-value">0</div>
     </div>
     <div class="reward-card">
       <div class="reward-title">24h Rewards</div>
-      <div class="reward-value" id="dailyRewards">0.000</div>
+      <div class="reward-value" id="reward">0.000</div>
     </div>
   </div>
 
-  <!-- Konten dashboard lainnya di bawah sini -->
+  <div class="actions">
+    <button id="claimBtn" disabled>Klaim Poin</button>
+    <button id="logoutBtn">Keluar</button>
+    <div id="statusText">Memuat...</div>
+  </div>
 
-  <script>
-    // Simulasi pertumbuhan reward dari 0 ke 1000 dalam 24 jam
-    const startTime = localStorage.getItem('miningStart') || Date.now();
-    localStorage.setItem('miningStart', startTime);
-
-    function updateRewards() {
-      const now = Date.now();
-      const elapsed = now - startTime;
-      const totalMillisIn24h = 24 * 60 * 60 * 1000;
-
-      let progress = elapsed / totalMillisIn24h;
-      if (progress > 1) progress = 1;
-
-      const dailyReward = 1000 * progress;
-      document.getElementById('dailyRewards').innerText = dailyReward.toFixed(3);
-
-      // Contoh Total Rewards (nanti bisa fetch dari Supabase)
-      const total = parseFloat(localStorage.getItem('totalRewards') || 0);
-      document.getElementById('totalRewards').innerText = total.toFixed(3);
-    }
-
-    setInterval(updateRewards, 1000);
-    updateRewards();
-  </script>
+  <script src="dashboard.js"></script>
 </body>
 </html>
