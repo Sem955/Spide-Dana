@@ -39,60 +39,56 @@
       font-weight: bold;
     }
 
-    .actions {
+    .button-group {
       text-align: center;
       margin-top: 30px;
     }
 
-    #claimBtn {
-      padding: 10px 20px;
-      font-size: 18px;
-      background-color: #00ff00;
-      color: #000;
+    button {
+      padding: 12px 24px;
+      margin: 10px;
       border: none;
       border-radius: 8px;
-      margin-right: 10px;
+      font-size: 16px;
       cursor: pointer;
     }
 
-    #claimBtn:disabled {
-      background-color: #444;
-      cursor: not-allowed;
+    #claimBtn.enabled {
+      background-color: #00ff00;
+      color: black;
     }
 
     #logoutBtn {
-      padding: 10px 20px;
-      font-size: 18px;
-      background-color: #ff4444;
+      background-color: #f44336;
       color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
     }
 
     #statusText {
       text-align: center;
-      margin-top: 10px;
+      margin-top: 20px;
+      font-style: italic;
     }
   </style>
 </head>
 <body>
+
   <div class="rewards-top">
     <div class="reward-card">
       <div class="reward-title">Total Rewards</div>
-      <div class="reward-value" id="total-rewards-value">0</div>
+      <div class="reward-value" id="totalReward">0</div>
     </div>
     <div class="reward-card">
       <div class="reward-title">24h Rewards</div>
-      <div class="reward-value" id="reward">0.000</div>
+      <div class="reward-value" id="dailyReward">0</div>
     </div>
   </div>
 
-  <div class="actions">
-    <button id="claimBtn" disabled>Klaim Poin</button>
+  <div class="button-group">
+    <button id="claimBtn" disabled>Claim Poin</button>
     <button id="logoutBtn">Keluar</button>
-    <div id="statusText">Memuat...</div>
   </div>
+
+  <div id="statusText">Memuat...</div>
 
   <script src="dashboard.js"></script>
 </body>
