@@ -1,70 +1,87 @@
+// Konfigurasi Supabase
+const supabaseUrl = 'https://YOUR_PROJECT.supabase.co';
+const supabaseKey = 'YOUR_SUPABASE_API_KEY';
+const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
 // Ambil username dari localStorage
-const username = localStorage.getItem("username");
-if (!username) {
-  window.location.href = "index.html";
+const username = localStorage.getItem('username');
+const CLAIM_REWARD = 1000;
+const COOLDOWN_HOURS = 24;
+
+const rewardEl = document.getElementById('reward');
+const totalRewardEl = document.getElementById('total-rewards-value');
+const statusText = document.getElementById('statusText');
+const claimBtn = document.getElementById('claimBtn');
+
+let userData = null;
+
+// Ambil data user dari Supabase
+async function fetchUserData() {
+  const { data, error } = await supabase
+    .from('users')
+    .select('*')
+    .eq('username', username)
+    .single();
+
+  if (error || !data) {
+    console.error('Gagal ambil data:', error);
+    return;
+  }
+
+  userData = data;
+  updateUI();
 }
 
-// Tampilkan nama user
-document.getElementById("usernameDisplay").textContent = username;
+function updateUI() {
+  const lastClaim = new Date(userData.last_claim_time);
+  const now = new Date();
+  const diffHours = (now - lastClaim) / (1000 * 60 * 60);
 
-// Elemen
-const miningAmount = document.getElementById("miningAmount");
-const claimButton = document.getElementById("claimButton");
-const totalRewardEl = document.getElementById("totalReward");
-const logoutButton = document.getElementById("logoutButton");
+  const canClaim = diffHours >= COOLDOWN_HOURS;
 
-// Data waktu dan poin
-const startTimeKey = `miningStartTime_${username}`;
-const totalRewardKey = `totalReward_${username}`;
+  rewardEl.textContent = userData.total_reward.toFixed(2);
+  totalRewardEl.textContent = userData.total_reward.toFixed(2);
 
-let startTime = localStorage.getItem(startTimeKey);
-let totalReward = parseInt(localStorage.getItem(totalRewardKey)) || 0;
-
-// Update tampilan awal
-totalRewardEl.textContent = totalReward;
-
-// Kalau belum pernah mining, set waktu mulai sekarang
-if (!startTime) {
-  startTime = Date.now();
-  localStorage.setItem(startTimeKey, startTime);
-}
-
-// Hitung poin berdasarkan waktu berjalan
-function updateMining() {
-  const now = Date.now();
-  const elapsed = now - startTime;
-  const seconds = Math.floor(elapsed / 1000);
-  const reward = Math.min(seconds, 86400); // 24 jam = 86400 detik
-
-  miningAmount.textContent = reward;
-
-  // Aktifkan tombol klaim jika sudah 24 jam
-  if (reward >= 1000) {
-    claimButton.disabled = false;
+  if (canClaim) {
+    claimBtn.disabled = false;
+    claimBtn.classList.add('enabled');
+    claimBtn.textContent = 'Claim Koin';
+    statusText.textContent = 'Kamu bisa klaim 1000 poin sekarang!';
   } else {
-    claimButton.disabled = true;
+    const remaining = CLAIM_REWARD - (diffHours / COOLDOWN_HOURS) * CLAIM_REWARD;
+    claimBtn.disabled = true;
+    claimBtn.classList.remove('enabled');
+    claimBtn.textContent = 'Claim Koin';
+    statusText.textContent = `Menunggu ${remaining.toFixed(2)} poin lagi untuk klaim.`;
   }
 }
 
-setInterval(updateMining, 1000);
-updateMining();
+// Fungsi klaim koin
+async function claimReward() {
+  const now = new Date().toISOString();
 
-// Tombol klaim
-claimButton.addEventListener("click", () => {
-  const claimed = Math.min(parseInt(miningAmount.textContent), 1000);
-  totalReward += claimed;
-  totalRewardEl.textContent = totalReward;
-  localStorage.setItem(totalRewardKey, totalReward);
+  const { error } = await supabase
+    .from('users')
+    .update({
+      total_reward: userData.total_reward + CLAIM_REWARD,
+      last_claim_time: now
+    })
+    .eq('username', username);
 
-  // Reset waktu mulai
-  startTime = Date.now();
-  localStorage.setItem(startTimeKey, startTime);
-  miningAmount.textContent = "0";
-  claimButton.disabled = true;
+  if (error) {
+    alert('Gagal klaim poin.');
+    return;
+  }
+
+  await fetchUserData();
+}
+
+// Event tombol
+claimBtn.addEventListener('click', async () => {
+  if (!claimBtn.disabled) {
+    await claimReward();
+  }
 });
 
-// Tombol keluar
-logoutButton.addEventListener("click", () => {
-  localStorage.removeItem("username");
-  window.location.href = "index.html";
-});
+// Inisialisasi
+fetchUserData();
