@@ -3,80 +3,111 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard Mining</title>
+  <title>Dashboard</title>
   <style>
     body {
-      background-color: black;
-      color: lime;
+      background-color: #000;
+      color: #00ff00;
       font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 20px;
-    }
-
-    .reward-box {
       display: flex;
+      flex-direction: column;
+      align-items: center;
       justify-content: center;
-      gap: 40px;
-      font-weight: bold;
-      font-size: 18px;
-      margin-top: 40px;
+      height: 100vh;
+      margin: 0;
     }
 
-    .reward-box div {
-      text-align: center;
+    h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
     }
 
-    .big-reward {
+    .points {
       font-size: 64px;
       font-weight: bold;
-      margin: 30px 0;
+      margin: 20px 0;
+      color: #00ff00;
     }
 
     button {
-      padding: 10px 20px;
-      font-size: 20px;
+      padding: 12px 24px;
+      font-size: 18px;
+      background-color: #00ff00;
+      color: #000;
       border: none;
-      border-radius: 10px;
-      background-color: gray;
-      color: white;
-      cursor: not-allowed;
-    }
-
-    button.enabled {
-      background-color: lime;
-      color: black;
+      border-radius: 6px;
       cursor: pointer;
     }
 
-    .status {
+    button:disabled {
+      background-color: #444;
+      color: #999;
+      cursor: not-allowed;
+    }
+
+    .info {
       margin-top: 20px;
-      color: lime;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
-  <!-- Kolom tambahan -->
-  <div class="reward-box">
-    <div>
-      <div>Total Rewards</div>
-      <div id="total-rewards-value">0</div>
-    </div>
-    <div>
-      <div>24 Jam Rewards</div>
-      <div>1000</div>
-    </div>
-  </div>
-
-  <!-- Angka besar Total Reward -->
-  <div class="big-reward" id="reward">0.00</div>
-
-  <!-- Tombol klaim -->
+  <h1>Total Rewards</h1>
+  <div class="points" id="pointDisplay">0.00</div>
   <button id="claimBtn" disabled>Claim Koin</button>
+  <div class="info" id="statusText"></div>
 
-  <!-- Status countdown -->
-  <div class="status" id="statusText">Menunggu 1000 poin lagi untuk klaim.</div>
+  <script>
+    const pointDisplay = document.getElementById("pointDisplay");
+    const claimBtn = document.getElementById("claimBtn");
+    const statusText = document.getElementById("statusText");
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-  <script src="dashboard.js"></script>
+    const username = localStorage.getItem("currentUser") || "guest";
+    const startKey = `miningStart_${username}`;
+    const totalKey = `totalReward_${username}`;
+
+    const MAX_POINT = 1000;
+    const TOTAL_SECONDS = 86400; // 24 jam
+    let startTime = parseInt(localStorage.getItem(startKey));
+    let totalReward = parseInt(localStorage.getItem(totalKey) || "0");
+
+    if (!startTime) {
+      startTime = Date.now();
+      localStorage.setItem(startKey, startTime);
+    }
+
+    function updatePoints() {
+      const now = Date.now();
+      const elapsed = (now - startTime) / 1000; // detik
+      let points = Math.min((elapsed / TOTAL_SECONDS) * MAX_POINT, MAX_POINT);
+      pointDisplay.textContent = points.toFixed(2);
+
+      if (points >= MAX_POINT) {
+        claimBtn.disabled = false;
+        statusText.textContent = "Sudah bisa klaim!";
+      } else {
+        claimBtn.disabled = true;
+        const remaining = (MAX_POINT - points).toFixed(2);
+        statusText.textContent = `Menunggu ${remaining} poin lagi untuk klaim.`;
+      }
+    }
+
+    claimBtn.onclick = () => {
+      const now = Date.now();
+      const elapsed = (now - startTime) / 1000;
+      let points = Math.min((elapsed / TOTAL_SECONDS) * MAX_POINT, MAX_POINT);
+      if (points >= MAX_POINT) {
+        totalReward += MAX_POINT;
+        localStorage.setItem(totalKey, totalReward);
+        alert(`Kamu berhasil klaim ${MAX_POINT} koin! Total: ${totalReward}`);
+        startTime = Date.now();
+        localStorage.setItem(startKey, startTime);
+        claimBtn.disabled = true;
+      }
+    };
+
+    setInterval(updatePoints, 1000);
+    updatePoints();
+  </script>
 </body>
 </html>
