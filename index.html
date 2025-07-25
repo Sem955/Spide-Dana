@@ -6,8 +6,8 @@
   <title>Login Game</title>
   <style>
     body {
-  background-color: #1a002c;
-}
+      background-color: #1a002c;
+      color: #00ff00;
       font-family: Arial, sans-serif;
       display: flex;
       flex-direction: column;
@@ -16,7 +16,12 @@
       height: 100vh;
       margin: 0;
     }
-    h1 { margin-bottom: 30px; font-size: 28px; }
+
+    h1 {
+      margin-bottom: 30px;
+      font-size: 28px;
+    }
+
     input {
       width: 300px;
       padding: 12px;
@@ -25,6 +30,7 @@
       border: none;
       border-radius: 6px;
     }
+
     button {
       width: 320px;
       padding: 12px;
@@ -34,8 +40,17 @@
       cursor: pointer;
       margin-top: 10px;
     }
-    #loginBtn { background-color: #1877f2; color: white; }
-    #registerBtn { background-color: transparent; border: 1px solid #00ff00; color: #00ff00; }
+
+    #loginBtn {
+      background-color: #1877f2;
+      color: white;
+    }
+
+    #registerBtn {
+      background-color: transparent;
+      border: 1px solid #00ff00;
+      color: #00ff00;
+    }
   </style>
 </head>
 <body>
@@ -52,9 +67,9 @@
     loginBtn.onclick = () => {
       const username = document.getElementById("username").value;
       const password = document.getElementById("password").value;
-      const users = JSON.parse(localStorage.getItem("users") || "{}");
+      const saved = JSON.parse(localStorage.getItem("users") || "{}");
 
-      if (users[username] === password) {
+      if (saved[username] === password) {
         localStorage.setItem("currentUser", username);
         window.location.href = "dashboard.html";
       } else {
@@ -65,18 +80,18 @@
     registerBtn.onclick = () => {
       const username = document.getElementById("username").value;
       const password = document.getElementById("password").value;
-      const users = JSON.parse(localStorage.getItem("users") || "{}");
+      let saved = JSON.parse(localStorage.getItem("users") || "{}");
 
       if (username === "" || password === "") {
         alert("Isi semua kolom!");
         return;
       }
 
-      if (users[username]) {
+      if (saved[username]) {
         alert("Username sudah terdaftar.");
       } else {
-        users[username] = password;
-        localStorage.setItem("users", JSON.stringify(users));
+        saved[username] = password;
+        localStorage.setItem("users", JSON.stringify(saved));
         alert("Akun berhasil dibuat. Silakan login.");
       }
     };
