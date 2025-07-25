@@ -12,68 +12,118 @@
       text-align: center;
       padding: 20px;
     }
-
     .reward-table {
-      margin: 20px auto;
+      margin-top: 20px;
+      border-collapse: collapse;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .reward-table td {
       border: 1px solid white;
-      padding: 20px;
-      width: 300px;
-      border-radius: 10px;
-    }
-
-    .reward-table h3 {
-      margin: 10px 0;
+      padding: 10px 20px;
       color: white;
     }
-
-    .reward-value {
-      color: #00ff00;
-      font-size: 24px;
+    .reward-table .value {
+      color: limegreen;
+      font-weight: bold;
     }
-
-    #miningAmount {
-      font-size: 36px;
-      margin: 20px 0;
-      color: #00ff00;
+    #poinDisplay {
+      font-size: 48px;
+      margin: 40px 0;
+      color: limegreen;
     }
-
     button {
-      padding: 12px 24px;
-      margin: 10px;
-      font-size: 16px;
+      padding: 10px 30px;
+      font-size: 18px;
       border: none;
-      border-radius: 8px;
+      border-radius: 5px;
       cursor: pointer;
+      margin-top: 20px;
     }
-
-    #claimButton {
-      background-color: #28a745;
+    #claimBtn {
+      background-color: green;
       color: white;
     }
-
-    #logoutButton {
-      background-color: #dc3545;
+    #logoutBtn {
+      background-color: red;
       color: white;
-      display: block;
-      margin: 20px auto 0;
+      margin-top: 15px;
     }
   </style>
 </head>
 <body>
-  <h2>Selamat datang, <span id="usernameDisplay"></span>!</h2>
+  <h1>Selamat Datang, <span id="user"></span>!</h1>
 
-  <div class="reward-table">
-    <h3>Total Reward</h3>
-    <div class="reward-value" id="totalReward">0</div>
+  <div id="poinDisplay">0</div>
 
-    <h3>24 Jam Reward</h3>
-    <div class="reward-value">1000</div>
-  </div>
+  <table class="reward-table">
+    <tr>
+      <td>Total Reward</td>
+      <td class="value" id="totalReward">0</td>
+    </tr>
+    <tr>
+      <td>24 Jam Reward</td>
+      <td class="value">1000</td>
+    </tr>
+  </table>
 
-  <div id="miningAmount">0</div>
-  <button id="claimButton" disabled>Klaim 24 Jam</button>
-  <button id="logoutButton">Keluar</button>
+  <button id="claimBtn" disabled onclick="claimReward()">CLAIM</button>
+  <br />
+  <button id="logoutBtn" onclick="logout()">Logout</button>
 
-  <script src="dashboard.js"></script>
+  <script>
+    const username = localStorage.getItem('username');
+    if (!username) window.location.href = 'index.html';
+    document.getElementById('user').textContent = username;
+
+    let startTime = localStorage.getItem('startTime');
+    let totalReward = parseInt(localStorage.getItem('totalReward')) || 0;
+    let claimed = localStorage.getItem('claimed') === 'true';
+
+    const poinDisplay = document.getElementById('poinDisplay');
+    const totalRewardDisplay = document.getElementById('totalReward');
+    const claimBtn = document.getElementById('claimBtn');
+
+    if (!startTime) {
+      startTime = Date.now();
+      localStorage.setItem('startTime', startTime);
+      localStorage.setItem('claimed', 'false');
+    }
+
+    function updatePoin() {
+      const now = Date.now();
+      const elapsed = Math.floor((now - startTime) / 1000);
+      let poin = Math.min(elapsed, 1000);
+      poinDisplay.textContent = poin;
+
+      if (poin >= 1000 && !claimed) {
+        claimBtn.disabled = false;
+      } else {
+        claimBtn.disabled = true;
+      }
+    }
+
+    function claimReward() {
+      totalReward += 1000;
+      totalRewardDisplay.textContent = totalReward;
+      localStorage.setItem('totalReward', totalReward);
+      localStorage.setItem('claimed', 'true');
+      claimBtn.disabled = true;
+    }
+
+    function logout() {
+      localStorage.removeItem('username');
+      localStorage.removeItem('startTime');
+      localStorage.removeItem('claimed');
+      window.location.href = 'index.html';
+    }
+
+    // Set total reward awal
+    totalRewardDisplay.textContent = totalReward;
+
+    // Jalankan poin updater
+    updatePoin();
+    setInterval(updatePoin, 1000);
+  </script>
 </body>
 </html>
