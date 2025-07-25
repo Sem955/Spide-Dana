@@ -1,21 +1,24 @@
 // Konfigurasi Supabase
-const supabaseUrl = 'https://YOUR_PROJECT.supabase.co';
-const supabaseKey = 'YOUR_SUPABASE_API_KEY';
+const supabaseUrl = 'https://mppordupklxrmqhrtxrc.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1wcG9yZHVwa2x4cm1xaHJ0eHJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI4NzQ3NjUsImV4cCI6MjA2ODQ1MDc2NX0.RtDugPVzWjIA6TjZmyXw3MI2oamApryHYmLArQq17Jw';
 const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
 // Ambil username dari localStorage
 const username = localStorage.getItem('currentUser');
+if (!username) window.location.href = 'index.html';
+
 const CLAIM_REWARD = 1000;
 const COOLDOWN_HOURS = 24;
 
-const rewardEl = document.getElementById('reward');
-const totalRewardEl = document.getElementById('total-rewards-value');
+const totalRewardEl = document.getElementById('totalReward');
+const dailyRewardEl = document.getElementById('dailyReward');
 const statusText = document.getElementById('statusText');
 const claimBtn = document.getElementById('claimBtn');
 const logoutBtn = document.getElementById('logoutBtn');
 
 let userData = null;
 
+// Ambil data user dari Supabase
 async function fetchUserData() {
   const { data, error } = await supabase
     .from('users')
@@ -24,8 +27,7 @@ async function fetchUserData() {
     .single();
 
   if (error || !data) {
-    console.error('Gagal ambil data:', error);
-    alert("Data user tidak ditemukan.");
+    alert('Gagal ambil data pengguna.');
     return;
   }
 
@@ -33,34 +35,49 @@ async function fetchUserData() {
   updateUI();
 }
 
+// Perbarui tampilan poin
 function updateUI() {
-  const lastClaim = new Date(userData.last_claim_time);
   const now = new Date();
-  const diffHours = (now - lastClaim) / (1000 * 60 * 60);
+  const lastClaim = new Date(userData.last_claim_time || 0);
+  const elapsedMs = now - lastClaim;
+  const maxMs = COOLDOWN_HOURS * 60 * 60 * 1000;
 
-  const canClaim = diffHours >= COOLDOWN_HOURS;
+  let earned = 0;
+  let canClaim = false;
 
-  rewardEl.textContent = canClaim ? CLAIM_REWARD.toFixed(2) : "0.000";
+  if (elapsedMs >= maxMs) {
+    earned = CLAIM_REWARD;
+    canClaim = true;
+  } else {
+    earned = (elapsedMs / maxMs) * CLAIM_REWARD;
+  }
+
+  dailyRewardEl.textContent = earned.toFixed(2);
   totalRewardEl.textContent = userData.total_reward.toFixed(2);
 
   if (canClaim) {
     claimBtn.disabled = false;
-    statusText.textContent = 'Kamu bisa klaim 1000 poin sekarang!';
+    claimBtn.classList.add('enabled');
+    claimBtn.textContent = 'Claim 1000 Poin';
+    statusText.textContent = 'Kamu bisa klaim sekarang!';
   } else {
-    const remaining = (COOLDOWN_HOURS - diffHours).toFixed(2);
     claimBtn.disabled = true;
-    statusText.textContent = `Klaim tersedia dalam ${remaining} jam lagi`;
+    claimBtn.classList.remove('enabled');
+    claimBtn.textContent = 'Claim 1000 Poin';
+    const remaining = CLAIM_REWARD - earned;
+    statusText.textContent = `Menunggu ${remaining.toFixed(2)} poin lagi sebelum klaim.`;
   }
 }
 
-// Fungsi klaim
+// Proses klaim poin
 async function claimReward() {
   const now = new Date().toISOString();
+  const newTotal = userData.total_reward + CLAIM_REWARD;
 
   const { error } = await supabase
     .from('users')
     .update({
-      total_reward: userData.total_reward + CLAIM_REWARD,
+      total_reward: newTotal,
       last_claim_time: now
     })
     .eq('username', username);
@@ -70,26 +87,19 @@ async function claimReward() {
     return;
   }
 
-  await fetchUserData();
+  userData.total_reward = newTotal;
+  userData.last_claim_time = now;
+  updateUI();
 }
 
-// Event listener tombol
-claimBtn.addEventListener('click', async () => {
-  if (!claimBtn.disabled) {
-    await claimReward();
-  }
-});
+// Event
+claimBtn.addEventListener('click', claimReward);
 
-// Tombol logout
 logoutBtn.addEventListener('click', () => {
-  localStorage.clear();
+  localStorage.removeItem('currentUser');
   window.location.href = 'index.html';
 });
 
-// Inisialisasi
-if (!username) {
-  alert("Kamu belum login.");
-  window.location.href = 'index.html';
-} else {
-  fetchUserData();
-}
+// Jalankan awal
+fetchUserData();
+setInterval(fetchUserData, 5000); // Refresh tiap 5 detik
