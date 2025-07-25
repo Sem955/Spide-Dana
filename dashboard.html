@@ -53,7 +53,7 @@
 </head>
 <body>
   <h1>Total Rewards</h1>
-  <div class="points" id="pointDisplay">0</div>
+  <div class="points" id="pointDisplay">0.00</div>
   <button id="claimBtn" disabled>Claim Koin</button>
   <div class="info" id="statusText"></div>
 
@@ -66,9 +66,9 @@
     const startKey = `miningStart_${username}`;
     const totalKey = `totalReward_${username}`;
 
-    const POINT_MAX = 1000;
-    const INTERVAL_SECONDS = 86400 / POINT_MAX; // ~86.4 detik per poin
-    let startTime = localStorage.getItem(startKey);
+    const MAX_POINT = 1000;
+    const TOTAL_SECONDS = 86400; // 24 jam
+    let startTime = parseInt(localStorage.getItem(startKey));
     let totalReward = parseInt(localStorage.getItem(totalKey) || "0");
 
     if (!startTime) {
@@ -78,16 +78,16 @@
 
     function updatePoints() {
       const now = Date.now();
-      const elapsed = (now - startTime) / 1000;
-      const currentPoints = Math.min(Math.floor(elapsed / INTERVAL_SECONDS), POINT_MAX);
-      pointDisplay.textContent = currentPoints;
+      const elapsed = (now - startTime) / 1000; // detik
+      let points = Math.min((elapsed / TOTAL_SECONDS) * MAX_POINT, MAX_POINT);
+      pointDisplay.textContent = points.toFixed(2);
 
-      if (currentPoints >= POINT_MAX) {
+      if (points >= MAX_POINT) {
         claimBtn.disabled = false;
         statusText.textContent = "Sudah bisa klaim!";
       } else {
         claimBtn.disabled = true;
-        const remaining = POINT_MAX - currentPoints;
+        const remaining = (MAX_POINT - points).toFixed(2);
         statusText.textContent = `Menunggu ${remaining} poin lagi untuk klaim.`;
       }
     }
@@ -95,11 +95,11 @@
     claimBtn.onclick = () => {
       const now = Date.now();
       const elapsed = (now - startTime) / 1000;
-      const currentPoints = Math.min(Math.floor(elapsed / INTERVAL_SECONDS), POINT_MAX);
-      if (currentPoints >= POINT_MAX) {
-        totalReward += POINT_MAX;
+      let points = Math.min((elapsed / TOTAL_SECONDS) * MAX_POINT, MAX_POINT);
+      if (points >= MAX_POINT) {
+        totalReward += MAX_POINT;
         localStorage.setItem(totalKey, totalReward);
-        alert(`Kamu berhasil klaim ${POINT_MAX} koin! Total: ${totalReward}`);
+        alert(`Kamu berhasil klaim ${MAX_POINT} koin! Total: ${totalReward}`);
         startTime = Date.now();
         localStorage.setItem(startKey, startTime);
         claimBtn.disabled = true;
