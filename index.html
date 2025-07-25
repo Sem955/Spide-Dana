@@ -1,85 +1,48 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login Game</title>
+  <title>Login Maining</title>
   <style>
     body {
-      background-color: #000;
-      color: #00ff00;
+      background-color: #f1eaf7;
       font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
+      text-align: center;
+      padding: 50px;
     }
-    h1 { margin-bottom: 30px; font-size: 28px; }
     input {
-      width: 300px;
-      padding: 12px;
-      margin: 10px 0;
-      font-size: 16px;
-      border: none;
-      border-radius: 6px;
+      padding: 10px;
+      margin: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
     }
     button {
-      width: 320px;
-      padding: 12px;
-      font-size: 16px;
+      padding: 10px 20px;
       border: none;
-      border-radius: 6px;
+      border-radius: 5px;
+      background-color: #28a745;
+      color: white;
+      font-size: 16px;
       cursor: pointer;
-      margin-top: 10px;
     }
-    #loginBtn { background-color: #1877f2; color: white; }
-    #registerBtn { background-color: transparent; border: 1px solid #00ff00; color: #00ff00; }
   </style>
 </head>
 <body>
-  <h1>Masuk Game</h1>
-  <input type="text" id="username" placeholder="Nomor ponsel atau email" />
-  <input type="password" id="password" placeholder="Kata sandi" />
-  <button id="loginBtn">Login</button>
-  <button id="registerBtn">Buat akun baru</button>
+  <h1>Login</h1>
+  <input type="text" id="username" placeholder="Masukkan Username" />
+  <br />
+  <button onclick="login()">Masuk</button>
 
   <script>
-    const loginBtn = document.getElementById("loginBtn");
-    const registerBtn = document.getElementById("registerBtn");
-
-    loginBtn.onclick = () => {
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
-      const users = JSON.parse(localStorage.getItem("users") || "{}");
-
-      if (users[username] === password) {
-        localStorage.setItem("currentUser", username);
-        window.location.href = "dashboard.html";
+    function login() {
+      const username = document.getElementById('username').value;
+      if (username) {
+        localStorage.setItem('username', username);
+        window.location.href = 'dashboard.html';
       } else {
-        alert("Login gagal: Username atau password salah.");
+        alert('Masukkan username terlebih dahulu');
       }
-    };
-
-    registerBtn.onclick = () => {
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
-      const users = JSON.parse(localStorage.getItem("users") || "{}");
-
-      if (username === "" || password === "") {
-        alert("Isi semua kolom!");
-        return;
-      }
-
-      if (users[username]) {
-        alert("Username sudah terdaftar.");
-      } else {
-        users[username] = password;
-        localStorage.setItem("users", JSON.stringify(users));
-        alert("Akun berhasil dibuat. Silakan login.");
-      }
-    };
+    }
   </script>
 </body>
 </html>
