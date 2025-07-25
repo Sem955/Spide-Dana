@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -8,90 +8,71 @@
     body {
       background-color: #111;
       color: white;
-      font-family: sans-serif;
+      font-family: Arial, sans-serif;
       text-align: center;
-      margin: 0;
-      padding: 0;
-    }
-
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      gap: 20px;
-    }
-
-    .table-rewards {
-      display: flex;
-      gap: 30px;
-      justify-content: center;
-    }
-
-    .reward-box {
-      border: 2px solid white;
-      border-radius: 12px;
       padding: 20px;
-      min-width: 150px;
     }
 
-    .reward-box h3 {
-      margin: 0;
+    .reward-table {
+      margin: 20px auto;
+      border: 1px solid white;
+      padding: 20px;
+      width: 300px;
+      border-radius: 10px;
+    }
+
+    .reward-table h3 {
+      margin: 10px 0;
       color: white;
     }
 
-    .reward-box p {
-      margin: 5px 0 0;
-      font-size: 1.5em;
+    .reward-value {
       color: #00ff00;
+      font-size: 24px;
     }
 
-    #mining {
-      font-size: 2.5em;
+    #miningAmount {
+      font-size: 36px;
+      margin: 20px 0;
       color: #00ff00;
     }
 
     button {
-      padding: 12px 25px;
-      font-size: 1em;
+      padding: 12px 24px;
+      margin: 10px;
+      font-size: 16px;
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
       cursor: pointer;
-      background-color: #4CAF50;
+    }
+
+    #claimButton {
+      background-color: #28a745;
       color: white;
-      margin-top: 10px;
     }
 
-    #logout {
-      background-color: #e74c3c;
+    #logoutButton {
+      background-color: #dc3545;
+      color: white;
+      display: block;
+      margin: 20px auto 0;
     }
-
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2 id="welcome"></h2>
+  <h2>Selamat datang, <span id="usernameDisplay"></span>!</h2>
 
-    <div class="table-rewards">
-      <div class="reward-box">
-        <h3>Total Reward</h3>
-        <p id="totalReward">0</p>
-      </div>
-      <div class="reward-box">
-        <h3>24 Jam Reward</h3>
-        <p>1000</p>
-      </div>
-    </div>
+  <div class="reward-table">
+    <h3>Total Reward</h3>
+    <div class="reward-value" id="totalReward">0</div>
 
-    <div>
-      <h1 id="mining">0</h1>
-      <p id="countdown">Sedang berjalan...</p>
-    </div>
-
-    <button id="claimBtn" disabled>Klaim Poin</button>
-    <button id="logout">Keluar</button>
+    <h3>24 Jam Reward</h3>
+    <div class="reward-value">1000</div>
   </div>
+
+  <div id="miningAmount">0</div>
+  <button id="claimButton" disabled>Klaim 24 Jam</button>
+  <button id="logoutButton">Keluar</button>
 
   <script src="dashboard.js"></script>
 </body>
