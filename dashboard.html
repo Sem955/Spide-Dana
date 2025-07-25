@@ -1,102 +1,97 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard Mining</title>
   <style>
     body {
       background-color: #111;
       color: white;
-      font-family: Arial, sans-serif;
+      font-family: sans-serif;
       text-align: center;
       margin: 0;
-      padding-top: 40px;
+      padding: 0;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      gap: 20px;
+    }
+
+    .table-rewards {
+      display: flex;
+      gap: 30px;
+      justify-content: center;
     }
 
     .reward-box {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-      margin-bottom: 30px;
-    }
-
-    .reward-column {
       border: 2px solid white;
-      padding: 15px 30px;
-      border-radius: 10px;
+      border-radius: 12px;
+      padding: 20px;
       min-width: 150px;
     }
 
-    .reward-column h3 {
+    .reward-box h3 {
       margin: 0;
       color: white;
-      font-size: 18px;
     }
 
-    .reward-column p {
+    .reward-box p {
       margin: 5px 0 0;
-      color: lime;
-      font-size: 20px;
-      font-weight: bold;
+      font-size: 1.5em;
+      color: #00ff00;
     }
 
-    #pointsDisplay {
-      font-size: 48px;
-      font-weight: bold;
-      margin: 30px 0;
-      color: lime;
+    #mining {
+      font-size: 2.5em;
+      color: #00ff00;
     }
 
-    #claimBtn {
-      padding: 10px 25px;
-      background-color: #00cc66;
-      color: white;
+    button {
+      padding: 12px 25px;
+      font-size: 1em;
       border: none;
-      font-size: 18px;
-      border-radius: 6px;
+      border-radius: 10px;
       cursor: pointer;
-      margin-top: 20px;
-    }
-
-    #claimBtn:disabled {
-      background-color: gray;
-      cursor: not-allowed;
-    }
-
-    #countdown {
+      background-color: #4CAF50;
+      color: white;
       margin-top: 10px;
-      font-size: 16px;
     }
 
-    #logoutBtn {
-      margin-top: 30px;
-      background-color: red;
-      color: white;
-      border: none;
-      padding: 10px 25px;
-      border-radius: 6px;
-      cursor: pointer;
+    #logout {
+      background-color: #e74c3c;
     }
+
   </style>
 </head>
 <body>
-  <div class="reward-box">
-    <div class="reward-column">
-      <h3>Total Reward</h3>
-      <p id="totalReward">0</p>
+  <div class="container">
+    <h2 id="welcome"></h2>
+
+    <div class="table-rewards">
+      <div class="reward-box">
+        <h3>Total Reward</h3>
+        <p id="totalReward">0</p>
+      </div>
+      <div class="reward-box">
+        <h3>24 Jam Reward</h3>
+        <p>1000</p>
+      </div>
     </div>
-    <div class="reward-column">
-      <h3>24 Jam Reward</h3>
-      <p>1000</p>
+
+    <div>
+      <h1 id="mining">0</h1>
+      <p id="countdown">Sedang berjalan...</p>
     </div>
+
+    <button id="claimBtn" disabled>Klaim Poin</button>
+    <button id="logout">Keluar</button>
   </div>
-
-  <div id="pointsDisplay">0.00</div>
-  <button id="claimBtn" disabled>Klaim Reward</button>
-  <div id="countdown">Sedang mining...</div>
-
-  <button id="logoutBtn">Keluar</button>
 
   <script src="dashboard.js"></script>
 </body>
