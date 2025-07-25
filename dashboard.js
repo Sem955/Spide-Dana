@@ -1,64 +1,73 @@
-// Konfigurasi Supabase
+// === KONFIGURASI ===
 const supabaseUrl = 'https://YOUR_PROJECT.supabase.co';
 const supabaseKey = 'YOUR_SUPABASE_API_KEY';
 const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
-// Ambil username dari localStorage
 const username = localStorage.getItem('username');
-const CLAIM_REWARD = 1000;
-const COOLDOWN_HOURS = 24;
 
-const rewardEl = document.getElementById('reward');
+// === KONSTANTA ===
+const MAX_REWARD = 1000;
+const SECONDS_IN_24H = 86400;
+const REWARD_PER_SECOND = MAX_REWARD / SECONDS_IN_24H;
+
+let miningReward = 0;
+let canClaim = false;
+let lastClaimTime = null;
+let totalReward = 0;
+
+// === ELEMENT HTML ===
+const miningEl = document.getElementById('mining-reward');
 const totalRewardEl = document.getElementById('total-rewards-value');
-const statusText = document.getElementById('statusText');
 const claimBtn = document.getElementById('claimBtn');
+const statusText = document.getElementById('statusText');
 
-let userData = null;
-
-async function fetchUserData() {
+// === AMBIL DATA USER ===
+async function loadUserData() {
   const { data, error } = await supabase
     .from('users')
     .select('*')
     .eq('username', username)
     .single();
 
-  if (error || !data) {
-    console.error('Gagal ambil data:', error);
-    return;
-  }
-
-  userData = data;
-  updateUI();
-}
-
-function updateUI() {
-  const lastClaim = new Date(userData.last_claim_time);
-  const now = new Date();
-  const diffHours = (now - lastClaim) / (1000 * 60 * 60);
-
-  const canClaim = diffHours >= COOLDOWN_HOURS;
-
-  // Update tampilan poin
-  rewardEl.textContent = userData.total_reward.toFixed(2);
-  totalRewardEl.textContent = userData.total_reward.toFixed(2);
-
-  if (canClaim) {
-    claimBtn.disabled = false;
-    claimBtn.classList.add('enabled');
-    claimBtn.textContent = 'Claim Koin';
-    statusText.textContent = 'Kamu bisa klaim 1000 poin sekarang!';
+  if (data) {
+    lastClaimTime = new Date(data.last_claim_time);
+    totalReward = data.total_reward || 0;
+    totalRewardEl.textContent = totalReward.toFixed(2);
+    startMiningLoop();
   } else {
-    const remaining = CLAIM_REWARD - (diffHours / COOLDOWN_HOURS) * CLAIM_REWARD;
-    claimBtn.disabled = true;
-    claimBtn.classList.remove('enabled');
-    claimBtn.textContent = 'Claim Koin';
-    statusText.textContent = `Menunggu ${remaining.toFixed(2)} poin lagi untuk klaim.`;
+    console.error("Gagal ambil data user:", error);
   }
 }
 
-async function claimReward() {
+// === LOOP MINING REAL-TIME ===
+function startMiningLoop() {
+  setInterval(() => {
+    const now = new Date();
+    const elapsedSeconds = Math.floor((now - lastClaimTime) / 1000);
+
+    if (elapsedSeconds >= SECONDS_IN_24H) {
+      miningReward = MAX_REWARD;
+      canClaim = true;
+      claimBtn.disabled = false;
+      claimBtn.classList.add('enabled');
+      statusText.textContent = "Klaim tersedia! Klik tombol untuk ambil 1000 poin.";
+    } else {
+      miningReward = REWARD_PER_SECOND * elapsedSeconds;
+      canClaim = false;
+      claimBtn.disabled = true;
+      claimBtn.classList.remove('enabled');
+      statusText.textContent = "Menambang... " + miningReward.toFixed(2) + " / 1000";
+    }
+
+    miningEl.textContent = miningReward.toFixed(2);
+  }, 1000);
+}
+
+// === KLAIM KOIN ===
+claimBtn.addEventListener('click', async () => {
+  if (!canClaim) return;
+
   const now = new Date().toISOString();
-  const newTotal = userData.total_reward + CLAIM_REWARD;
+  const newTotal = totalReward + MAX_REWARD;
 
   const { error } = await supabase
     .from('users')
@@ -68,19 +77,18 @@ async function claimReward() {
     })
     .eq('username', username);
 
-  if (error) {
-    alert('Gagal klaim poin.');
-    return;
-  }
-
-  await fetchUserData(); // refresh tampilan
-}
-
-claimBtn.addEventListener('click', async () => {
-  if (!claimBtn.disabled) {
-    await claimReward();
+  if (!error) {
+    miningReward = 0;
+    totalReward = newTotal;
+    totalRewardEl.textContent = totalReward.toFixed(2);
+    lastClaimTime = new Date();
+    claimBtn.disabled = true;
+    claimBtn.classList.remove('enabled');
+    statusText.textContent = "Berhasil klaim. Mining dimulai ulang.";
+  } else {
+    alert("Gagal klaim reward.");
   }
 });
 
-// Jalankan awal
-fetchUserData();
+// === MULAI ===
+loadUserData();
