@@ -15,7 +15,6 @@ const claimBtn = document.getElementById('claimBtn');
 
 let userData = null;
 
-// Ambil data user dari Supabase
 async function fetchUserData() {
   const { data, error } = await supabase
     .from('users')
@@ -39,6 +38,7 @@ function updateUI() {
 
   const canClaim = diffHours >= COOLDOWN_HOURS;
 
+  // Update tampilan poin
   rewardEl.textContent = userData.total_reward.toFixed(2);
   totalRewardEl.textContent = userData.total_reward.toFixed(2);
 
@@ -56,14 +56,14 @@ function updateUI() {
   }
 }
 
-// Fungsi klaim koin
 async function claimReward() {
   const now = new Date().toISOString();
+  const newTotal = userData.total_reward + CLAIM_REWARD;
 
   const { error } = await supabase
     .from('users')
     .update({
-      total_reward: userData.total_reward + CLAIM_REWARD,
+      total_reward: newTotal,
       last_claim_time: now
     })
     .eq('username', username);
@@ -73,15 +73,14 @@ async function claimReward() {
     return;
   }
 
-  await fetchUserData();
+  await fetchUserData(); // refresh tampilan
 }
 
-// Event tombol
 claimBtn.addEventListener('click', async () => {
   if (!claimBtn.disabled) {
     await claimReward();
   }
 });
 
-// Inisialisasi
+// Jalankan awal
 fetchUserData();
