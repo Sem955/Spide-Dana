@@ -13,28 +13,32 @@
       padding: 20px;
     }
 
-    .table-header {
-      display: flex;
-      justify-content: center;
-      gap: 60px;
-      font-weight: bold;
-      margin-bottom: 10px;
+    table {
+      margin: 0 auto 30px;
+      border-collapse: collapse;
       font-size: 18px;
+      width: 80%;
+      max-width: 400px;
     }
 
-    .table-body {
-      display: flex;
-      justify-content: center;
-      gap: 60px;
-      font-size: 24px;
+    th, td {
+      border: 1px solid white;
+      padding: 10px;
+    }
+
+    th {
+      color: white;
+    }
+
+    td {
       color: lime;
-      margin-bottom: 40px;
+      font-weight: bold;
     }
 
     .big-reward {
       font-size: 64px;
       font-weight: bold;
-      margin: 30px 0;
+      margin: 40px 0;
       color: lime;
     }
 
@@ -63,23 +67,25 @@
 <body>
 
   <!-- Tabel Kolom -->
-  <div class="table-header">
-    <div>Total Reward</div>
-    <div>24 Jam Reward</div>
-  </div>
-  <div class="table-body">
-    <div id="total-rewards-value">0</div>
-    <div>1000</div>
-  </div>
+  <table>
+    <tr>
+      <th>Total Reward</th>
+      <th>24 Jam Reward</th>
+    </tr>
+    <tr>
+      <td id="total-rewards-value">0</td>
+      <td>1000</td>
+    </tr>
+  </table>
 
   <!-- Angka besar total poin -->
-  <div class="big-reward" id="reward">0.00</div>
+  <div class="big-reward" id="mining-reward">0.00</div>
 
   <!-- Tombol klaim -->
   <button id="claimBtn" disabled>Claim Koin</button>
 
   <!-- Status countdown -->
-  <div class="status" id="statusText">Menunggu 1000 poin lagi untuk klaim.</div>
+  <div class="status" id="statusText">Menambang...</div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script src="dashboard.js"></script>
