@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard Mining</title>
   <style>
     body {
@@ -11,19 +11,7 @@
       font-family: Arial, sans-serif;
       text-align: center;
       margin: 0;
-      padding-top: 60px;
-    }
-
-    #logoutBtn {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background-color: red;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 6px;
-      cursor: pointer;
+      padding-top: 40px;
     }
 
     .reward-box {
@@ -80,11 +68,19 @@
       margin-top: 10px;
       font-size: 16px;
     }
+
+    #logoutBtn {
+      margin-top: 30px;
+      background-color: red;
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
-  <button id="logoutBtn">Keluar</button>
-
   <div class="reward-box">
     <div class="reward-column">
       <h3>Total Reward</h3>
@@ -97,9 +93,10 @@
   </div>
 
   <div id="pointsDisplay">0.00</div>
-
   <button id="claimBtn" disabled>Klaim Reward</button>
   <div id="countdown">Sedang mining...</div>
+
+  <button id="logoutBtn">Keluar</button>
 
   <script src="dashboard.js"></script>
 </body>
