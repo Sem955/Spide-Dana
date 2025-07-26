@@ -6,239 +6,91 @@
   <title>Dashboard</title>
   <style>
     body {
-      background-color: #4CC6FF;
-      color: #f0f0f0;
       font-family: Arial, sans-serif;
-      margin: 0;
       padding: 20px;
-      min-height: 100vh;
-      box-sizing: border-box;
-      position: relative;
+      background: #111;
+      color: white;
     }
-
-    .rewards-top {
-      display: flex;
-      justify-content: space-around;
-      gap: 20px;
+    .box {
+      background: #222;
+      padding: 20px;
+      border-radius: 10px;
       margin-bottom: 20px;
     }
-
-    .reward-card {
-      background-color: #111;
-      border-radius: 12px;
-      padding: 16px 24px;
-      text-align: center;
-      box-shadow: 0 0 10px #00ff0044;
-      flex: 1;
-    }
-
-    .reward-title {
-      font-size: 16px;
-      margin-bottom: 10px;
-    }
-
-    .reward-value {
-      font-size: 20px;
-      font-weight: bold;
-    }
-
-    #statusText {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .actions {
-      position: fixed;
-      bottom: 20px;
-      left: 0;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      padding: 0 20px;
-      box-sizing: border-box;
-    }
-
-    .actions button {
-      flex: 1;
-      padding: 12px 16px;
-      font-size: 14px;
-      font-weight: bold;
+    input, button {
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
       border: none;
-      border-radius: 8px;
+    }
+    button {
+      background: lime;
+      color: black;
       cursor: pointer;
     }
-
-    #claimBtn:disabled {
-      background-color: gray;
-      cursor: not-allowed;
-    }
-
-    #claimBtn {
-      background-color: #888;
-      color: black;
-    }
-
-    #logoutBtn, #withdrawBtn {
-      background-color: #00ff00;
-      color: black;
-    }
-
     #withdrawForm {
       display: none;
-      margin-top: 20px;
-      text-align: center;
-    }
-
-    #withdrawForm input {
-      padding: 10px;
-      margin: 10px;
-      width: 80%;
-      max-width: 300px;
-      border-radius: 8px;
-      border: none;
-    }
-
-    #withdrawForm button {
-      margin-top: 10px;
-      background-color: #00ff00;
-      color: black;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    #cancelWithdraw {
-      background-color: red !important;
-      color: white !important;
-      margin-left: 10px;
-    }
-
-    #withdrawMessage {
-      margin-top: 10px;
-      font-weight: bold;
-    }
-
-    /* Logo animasi */
-    .logo-dana {
-      display: flex;
-      justify-content: center;
-      margin: 20px 0;
-      animation: float 2s ease-in-out infinite;
-    }
-
-    .logo-dana img {
-      width: 100px;
-      height: auto;
-    }
-
-    @keyframes float {
-      0%, 100% {
-        transform: translateY(0px);
-      }
-      50% {
-        transform: translateY(-10px);
-      }
     }
   </style>
 </head>
 <body>
-  <div class="rewards-top">
-    <div class="reward-card">
-      <div class="reward-title">Total Rewards</div>
-      <div class="reward-value" id="totalRewards">0</div>
-    </div>
-    <div class="reward-card">
-      <div class="reward-title">24h Rewards</div>
-      <div class="reward-value" id="dailyRewards">0.000</div>
-    </div>
+  <div class="box">
+    <h2>Selamat datang di Dashboard</h2>
+    <p><strong>Daily Rewards:</strong> <span id="dailyRewards">0</span></p>
+    <p><strong>Total Rewards:</strong> <span id="totalRewards">0</span></p>
+    <button id="withdrawBtn">Withdraw</button>
   </div>
 
-  <div class="logo-dana">
-    <img src="https://i.postimg.cc/0KZ505rV/file-0000000084f062309e6fd2523e94f3de.png" alt="Logo Dana" />
-  </div>
-
-  <div id="statusText">Memuat data...</div>
-
-  <div class="actions">
-    <button id="claimBtn" disabled>Klaim Poin</button>
-    <button id="logoutBtn">Keluar</button>
-    <button id="withdrawBtn">💸 Withdraw</button>
-  </div>
-
-  <!-- Form Withdraw -->
-  <div id="withdrawForm">
-    <input type="number" id="withdrawAmount" placeholder="Jumlah Poin yang ingin diwithdraw" /><br />
-    <input type="text" id="withdrawDana" placeholder="Nomor Dana kamu" /><br />
+  <div class="box" id="withdrawForm">
+    <h3>Form Withdraw</h3>
+    <input type="number" id="withdrawAmount" placeholder="Jumlah Poin"><br>
+    <input type="text" id="withdrawDana" placeholder="Nomor Dana"><br>
     <button id="submitWithdraw">Submit Withdraw</button>
-    <button id="cancelWithdraw">Batal</button>
-    <div id="withdrawMessage"></div>
+    <p id="withdrawMessage"></p>
   </div>
 
   <script>
-    const username = localStorage.getItem('currentUser');
-    if (!username) window.location.href = 'index.html';
+    const supabase = supabase.createClient(
+      'https://mppordupklxrmqhrtxrc.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1wcG9yZHVwa2x4cm1xaHJ0eHJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI4NzQ3NjUsImV4cCI6MjA2ODQ1MDc2NX0.RtDugPVzWjIA6TjZmyXw3MI2oamApryHYmLArQq17Jw'
+    );
 
-    const CLAIM_REWARD = 1000;
-    const COOLDOWN_MS = 24 * 60 * 60 * 1000;
+    const startTime = localStorage.getItem('miningStart') || Date.now();
+    localStorage.setItem('miningStart', startTime);
 
-    const totalEl = document.getElementById('totalRewards');
-    const dailyEl = document.getElementById('dailyRewards');
-    const claimBtn = document.getElementById('claimBtn');
-    const statusText = document.getElementById('statusText');
-    const logoutBtn = document.getElementById('logoutBtn');
+    const username = localStorage.getItem('username') || 'guest';
+    let totalReward = parseFloat(localStorage.getItem(username + "_totalReward")) || 0;
 
-    let lastClaim = localStorage.getItem(username + "_lastClaim");
-    let totalReward = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
-
-    function updateUI() {
+    function updateRewards() {
       const now = Date.now();
-      let last = lastClaim ? parseInt(lastClaim) : 0;
-      let elapsed = now - last;
-      let canClaim = elapsed >= COOLDOWN_MS;
+      const elapsed = now - startTime;
+      const totalMillisIn24h = 24 * 60 * 60 * 1000;
 
-      if (canClaim) {
-        dailyEl.textContent = CLAIM_REWARD.toFixed(3);
-        claimBtn.disabled = false;
-        statusText.textContent = "Kamu bisa klaim sekarang!";
-      } else {
-        let progress = elapsed / COOLDOWN_MS;
-        dailyEl.textContent = (CLAIM_REWARD * progress).toFixed(3);
-        claimBtn.disabled = true;
-        let sisa = Math.ceil((COOLDOWN_MS - elapsed) / 3600000);
-        statusText.textContent = `Tunggu ${sisa} jam lagi untuk klaim berikutnya.`;
-      }
+      let progress = elapsed / totalMillisIn24h;
+      if (progress > 1) progress = 1;
 
-      totalEl.textContent = totalReward.toFixed(3);
+      const dailyReward = 1000 * progress;
+      document.getElementById('dailyRewards').innerText = dailyReward.toFixed(3);
     }
 
-    claimBtn.onclick = () => {
-      totalReward += CLAIM_REWARD;
-      localStorage.setItem(username + "_totalReward", totalReward);
-      lastClaim = Date.now();
-      localStorage.setItem(username + "_lastClaim", lastClaim);
-      updateUI();
-    };
+    function updateUI() {
+      document.getElementById('totalRewards').innerText = totalReward.toFixed(3);
+    }
 
-    logoutBtn.onclick = () => {
-      localStorage.removeItem("currentUser");
-      window.location.href = "index.html";
-    };
+    updateRewards();
+    updateUI();
 
     const withdrawBtn = document.getElementById("withdrawBtn");
     const withdrawForm = document.getElementById("withdrawForm");
     const submitWithdraw = document.getElementById("submitWithdraw");
-    const cancelWithdraw = document.getElementById("cancelWithdraw");
     const withdrawMessage = document.getElementById("withdrawMessage");
 
     withdrawBtn.onclick = () => {
       withdrawForm.style.display = "block";
-      withdrawMessage.textContent = "";
     };
 
     submitWithdraw.onclick = () => {
-      const amount = document.getElementById("withdrawAmount").value;
+      const amount = parseFloat(document.getElementById("withdrawAmount").value);
       const dana = document.getElementById("withdrawDana").value;
 
       if (!amount || !dana) {
@@ -247,27 +99,23 @@
         return;
       }
 
+      if (amount > totalReward) {
+        withdrawMessage.textContent = "Poin tidak cukup!";
+        withdrawMessage.style.color = "orange";
+        return;
+      }
+
+      // Kurangi poin
+      totalReward -= amount;
+      localStorage.setItem(username + "_totalReward", totalReward);
+      updateUI();
+
       withdrawMessage.textContent = "Withdraw berhasil!";
       withdrawMessage.style.color = "lime";
 
       document.getElementById("withdrawAmount").value = "";
       document.getElementById("withdrawDana").value = "";
-
-      setTimeout(() => {
-        withdrawForm.style.display = "none";
-        withdrawMessage.textContent = "";
-      }, 1000);
     };
-
-    cancelWithdraw.onclick = () => {
-      withdrawForm.style.display = "none";
-      withdrawMessage.textContent = "";
-      document.getElementById("withdrawAmount").value = "";
-      document.getElementById("withdrawDana").value = "";
-    };
-
-    updateUI();
-    setInterval(updateUI, 1000);
   </script>
 </body>
 </html>
