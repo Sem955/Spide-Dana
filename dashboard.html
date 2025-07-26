@@ -13,7 +13,7 @@
       padding: 20px;
       min-height: 100vh;
       box-sizing: border-box;
-      position: relative;
+      text-align: center;
     }
 
     .rewards-top {
@@ -44,7 +44,19 @@
 
     #statusText {
       text-align: center;
-      margin-bottom: 20px;
+      margin: 20px 0;
+    }
+
+    .logo-dana {
+      margin: 20px auto;
+      width: 100px;
+      animation: float 2s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
     }
 
     .actions {
@@ -124,38 +136,9 @@
       margin-top: 10px;
       font-weight: bold;
     }
-
-    /* Logo Dana animasi */
-    .logo-dana {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      animation: floating 2s ease-in-out infinite;
-      z-index: 1;
-    }
-
-    .logo-dana img {
-      width: 100px;
-      height: auto;
-    }
-
-    @keyframes floating {
-      0%, 100% {
-        transform: translate(-50%, -50%) translateY(0px);
-      }
-      50% {
-        transform: translate(-50%, -50%) translateY(-10px);
-      }
-    }
   </style>
 </head>
 <body>
-  <!-- Logo Dana -->
-  <div class="logo-dana">
-    <img src="https://i.postimg.cc/0KZ505rV/file-0000000084f062309e6fd2523e94f3de.png" alt="Logo Dana">
-  </div>
-
   <div class="rewards-top">
     <div class="reward-card">
       <div class="reward-title">Total Rewards</div>
@@ -166,6 +149,9 @@
       <div class="reward-value" id="dailyRewards">0.000</div>
     </div>
   </div>
+
+  <!-- Logo Dana bergerak -->
+  <img class="logo-dana" src="https://i.postimg.cc/0KZ505rV/file-0000000084f062309e6fd2523e94f3de.png" alt="Logo Dana" />
 
   <div id="statusText">Memuat data...</div>
 
