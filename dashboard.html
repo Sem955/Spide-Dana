@@ -13,7 +13,22 @@
       padding: 20px;
       min-height: 100vh;
       box-sizing: border-box;
+    }
+
+    .logo-container {
       text-align: center;
+      margin: 20px 0;
+    }
+
+    .logo-container img {
+      width: 120px;
+      animation: float 2s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
     }
 
     .rewards-top {
@@ -43,18 +58,8 @@
     }
 
     #statusText {
-      margin: 20px 0;
-    }
-
-    .logo-dana {
-      width: 100px;
-      height: auto;
-      animation: float 3s ease-in-out infinite;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-15px); }
+      text-align: center;
+      margin-bottom: 20px;
     }
 
     .actions {
@@ -102,6 +107,7 @@
     #withdrawForm {
       display: none;
       margin-top: 20px;
+      text-align: center;
     }
 
     #withdrawForm input {
@@ -136,6 +142,11 @@
   </style>
 </head>
 <body>
+  <!-- Logo Dana -->
+  <div class="logo-container">
+    <img src="https://i.imgur.com/9Z6KdZW.png" alt="Logo Dana" />
+  </div>
+
   <div class="rewards-top">
     <div class="reward-card">
       <div class="reward-title">Total Rewards</div>
@@ -147,8 +158,6 @@
     </div>
   </div>
 
-  <img class="logo-dana" src="https://i.postimg.cc/0KZ505rV/file-0000000084f062309e6fd2523e94f3de.png" alt="Logo Dana" />
-
   <div id="statusText">Memuat data...</div>
 
   <div class="actions">
@@ -157,6 +166,7 @@
     <button id="withdrawBtn">💸 Withdraw</button>
   </div>
 
+  <!-- Form Withdraw -->
   <div id="withdrawForm">
     <input type="number" id="withdrawAmount" placeholder="Jumlah Poin yang ingin diwithdraw" /><br />
     <input type="text" id="withdrawDana" placeholder="Nomor Dana kamu" /><br />
