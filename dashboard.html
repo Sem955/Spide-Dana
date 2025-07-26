@@ -46,6 +46,16 @@
       margin-bottom: 20px;
     }
 
+    .video-container {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .video-container video {
+      max-width: 90%;
+      border-radius: 12px;
+    }
+
     .actions {
       position: fixed;
       bottom: 20px;
@@ -140,6 +150,14 @@
 
   <div id="statusText">Memuat data...</div>
 
+  <!-- 🎥 Video ditampilkan di tengah -->
+  <div class="video-container">
+    <video autoplay loop muted playsinline>
+      <source src="vecteezy_digital-wire-motherboard-in-4k-cgi_1798640.mp4" type="video/mp4">
+      Browser kamu tidak mendukung video HTML5.
+    </video>
+  </div>
+
   <div class="actions">
     <button id="claimBtn" disabled>Klaim Poin</button>
     <button id="logoutBtn">Keluar</button>
@@ -230,11 +248,9 @@
       withdrawMessage.textContent = "Withdraw berhasil!";
       withdrawMessage.style.color = "lime";
 
-      // Kosongkan input
       document.getElementById("withdrawAmount").value = "";
       document.getElementById("withdrawDana").value = "";
 
-      // Setelah 1 detik, sembunyikan form dan hapus pesan
       setTimeout(() => {
         withdrawForm.style.display = "none";
         withdrawMessage.textContent = "";
