@@ -1,3 +1,7 @@
+const supabase = supabase.createClient(
+  'https://mppordupklxrmqhrtxrc.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1wcG9yZHVwa2x4cm1xaHJ0eHJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI4NzQ3NjUsImV4cCI6MjA2ODQ1MDc2NX0.RtDugPVzWjIA6TjZmyXw3MI2oamApryHYmLArQq17Jw'
+);
 // Simulasi pertumbuhan reward dari 0 ke 1000 dalam 24 jam
 const startTime = localStorage.getItem('miningStart') || Date.now();
 localStorage.setItem('miningStart', startTime);
