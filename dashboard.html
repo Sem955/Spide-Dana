@@ -13,6 +13,7 @@
       padding: 20px;
       min-height: 100vh;
       box-sizing: border-box;
+      position: relative;
     }
 
     .rewards-top {
@@ -39,19 +40,6 @@
     .reward-value {
       font-size: 20px;
       font-weight: bold;
-    }
-
-    .coin-logo {
-      display: block;
-      margin: 20px auto;
-      width: 80px;
-      animation: float 3s ease-in-out infinite;
-    }
-
-    @keyframes float {
-      0% { transform: translateY(0px); }
-      50% { transform: translateY(-15px); }
-      100% { transform: translateY(0px); }
     }
 
     #statusText {
@@ -136,9 +124,32 @@
       margin-top: 10px;
       font-weight: bold;
     }
+
+    /* Logo Dana */
+    .logo-container {
+      text-align: center;
+      margin-bottom: 20px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .logo-container img {
+      width: 100px;
+      height: 100px;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+      100% { transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
+  <!-- Logo Dana -->
+  <div class="logo-container">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Logo_dana_blue.svg/1024px-Logo_dana_blue.svg.png" alt="Logo Dana">
+  </div>
+
   <div class="rewards-top">
     <div class="reward-card">
       <div class="reward-title">Total Rewards</div>
@@ -149,10 +160,6 @@
       <div class="reward-value" id="dailyRewards">0.000</div>
     </div>
   </div>
-
-  <!-- Logo Dana Bergerak -->
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Logo_DANA.svg/512px-Logo_DANA.svg.png"
-       alt="Logo Dana" class="coin-logo" />
 
   <div id="statusText">Memuat data...</div>
 
