@@ -41,6 +41,19 @@
       font-weight: bold;
     }
 
+    .coin-logo {
+      display: block;
+      margin: 20px auto;
+      width: 80px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+      100% { transform: translateY(0px); }
+    }
+
     #statusText {
       text-align: center;
       margin-bottom: 20px;
@@ -136,6 +149,10 @@
       <div class="reward-value" id="dailyRewards">0.000</div>
     </div>
   </div>
+
+  <!-- Logo Dana Bergerak -->
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Logo_DANA.svg/512px-Logo_DANA.svg.png"
+       alt="Logo Dana" class="coin-logo" />
 
   <div id="statusText">Memuat data...</div>
 
