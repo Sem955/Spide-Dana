@@ -54,31 +54,33 @@
       background-color: gray;
       cursor: not-allowed;
     }
+
+    /* Form withdraw */
     #withdrawForm {
       display: none;
       margin-top: 20px;
-      padding: 20px;
-      background-color: #111;
-      border-radius: 12px;
-      box-shadow: 0 0 10px #00ff0044;
-      width: 300px;
-      margin-left: auto;
-      margin-right: auto;
+      text-align: center;
     }
     #withdrawForm input {
-      width: 100%;
       padding: 10px;
-      margin-bottom: 12px;
-      border-radius: 6px;
+      margin: 10px;
+      width: 80%;
+      max-width: 300px;
+      border-radius: 8px;
       border: none;
-      font-size: 16px;
     }
     #withdrawForm button {
-      width: 100%;
+      margin-top: 10px;
+      background-color: #00ff00;
+      color: black;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
     }
     #withdrawMessage {
       margin-top: 10px;
-      text-align: center;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -101,9 +103,10 @@
     <button id="withdrawBtn">💸 Withdraw</button>
   </div>
 
+  <!-- Form Withdraw -->
   <div id="withdrawForm">
-    <input type="number" id="withdrawAmount" placeholder="Jumlah Poin" />
-    <input type="text" id="withdrawDana" placeholder="Nomor DANA" />
+    <input type="number" id="withdrawAmount" placeholder="Jumlah Poin yang ingin diwithdraw" /><br />
+    <input type="text" id="withdrawDana" placeholder="Nomor Dana kamu" /><br />
     <button id="submitWithdraw">Submit Withdraw</button>
     <div id="withdrawMessage"></div>
   </div>
@@ -158,9 +161,6 @@
       window.location.href = "index.html";
     };
 
-    updateUI();
-    setInterval(updateUI, 1000);
-
     // Withdraw Logic
     const withdrawBtn = document.getElementById("withdrawBtn");
     const withdrawForm = document.getElementById("withdrawForm");
@@ -177,7 +177,7 @@
       const dana = document.getElementById("withdrawDana").value;
 
       if (!amount || !dana) {
-        withdrawMessage.textContent = "Harap isi semua data!";
+        withdrawMessage.textContent = "Harap isi semua field!";
         withdrawMessage.style.color = "red";
         return;
       }
@@ -185,12 +185,19 @@
       withdrawMessage.textContent = "Withdraw berhasil!";
       withdrawMessage.style.color = "lime";
 
+      // Kosongkan input
       document.getElementById("withdrawAmount").value = "";
       document.getElementById("withdrawDana").value = "";
 
-      // Sembunyikan form setelah submit
-      withdrawForm.style.display = "none";
+      // Setelah 1 detik, sembunyikan form dan hapus pesan
+      setTimeout(() => {
+        withdrawForm.style.display = "none";
+        withdrawMessage.textContent = "";
+      }, 1000);
     };
+
+    updateUI();
+    setInterval(updateUI, 1000);
   </script>
 </body>
 </html>
