@@ -22,12 +22,35 @@ function updateRewards() {
   document.getElementById('totalRewards').innerText = total.toFixed(3);
 }
 
-// ✅ Tambahkan ini agar tombol bekerja
+// ✅ Tambahkan ini agar tombol bekerja dan poin berkurang
 function handleWithdraw() {
-  alert("Fitur withdraw sedang dalam pengembangan.");
+  const withdrawAmountStr = prompt("Masukkan jumlah poin yang ingin di-withdraw:");
+  if (!withdrawAmountStr) return;
+
+  const withdrawAmount = parseFloat(withdrawAmountStr);
+  if (isNaN(withdrawAmount) || withdrawAmount <= 0) {
+    alert("Jumlah tidak valid.");
+    return;
+  }
+
+  const currentTotal = parseFloat(localStorage.getItem('totalRewards') || 0);
+  if (withdrawAmount > currentTotal) {
+    alert("Poin tidak cukup.");
+    return;
+  }
+
+  const newTotal = currentTotal - withdrawAmount;
+  localStorage.setItem('totalRewards', newTotal.toFixed(3));
+  document.getElementById('totalRewards').innerText = newTotal.toFixed(3);
+
+  alert("Withdraw berhasil sejumlah " + withdrawAmount.toFixed(3) + " poin.");
 }
 
 const withdrawBtn = document.getElementById("withdrawBtn");
 if (withdrawBtn) {
   withdrawBtn.onclick = handleWithdraw;
 }
+
+// ✅ Jalankan update awal saat halaman dibuka
+updateRewards();
+setInterval(updateRewards, 5000); // Perbarui setiap 5 detik
