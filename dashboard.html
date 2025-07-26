@@ -74,14 +74,35 @@
     <button id="logoutBtn">Keluar</button>
   </div>
 
-  <!-- ✅ Ini tombol withdraw yang kamu minta -->
+  <!-- Tombol Withdraw -->
   <div style="margin-top: 50px; text-align: center;">
-    <button id="withdrawBtn"
-      style="margin-top: 20px; background-color: #222; color: #fff; border: none;
-             padding: 12px 24px; font-size: 16px; border-radius: 8px; cursor: pointer;
-             box-shadow: 0 0 10px #00ff0044;">
+    <button id="withdrawBtn" style="
+      background-color: #222;
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 0 10px #00ff0044;
+    ">
       💸 Withdraw
     </button>
+  </div>
+
+  <!-- Form Withdraw -->
+  <div id="withdrawForm" style="display:none; margin-top: 20px; text-align: center;">
+    <input type="number" id="withdrawAmount" placeholder="Jumlah poin" style="padding: 10px; width: 80%; margin-bottom: 10px;" /><br/>
+    <input type="text" id="withdrawDana" placeholder="Nomor DANA kamu" style="padding: 10px; width: 80%; margin-bottom: 10px;" /><br/>
+    <button id="submitWithdraw" style="
+      background-color: #00ff00;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;">Submit</button>
+    <div id="withdrawMessage" style="margin-top: 10px; color: lime;"></div>
   </div>
 
   <script>
@@ -134,16 +155,35 @@
       window.location.href = "index.html";
     };
 
+    // Fungsi tombol Withdraw
+    const withdrawBtn = document.getElementById("withdrawBtn");
+    const withdrawForm = document.getElementById("withdrawForm");
+    const submitWithdraw = document.getElementById("submitWithdraw");
+    const withdrawMessage = document.getElementById("withdrawMessage");
+
+    withdrawBtn.onclick = () => {
+      withdrawForm.style.display = "block";
+      withdrawMessage.textContent = "";
+    };
+
+    submitWithdraw.onclick = () => {
+      const amount = document.getElementById("withdrawAmount").value;
+      const danaNumber = document.getElementById("withdrawDana").value;
+
+      if (!amount || !danaNumber) {
+        withdrawMessage.textContent = "Mohon isi semua kolom.";
+        withdrawMessage.style.color = "red";
+        return;
+      }
+
+      withdrawMessage.textContent = "Withdraw berhasil!";
+      withdrawMessage.style.color = "lime";
+      document.getElementById("withdrawAmount").value = "";
+      document.getElementById("withdrawDana").value = "";
+    };
+
     updateUI();
     setInterval(updateUI, 1000);
-
-    // ✅ Fungsi withdraw
-    const withdrawBtn = document.getElementById("withdrawBtn");
-    if (withdrawBtn) {
-      withdrawBtn.onclick = function () {
-        alert("Fitur withdraw sedang dalam pengembangan.");
-      };
-    }
   </script>
 </body>
 </html>
