@@ -43,20 +43,18 @@
     }
 
     #statusText {
-      text-align: center;
       margin: 20px 0;
     }
 
     .logo-dana {
-      margin: 20px auto;
       width: 100px;
-      animation: float 2s ease-in-out infinite;
+      height: auto;
+      animation: float 3s ease-in-out infinite;
     }
 
     @keyframes float {
-      0% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-      100% { transform: translateY(0); }
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
     }
 
     .actions {
@@ -104,7 +102,6 @@
     #withdrawForm {
       display: none;
       margin-top: 20px;
-      text-align: center;
     }
 
     #withdrawForm input {
@@ -150,7 +147,6 @@
     </div>
   </div>
 
-  <!-- Logo Dana bergerak -->
   <img class="logo-dana" src="https://i.postimg.cc/0KZ505rV/file-0000000084f062309e6fd2523e94f3de.png" alt="Logo Dana" />
 
   <div id="statusText">Memuat data...</div>
@@ -161,7 +157,6 @@
     <button id="withdrawBtn">💸 Withdraw</button>
   </div>
 
-  <!-- Form Withdraw -->
   <div id="withdrawForm">
     <input type="number" id="withdrawAmount" placeholder="Jumlah Poin yang ingin diwithdraw" /><br />
     <input type="text" id="withdrawDana" placeholder="Nomor Dana kamu" /><br />
