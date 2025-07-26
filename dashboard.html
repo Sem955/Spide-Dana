@@ -267,5 +267,38 @@
     updateUI();
     setInterval(updateUI, 1000);
   </script>
+  submitWithdraw.onclick = () => {
+  const amount = parseFloat(document.getElementById("withdrawAmount").value);
+  const dana = document.getElementById("withdrawDana").value;
+
+  if (!amount || !dana) {
+    withdrawMessage.textContent = "Harap isi semua field!";
+    withdrawMessage.style.color = "red";
+    return;
+  }
+
+  if (amount > totalReward) {
+    withdrawMessage.textContent = "Poin tidak cukup untuk withdraw!";
+    withdrawMessage.style.color = "red";
+    return;
+  }
+
+  // Kurangi poin user
+  totalReward -= amount;
+  localStorage.setItem(username + "_totalReward", totalReward);
+
+  withdrawMessage.textContent = "Withdraw berhasil!";
+  withdrawMessage.style.color = "lime";
+
+  document.getElementById("withdrawAmount").value = "";
+  document.getElementById("withdrawDana").value = "";
+
+  updateUI();
+
+  setTimeout(() => {
+    withdrawForm.style.display = "none";
+    withdrawMessage.textContent = "";
+  }, 1000);
+};
 </body>
 </html>
