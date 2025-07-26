@@ -236,6 +236,9 @@
     };
 
     submitWithdraw.onclick = () => {
+      sendTelegramNotification(
+  `📤 Withdraw Baru!\n\nUser: ${username}\nJumlah: ${amount} poin\nNomor DANA: ${dana}`
+);
       const amount = parseFloat(document.getElementById("withdrawAmount").value);
       const dana = document.getElementById("withdrawDana").value;
 
