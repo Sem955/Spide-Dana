@@ -46,16 +46,6 @@
       margin-bottom: 20px;
     }
 
-    .video-container {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .video-container video {
-      max-width: 90%;
-      border-radius: 12px;
-    }
-
     .actions {
       position: fixed;
       bottom: 20px;
@@ -88,17 +78,12 @@
       color: black;
     }
 
-    #logoutBtn {
-      background-color: #00ff00;
-      color: black;
-    }
-
+    #logoutBtn,
     #withdrawBtn {
       background-color: #00ff00;
       color: black;
     }
 
-    /* Form withdraw */
     #withdrawForm {
       display: none;
       margin-top: 20px;
@@ -134,6 +119,19 @@
       margin-top: 10px;
       font-weight: bold;
     }
+
+    /* Tambahan video */
+    .video-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    video {
+      max-width: 600px;
+      width: 100%;
+      border-radius: 12px;
+    }
   </style>
 </head>
 <body>
@@ -148,15 +146,15 @@
     </div>
   </div>
 
-  <div id="statusText">Memuat data...</div>
-
-  <!-- 🎥 Video ditampilkan di tengah -->
+  <!-- VIDEO DI SINI -->
   <div class="video-container">
     <video autoplay loop muted playsinline>
-      <source src="vecteezy_digital-wire-motherboard-in-4k-cgi_1798640.mp4" type="video/mp4">
+      <source src="/vecteezy_digital-wire-motherboard-in-4k-cgi_1798640.mp4" type="video/mp4">
       Browser kamu tidak mendukung video HTML5.
     </video>
   </div>
+
+  <div id="statusText">Memuat data...</div>
 
   <div class="actions">
     <button id="claimBtn" disabled>Klaim Poin</button>
@@ -164,7 +162,6 @@
     <button id="withdrawBtn">💸 Withdraw</button>
   </div>
 
-  <!-- Form Withdraw -->
   <div id="withdrawForm">
     <input type="number" id="withdrawAmount" placeholder="Jumlah Poin yang ingin diwithdraw" /><br />
     <input type="text" id="withdrawDana" placeholder="Nomor Dana kamu" /><br />
@@ -223,7 +220,6 @@
       window.location.href = "index.html";
     };
 
-    // Withdraw Logic
     const withdrawBtn = document.getElementById("withdrawBtn");
     const withdrawForm = document.getElementById("withdrawForm");
     const submitWithdraw = document.getElementById("submitWithdraw");
