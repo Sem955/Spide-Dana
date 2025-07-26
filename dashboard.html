@@ -1,203 +1,107 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard</title>
-  <style>
-    body {
-      background-color: #000;
-      color: #00ff00;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-    }
-    .rewards-top {
-      display: flex;
-      justify-content: space-around;
-      gap: 20px;
-      margin-bottom: 20px;
-    }
-    .reward-card {
-      background-color: #111;
-      border-radius: 12px;
-      padding: 16px 24px;
-      text-align: center;
-      box-shadow: 0 0 10px #00ff0044;
-      flex: 1;
-    }
-    .reward-title {
-      font-size: 16px;
-      margin-bottom: 10px;
-    }
-    .reward-value {
-      font-size: 20px;
-      font-weight: bold;
-    }
-    .actions {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 30px;
-      gap: 10px;
-    }
-    button {
-      background-color: #00ff00;
-      color: black;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    button:disabled {
-      background-color: gray;
-      cursor: not-allowed;
-    }
+<!-- ... semua bagian sebelum ini tetap sama ... -->
 
-    /* Form withdraw */
-    #withdrawForm {
-      display: none;
-      margin-top: 20px;
-      text-align: center;
-    }
-    #withdrawForm input {
-      padding: 10px;
-      margin: 10px;
-      width: 80%;
-      max-width: 300px;
-      border-radius: 8px;
-      border: none;
-    }
-    #withdrawForm button {
-      margin-top: 10px;
-      background-color: #00ff00;
-      color: black;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    #withdrawMessage {
-      margin-top: 10px;
-      font-weight: bold;
-    }
-  </style>
-</head>
-<body>
-  <div class="rewards-top">
-    <div class="reward-card">
-      <div class="reward-title">Total Rewards</div>
-      <div class="reward-value" id="totalRewards">0</div>
-    </div>
-    <div class="reward-card">
-      <div class="reward-title">24h Rewards</div>
-      <div class="reward-value" id="dailyRewards">0.000</div>
-    </div>
-  </div>
-
-  <div class="actions">
-    <div id="statusText">Memuat data...</div>
-    <button id="claimBtn" disabled>Klaim Poin</button>
-    <button id="logoutBtn">Keluar</button>
-    <button id="withdrawBtn">💸 Withdraw</button>
-  </div>
-
-  <!-- Form Withdraw -->
-  <div id="withdrawForm">
-    <input type="number" id="withdrawAmount" placeholder="Jumlah Poin yang ingin diwithdraw" /><br />
-    <input type="text" id="withdrawDana" placeholder="Nomor Dana kamu" /><br />
+<!-- Form Withdraw -->
+<div id="withdrawForm">
+  <input type="number" id="withdrawAmount" placeholder="Jumlah Poin yang ingin diwithdraw" /><br />
+  <input type="text" id="withdrawDana" placeholder="Nomor Dana kamu" /><br />
+  <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
     <button id="submitWithdraw">Submit Withdraw</button>
-    <div id="withdrawMessage"></div>
+    <button id="cancelWithdraw" style="background-color: #444; color: white;">Batalkan</button>
   </div>
+  <div id="withdrawMessage"></div>
+</div>
 
-  <script>
-    const username = localStorage.getItem('currentUser');
-    if (!username) window.location.href = 'index.html';
+<script>
+  const username = localStorage.getItem('currentUser');
+  if (!username) window.location.href = 'index.html';
 
-    const CLAIM_REWARD = 1000;
-    const COOLDOWN_MS = 24 * 60 * 60 * 1000;
+  const CLAIM_REWARD = 1000;
+  const COOLDOWN_MS = 24 * 60 * 60 * 1000;
 
-    const totalEl = document.getElementById('totalRewards');
-    const dailyEl = document.getElementById('dailyRewards');
-    const claimBtn = document.getElementById('claimBtn');
-    const statusText = document.getElementById('statusText');
-    const logoutBtn = document.getElementById('logoutBtn');
+  const totalEl = document.getElementById('totalRewards');
+  const dailyEl = document.getElementById('dailyRewards');
+  const claimBtn = document.getElementById('claimBtn');
+  const statusText = document.getElementById('statusText');
+  const logoutBtn = document.getElementById('logoutBtn');
 
-    let lastClaim = localStorage.getItem(username + "_lastClaim");
-    let totalReward = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
+  let lastClaim = localStorage.getItem(username + "_lastClaim");
+  let totalReward = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
 
-    function updateUI() {
-      const now = Date.now();
-      let last = lastClaim ? parseInt(lastClaim) : 0;
-      let elapsed = now - last;
-      let canClaim = elapsed >= COOLDOWN_MS;
+  function updateUI() {
+    const now = Date.now();
+    let last = lastClaim ? parseInt(lastClaim) : 0;
+    let elapsed = now - last;
+    let canClaim = elapsed >= COOLDOWN_MS;
 
-      if (canClaim) {
-        dailyEl.textContent = CLAIM_REWARD.toFixed(3);
-        claimBtn.disabled = false;
-        statusText.textContent = "Kamu bisa klaim sekarang!";
-      } else {
-        let progress = elapsed / COOLDOWN_MS;
-        dailyEl.textContent = (CLAIM_REWARD * progress).toFixed(3);
-        claimBtn.disabled = true;
-        let sisa = Math.ceil((COOLDOWN_MS - elapsed) / 3600000);
-        statusText.textContent = `Tunggu ${sisa} jam lagi untuk klaim berikutnya.`;
-      }
-
-      totalEl.textContent = totalReward.toFixed(3);
+    if (canClaim) {
+      dailyEl.textContent = CLAIM_REWARD.toFixed(3);
+      claimBtn.disabled = false;
+      statusText.textContent = "Kamu bisa klaim sekarang!";
+    } else {
+      let progress = elapsed / COOLDOWN_MS;
+      dailyEl.textContent = (CLAIM_REWARD * progress).toFixed(3);
+      claimBtn.disabled = true;
+      let sisa = Math.ceil((COOLDOWN_MS - elapsed) / 3600000);
+      statusText.textContent = `Tunggu ${sisa} jam lagi untuk klaim berikutnya.`;
     }
 
-    claimBtn.onclick = () => {
-      totalReward += CLAIM_REWARD;
-      localStorage.setItem(username + "_totalReward", totalReward);
-      lastClaim = Date.now();
-      localStorage.setItem(username + "_lastClaim", lastClaim);
-      updateUI();
-    };
+    totalEl.textContent = totalReward.toFixed(3);
+  }
 
-    logoutBtn.onclick = () => {
-      localStorage.removeItem("currentUser");
-      window.location.href = "index.html";
-    };
-
-    // Withdraw Logic
-    const withdrawBtn = document.getElementById("withdrawBtn");
-    const withdrawForm = document.getElementById("withdrawForm");
-    const submitWithdraw = document.getElementById("submitWithdraw");
-    const withdrawMessage = document.getElementById("withdrawMessage");
-
-    withdrawBtn.onclick = () => {
-      withdrawForm.style.display = "block";
-      withdrawMessage.textContent = "";
-    };
-
-    submitWithdraw.onclick = () => {
-      const amount = document.getElementById("withdrawAmount").value;
-      const dana = document.getElementById("withdrawDana").value;
-
-      if (!amount || !dana) {
-        withdrawMessage.textContent = "Harap isi semua field!";
-        withdrawMessage.style.color = "red";
-        return;
-      }
-
-      withdrawMessage.textContent = "Withdraw berhasil!";
-      withdrawMessage.style.color = "lime";
-
-      // Kosongkan input
-      document.getElementById("withdrawAmount").value = "";
-      document.getElementById("withdrawDana").value = "";
-
-      // Setelah 1 detik, sembunyikan form dan hapus pesan
-      setTimeout(() => {
-        withdrawForm.style.display = "none";
-        withdrawMessage.textContent = "";
-      }, 1000);
-    };
-
+  claimBtn.onclick = () => {
+    totalReward += CLAIM_REWARD;
+    localStorage.setItem(username + "_totalReward", totalReward);
+    lastClaim = Date.now();
+    localStorage.setItem(username + "_lastClaim", lastClaim);
     updateUI();
-    setInterval(updateUI, 1000);
-  </script>
-</body>
-</html>
+  };
+
+  logoutBtn.onclick = () => {
+    localStorage.removeItem("currentUser");
+    window.location.href = "index.html";
+  };
+
+  // Withdraw Logic
+  const withdrawBtn = document.getElementById("withdrawBtn");
+  const withdrawForm = document.getElementById("withdrawForm");
+  const submitWithdraw = document.getElementById("submitWithdraw");
+  const cancelWithdraw = document.getElementById("cancelWithdraw");
+  const withdrawMessage = document.getElementById("withdrawMessage");
+
+  withdrawBtn.onclick = () => {
+    withdrawForm.style.display = "block";
+    withdrawMessage.textContent = "";
+  };
+
+  submitWithdraw.onclick = () => {
+    const amount = document.getElementById("withdrawAmount").value;
+    const dana = document.getElementById("withdrawDana").value;
+
+    if (!amount || !dana) {
+      withdrawMessage.textContent = "Harap isi semua field!";
+      withdrawMessage.style.color = "red";
+      return;
+    }
+
+    withdrawMessage.textContent = "Withdraw berhasil!";
+    withdrawMessage.style.color = "lime";
+
+    document.getElementById("withdrawAmount").value = "";
+    document.getElementById("withdrawDana").value = "";
+
+    setTimeout(() => {
+      withdrawForm.style.display = "none";
+      withdrawMessage.textContent = "";
+    }, 1000);
+  };
+
+  cancelWithdraw.onclick = () => {
+    document.getElementById("withdrawAmount").value = "";
+    document.getElementById("withdrawDana").value = "";
+    withdrawForm.style.display = "none";
+    withdrawMessage.textContent = "";
+  };
+
+  updateUI();
+  setInterval(updateUI, 1000);
+</script>
