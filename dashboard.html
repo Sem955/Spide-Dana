@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard</title>
   <style>
     body {
@@ -74,6 +74,16 @@
     <button id="logoutBtn">Keluar</button>
   </div>
 
+  <!-- ✅ Ini tombol withdraw yang kamu minta -->
+  <div style="margin-top: 50px; text-align: center;">
+    <button id="withdrawBtn"
+      style="margin-top: 20px; background-color: #222; color: #fff; border: none;
+             padding: 12px 24px; font-size: 16px; border-radius: 8px; cursor: pointer;
+             box-shadow: 0 0 10px #00ff0044;">
+      💸 Withdraw
+    </button>
+  </div>
+
   <script>
     const username = localStorage.getItem('currentUser');
     if (!username) window.location.href = 'index.html';
@@ -126,19 +136,14 @@
 
     updateUI();
     setInterval(updateUI, 1000);
+
+    // ✅ Fungsi withdraw
+    const withdrawBtn = document.getElementById("withdrawBtn");
+    if (withdrawBtn) {
+      withdrawBtn.onclick = function () {
+        alert("Fitur withdraw sedang dalam pengembangan.");
+      };
+    }
   </script>
 </body>
-<div style="margin-top: 50px; text-align: center;">
-  <button id="withdrawBtn" style="
-    background-color: #222;
-    color: #fff;
-    border: none;
-    padding: 12px 24px;
-    font-size: 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    box-shadow: 0 0 10px #00ff0044;
-  ">
-    💸 Withdraw
-  </button>
-</div>
+</html>
