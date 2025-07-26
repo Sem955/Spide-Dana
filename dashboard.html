@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard</title>
   <style>
     body {
@@ -11,16 +11,15 @@
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 20px;
-      min-height: 100vh;
       box-sizing: border-box;
-      position: relative;
     }
 
-    /* Animasi logo */
+    /* Logo Dana animasi di tengah */
     .logo-container {
-      text-align: center;
+      display: flex;
+      justify-content: center;
       margin-bottom: 20px;
-      animation: float 2.5s ease-in-out infinite;
+      animation: float 3s ease-in-out infinite;
     }
 
     .logo-container img {
@@ -37,17 +36,17 @@
     .rewards-top {
       display: flex;
       justify-content: space-around;
-      gap: 20px;
       margin-bottom: 20px;
+      gap: 10px;
     }
 
     .reward-card {
       background-color: #111;
       border-radius: 12px;
-      padding: 16px 24px;
+      padding: 16px;
       text-align: center;
-      box-shadow: 0 0 10px #00ff0044;
       flex: 1;
+      box-shadow: 0 0 10px #00ff0044;
     }
 
     .reward-title {
@@ -146,9 +145,9 @@
 </head>
 <body>
 
-  <!-- Logo Dana -->
+  <!-- Logo Dana di tengah -->
   <div class="logo-container">
-    <img src="https://i.ibb.co/WxqB9SP/logo-dana.png" alt="Logo Dana">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Logo_DANA_blue.svg/200px-Logo_DANA_blue.svg.png" alt="Logo Dana" />
   </div>
 
   <div class="rewards-top">
@@ -170,7 +169,6 @@
     <button id="withdrawBtn">💸 Withdraw</button>
   </div>
 
-  <!-- Form Withdraw -->
   <div id="withdrawForm">
     <input type="number" id="withdrawAmount" placeholder="Jumlah Poin yang ingin diwithdraw" /><br />
     <input type="text" id="withdrawDana" placeholder="Nomor Dana kamu" /><br />
