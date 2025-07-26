@@ -54,6 +54,32 @@
       background-color: gray;
       cursor: not-allowed;
     }
+    #withdrawForm {
+      display: none;
+      margin-top: 20px;
+      padding: 20px;
+      background-color: #111;
+      border-radius: 12px;
+      box-shadow: 0 0 10px #00ff0044;
+      width: 300px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #withdrawForm input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 12px;
+      border-radius: 6px;
+      border: none;
+      font-size: 16px;
+    }
+    #withdrawForm button {
+      width: 100%;
+    }
+    #withdrawMessage {
+      margin-top: 10px;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -72,37 +98,14 @@
     <div id="statusText">Memuat data...</div>
     <button id="claimBtn" disabled>Klaim Poin</button>
     <button id="logoutBtn">Keluar</button>
+    <button id="withdrawBtn">💸 Withdraw</button>
   </div>
 
-  <!-- Tombol Withdraw -->
-  <div style="margin-top: 50px; text-align: center;">
-    <button id="withdrawBtn" style="
-      background-color: #222;
-      color: #fff;
-      border: none;
-      padding: 12px 24px;
-      font-size: 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      box-shadow: 0 0 10px #00ff0044;
-    ">
-      💸 Withdraw
-    </button>
-  </div>
-
-  <!-- Form Withdraw -->
-  <div id="withdrawForm" style="display:none; margin-top: 20px; text-align: center;">
-    <input type="number" id="withdrawAmount" placeholder="Jumlah poin" style="padding: 10px; width: 80%; margin-bottom: 10px;" /><br/>
-    <input type="text" id="withdrawDana" placeholder="Nomor DANA kamu" style="padding: 10px; width: 80%; margin-bottom: 10px;" /><br/>
-    <button id="submitWithdraw" style="
-      background-color: #00ff00;
-      color: #000;
-      border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      border-radius: 8px;
-      cursor: pointer;">Submit</button>
-    <div id="withdrawMessage" style="margin-top: 10px; color: lime;"></div>
+  <div id="withdrawForm">
+    <input type="number" id="withdrawAmount" placeholder="Jumlah Poin" />
+    <input type="text" id="withdrawDana" placeholder="Nomor DANA" />
+    <button id="submitWithdraw">Submit Withdraw</button>
+    <div id="withdrawMessage"></div>
   </div>
 
   <script>
@@ -155,7 +158,10 @@
       window.location.href = "index.html";
     };
 
-    // Fungsi tombol Withdraw
+    updateUI();
+    setInterval(updateUI, 1000);
+
+    // Withdraw Logic
     const withdrawBtn = document.getElementById("withdrawBtn");
     const withdrawForm = document.getElementById("withdrawForm");
     const submitWithdraw = document.getElementById("submitWithdraw");
@@ -168,22 +174,23 @@
 
     submitWithdraw.onclick = () => {
       const amount = document.getElementById("withdrawAmount").value;
-      const danaNumber = document.getElementById("withdrawDana").value;
+      const dana = document.getElementById("withdrawDana").value;
 
-      if (!amount || !danaNumber) {
-        withdrawMessage.textContent = "Mohon isi semua kolom.";
+      if (!amount || !dana) {
+        withdrawMessage.textContent = "Harap isi semua data!";
         withdrawMessage.style.color = "red";
         return;
       }
 
       withdrawMessage.textContent = "Withdraw berhasil!";
       withdrawMessage.style.color = "lime";
+
       document.getElementById("withdrawAmount").value = "";
       document.getElementById("withdrawDana").value = "";
-    };
 
-    updateUI();
-    setInterval(updateUI, 1000);
+      // Sembunyikan form setelah submit
+      withdrawForm.style.display = "none";
+    };
   </script>
 </body>
 </html>
