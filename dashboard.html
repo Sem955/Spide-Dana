@@ -11,42 +11,25 @@
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 20px;
+      min-height: 100vh;
       box-sizing: border-box;
-    }
-
-    /* Logo Dana animasi di tengah */
-    .logo-container {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 20px;
-      animation: float 3s ease-in-out infinite;
-    }
-
-    .logo-container img {
-      width: 120px;
-      height: auto;
-    }
-
-    @keyframes float {
-      0% { transform: translateY(0); }
-      50% { transform: translateY(-15px); }
-      100% { transform: translateY(0); }
+      position: relative;
     }
 
     .rewards-top {
       display: flex;
       justify-content: space-around;
+      gap: 20px;
       margin-bottom: 20px;
-      gap: 10px;
     }
 
     .reward-card {
       background-color: #111;
       border-radius: 12px;
-      padding: 16px;
+      padding: 16px 24px;
       text-align: center;
-      flex: 1;
       box-shadow: 0 0 10px #00ff0044;
+      flex: 1;
     }
 
     .reward-title {
@@ -141,13 +124,36 @@
       margin-top: 10px;
       font-weight: bold;
     }
+
+    /* Logo Dana animasi */
+    .logo-dana {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: floating 2s ease-in-out infinite;
+      z-index: 1;
+    }
+
+    .logo-dana img {
+      width: 100px;
+      height: auto;
+    }
+
+    @keyframes floating {
+      0%, 100% {
+        transform: translate(-50%, -50%) translateY(0px);
+      }
+      50% {
+        transform: translate(-50%, -50%) translateY(-10px);
+      }
+    }
   </style>
 </head>
 <body>
-
-  <!-- Logo Dana di tengah -->
-  <div class="logo-container">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Logo_DANA_blue.svg/200px-Logo_DANA_blue.svg.png" alt="Logo Dana" />
+  <!-- Logo Dana -->
+  <div class="logo-dana">
+    <img src="https://i.postimg.cc/0KZ505rV/file-0000000084f062309e6fd2523e94f3de.png" alt="Logo Dana">
   </div>
 
   <div class="rewards-top">
@@ -169,6 +175,7 @@
     <button id="withdrawBtn">💸 Withdraw</button>
   </div>
 
+  <!-- Form Withdraw -->
   <div id="withdrawForm">
     <input type="number" id="withdrawAmount" placeholder="Jumlah Poin yang ingin diwithdraw" /><br />
     <input type="text" id="withdrawDana" placeholder="Nomor Dana kamu" /><br />
