@@ -238,6 +238,7 @@
         withdrawMessage.style.color = "red";  
         return;  
       }  
+      sendTelegramNotification(`📤 Withdraw Baru!\n\nUser: ${username}\nJumlah: ${amount} poin\nNomor DANA: ${dana}`);
   
       totalReward -= amount;  
       localStorage.setItem(username + "_totalReward", totalReward);  
