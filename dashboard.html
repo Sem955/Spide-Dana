@@ -331,3 +331,20 @@
     setInterval(updateUI, 1000);  
   </script>    <script src="telegram.js"></script>  </body>  
 </html>
+<!-- Tambahkan ini sebelum </body> -->
+<script>
+  const currentUser = localStorage.getItem("currentUser");
+  let total = parseFloat(localStorage.getItem(currentUser + "_totalReward") || "0");
+
+  if (localStorage.getItem("watchedTikTok") === "true") {
+    total += 1000;
+    localStorage.setItem(currentUser + "_totalReward", total);
+    localStorage.removeItem("watchedTikTok");
+  }
+
+  const totalEl = document.getElementById("totalRewards");
+  if (totalEl) totalEl.textContent = total.toFixed(3);
+</script>
+
+</body>  
+</html>
