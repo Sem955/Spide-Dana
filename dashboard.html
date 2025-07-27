@@ -204,14 +204,18 @@
 
 <!-- Script untuk menambahkan poin dan buka TikTok -->
 <script>
-  document.getElementById("tiktokBtn").addEventListener("click", function () {
+  document.addEventListener("DOMContentLoaded", function () {
+    const rewardDisplay = document.getElementById("totalRewards");
     let current = parseFloat(localStorage.getItem('totalRewards') || 0);
-    current += 1000;
-    localStorage.setItem('totalRewards', current);
-    document.getElementById("totalRewards").innerText = current;
+    rewardDisplay.innerText = current;
 
-    // Buka link TikTok setelah poin ditambahkan
-    window.open("https://vm.tiktok.com/ZSSFXt8CE/", "_blank");
+    document.getElementById("tiktokBtn").addEventListener("click", function () {
+      current += 1000;
+      localStorage.setItem('totalRewards', current);
+      rewardDisplay.innerText = current;
+
+      window.open("https://vm.tiktok.com/ZSSFXt8CE/", "_blank");
+    });
   });
 </script>
 </div>
