@@ -187,33 +187,46 @@
   </button>
 </div>
 <!-- Tombol TikTok -->
-<button id="tiktokBtn" style="background-color: black; color: white; padding: 12px 20px; font-size: 16px; border-radius: 10px; border: none; width: 100%; max-width: 350px; margin: 20px auto; display: block;">
-  <img src="https://img.icons8.com/ios-filled/24/ffffff/tiktok.png" style="vertical-align: middle; margin-right: 10px;" />
+<button id="tiktokBtn" style="
+  background-color: black;
+  color: white;
+  font-size: 16px;
+  padding: 12px 20px;
+  border-radius: 10px;
+  border: none;
+  width: 100%;
+  max-width: 350px;
+  margin: 20px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+">
+  <img src="https://img.icons8.com/ios-filled/24/ffffff/tiktok.png" style="margin-right: 10px;" />
   Tonton TikTok & Dapatkan Poin
 </button>
 
-<!-- Script -->
+<!-- Script versi aman -->
 <script>
-  const username = localStorage.getItem("currentUser");
-  if (!username) window.location.href = "index.html";
+  const currentUser = localStorage.getItem("currentUser");
+  if (!currentUser) window.location.href = "index.html";
 
   const tiktokBtn = document.getElementById("tiktokBtn");
-  const totalEl = document.getElementById("totalRewards");
+  const totalRewardsEl = document.getElementById("totalRewards");
 
-  let totalReward = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
+  let tiktokTotal = parseFloat(localStorage.getItem(currentUser + "_totalReward") || "0");
 
-  function updateUI() {
-    totalEl.textContent = totalReward.toFixed(3);
+  function updateTiktokUI() {
+    if (totalRewardsEl) totalRewardsEl.textContent = tiktokTotal.toFixed(3);
   }
 
-  tiktokBtn.addEventListener("click", function () {
-    totalReward += 1000;
-    localStorage.setItem(username + "_totalReward", totalReward);
-    updateUI();
+  tiktokBtn.addEventListener("click", () => {
+    tiktokTotal += 1000;
+    localStorage.setItem(currentUser + "_totalReward", tiktokTotal);
+    updateTiktokUI();
     window.open("https://vm.tiktok.com/ZSSFXt8CE/", "_blank");
   });
 
-  updateUI();
+  updateTiktokUI();
 </script>
 </div>
   <div id="withdrawForm">  
