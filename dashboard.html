@@ -329,11 +329,22 @@
     };  
     updateUI();  
     setInterval(updateUI, 1000);  
-  </script>    <script src="telegram.js"></script>  </body>  
-</html>
-<!-- Tambahkan ini sebelum </body> -->
+  </script>    <script src="telegram.js"></script> 
+<!-- Script klik TikTok -->
 <script>
   const currentUser = localStorage.getItem("currentUser");
+  if (!currentUser) window.location.href = "index.html";
+
+  const tiktokBtn = document.getElementById("tiktokBtn");
+
+  tiktokBtn.addEventListener("click", () => {
+    localStorage.setItem("watchedTikTok", "true");
+    window.open("https://vm.tiktok.com/ZSSFXt8CE/", "_blank");
+  });
+</script>
+
+<!-- Script reward TikTok saat kembali ke dashboard -->
+<script>
   let total = parseFloat(localStorage.getItem(currentUser + "_totalReward") || "0");
 
   if (localStorage.getItem("watchedTikTok") === "true") {
@@ -346,5 +357,5 @@
   if (totalEl) totalEl.textContent = total.toFixed(3);
 </script>
 
-</body>  
+</body>
 </html>
