@@ -186,7 +186,7 @@
     KLIK VIDIO DAPAT REWARDS
   </button>
 </div>
-<!-- HTML bagian tombol TikTok -->
+<!-- Tombol TikTok -->
 <a href="#" 
    id="tiktokBtn"
    style="display: inline-flex; align-items: center; justify-content: center; background-color: #000; color: white; font-size: 18px; padding: 10px 20px; border-radius: 10px; margin-top: 20px; text-decoration: none;">
@@ -196,32 +196,23 @@
    Tonton TikTok & Dapatkan Poin
 </a>
 
-<!-- Tempat tampilan poin -->
-<div id="totalRewards">0</div>
-
-<!-- JavaScript -->
+<!-- Script -->
 <script>
-  const username = localStorage.getItem("currentUser") || "guest";
+  window.addEventListener("load", function () {
+    const username = localStorage.getItem("currentUser");
+    const rewardDisplay = document.getElementById("totalRewards");
+    if (!username || !rewardDisplay) return;
 
-  function updateTotalRewardDisplay() {
-    const total = parseFloat(localStorage.getItem(username + "_totalReward")) || 0;
-    document.getElementById("totalRewards").innerText = total.toFixed(3);
-  }
+    let saved = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
+    rewardDisplay.innerText = saved;
 
-  // Jalankan saat halaman dibuka
-  window.addEventListener("load", updateTotalRewardDisplay);
-
-  // Event saat tombol TikTok diklik
-  document.getElementById("tiktokBtn").addEventListener("click", function () {
-    const key = username + "_totalReward";
-    let current = parseFloat(localStorage.getItem(key)) || 0;
-    const added = 1000;
-    const updated = current + added;
-
-    localStorage.setItem(key, updated);
-    updateTotalRewardDisplay();
-
-    window.open("https://vm.tiktok.com/ZSSFXt8CE/", "_blank");
+    document.getElementById("tiktokBtn").addEventListener("click", function () {
+      let updated = saved + 1000;
+      saved = updated;
+      localStorage.setItem(username + "_totalReward", updated);
+      rewardDisplay.innerText = updated;
+      window.open("https://vm.tiktok.com/ZSSFXt8CE/", "_blank");
+    });
   });
 </script>
 </div>
