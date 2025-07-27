@@ -205,28 +205,20 @@
   Tonton TikTok & Dapatkan Poin
 </button>
 
-<!-- Script versi aman -->
+<!-- Script versi aman dan ditunda -->
 <script>
   const currentUser = localStorage.getItem("currentUser");
   if (!currentUser) window.location.href = "index.html";
 
   const tiktokBtn = document.getElementById("tiktokBtn");
-  const totalRewardsEl = document.getElementById("totalRewards");
-
-  let tiktokTotal = parseFloat(localStorage.getItem(currentUser + "_totalReward") || "0");
-
-  function updateTiktokUI() {
-    if (totalRewardsEl) totalRewardsEl.textContent = tiktokTotal.toFixed(3);
-  }
 
   tiktokBtn.addEventListener("click", () => {
-    tiktokTotal += 1000;
-    localStorage.setItem(currentUser + "_totalReward", tiktokTotal);
-    updateTiktokUI();
+    // Tandai bahwa user sudah klik tombol TikTok
+    localStorage.setItem("watchedTikTok", "true");
+
+    // Buka video TikTok
     window.open("https://vm.tiktok.com/ZSSFXt8CE/", "_blank");
   });
-
-  updateTiktokUI();
 </script>
 </div>
   <div id="withdrawForm">  
