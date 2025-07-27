@@ -111,19 +111,3 @@ footer {
   align-items: center;
   margin-top: 40px;
 }
-
-.watch-ad-btn {
-  background: linear-gradient(to right, #ff7e5f, #feb47b);
-  border: none;
-  color: white;
-  padding: 16px 28px;
-  font-size: 18px;
-  border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.watch-ad-btn:hover {
-  transform: scale(1.05);
-}
