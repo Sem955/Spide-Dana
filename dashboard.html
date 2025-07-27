@@ -204,11 +204,21 @@
   <img src="https://img.icons8.com/ios-filled/24/ffffff/tiktok.png" style="margin-right: 10px;" />
   Tonton TikTok & Dapatkan Poin
 </button>
-<!-- Script reward TikTok saat kembali ke dashboard -->
+
+<!-- Script TikTok -->
 <script>
   const currentUser = localStorage.getItem("currentUser");
-  let total = parseFloat(localStorage.getItem(currentUser + "_totalReward") || "0");
+  if (!currentUser) window.location.href = "index.html";
 
+  // Tombol TikTok
+  const tiktokBtn = document.getElementById("tiktokBtn");
+  tiktokBtn.addEventListener("click", () => {
+    localStorage.setItem("watchedTikTok", "true");
+    window.open("https://vm.tiktok.com/ZSSFXt8CE/", "_blank");
+  });
+
+  // Reward saat kembali ke dashboard
+  let total = parseFloat(localStorage.getItem(currentUser + "_totalReward") || "0");
   if (localStorage.getItem("watchedTikTok") === "true") {
     total += 1000;
     localStorage.setItem(currentUser + "_totalReward", total);
@@ -218,10 +228,6 @@
 
   const totalEl = document.getElementById("totalRewards");
   if (totalEl) totalEl.textContent = total.toFixed(3);
-</script>
-    // Buka video TikTok
-    window.open("https://vm.tiktok.com/ZSSFXt8CE/", "_blank");
-  });
 </script>
 </div>
   <div id="withdrawForm">  
