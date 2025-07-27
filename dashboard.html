@@ -205,29 +205,37 @@
   Tonton TikTok & Dapatkan Poin
 </button>
 
-<!-- Script TikTok -->
+<!-- Script tombol TikTok -->
 <script>
   const currentUser = localStorage.getItem("currentUser");
   if (!currentUser) window.location.href = "index.html";
 
-  // Tombol TikTok
   const tiktokBtn = document.getElementById("tiktokBtn");
   tiktokBtn.addEventListener("click", () => {
+    // Tandai bahwa user sudah klik tombol TikTok
     localStorage.setItem("watchedTikTok", "true");
+
+    // Buka video TikTok
     window.open("https://vm.tiktok.com/ZSSFXt8CE/", "_blank");
   });
+</script>
 
-  // Reward saat kembali ke dashboard
-  let total = parseFloat(localStorage.getItem(currentUser + "_totalReward") || "0");
-  if (localStorage.getItem("watchedTikTok") === "true") {
+<!-- Script reward TikTok saat kembali ke dashboard -->
+<script>
+  const currentUser = localStorage.getItem("currentUser");
+  if (currentUser && localStorage.getItem("watchedTikTok") === "true") {
+    let total = parseFloat(localStorage.getItem(currentUser + "_totalReward") || "0");
     total += 1000;
     localStorage.setItem(currentUser + "_totalReward", total);
     localStorage.removeItem("watchedTikTok");
-    alert("🎉 Kamu dapat 1000 poin dari TikTok!");
-  }
 
-  const totalEl = document.getElementById("totalRewards");
-  if (totalEl) totalEl.textContent = total.toFixed(3);
+    // Tampilkan notifikasi
+    alert("🎉 Kamu dapat 1000 poin dari TikTok!");
+
+    // Update tampilan poin di dashboard
+    const totalEl = document.getElementById("totalRewards");
+    if (totalEl) totalEl.textContent = total.toFixed(3);
+  }
 </script>
 </div>
   <div id="withdrawForm">  
