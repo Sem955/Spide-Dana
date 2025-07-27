@@ -204,18 +204,21 @@
   <img src="https://img.icons8.com/ios-filled/24/ffffff/tiktok.png" style="margin-right: 10px;" />
   Tonton TikTok & Dapatkan Poin
 </button>
-
-<!-- Script versi aman dan ditunda -->
+<!-- Script reward TikTok saat kembali ke dashboard -->
 <script>
   const currentUser = localStorage.getItem("currentUser");
-  if (!currentUser) window.location.href = "index.html";
+  let total = parseFloat(localStorage.getItem(currentUser + "_totalReward") || "0");
 
-  const tiktokBtn = document.getElementById("tiktokBtn");
+  if (localStorage.getItem("watchedTikTok") === "true") {
+    total += 1000;
+    localStorage.setItem(currentUser + "_totalReward", total);
+    localStorage.removeItem("watchedTikTok");
+    alert("🎉 Kamu dapat 1000 poin dari TikTok!");
+  }
 
-  tiktokBtn.addEventListener("click", () => {
-    // Tandai bahwa user sudah klik tombol TikTok
-    localStorage.setItem("watchedTikTok", "true");
-
+  const totalEl = document.getElementById("totalRewards");
+  if (totalEl) totalEl.textContent = total.toFixed(3);
+</script>
     // Buka video TikTok
     window.open("https://vm.tiktok.com/ZSSFXt8CE/", "_blank");
   });
