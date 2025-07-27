@@ -187,7 +187,7 @@
   </button>
 </div>
 <!-- Tombol TikTok -->
-<a href="#" 
+<a href="#"
    id="tiktokBtn"
    style="display: inline-flex; align-items: center; justify-content: center; background-color: #000; color: white; font-size: 18px; padding: 10px 20px; border-radius: 10px; margin-top: 20px; text-decoration: none;">
    <img src="https://img.icons8.com/ios-filled/50/ffffff/tiktok.png" 
@@ -196,23 +196,28 @@
    Tonton TikTok & Dapatkan Poin
 </a>
 
-<!-- Script -->
+<!-- Script TikTok -->
 <script>
-  window.addEventListener("load", function () {
-    const username = localStorage.getItem("currentUser");
-    const rewardDisplay = document.getElementById("totalRewards");
-    if (!username || !rewardDisplay) return;
+  const username = localStorage.getItem("currentUser");
+  const rewardEl = document.getElementById("totalRewards");
+  const tiktokBtn = document.getElementById("tiktokBtn");
 
-    let saved = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
-    rewardDisplay.innerText = saved;
+  let totalReward = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
 
-    document.getElementById("tiktokBtn").addEventListener("click", function () {
-      let updated = saved + 1000;
-      saved = updated;
-      localStorage.setItem(username + "_totalReward", updated);
-      rewardDisplay.innerText = updated;
-      window.open("https://vm.tiktok.com/ZSSFXt8CE/", "_blank");
-    });
+  function updateUI() {
+    if (rewardEl) {
+      rewardEl.innerText = totalReward.toFixed(3);
+    }
+  }
+
+  updateUI(); // panggil saat pertama buka halaman
+
+  // Saat tombol TikTok diklik
+  tiktokBtn.addEventListener("click", function () {
+    totalReward += 1000;
+    localStorage.setItem(username + "_totalReward", totalReward);
+    updateUI();
+    window.open("https://vm.tiktok.com/ZSSFXt8CE/", "_blank");
   });
 </script>
 </div>
