@@ -54,3 +54,15 @@ if (withdrawBtn) {
 // ✅ Jalankan update awal saat halaman dibuka
 updateRewards();
 setInterval(updateRewards, 5000); // Perbarui setiap 5 detik
+}
+
+const tiktokBtn = document.getElementById("tiktokBtn");
+if (tiktokBtn) {
+  tiktokBtn.addEventListener("click", function () {
+    let currentPoints = parseFloat(localStorage.getItem("totalRewards") || "0");
+    currentPoints += 1000;
+    localStorage.setItem("totalRewards", currentPoints.toFixed(3));
+    document.getElementById("totalRewards").innerText = currentPoints.toFixed(3);
+    alert("Kamu mendapatkan 1000 poin dari TikTok!");
+  });
+}
