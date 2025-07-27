@@ -197,29 +197,23 @@
    Tonton TikTok & Dapatkan Poin
 </a>
 
-<!-- Script: Tambah poin ke totalRewards & buka link TikTok -->
+<!-- Script -->
 <script>
   document.getElementById("tiktokBtn").addEventListener("click", function () {
-    // Ambil nilai sekarang dari elemen yang sudah ada
-    let rewardDiv = document.getElementById("totalRewards");
-    let current = parseFloat(rewardDiv.innerText) || 0;
+    const username = localStorage.getItem("currentUser");
+    if (!username) return;
+
+    let current = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
     let added = 1000;
-
-    // Tambahkan poin
     let updated = current + added;
-    rewardDiv.innerText = updated;
 
-    // Simpan ke localStorage
-    localStorage.setItem('totalRewards', updated);
+    // Simpan & update tampilan
+    localStorage.setItem(username + "_totalReward", updated);
+    const rewardDisplay = document.getElementById("totalRewards");
+    if (rewardDisplay) rewardDisplay.innerText = updated.toFixed(3);
 
-    // Buka link TikTok
+    // Buka TikTok
     window.open("https://vm.tiktok.com/ZSSFXt8CE/", "_blank");
-  });
-
-  // Saat halaman dibuka, ambil dari localStorage dan tampilkan
-  window.addEventListener("load", function () {
-    let saved = parseFloat(localStorage.getItem('totalRewards')) || 0;
-    document.getElementById("totalRewards").innerText = saved;
   });
 </script>
 </div>
