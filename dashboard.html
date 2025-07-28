@@ -293,7 +293,7 @@
         let progress = elapsed / COOLDOWN_MS;  
         dailyEl.textContent = (CLAIM_REWARD * progress).toFixed(3);  
         claimBtn.disabled = true;  
-        let sisa = Math.ceil((COOLDOWN_MS - elapsed) / 3600000);  
+        let sisa = Math.ceil((COOLDOWN_MS - elapsed) / 60000);  
         statusText.textContent = `Tunggu ${sisa} jam lagi untuk klaim berikutnya.`;  
       }  
   
