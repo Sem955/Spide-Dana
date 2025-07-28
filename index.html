@@ -1,71 +1,111 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login Game</title>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3665788659374137"
-     crossorigin="anonymous"></script>
-  <style>
-    body {
-      background-color: #F9F6EE; /* background cerah */
-      color: #333333; /* teks gelap agar terbaca */
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      margin: 0;
-      padding-bottom: 80px; /* ruang buat iklan di bawah */
-    }
+<!DOCTYPE html>  <html lang="id">  
+<head>  
+  <meta charset="UTF-8" />  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>  
+  <title>Login Game</title>  
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3665788659374137"  
+     crossorigin="anonymous"></script>  
+  <style>  
+    body {  
+      background-color: #F9F6EE;  
+      color: #FFD700;  
+      font-family: Arial, sans-serif;  
+      display: flex;  
+      flex-direction: column;  
+      align-items: center;  
+      justify-content: center;  
+      height: 100vh;  
+      margin: 0;  
+    }  h1 {  
+  margin-bottom: 30px;  
+  font-size: 28px;  
+}  
 
-    h1 {
-      margin-bottom: 30px;
-      font-size: 28px;
-      color: #00cc00;
-    }
+input {  
+  width: 300px;  
+  padding: 12px;  
+  margin: 10px 0;  
+  font-size: 16px;  
+  border: none;  
+  border-radius: 6px;  
+}  
 
-    input {
-      width: 300px;
-      padding: 12px;
-      margin: 10px 0;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
+button {  
+  width: 320px;  
+  padding: 12px;  
+  font-size: 16px;  
+  border: none;  
+  border-radius: 6px;  
+  cursor: pointer;  
+  margin-top: 10px;  
+}  
 
-    button {
-      width: 320px;
-      padding: 12px;
-      font-size: 16px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
+#loginBtn {  
+  background-color: #1877f2;  
+  color: white;  
+}
 
-    #loginBtn {
-      background-color: #1877f2;
-      color: white;
-    }
+#registerBtn {
+background-color: transparent;
+border: 1px solid #00ff00;
+color: #00ff00;
+margin-bottom: 20px; /* Tambah jarak bawah */
+}
+}
+</style>
 
-    #registerBtn {
-      background-color: transparent;
-      border: 1px solid #00cc00;
-      color: #00cc00;
-      margin-bottom: 20px;
-    }
+</head>  
+<body>  
+  <h1>LOGIN DAFTAR</h1>  
+  <input type="text" id="username" placeholder="Nomor ponsel atau email" />  
+  <input type="password" id="password" placeholder="Kata sandi" />  
+  <button id="loginBtn">Login</button>  
+  <button id="registerBtn">Buat akun baru</button>  
+</script>  
+  <script type="text/javascript">  
+  atOptions = {  
+    'key' : 'a4756fd525e25cbed5ac79db27595f95',  
+    'format' : 'iframe',  
+    'height' : 50,  
+    'width' : 320,  
+    'params' : {}  
+  };  
+</script>  
+<script type="text/javascript" src="//www.highperformanceformat.com/a4756fd525e25cbed5ac79db27595f95/invoke.js"></script>  
+  <script>  
+    const loginBtn = document.getElementById("loginBtn");  
+    const registerBtn = document.getElementById("registerBtn");  loginBtn.onclick = () => {  
+  const username = document.getElementById("username").value;  
+  const password = document.getElementById("password").value;  
+  const saved = JSON.parse(localStorage.getItem("users") || "{}");  
 
-    .ad-container {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      text-align: center;
-      z-index: 1000;
-    }
-  </style>
-</head>
-<body>
-  <h1>LOGIN DAFTAR</h1>
-  <input
+  if (saved[username] === password) {  
+    localStorage.setItem("currentUser", username);  
+    window.location.href = "dashboard.html";  
+  } else {  
+    alert("Login gagal: Username atau password salah.");  
+  }  
+};  
+
+registerBtn.onclick = () => {  
+  const username = document.getElementById("username").value;  
+  const password = document.getElementById("password").value;  
+  let saved = JSON.parse(localStorage.getItem("users") || "{}");  
+
+  if (username === "" || password === "") {  
+    alert("Isi semua kolom!");  
+    return;  
+  }  
+
+  if (saved[username]) {  
+    alert("Username sudah terdaftar.");  
+  } else {  
+    saved[username] = password;  
+    localStorage.setItem("users", JSON.stringify(saved));  
+    alert("Akun berhasil dibuat. Silakan login.");  
+  }  
+};
+
+  </script>  
+</body>  
+</html>
