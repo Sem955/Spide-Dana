@@ -1,168 +1,128 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 1rem;
-      background-color: #f4f4f4;
-      color: #333;
+      padding: 20px;
     }
-    .container {
-      max-width: 480px;
-      margin: auto;
-      background: #fff;
-      padding: 1.5rem;
+    .box {
+      margin: 10px 0;
+      padding: 15px;
+      border: 1px solid #ccc;
       border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-    .info-box {
-      background: #f9f9f9;
-      padding: 1rem;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-    }
-    .info-box h2 {
-      margin: 0 0 0.5rem 0;
-    }
-    .button-group {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 1rem 0;
     }
     button {
-      flex: 1;
-      padding: 0.75rem;
-      border: none;
-      background: #007bff;
-      color: white;
-      border-radius: 6px;
-      cursor: pointer;
+      padding: 10px 15px;
+      margin-top: 10px;
     }
-    button:hover {
-      background: #0056b3;
-    }
-    .rules {
-      background: #fff7e6;
-      padding: 1rem;
-      border-left: 4px solid #ffc107;
-      margin-bottom: 1rem;
-    }
-    .rules p {
-      margin: 0.5rem 0;
-    }
-    .withdraw-form {
-      display: none;
-      margin-top: 1rem;
-      padding: 1rem;
-      background: #e9ecef;
-      border-radius: 6px;
-    }
-    .withdraw-form input {
+    input {
+      padding: 8px;
+      margin-top: 5px;
+      display: block;
       width: 100%;
-      padding: 0.5rem;
-      margin: 0.5rem 0;
-    }
-    .withdraw-form-buttons {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-    }
-    .external-links {
-      margin-top: 1.5rem;
-      text-align: center;
-    }
-    .external-links a {
-      display: inline-block;
-      margin: 5px 0;
-      color: #007bff;
-      text-decoration: none;
-    }
-    .external-links a:hover {
-      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Dashboard</h1>
 
-    <div class="info-box">
-      <h2>Total Rewards</h2>
-      <p id="totalRewards">0</p>
-    </div>
-
-    <div class="info-box">
-      <h2>1h Rewards</h2>
-      <p id="hourlyRewards">0.000</p>
-    </div>
-
-    <div class="logo">
-      <h3 style="text-align: center;">Logo Dana</h3>
-      <p style="text-align: center;">Memuat data...</p>
-    </div>
-
-    <div class="rules">
-      <h3 style="text-align: center;">Aturan Dana Miner</h3>
-      <p>1. Tidak boleh 1 HP lebih dari 1 akun. Jika ada kesamaan IP, maka withdraw otomatis tidak masuk.</p>
-      <p>2. Anda bisa klaim setiap 1 jam sekali. 1 jam = 50 poin.</p>
-      <p>3. Minimal withdraw 100.000 poin setara Rp100.000.</p>
-      <p>4. Dapatkan poin tambahan dengan klik tombol DISCET LINK & FOLLOW TIKTOK.</p>
-      <p>5. Saat withdraw, isi nomor DANA yang valid. Jika salah ketik, withdraw tidak diproses dan poin hangus.</p>
-    </div>
-
-    <div class="button-group">
-      <button id="btnKlaim">Klaim Poin</button>
-      <button id="btnLogout">Keluar</button>
-      <button id="btnWithdraw">💸 Withdraw</button>
-    </div>
-
-    <div class="external-links">
-      <a href="https://www.profitableratecpm.com/r6t38ns3hh?key=ac955a03eb118a3acce55ae30410f9b5" target="_blank">🎥 Video DIRCET LINK</a><br>
-      <a href="#" target="_blank">📱 Follow TikTok</a>
-    </div>
-
-    <div class="withdraw-form" id="withdrawForm">
-      <input type="number" placeholder="Jumlah Poin" id="withdrawAmount">
-      <input type="text" placeholder="Nomor DANA" id="withdrawDana">
-      <div class="withdraw-form-buttons">
-        <button onclick="submitWithdraw()">Submit Withdraw</button>
-        <button onclick="hideWithdrawForm()">Batal</button>
-      </div>
-    </div>
+  <h2>Selamat Datang di Game Penghasil Uang</h2>
+  <div class="box">
+    <p>Total Poin: <span id="totalRewards">0</span></p>
+    <p>Poin Harian: <span id="dailyRewards">0</span></p>
+    <p id="statusText">Memuat...</p>
+    <button id="claimBtn">Klaim Poin Harian</button>
   </div>
 
-  <script>
-    const withdrawForm = document.getElementById("withdrawForm");
+  <div class="box">
+    <h3>Form Withdraw</h3>
+    <input type="number" id="withdrawAmount" placeholder="Jumlah poin yang ingin ditarik">
+    <input type="text" id="withdrawDana" placeholder="Nomor Dana Anda">
+    <button id="withdrawBtn">Withdraw</button>
+    <p id="withdrawStatus"></p>
+  </div>
 
-    document.getElementById("btnWithdraw").onclick = () => {
-      withdrawForm.style.display = "block";
+  <button id="logoutBtn">Logout</button>
+
+  <script>
+    const username = localStorage.getItem('currentUser');
+    if (!username) window.location.href = 'index.html';
+
+    const CLAIM_REWARD = 50;
+    const COOLDOWN_MS = 1 * 60 * 60 * 1000;
+
+    const totalEl = document.getElementById('totalRewards');
+    const dailyEl = document.getElementById('dailyRewards');
+    const claimBtn = document.getElementById('claimBtn');
+    const statusText = document.getElementById('statusText');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    let lastClaim = localStorage.getItem(username + "_lastClaim");
+    let totalReward = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
+
+    function updateUI() {
+      const now = Date.now();
+      let last = lastClaim ? parseInt(lastClaim) : 0;
+      let elapsed = now - last;
+      let canClaim = elapsed >= COOLDOWN_MS;
+
+      if (canClaim) {
+        dailyEl.textContent = CLAIM_REWARD.toFixed(3);
+        claimBtn.disabled = false;
+        statusText.textContent = "Kamu bisa klaim sekarang!";
+      } else {
+        let progress = elapsed / COOLDOWN_MS;
+        dailyEl.textContent = (CLAIM_REWARD * progress).toFixed(3);
+        claimBtn.disabled = true;
+        let sisa = Math.ceil((COOLDOWN_MS - elapsed) / 60000);
+        statusText.textContent = `Tunggu ${sisa} Menit lagi untuk klaim berikutnya.`;
+      }
+
+      totalEl.textContent = totalReward.toFixed(3);
+    }
+
+    claimBtn.onclick = () => {
+      totalReward += CLAIM_REWARD;
+      localStorage.setItem(username + "_totalReward", totalReward);
+      lastClaim = Date.now();
+      localStorage.setItem(username + "_lastClaim", lastClaim);
+      updateUI();
     };
 
-    function hideWithdrawForm() {
-      withdrawForm.style.display = "none";
-    }
+    logoutBtn.onclick = () => {
+      localStorage.removeItem("currentUser");
+      window.location.href = "index.html";
+    };
 
-    function submitWithdraw() {
-      const amount = document.getElementById("withdrawAmount").value;
+    updateUI();
+
+    // ✅ Withdraw
+    document.getElementById("withdrawBtn").onclick = () => {
+      const amount = parseFloat(document.getElementById("withdrawAmount").value);
       const dana = document.getElementById("withdrawDana").value;
-      if (amount && dana) {
-        alert("Withdraw berhasil!");
-        hideWithdrawForm();
-      } else {
-        alert("Mohon isi jumlah poin dan nomor DANA.");
+      const statusEl = document.getElementById("withdrawStatus");
+
+      if (!amount || !dana) {
+        statusEl.textContent = "Mohon isi semua data!";
+        return;
       }
-    }
+
+      if (amount > totalReward) {
+        statusEl.textContent = "Poin tidak cukup.";
+        return;
+      }
+
+      totalReward -= amount;
+      localStorage.setItem(username + "_totalReward", totalReward);
+      updateUI();
+
+      statusEl.textContent = "Withdraw berhasil dikirim.";
+      document.getElementById("withdrawAmount").value = "";
+      document.getElementById("withdrawDana").value = "";
+    };
   </script>
 </body>
 </html>
