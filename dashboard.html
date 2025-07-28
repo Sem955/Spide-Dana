@@ -333,7 +333,13 @@
         withdrawMessage.style.color = "red";  
         return;  
       }  
-  
+
+      if (amount < 100000) {
+  withdrawMessage.textContent = "Minimal withdraw adalah 100000 poin!";
+  withdrawMessage.style.color = "red";
+  return;
+    }
+      
       if (amount > totalReward) {  
         withdrawMessage.textContent = "Poin tidak cukup untuk withdraw!";  
         withdrawMessage.style.color = "red";  
