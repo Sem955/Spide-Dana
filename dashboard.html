@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard</title>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3665788659374137" crossorigin="anonymous"></script>
+  <title>Dashboard Reward</title>
   <style>
     body {
       background-color: #4CC6FF;
@@ -135,33 +134,22 @@
     }
   </style>
 
-  <!-- FUNGSI POPUNDER OPTIMIZED -->
+  <!-- SISTEM IKLAN VIDEO -->
   <script>
-    function launchPopunder() {
-      try {
-        // Method 1: Standard popunder
-        var popunder = window.open('', '_blank', 'width=1,height=1,left=-1000,top=-1000');
-        if(popunder) {
-          popunder.location.href = 'https://impossibleentry.com/cTDM9x6.bk2S5Wl';
-          setTimeout(() => {
-            popunder.blur();
-            window.focus();
-          }, 500);
-        }
-        
-        // Method 2: Backup script
-        (function(stiw){
-          var d = document,
-              s = d.createElement('script'),
-              l = d.scripts[d.scripts.length - 1];
-          s.settings = stiw || {};
-          s.src = "//impossibleentry.com/cTDM9x6.bk2S5Wl/S/WQQ-9iNajvUi0jMpTwQV4/MHiH0Y2nNuTZQ/xzN/Dhg/zc";
-          s.async = true;
-          s.referrerPolicy = 'no-referrer-when-downgrade';
-          l.parentNode.insertBefore(s, l);
-        })({});
-      } catch(e) {
-        console.log("Popunder fallback:", e) 
+    function showVideoAd() {
+      // JIKA INGIN PAKAI IKLAN VIDEO (Uncomment salah satu)
+      
+      // 1. OPTION 1: Popunder Adsterra (Ganti YOUR_PID)
+      // window.open('https://www.adsterra.com/video-player?pid=YOUR_PID', '_blank', 'width=800,height=600');
+      
+      // 2. OPTION 2: Direct Link Anda (Yang sudah ada)
+      window.open('https://www.profitableratecpm.com/r6t38ns3hh?key=ac955a03eb118a3acce55ae30410f9b5', '_blank');
+      
+      // 3. OPTION 3: Jika ingin pakai iframe
+      // const iframe = document.createElement('iframe');
+      // iframe.src = 'LINK_IKLAN_ANDA';
+      // iframe.style.display = 'none';
+      // document.body.appendChild(iframe);
     }
   </script>
 </head>
@@ -207,7 +195,7 @@
           cursor: pointer;
         ">
           <img src="https://img.icons8.com/ios-filled/50/ffffff/video.png" alt="Video" style="width: 20px; height: 20px;" />
-          DIRCET LINK
+          DIRECT LINK
         </button>
       </a>
       <button id="tiktokBtn" style="
@@ -237,12 +225,12 @@
   </div>
 
   <script>
+    // SISTEM REWARD (1 JAM COOLDOWN)
     const username = localStorage.getItem('currentUser');
     if (!username) window.location.href = 'index.html';
 
-    // 1 HOUR COOLDOWN (3600000 ms)
     const CLAIM_REWARD = 50;
-    const COOLDOWN_MS = 60 * 60 * 1000; // 1 jam dalam milidetik
+    const COOLDOWN_MS = 60 * 60 * 1000; // 1 JAM
 
     const totalEl = document.getElementById('totalRewards');
     const dailyEl = document.getElementById('dailyRewards');
@@ -275,20 +263,22 @@
     }
 
     claimBtn.onclick = () => {
-      // Trigger popunder first
-      launchPopunder();
+      // 1. Tampilkan iklan
+      showVideoAd();
       
-      // Process reward claim
+      // 2. Berikan reward
       totalReward += CLAIM_REWARD;
       localStorage.setItem(username + "_totalReward", totalReward);
       lastClaim = Date.now();
       localStorage.setItem(username + "_lastClaim", lastClaim);
+      
+      // 3. Update tampilan
       updateUI();
       
-      // Notification
+      // 4. Notifikasi
       setTimeout(() => {
-        alert("+50 Poin berhasil diklaim! Iklan popunder seharusnya terbuka di tab baru.");
-      }, 300);
+        alert("+50 Poin berhasil diklaim!");
+      }, 500);
     };
 
     logoutBtn.onclick = () => {
@@ -329,8 +319,9 @@
         return;
       }
       
-      sendTelegramNotification(`📤 Withdraw Baru!\n\nUser: ${username}\nJumlah: ${amount} poin\nNomor DANA: ${dana}`);
-
+      // Fungsi kirim notifikasi (sesuaikan)
+      // sendTelegramNotification(`Withdraw oleh ${username}`);
+      
       totalReward -= amount;
       localStorage.setItem(username + "_totalReward", totalReward);
       updateUI();
@@ -357,28 +348,5 @@
     updateUI();
     setInterval(updateUI, 1000);
   </script>
-
-  <!-- SCRIPT IKLAN BENAR (HPF) -->
-  <script>
-    setTimeout(() => {
-      var hpfScript = document.createElement('script');
-      hpfScript.innerHTML = `
-        atOptions = {
-          'key' : 'ac86c93838d18124dc18da7238d0ef1a',
-          'format' : 'iframe',
-          'height' : 250,
-          'width' : 300,
-          'params' : {}
-        };
-      `;
-      document.body.appendChild(hpfScript);
-
-      var invokeScript = document.createElement('script');
-      invokeScript.src = "//www.highperformanceformat.com/ac86c93838d18124dc18da7238d0ef1a/invoke.js";
-      document.body.appendChild(invokeScript);
-    }, 1000);
-  </script>
-
-  <script src="telegram.js"></script>
 </body>
-</html>
+        </html>
