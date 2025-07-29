@@ -172,10 +172,13 @@ transform: translateY(-10px);
     <img src="https://i.postimg.cc/0KZ505rV/file-0000000084f062309e6fd2523e94f3de.png" alt="Logo Dana" />    
   </div>    <div id="statusText">Memuat data...</div>   
   <div class="actions">
-  <button id="claimBtn" disabled>Klaim Poin</button>
-  <button id="logoutBtn">Keluar</button>
-  <button id="withdrawBtn">💸 Withdraw</button>
-  <button id="referralBtn">🎁 Invite</button> <!-- Tombol Baru -->
+ <div class="grid grid-cols-4 gap-4 mt-4">
+  <button id="claimBtn" class="bg-yellow-500 text-white px-4 py-2 rounded-lg shadow hover:bg-yellow-600">Claim</button>
+  <button id="withdrawBtn" class="bg-red-500 text-white px-4 py-2 rounded-lg shadow hover:bg-red-600">Withdraw</button>
+  <button id="logoutBtn" class="bg-gray-500 text-white px-4 py-2 rounded-lg shadow hover:bg-gray-600">Logout</button>
+  <button id="referralBtn" class="bg-green-600 text-white px-4 py-2 rounded-lg shadow hover:bg-green-700 transition">Invite</button>
+</div>
+    <!-- Tombol Baru -->
 </div>
 <div class="watch-ad-container">  
 <!-- Container tombol sejajar -->  
