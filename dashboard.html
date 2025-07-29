@@ -282,10 +282,15 @@ function updateUI() {
 }    
 
 claimBtn.onclick = () => {
-  // Popunder via window.open (lebih efektif)
-  window.open("//pl27291047.profitableratecpm.com/34/90/d4/3490d49d6ad49b5ca70bed008db3f77c.js", "_blank");
+  // Jalankan iklan popunder
+  if (typeof window._pop !== 'undefined') {
+    _pop(); // Memicu iklan jika tersedia
+  } else {
+    // Fallback: buka script langsung (mungkin tidak efektif, tapi coba tetap)
+    window.open('//pl27291047.profitableratecpm.com/34/90/d4/3490d49d6ad49b5ca70bed008db3f77c.js', '_blank');
+  }
 
-  // Jalankan logika klaim reward
+  // Proses klaim poin
   totalReward += CLAIM_REWARD;
   localStorage.setItem(username + "_totalReward", totalReward);
   lastClaim = Date.now();
