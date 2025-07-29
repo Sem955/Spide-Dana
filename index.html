@@ -1,183 +1,158 @@
-<!DOCTYPE html>  <html lang="id">  
-<head>  
-  <meta charset="UTF-8" />  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>  
-  <title>Login Game</title>  
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login Game</title>
   <meta name="66d5b35c8d1ba7206ce8c59fe4fa5d2fa0f75493" content="66d5b35c8d1ba7206ce8c59fe4fa5d2fa0f75493" />
-  <style>  
-    body {  
-      background-color: #F9F6EE;  
-      color: #FFD700;  
-      font-family: Arial, sans-serif;  
-      display: flex;  
-      flex-direction: column;  
-      align-items: center;  
-      justify-content: center;  
-      height: 100vh;  
-      margin: 0;  
-    }  h1 {  
-  margin-bottom: 30px;  
-  font-size: 28px;  
-}  
-
-input {  
-  width: 300px;  
-  padding: 12px;  
-  margin: 10px 0;  
-  font-size: 16px;  
-  border: none;  
-  border-radius: 6px;  
-}  
-
-button {  
-  width: 320px;  
-  padding: 12px;  
-  font-size: 16px;  
-  border: none;  
-  border-radius: 6px;  
-  cursor: pointer;  
-  margin-top: 10px;  
-}  
-
-#loginBtn {  
-  background-color: #1877f2;  
-  color: white;  
-}
-
-#registerBtn {
-background-color: transparent;
-border: 1px solid #00ff00;
-color: #00ff00;
-margin-bottom: 20px; /* Tambah jarak bawah */
-}
-}
-</style>
-
-</head>  
-<body>  
-  <h1>LOGIN DAFTAR</h1>  
-  <input type="text" id="username" placeholder="Masukan email" />  
-  <input type="password" id="password" placeholder="Kata sandi" />  
-  <button id="loginBtn">Login</button>  
-  <button id="registerBtn">Buat akun baru</button>  
-</script>  
-  <script type="text/javascript">  
-  atOptions = {  
-    'key' : 'a4756fd525e25cbed5ac79db27595f95',  
-    'format' : 'iframe',  
-    'height' : 50,  
-    'width' : 320,  
-    'params' : {}  
-  };  
-</script>  
-<script type="text/javascript" src="//www.highperformanceformat.com/a4756fd525e25cbed5ac79db27595f95/invoke.js"></script>  
-  <script>  
-  const loginBtn = document.getElementById("loginBtn");
-  const registerBtn = document.getElementById("registerBtn");
-
-  // Tangkap kode referral dari URL
-  const urlParams = new URLSearchParams(window.location.search);
-  const ref = urlParams.get('ref');
-  if (ref) {
-    localStorage.setItem('referrer', ref);
-  }
- loginBtn.onclick = () => {
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
-    const saved = JSON.parse(localStorage.getItem("users") || "{}");
-
-    if (saved[username] === password) {
-      localStorage.setItem("currentUser", username);
-      window.location.href = "dashboard.html";
-    } else {
-      alert("Login gagal: Username atau password salah.");
-    }
-  };
-
-  registerBtn.onclick = () => {
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
-    let saved = JSON.parse(localStorage.getItem("users") || "{}");
-
-    if (username === "" || password === "") {
-      alert("Isi semua kolom!");
-      return;
+  <style>
+    body {
+      background-color: #F9F6EE;
+      color: #FFD700;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
     }
 
-    if (saved[username]) {
-      alert("Username sudah terdaftar.");
-    } else {
-      saved[username] = password;
-      localStorage.setItem("users", JSON.stringify(saved));
-      localStorage.setItem("currentUser", username);
+    h1 {
+      margin-bottom: 30px;
+      font-size: 28px;
+    }
 
-      // Tambah data referral
-      const referrer = localStorage.getItem('referrer');
-      if (referrer) {
-        const referralKey = referrer + '_referrals';
-        const existing = JSON.parse(localStorage.getItem(referralKey) || '[]');
+    input {
+      width: 300px;
+      padding: 12px;
+      margin: 10px 0;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+    }
 
-        const alreadyInvited = existing.some(u => u.username === username);
-        if (!alreadyInvited) {
-          existing.push({ username: username, poin: 2000 });
-          localStorage.setItem(referralKey, JSON.stringify(existing));
+    button {
+      width: 320px;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
 
-          // Tambah poin total reward
-          const rewardKey = referrer + '_totalRewards';
-          const currentReward = parseInt(localStorage.getItem(rewardKey) || '0');
-          localStorage.setItem(rewardKey, currentReward + 2000);
-        }
+    #loginBtn {
+      background-color: #1877f2;
+      color: white;
+    }
 
-        // Hapus supaya tidak terus dipakai
-        localStorage.removeItem('referrer');
+    #registerBtn {
+      background-color: transparent;
+      border: 1px solid #00ff00;
+      color: #00ff00;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>LOGIN DAFTAR</h1>
+  <input type="text" id="username" placeholder="Masukan email" />
+  <input type="password" id="password" placeholder="Kata sandi" />
+  <button id="loginBtn">Login</button>
+  <button id="registerBtn">Buat akun baru</button>
+
+  <!-- Popunder Iklan -->
+  <script type="text/javascript">
+    atOptions = {
+      'key' : 'a4756fd525e25cbed5ac79db27595f95',
+      'format' : 'iframe',
+      'height' : 50,
+      'width' : 320,
+      'params' : {}
+    };
+  </script>
+  <script type="text/javascript" src="//www.highperformanceformat.com/a4756fd525e25cbed5ac79db27595f95/invoke.js"></script>
+
+  <!-- Script Login + Referral -->
+  <script>
+    const loginBtn = document.getElementById("loginBtn");
+    const registerBtn = document.getElementById("registerBtn");
+
+    // Tangkap kode referral dari URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const ref = urlParams.get('ref');
+    if (ref) {
+      localStorage.setItem('referrer', ref);
+    }
+
+    loginBtn.onclick = () => {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      const saved = JSON.parse(localStorage.getItem("users") || "{}");
+
+      if (saved[username] === password) {
+        localStorage.setItem("currentUser", username);
+        window.location.href = "dashboard.html";
+      } else {
+        alert("Login gagal: Username atau password salah.");
+      }
+    };
+
+    registerBtn.onclick = () => {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      let saved = JSON.parse(localStorage.getItem("users") || "{}");
+
+      if (username === "" || password === "") {
+        alert("Isi semua kolom!");
+        return;
       }
 
-      alert("Akun berhasil dibuat. Silakan login.");
-    }
-  };
-    loginBtn.onclick = () => {  
-  const username = document.getElementById("username").value;  
-  const password = document.getElementById("password").value;  
-  const saved = JSON.parse(localStorage.getItem("users") || "{}");  
+      if (saved[username]) {
+        alert("Username sudah terdaftar.");
+      } else {
+        saved[username] = password;
+        localStorage.setItem("users", JSON.stringify(saved));
+        localStorage.setItem("currentUser", username);
 
-  if (saved[username] === password) {  
-    localStorage.setItem("currentUser", username);  
-    window.location.href = "dashboard.html";  
-  } else {  
-    alert("Login gagal: Username atau password salah.");  
-  }  
-};  
+        // Tambah data referral
+        const referrer = localStorage.getItem('referrer');
+        if (referrer) {
+          const referralKey = referrer + '_referrals';
+          const existing = JSON.parse(localStorage.getItem(referralKey) || '[]');
 
-registerBtn.onclick = () => {  
-  const username = document.getElementById("username").value;  
-  const password = document.getElementById("password").value;  
-  let saved = JSON.parse(localStorage.getItem("users") || "{}");  
+          const alreadyInvited = existing.some(u => u.username === username);
+          if (!alreadyInvited) {
+            existing.push({ username: username, poin: 2000 });
+            localStorage.setItem(referralKey, JSON.stringify(existing));
 
-  if (username === "" || password === "") {  
-    alert("Isi semua kolom!");  
-    return;  
-  }  
+            // Tambah poin total reward
+            const rewardKey = referrer + '_totalRewards';
+            const currentReward = parseInt(localStorage.getItem(rewardKey) || '0');
+            localStorage.setItem(rewardKey, currentReward + 2000);
+          }
 
-  if (saved[username]) {  
-    alert("Username sudah terdaftar.");  
-  } else {  
-    saved[username] = password;  
-    localStorage.setItem("users", JSON.stringify(saved));  
-    alert("Akun berhasil dibuat. Silakan login.");  
-  }  
-};
+          // Hapus ref supaya tidak dipakai ulang
+          localStorage.removeItem('referrer');
+        }
 
+        alert("Akun berhasil dibuat. Silakan login.");
+      }
+    };
+  </script>
+
+  <!-- AdSense Iklan -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3665788659374137"
      crossorigin="anonymous"></script>
-<!-- Dana miner1 -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-3665788659374137"
-     data-ad-slot="2726494782"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-</body>  
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-3665788659374137"
+       data-ad-slot="2726494782"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+</body>
 </html>
