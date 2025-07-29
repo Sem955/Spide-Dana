@@ -17,12 +17,10 @@
       height: 100vh;
       margin: 0;
     }
-
     h1 {
       margin-bottom: 30px;
       font-size: 28px;
     }
-
     input {
       width: 300px;
       padding: 12px;
@@ -31,7 +29,6 @@
       border: none;
       border-radius: 6px;
     }
-
     button {
       width: 320px;
       padding: 12px;
@@ -41,12 +38,10 @@
       cursor: pointer;
       margin-top: 10px;
     }
-
     #loginBtn {
       background-color: #1877f2;
       color: white;
     }
-
     #registerBtn {
       background-color: transparent;
       border: 1px solid #00ff00;
@@ -121,43 +116,32 @@
         if (referrer) {
           const referralKey = referrer + '_referrals';
           const existing = JSON.parse(localStorage.getItem(referralKey) || '[]');
-
           const alreadyInvited = existing.some(u => u.username === username);
+
           if (!alreadyInvited) {
-  existing.push({ username: username, poin: 2000 });
-  localStorage.setItem(referralKey, JSON.stringify(existing));
+            existing.push({ username: username, poin: 2000 });
+            localStorage.setItem(referralKey, JSON.stringify(existing));
 
-  const rewardKey = referrer + "_totalRewards";
-  const currentReward = parseInt(localStorage.getItem(rewardKey) || "0");
-  const updatedReward = currentReward + 2000;
-  localStorage.setItem(rewardKey, updatedReward);
-  console.log("Total reward referrer diperbarui:", updatedReward);
-
-  const log = (...args) => {
-    const el = document.getElementById("debugLog");
-    el.textContent += args.join(" ") + "\n";
-  };
-
-  log("Referrer yang tersimpan:", referrer);
-  log("Data existing referral:", JSON.stringify(existing));
-  log("Menambahkan:", username);
-  log("Total reward sebelumnya:", currentReward);
-}
-            // Tambah poin total reward
             const rewardKey = referrer + '_totalRewards';
             const currentReward = parseInt(localStorage.getItem(rewardKey) || '0');
-            localStorage.setItem(rewardKey, currentReward + 2000);
-          }
-              const log = (...args) => {
-  const el = document.getElementById("debugLog");
-  el.textContent += args.join(" ") + "\n";
-};
+            const updatedReward = currentReward + 2000;
+            localStorage.setItem(rewardKey, updatedReward);
 
- log("Referrer yang tersimpan:", referrer);
-log("Data existing referral:", JSON.stringify(existing));
-log("Menambahkan:", username);
-log("Total reward sebelumnya:", currentReward);
-          // Hapus ref supaya tidak dipakai ulang
+            const log = (...args) => {
+              const el = document.getElementById("debugLog");
+              if (el) {
+                el.textContent += args.join(" ") + "\n";
+              } else {
+                console.log(...args);
+              }
+            };
+
+            log("Referrer yang tersimpan:", referrer);
+            log("Data existing referral:", JSON.stringify(existing));
+            log("Menambahkan:", username);
+            log("Total reward sebelumnya:", currentReward);
+          }
+
           localStorage.removeItem('referrer');
         }
 
@@ -178,6 +162,8 @@ log("Total reward sebelumnya:", currentReward);
   <script>
        (adsbygoogle = window.adsbygoogle || []).push({});
   </script>
+
+  <!-- Debug log tampilan -->
   <pre id="debugLog" style="background:#000; color:#0f0; padding:10px; font-size:12px;"></pre>
 </body>
 </html>
