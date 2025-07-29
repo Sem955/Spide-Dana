@@ -80,7 +80,7 @@
             color: black;
         }
         
-        #logoutBtn, #withdrawBtn, #referralBtn {
+        #logoutBtn, #withdrawBtn {
             background-color: #FFD700;
             color: black;
         }
@@ -217,15 +217,29 @@
     <div id="statusText">Memuat data...</div>
     
     <div class="watch-ad-container">
-        <button id="directLinkBtn">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/video.png" style="width:20px;height:20px;">
-            DIRECT LINK
-        </button>
+        <a href="https://www.profitableratecpm.com/r6t38ns3hh?key=ac955a03eb118a3acce55ae30410f9b5" target="_blank" style="text-decoration: none;">
+            <button>
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/video.png" alt="Video" style="width: 20px; height: 20px;" />
+                DIRCET LINK
+            </button>
+        </a>
         <button id="tiktokBtn">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/tiktok.png" style="width:20px;height:20px;">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/tiktok.png" alt="TikTok" style="width: 20px; height: 20px;" />
             DISCRET LINK
         </button>
     </div>
+    
+    <!-- Iklan dari profitableratecpm.com -->
+    <script type="text/javascript">
+        atOptions = {
+            'key' : 'ac86c93838d18124dc18da7238d0ef1a',
+            'format' : 'iframe',
+            'height' : 250,
+            'width' : 300,
+            'params' : {}
+        };
+    </script>
+    <script type="text/javascript" src="//www.highperformanceformat.com/ac86c93838d18124dc18da7238d0ef1a/invoke.js"></script>
     
     <div class="actions">
         <button id="claimBtn">Claim</button>
@@ -252,180 +266,157 @@
         <p>Total Poin Referral: <span id="referralTotalPoin">0</span> Poin</p>
         <button onclick="document.getElementById('referralModal').style.display='none'" style="margin-top:10px; background-color:red; color:white; border:none; padding:8px 16px; border-radius:6px;">Tutup</button>
     </div>
-
+    
     <script>
-        // Cek login
         const username = localStorage.getItem('currentUser');
-        if (!username) {
-            alert('Silakan login terlebih dahulu');
-            window.location.href = 'index.html';
-        }
-
-        // Inisialisasi Variabel
-        const CLAIM_REWARD = 500;
-        const COOLDOWN_MS = 1 * 60 * 60 * 1000; // 1 jam cooldown
+        if (!username) window.location.href = 'index.html';
         
-        // Elemen UI
+        const CLAIM_REWARD = 500;
+        const COOLDOWN_MS = 1 * 60 * 60 * 1000; // 1 jam dalam milidetik
+        
         const totalEl = document.getElementById('totalRewards');
         const dailyEl = document.getElementById('dailyRewards');
         const claimBtn = document.getElementById('claimBtn');
         const statusText = document.getElementById('statusText');
+        const logoutBtn = document.getElementById('logoutBtn');
         
-        // Load data user
-        let lastClaim = localStorage.getItem(username + '_lastClaim');
-        let totalReward = parseFloat(localStorage.getItem(username + '_totalReward') || 0;
+        let lastClaim = localStorage.getItem(username + "_lastClaim");
+        let totalReward = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
         
-        // Fungsi update UI
         function updateUI() {
             const now = Date.now();
-            const last = lastClaim ? parseInt(lastClaim) : 0;
-            const elapsed = now - last;
-            const canClaim = elapsed >= COOLDOWN_MS;
+            let last = lastClaim ? parseInt(lastClaim) : 0;
+            let elapsed = now - last;
+            let canClaim = elapsed >= COOLDOWN_MS;
             
             if (canClaim) {
                 dailyEl.textContent = CLAIM_REWARD.toFixed(3);
                 claimBtn.disabled = false;
                 statusText.textContent = "Kamu bisa klaim sekarang!";
             } else {
-                const progress = elapsed / COOLDOWN_MS;
+                let progress = elapsed / COOLDOWN_MS;
                 dailyEl.textContent = (CLAIM_REWARD * progress).toFixed(3);
                 claimBtn.disabled = true;
-                const remaining = Math.ceil((COOLDOWN_MS - elapsed) / 3600000);
-                statusText.textContent = `Tunggu ${remaining} jam lagi untuk klaim berikutnya.`;
+                let sisa = Math.ceil((COOLDOWN_MS - elapsed) / 3600000);
+                statusText.textContent = `Tunggu ${sisa} jam lagi untuk klaim berikutnya.`;
             }
             
             totalEl.textContent = totalReward.toFixed(3);
         }
         
-        // Sistem Claim
-        claimBtn.addEventListener('click', () => {
+        claimBtn.onclick = () => {
             totalReward += CLAIM_REWARD;
-            localStorage.setItem(username + '_totalReward', totalReward);
+            localStorage.setItem(username + "_totalReward", totalReward);
             lastClaim = Date.now();
-            localStorage.setItem(username + '_lastClaim', lastClaim);
+            localStorage.setItem(username + "_lastClaim", lastClaim);
             updateUI();
-            alert('Berhasil claim 500 poin!');
-        });
+        };
         
-        // Sistem Logout
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            localStorage.removeItem('currentUser');
-            window.location.href = 'index.html';
-        });
+        logoutBtn.onclick = () => {
+            localStorage.removeItem("currentUser");
+            window.location.href = "index.html";
+        };
         
-        // Sistem Direct Link
-        document.getElementById('directLinkBtn').addEventListener('click', () => {
-            window.open('https://www.profitableratecpm.com/r6t38ns3hh?key=ac955a03eb118a3acce55ae30410f9b5', '_blank');
-        });
+        const withdrawBtn = document.getElementById("withdrawBtn");
+        const withdrawForm = document.getElementById("withdrawForm");
+        const submitWithdraw = document.getElementById("submitWithdraw");
+        const cancelWithdraw = document.getElementById("cancelWithdraw");
+        const withdrawMessage = document.getElementById("withdrawMessage");
         
-        // Sistem TikTok
-        document.getElementById('tiktokBtn').addEventListener('click', () => {
-            localStorage.setItem('watchedTikTok', 'true');
-            window.open('https://vm.tiktok.com/ZSSFXt8CE/', '_blank');
-            
-            setTimeout(() => {
-                if (localStorage.getItem('watchedTikTok') === 'true') {
-                    totalReward += 1000;
-                    localStorage.setItem(username + '_totalReward', totalReward);
-                    localStorage.removeItem('watchedTikTok');
-                    updateUI();
-                    alert('🎉 Kamu dapat 1000 poin dari TikTok!');
-                }
-            }, 30000);
-        });
+        withdrawBtn.onclick = () => {
+            withdrawForm.style.display = "block";
+            withdrawMessage.textContent = "";
+        };
         
-        // Sistem Withdraw
-        const withdrawBtn = document.getElementById('withdrawBtn');
-        const withdrawForm = document.getElementById('withdrawForm');
-        const submitWithdraw = document.getElementById('submitWithdraw');
-        const cancelWithdraw = document.getElementById('cancelWithdraw');
-        const withdrawMessage = document.getElementById('withdrawMessage');
-        
-        withdrawBtn.addEventListener('click', () => {
-            withdrawForm.style.display = 'block';
-        });
-        
-        submitWithdraw.addEventListener('click', () => {
-            const amount = parseFloat(document.getElementById('withdrawAmount').value);
-            const dana = document.getElementById('withdrawDana').value.trim();
+        submitWithdraw.onclick = () => {
+            const amount = parseFloat(document.getElementById("withdrawAmount").value);
+            const dana = document.getElementById("withdrawDana").value;
             
             if (!amount || !dana) {
-                withdrawMessage.textContent = 'Harap isi semua field!';
-                withdrawMessage.style.color = 'red';
+                withdrawMessage.textContent = "Harap isi semua field!";
+                withdrawMessage.style.color = "red";
                 return;
             }
             
             if (amount < 100000) {
-                withdrawMessage.textContent = 'Minimal withdraw 100.000 poin!';
-                withdrawMessage.style.color = 'red';
+                withdrawMessage.textContent = "Minimal withdraw adalah 100000 poin!";
+                withdrawMessage.style.color = "red";
                 return;
             }
             
             if (amount > totalReward) {
-                withdrawMessage.textContent = 'Poin tidak cukup!';
-                withdrawMessage.style.color = 'red';
+                withdrawMessage.textContent = "Poin tidak cukup untuk withdraw!";
+                withdrawMessage.style.color = "red";
                 return;
             }
             
+            // Simulate sending notification
+            console.log(`📤 Withdraw Baru!\n\nUser: ${username}\nJumlah: ${amount} poin\nNomor DANA: ${dana}`);
+            
             totalReward -= amount;
-            localStorage.setItem(username + '_totalReward', totalReward);
+            localStorage.setItem(username + "_totalReward", totalReward);
             updateUI();
             
-            withdrawMessage.textContent = 'Withdraw berhasil! Akan diproses dalam 1x24 jam.';
-            withdrawMessage.style.color = 'green';
+            withdrawMessage.textContent = "Withdraw berhasil!";
+            withdrawMessage.style.color = "lime";
+            
+            document.getElementById("withdrawAmount").value = "";
+            document.getElementById("withdrawDana").value = "";
             
             setTimeout(() => {
-                withdrawForm.style.display = 'none';
-                withdrawMessage.textContent = '';
-                document.getElementById('withdrawAmount').value = '';
-                document.getElementById('withdrawDana').value = '';
-            }, 3000);
-        });
+                withdrawForm.style.display = "none";
+                withdrawMessage.textContent = "";
+            }, 1000);
+        };
         
-        cancelWithdraw.addEventListener('click', () => {
-            withdrawForm.style.display = 'none';
-            document.getElementById('withdrawAmount').value = '';
-            document.getElementById('withdrawDana').value = '';
-            withdrawMessage.textContent = '';
-        });
+        cancelWithdraw.onclick = () => {
+            withdrawForm.style.display = "none";
+            withdrawMessage.textContent = "";
+            document.getElementById("withdrawAmount").value = "";
+            document.getElementById("withdrawDana").value = "";
+        };
         
-        // Sistem Referral
-        const referralBtn = document.getElementById('referralBtn');
-        const referralModal = document.getElementById('referralModal');
-        const referralLink = document.getElementById('referralLink');
-        const referralList = document.getElementById('referralList');
-        const referralTotalPoin = document.getElementById('referralTotalPoin');
-        
-        referralBtn.addEventListener('click', () => {
-            referralLink.value = `${window.location.origin}/index.html?ref=${username}`;
-            loadReferralData();
-            referralModal.style.display = 'block';
-        });
-        
-        function loadReferralData() {
-            const referralData = JSON.parse(localStorage.getItem(username + '_referrals') || []);
-            let totalPoints = 0;
+        // TikTok button functionality
+        const tiktokBtn = document.getElementById("tiktokBtn");
+        tiktokBtn.addEventListener("click", () => {
+            localStorage.setItem("watchedTikTok", "true");
+            window.open("https://vm.tiktok.com/ZSSFXt8CE/", "_blank");
             
-            referralList.innerHTML = '';
-            referralData.forEach(user => {
-                const li = document.createElement('li');
-                li.textContent = `${user.username} (+${user.poin} poin)`;
-                referralList.appendChild(li);
-                totalPoints += user.poin;
-            });
-            
-            referralTotalPoin.textContent = totalPoints;
-        }
+            // Beri reward setelah menonton TikTok
+            setTimeout(() => {
+                totalReward += 1000;
+                localStorage.setItem(username + "_totalReward", totalReward);
+                updateUI();
+                alert("🎉 Kamu dapat 1000 poin dari menonton TikTok!");
+            }, 30000); // Beri reward setelah 30 detik
+        });
+        
+        // Referral system
+        const referralBtn = document.getElementById("referralBtn");
+        const referralModal = document.getElementById("referralModal");
+        const referralLinkInput = document.getElementById("referralLink");
+        
+        referralBtn.addEventListener("click", () => {
+            const username = localStorage.getItem("currentUser") || "user";
+            const referralLink = `${window.location.origin}?ref=${username}`;
+            referralLinkInput.value = referralLink;
+            referralModal.style.display = "block";
+        });
         
         function copyReferralLink() {
-            referralLink.select();
-            document.execCommand('copy');
-            alert('Link referral berhasil disalin!');
+            referralLinkInput.select();
+            referralLinkInput.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+            alert("Link referral disalin!");
         }
         
-        // Inisialisasi
+        // Initialize UI
         updateUI();
         setInterval(updateUI, 1000);
     </script>
+    
+    <!-- Iklan tambahan dari profitableratecpm.com -->
+    <script type='text/javascript' src='//pl27292205.profitableratecpm.com/df/1b/f6/df1bf6dfa5e026ae1544a28586693749.js'></script>
+    <script type='text/javascript' src='//pl27291047.profitableratecpm.com/34/90/d4/3490d49d6ad49b5ca70bed008db3f77c.js'></script>
 </body>
-</html>
+    </html>
