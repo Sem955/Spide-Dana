@@ -3,178 +3,105 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login Game</title>
-  <meta name="66d5b35c8d1ba7206ce8c59fe4fa5d2fa0f75493" content="66d5b35c8d1ba7206ce8c59fe4fa5d2fa0f75493" />
+  <title>Login DANA Rewards</title>
   <style>
-    :root {
-      --primary: #FF6B00;
-      --secondary: #FFD700;
-      --dark: #1A1A1A;
-      --light: #F9F6EE;
-      --accent: #4CAF50;
-    }
-    
     body {
-      background-color: var(--dark);
-      color: var(--light);
-      font-family: 'Arial', sans-serif;
+      background-color: #F9F6EE;
+      font-family: Arial, sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
       margin: 0;
-      background-image: radial-gradient(circle at center, #2a2a2a 0%, #1A1A1A 100%);
+      padding: 20px;
     }
     
     .logo {
       width: 120px;
-      height: 120px;
-      margin-bottom: 20px;
-      background-color: var(--primary);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 20px rgba(255, 107, 0, 0.4);
-    }
-    
-    .logo span {
-      font-size: 48px;
-      font-weight: bold;
-      color: white;
+      margin-bottom: 30px;
     }
     
     .login-container {
-      background-color: rgba(255, 255, 255, 0.1);
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(5px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      width: 350px;
+      background-color: white;
+      border-radius: 10px;
+      padding: 25px;
+      width: 100%;
+      max-width: 350px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       text-align: center;
     }
     
     h1 {
-      margin-bottom: 30px;
-      font-size: 28px;
-      color: var(--secondary);
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    }
-    
-    .input-group {
-      margin-bottom: 20px;
-      text-align: left;
-    }
-    
-    .input-group label {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--secondary);
-      font-size: 14px;
+      color: #333;
+      margin-bottom: 25px;
+      font-size: 24px;
     }
     
     input {
       width: 100%;
       padding: 12px 15px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
       font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      background-color: rgba(255, 255, 255, 0.1);
-      color: white;
-      box-sizing: border-box;
-      transition: all 0.3s;
-    }
-    
-    input:focus {
-      outline: none;
-      background-color: rgba(255, 255, 255, 0.2);
-      box-shadow: 0 0 0 2px var(--primary);
-    }
-    
-    input::placeholder {
-      color: rgba(255, 255, 255, 0.5);
     }
     
     button {
       width: 100%;
-      padding: 14px;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
       font-size: 16px;
       font-weight: bold;
-      border: none;
-      border-radius: 8px;
       cursor: pointer;
-      transition: all 0.3s;
-      margin-top: 10px;
+      margin-top: 8px;
     }
     
     #loginBtn {
-      background-color: var(--primary);
+      background-color: #1877f2;
       color: white;
-      box-shadow: 0 4px 15px rgba(255, 107, 0, 0.4);
-    }
-    
-    #loginBtn:hover {
-      background-color: #E05D00;
-      transform: translateY(-2px);
     }
     
     #registerBtn {
-      background-color: transparent;
-      border: 2px solid var(--accent);
-      color: var(--accent);
+      background-color: #42b72a;
+      color: white;
+      margin-top: 15px;
     }
     
-    #registerBtn:hover {
-      background-color: rgba(76, 175, 80, 0.1);
-      transform: translateY(-2px);
+    .input-label {
+      display: block;
+      text-align: left;
+      margin-bottom: 5px;
+      color: #555;
+      font-size: 14px;
     }
     
-    .footer-text {
-      margin-top: 20px;
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.5);
+    .input-group {
+      margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
-  <div class="logo">
-    <span>G</span>
-  </div>
+  <img src="https://i.postimg.cc/0KZ505rV/file-0000000084f062309e6fd2523e94f3de.png" alt="Logo DANA" class="logo">
   
   <div class="login-container">
     <h1>LOGIN DAFTAR</h1>
     
     <div class="input-group">
-      <label for="username">EMAIL</label>
-      <input type="text" id="username" placeholder="Masukan email" />
+      <label class="input-label">Masukan email</label>
+      <input type="text" id="username" placeholder="contoh@email.com">
     </div>
     
     <div class="input-group">
-      <label for="password">KATA SANDI</label>
-      <input type="password" id="password" placeholder="Kata sandi" />
+      <label class="input-label">Kata sandi</label>
+      <input type="password" id="password" placeholder="Minimal 6 karakter">
     </div>
     
     <button id="loginBtn">Login</button>
     <button id="registerBtn">Buat akun baru</button>
-    
-    <p class="footer-text">© 2025 Game Platform. All rights reserved.</p>
   </div>
 
-  <!-- Popunder Iklan -->
-  <script type="text/javascript">
-    atOptions = {
-      'key' : 'a4756fd525e25cbed5ac79db27595f95',
-      'format' : 'iframe',
-      'height' : 50,
-      'width' : 320,
-      'params' : {}
-    };
-  </script>
-  <script type="text/javascript" src="//www.highperformanceformat.com/a4756fd525e25cbed5ac79db27595f95/invoke.js"></script>
-
-  <!-- Script Login + Referral -->
   <script>
     const loginBtn = document.getElementById("loginBtn");
     const registerBtn = document.getElementById("registerBtn");
@@ -191,11 +118,16 @@
       const password = document.getElementById("password").value;
       const saved = JSON.parse(localStorage.getItem("users") || "{}");
 
+      if (!username || !password) {
+        alert("Harap isi email dan password");
+        return;
+      }
+
       if (saved[username] === password) {
         localStorage.setItem("currentUser", username);
         window.location.href = "dashboard.html";
       } else {
-        alert("Login gagal: Username atau password salah.");
+        alert("Login gagal: Email atau password salah.");
       }
     };
 
@@ -204,71 +136,51 @@
       const password = document.getElementById("password").value;
       let saved = JSON.parse(localStorage.getItem("users") || "{}");
 
-      if (username === "" || password === "") {
-        alert("Isi semua kolom!");
+      if (!username || !password) {
+        alert("Harap isi semua kolom!");
+        return;
+      }
+
+      if (password.length < 6) {
+        alert("Password minimal 6 karakter");
         return;
       }
 
       if (saved[username]) {
-        alert("Username sudah terdaftar.");
-      } else {
-        saved[username] = password;
-        localStorage.setItem("users", JSON.stringify(saved));
-        localStorage.setItem("currentUser", username);
+        alert("Email sudah terdaftar.");
+        return;
+      }
 
-        // Tambah data referral
-        const referrer = localStorage.getItem('referrer');
-        if (referrer) {
-          const referralKey = referrer + '_referrals';
-          const existing = JSON.parse(localStorage.getItem(referralKey) || '[]');
-          const alreadyInvited = existing.some(u => u.username === username);
+      // Simpan user baru
+      saved[username] = password;
+      localStorage.setItem("users", JSON.stringify(saved));
+      localStorage.setItem("currentUser", username);
 
-          if (!alreadyInvited) {
-            existing.push({ username: username, poin: 2000 });
-            localStorage.setItem(referralKey, JSON.stringify(existing));
+      // Proses referral jika ada
+      const referrer = localStorage.getItem('referrer');
+      if (referrer && referrer !== username) {
+        const referralKey = referrer + '_referrals';
+        const existing = JSON.parse(localStorage.getItem(referralKey) || '[]');
+        const alreadyInvited = existing.some(u => u.username === username);
 
-            const rewardKey = referrer + '_totalRewards';
-            const currentReward = parseInt(localStorage.getItem(rewardKey) || '0');
-            const updatedReward = currentReward + 2000;
-            localStorage.setItem(rewardKey, updatedReward);
+        if (!alreadyInvited) {
+          existing.push({ username: username, poin: 2000 });
+          localStorage.setItem(referralKey, JSON.stringify(existing));
 
-            const log = (...args) => {
-              const el = document.getElementById("debugLog");
-              if (el) {
-                el.textContent += args.join(" ") + "\n";
-              } else {
-                console.log(...args);
-              }
-            };
-
-            log("Referrer yang tersimpan:", referrer);
-            log("Data existing referral:", JSON.stringify(existing));
-            log("Menambahkan:", username);
-            log("Total reward sebelumnya:", currentReward);
-          }
-
-          localStorage.removeItem('referrer');
+          const rewardKey = referrer + '_totalRewards';
+          const currentReward = parseInt(localStorage.getItem(rewardKey) || '0');
+          const updatedReward = currentReward + 2000;
+          localStorage.setItem(rewardKey, updatedReward);
         }
 
-        alert("Akun berhasil dibuat. Silakan login.");
+        localStorage.removeItem('referrer');
       }
+
+      alert("Akun berhasil dibuat. Anda akan dialihkan ke dashboard.");
+      setTimeout(() => {
+        window.location.href = "dashboard.html";
+      }, 1500);
     };
   </script>
-
-  <!-- AdSense Iklan -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3665788659374137"
-     crossorigin="anonymous"></script>
-  <ins class="adsbygoogle"
-       style="display:block"
-       data-ad-client="ca-pub-3665788659374137"
-       data-ad-slot="2726494782"
-       data-ad-format="auto"
-       data-full-width-responsive="true"></ins>
-  <script>
-       (adsbygoogle = window.adsbygoogle || []).push({});
-  </script>
-
-  <!-- Debug log tampilan -->
-  <pre id="debugLog" style="background:#000; color:#0f0; padding:10px; font-size:12px; position: fixed; bottom: 10px; right: 10px; max-width: 300px; max-height: 200px; overflow: auto;"></pre>
 </body>
 </html>
