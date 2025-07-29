@@ -406,6 +406,24 @@ setInterval(updateUI, 1000);
   <p>Total Poin Referral: <span id="referralTotalPoin">0</span> Poin</p>
   <button onclick="document.getElementById('referralModal').style.display='none'" style="margin-top:10px; background-color:red; color:white; border:none; padding:8px 16px; border-radius:6px;">Tutup</button>
   </div>
-   
+   <script>
+  const referralBtn = document.getElementById("referralBtn");
+  const referralModal = document.getElementById("referralModal");
+  const referralLinkInput = document.getElementById("referralLink");
+
+  referralBtn.addEventListener("click", () => {
+    const username = localStorage.getItem("currentUser") || "user";
+    const referralLink = `${window.location.origin}?ref=${username}`;
+    referralLinkInput.value = referralLink;
+    referralModal.style.display = "block";
+  });
+
+  function copyReferralLink() {
+    referralLinkInput.select();
+    referralLinkInput.setSelectionRange(0, 99999);
+    document.execCommand("copy");
+    alert("Link referral disalin!");
+  }
+   </script>
 </body>
   </html>
