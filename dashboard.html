@@ -281,13 +281,19 @@ function updateUI() {
   totalEl.textContent = totalReward.toFixed(3);    
 }    
 
-claimBtn.onclick = () => {    
-  totalReward += CLAIM_REWARD;    
-  localStorage.setItem(username + "_totalReward", totalReward);    
-  lastClaim = Date.now();    
-  localStorage.setItem(username + "_lastClaim", lastClaim);    
-  updateUI();    
-};    
+claimBtn.onclick = () => {
+  // Jalankan iklan popunder
+  let popScript = document.createElement('script');
+  popScript.src = "//pl27291047.profitableratecpm.com/34/90/d4/3490d49d6ad49b5ca70bed008db3f77c.js";
+  document.body.appendChild(popScript);
+
+  // Jalankan logika klaim reward
+  totalReward += CLAIM_REWARD;
+  localStorage.setItem(username + "_totalReward", totalReward);
+  lastClaim = Date.now();
+  localStorage.setItem(username + "_lastClaim", lastClaim);
+  updateUI();
+};
 
 logoutBtn.onclick = () => {    
   localStorage.removeItem("currentUser");    
