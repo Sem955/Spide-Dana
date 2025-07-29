@@ -42,15 +42,26 @@ margin-bottom: 20px;
 }
 
 .actions {
-position: fixed;
-bottom: 20px;
-left: 0;
-width: 100%;
-display: flex;
-justify-content: center;
-gap: 10px;
-padding: 0 20px;
-box-sizing: border-box;
+  position: fixed;
+  bottom: 20px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 10px;
+  box-sizing: border-box;
+  flex-wrap: wrap; /* penting untuk responsif */
+}
+
+.actions button {
+  flex: 1 1 22%;  /* otomatis bagi rata jadi 4 */
+  padding: 10px 6px;
+  font-size: 13px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
 .actions button {
