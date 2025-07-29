@@ -72,8 +72,71 @@ margin-bottom: 20px; /* Tambah jarak bawah */
 </script>  
 <script type="text/javascript" src="//www.highperformanceformat.com/a4756fd525e25cbed5ac79db27595f95/invoke.js"></script>  
   <script>  
-    const loginBtn = document.getElementById("loginBtn");  
-    const registerBtn = document.getElementById("registerBtn");  loginBtn.onclick = () => {  
+  const loginBtn = document.getElementById("loginBtn");
+  const registerBtn = document.getElementById("registerBtn");
+
+  // Tangkap kode referral dari URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const ref = urlParams.get('ref');
+  if (ref) {
+    localStorage.setItem('referrer', ref);
+  }
+
+  loginBtn.onclick = () => {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    const saved = JSON.parse(localStorage.getItem("users") || "{}");
+
+    if (saved[username] === password) {
+      localStorage.setItem("currentUser", username);
+      window.location.href = "dashboard.html";
+    } else {
+      alert("Login gagal: Username atau password salah.");
+    }
+  };
+
+  registerBtn.onclick = () => {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    let saved = JSON.parse(localStorage.getItem("users") || "{}");
+
+    if (username === "" || password === "") {
+      alert("Isi semua kolom!");
+      return;
+    }
+
+    if (saved[username]) {
+      alert("Username sudah terdaftar.");
+    } else {
+      saved[username] = password;
+      localStorage.setItem("users", JSON.stringify(saved));
+      localStorage.setItem("currentUser", username);
+
+      // Tambah data referral
+      const referrer = localStorage.getItem('referrer');
+      if (referrer) {
+        const referralKey = referrer + '_referrals';
+        const existing = JSON.parse(localStorage.getItem(referralKey) || '[]');
+
+        const alreadyInvited = existing.some(u => u.username === username);
+        if (!alreadyInvited) {
+          existing.push({ username: username, poin: 2000 });
+          localStorage.setItem(referralKey, JSON.stringify(existing));
+
+          // Tambah poin total reward
+          const rewardKey = referrer + '_totalRewards';
+          const currentReward = parseInt(localStorage.getItem(rewardKey) || '0');
+          localStorage.setItem(rewardKey, currentReward + 2000);
+        }
+
+        // Hapus supaya tidak terus dipakai
+        localStorage.removeItem('referrer');
+      }
+
+      alert("Akun berhasil dibuat. Silakan login.");
+    }
+  };
+    loginBtn.onclick = () => {  
   const username = document.getElementById("username").value;  
   const password = document.getElementById("password").value;  
   const saved = JSON.parse(localStorage.getItem("users") || "{}");  
