@@ -132,7 +132,15 @@
             const currentReward = parseInt(localStorage.getItem(rewardKey) || '0');
             localStorage.setItem(rewardKey, currentReward + 2000);
           }
+              const log = (...args) => {
+  const el = document.getElementById("debugLog");
+  el.textContent += args.join(" ") + "\n";
+};
 
+ log("Referrer yang tersimpan:", referrer);
+log("Data existing referral:", JSON.stringify(existing));
+log("Menambahkan:", username);
+log("Total reward sebelumnya:", currentReward);
           // Hapus ref supaya tidak dipakai ulang
           localStorage.removeItem('referrer');
         }
