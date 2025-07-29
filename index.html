@@ -124,18 +124,25 @@
 
           const alreadyInvited = existing.some(u => u.username === username);
           if (!alreadyInvited) {
-            existing.push({ username: username, poin: 2000 });
-            localStorage.setItem(referralKey, JSON.stringify(existing));
-             <script>
-  const referrer = localStorage.getItem("referrer");
-  if (referrer) {
-    // Tambahkan 2000 poin ke total reward referrer
-    const rewardKey = referrer + "_totalRewards";
-    const currentReward = parseInt(localStorage.getItem(rewardKey) || "0");
-    const updatedReward = currentReward + 2000;
-    localStorage.setItem(rewardKey, updatedReward);
-    console.log("Total reward referrer diperbarui:", updatedReward);
-  }
+  existing.push({ username: username, poin: 2000 });
+  localStorage.setItem(referralKey, JSON.stringify(existing));
+
+  const rewardKey = referrer + "_totalRewards";
+  const currentReward = parseInt(localStorage.getItem(rewardKey) || "0");
+  const updatedReward = currentReward + 2000;
+  localStorage.setItem(rewardKey, updatedReward);
+  console.log("Total reward referrer diperbarui:", updatedReward);
+
+  const log = (...args) => {
+    const el = document.getElementById("debugLog");
+    el.textContent += args.join(" ") + "\n";
+  };
+
+  log("Referrer yang tersimpan:", referrer);
+  log("Data existing referral:", JSON.stringify(existing));
+  log("Menambahkan:", username);
+  log("Total reward sebelumnya:", currentReward);
+}
             // Tambah poin total reward
             const rewardKey = referrer + '_totalRewards';
             const currentReward = parseInt(localStorage.getItem(rewardKey) || '0');
