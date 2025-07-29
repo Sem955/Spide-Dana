@@ -35,16 +35,20 @@
         .reward-title {
             font-size: 16px;
             margin-bottom: 10px;
+            color: #FFD700;
         }
         
         .reward-value {
-            font-size: 20px;
+            font-size: 24px;
             font-weight: bold;
+            color: white;
         }
         
         #statusText {
             text-align: center;
             margin-bottom: 20px;
+            color: #333;
+            font-weight: bold;
         }
         
         .actions {
@@ -54,7 +58,7 @@
             width: 100%;
             display: flex;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
             padding: 0 10px;
             box-sizing: border-box;
             flex-wrap: wrap;
@@ -62,16 +66,18 @@
         
         .actions button {
             flex: 1;
+            min-width: 120px;
             padding: 12px 16px;
             font-size: 14px;
             font-weight: bold;
             border: none;
             border-radius: 8px;
             cursor: pointer;
+            transition: all 0.3s;
         }
         
         #claimBtn:disabled {
-            background-color: gray;
+            background-color: #666 !important;
             cursor: not-allowed;
         }
         
@@ -80,9 +86,35 @@
             color: black;
         }
         
-        #logoutBtn, #withdrawBtn {
-            background-color: #FFD700;
-            color: black;
+        #claimBtn:hover {
+            background-color: #e6c200;
+        }
+        
+        #withdrawBtn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        #withdrawBtn:hover {
+            background-color: #3e8e41;
+        }
+        
+        #logoutBtn {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        #logoutBtn:hover {
+            background-color: #d32f2f;
+        }
+        
+        #referralBtn {
+            background-color: #2196F3;
+            color: white;
+        }
+        
+        #referralBtn:hover {
+            background-color: #0b7dda;
         }
         
         #withdrawForm {
@@ -98,6 +130,8 @@
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
             z-index: 1000;
             text-align: center;
+            width: 90%;
+            max-width: 400px;
         }
         
         #withdrawForm input {
@@ -112,17 +146,21 @@
         
         #withdrawForm button {
             margin-top: 10px;
-            background-color: #FFD700;
-            color: black;
             border: none;
             padding: 10px 20px;
             border-radius: 8px;
             cursor: pointer;
+            font-weight: bold;
+        }
+        
+        #submitWithdraw {
+            background-color: #4CAF50;
+            color: white;
         }
         
         #cancelWithdraw {
-            background-color: red !important;
-            color: white !important;
+            background-color: #f44336;
+            color: white;
             margin-left: 10px;
         }
         
@@ -173,11 +211,12 @@
             align-items: center;
             gap: 8px;
             cursor: pointer;
+            transition: all 0.3s;
         }
         
-        #tiktokBtn {
-            background-color: black;
-            color: white;
+        .watch-ad-container button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.3);
         }
         
         #referralModal {
@@ -196,6 +235,48 @@
             max-width: 350px;
             box-sizing: border-box;
         }
+        
+        #referralModal h3 {
+            margin-top: 0;
+            color: #2196F3;
+        }
+        
+        #referralLink {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+        
+        #referralList {
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 10px 0;
+            padding: 0;
+        }
+        
+        #referralList li {
+            background-color: #f5f5f5;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            color: #333;
+        }
+        
+        #referralList li span {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        
+        #referralTotalPoin {
+            font-weight: bold;
+            color: #2196F3;
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
@@ -211,35 +292,21 @@
     </div>
     
     <div class="logo-dana">
-        <img src="https://i.postimg.cc/0KZ505rV/file-0000000084f062309e6fd2523e94f3de.png" alt="Logo Dana" />
+        <img src="https://i.postimg.cc/0KZ505rV/file-0000000084f062309e6fd2523e94f3de.png" alt="Logo" />
     </div>
     
     <div id="statusText">Memuat data...</div>
     
     <div class="watch-ad-container">
-        <a href="https://www.profitableratecpm.com/r6t38ns3hh?key=ac955a03eb118a3acce55ae30410f9b5" target="_blank" style="text-decoration: none;">
-            <button>
-                <img src="https://img.icons8.com/ios-filled/50/ffffff/video.png" alt="Video" style="width: 20px; height: 20px;" />
-                DIRCET LINK
-            </button>
-        </a>
+        <button id="directLinkBtn">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/video.png" alt="Video" style="width: 20px; height: 20px;" />
+            DIRECT LINK
+        </button>
         <button id="tiktokBtn">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/tiktok.png" alt="TikTok" style="width: 20px; height: 20px;" />
             DISCRET LINK
         </button>
     </div>
-    
-    <!-- Iklan dari profitableratecpm.com -->
-    <script type="text/javascript">
-        atOptions = {
-            'key' : 'ac86c93838d18124dc18da7238d0ef1a',
-            'format' : 'iframe',
-            'height' : 250,
-            'width' : 300,
-            'params' : {}
-        };
-    </script>
-    <script type="text/javascript" src="//www.highperformanceformat.com/ac86c93838d18124dc18da7238d0ef1a/invoke.js"></script>
     
     <div class="actions">
         <button id="claimBtn">Claim</button>
@@ -249,8 +316,8 @@
     </div>
     
     <div id="withdrawForm">
-        <input type="number" id="withdrawAmount" placeholder="Jumlah Poin yang ingin diwithdraw" /><br />
-        <input type="text" id="withdrawDana" placeholder="Nomor Dana kamu" /><br />
+        <input type="number" id="withdrawAmount" placeholder="Jumlah Poin yang ingin diwithdraw" />
+        <input type="text" id="withdrawDana" placeholder="Nomor Dana kamu" />
         <button id="submitWithdraw">Submit Withdraw</button>
         <button id="cancelWithdraw">Batal</button>
         <div id="withdrawMessage"></div>
@@ -259,26 +326,29 @@
     <div id="referralModal">
         <h3>Referral Kamu</h3>
         <p>Bagikan link ini ke temanmu:</p>
-        <input type="text" id="referralLink" readonly style="width:100%; padding:8px; margin-bottom:10px; border-radius:6px; border:1px solid #ccc;" />
-        <button onclick="copyReferralLink()" style="background-color:#4CAF50; color:white; border:none; padding:10px 16px; border-radius:6px; cursor:pointer;">Salin Link</button>
+        <input type="text" id="referralLink" readonly />
+        <button onclick="copyReferralLink()" style="background-color:#4CAF50; color:white; border:none; padding:10px 16px; border-radius:6px; cursor:pointer; width:100%;">Salin Link</button>
         <h4 style="margin-top:15px;">Orang yang Kamu Undang:</h4>
-        <ul id="referralList" style="list-style:none; padding-left:0;"></ul>
+        <ul id="referralList"></ul>
         <p>Total Poin Referral: <span id="referralTotalPoin">0</span> Poin</p>
-        <button onclick="document.getElementById('referralModal').style.display='none'" style="margin-top:10px; background-color:red; color:white; border:none; padding:8px 16px; border-radius:6px;">Tutup</button>
+        <button onclick="document.getElementById('referralModal').style.display='none'" style="margin-top:10px; background-color:red; color:white; border:none; padding:8px 16px; border-radius:6px; width:100%;">Tutup</button>
     </div>
-    
+
     <script>
         const username = localStorage.getItem('currentUser');
         if (!username) window.location.href = 'index.html';
         
         const CLAIM_REWARD = 500;
         const COOLDOWN_MS = 1 * 60 * 60 * 1000; // 1 jam dalam milidetik
+        const REFERRAL_REWARD = 2000; // 2000 poin per referral
         
         const totalEl = document.getElementById('totalRewards');
         const dailyEl = document.getElementById('dailyRewards');
         const claimBtn = document.getElementById('claimBtn');
         const statusText = document.getElementById('statusText');
         const logoutBtn = document.getElementById('logoutBtn');
+        const directLinkBtn = document.getElementById('directLinkBtn');
+        const tiktokBtn = document.getElementById('tiktokBtn');
         
         let lastClaim = localStorage.getItem(username + "_lastClaim");
         let totalReward = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
@@ -292,13 +362,15 @@
             if (canClaim) {
                 dailyEl.textContent = CLAIM_REWARD.toFixed(3);
                 claimBtn.disabled = false;
-                statusText.textContent = "Kamu bisa klaim sekarang!";
+                statusText.textContent = "🎉 Kamu bisa klaim sekarang!";
+                statusText.style.color = "#4CAF50";
             } else {
                 let progress = elapsed / COOLDOWN_MS;
                 dailyEl.textContent = (CLAIM_REWARD * progress).toFixed(3);
                 claimBtn.disabled = true;
                 let sisa = Math.ceil((COOLDOWN_MS - elapsed) / 3600000);
-                statusText.textContent = `Tunggu ${sisa} jam lagi untuk klaim berikutnya.`;
+                statusText.textContent = `⏳ Tunggu ${sisa} jam lagi untuk klaim berikutnya.`;
+                statusText.style.color = "#f44336";
             }
             
             totalEl.textContent = totalReward.toFixed(3);
@@ -310,6 +382,12 @@
             lastClaim = Date.now();
             localStorage.setItem(username + "_lastClaim", lastClaim);
             updateUI();
+            
+            // Animasi
+            claimBtn.textContent = "✔ Berhasil!";
+            setTimeout(() => {
+                claimBtn.textContent = "Claim";
+            }, 2000);
         };
         
         logoutBtn.onclick = () => {
@@ -317,6 +395,27 @@
             window.location.href = "index.html";
         };
         
+        directLinkBtn.onclick = () => {
+            window.open("https://www.profitableratecpm.com/r6t38ns3hh?key=ac955a03eb118a3acce55ae30410f9b5", "_blank");
+        };
+        
+        tiktokBtn.onclick = () => {
+            localStorage.setItem("watchedTikTok", "true");
+            window.open("https://vm.tiktok.com/ZSSFXt8CE/", "_blank");
+            
+            // Beri reward setelah 30 detik
+            setTimeout(() => {
+                if (localStorage.getItem("watchedTikTok") === "true") {
+                    totalReward += 1000;
+                    localStorage.setItem(username + "_totalReward", totalReward);
+                    localStorage.removeItem("watchedTikTok");
+                    updateUI();
+                    alert("🎉 Kamu dapat 1000 poin dari TikTok!");
+                }
+            }, 30000);
+        };
+        
+        // Sistem Withdraw
         const withdrawBtn = document.getElementById("withdrawBtn");
         const withdrawForm = document.getElementById("withdrawForm");
         const submitWithdraw = document.getElementById("submitWithdraw");
@@ -330,7 +429,7 @@
         
         submitWithdraw.onclick = () => {
             const amount = parseFloat(document.getElementById("withdrawAmount").value);
-            const dana = document.getElementById("withdrawDana").value;
+            const dana = document.getElementById("withdrawDana").value.trim();
             
             if (!amount || !dana) {
                 withdrawMessage.textContent = "Harap isi semua field!";
@@ -339,7 +438,7 @@
             }
             
             if (amount < 100000) {
-                withdrawMessage.textContent = "Minimal withdraw adalah 100000 poin!";
+                withdrawMessage.textContent = "Minimal withdraw adalah 100.000 poin!";
                 withdrawMessage.style.color = "red";
                 return;
             }
@@ -350,15 +449,26 @@
                 return;
             }
             
-            // Simulate sending notification
-            console.log(`📤 Withdraw Baru!\n\nUser: ${username}\nJumlah: ${amount} poin\nNomor DANA: ${dana}`);
+            // Simpan data withdraw (simulasi)
+            const withdrawData = {
+                username: username,
+                amount: amount,
+                danaNumber: dana,
+                date: new Date().toLocaleString(),
+                status: "pending"
+            };
             
+            let allWithdraws = JSON.parse(localStorage.getItem("allWithdraws") || []);
+            allWithdraws.push(withdrawData);
+            localStorage.setItem("allWithdraws", JSON.stringify(allWithdraws));
+            
+            // Kurangi poin user
             totalReward -= amount;
             localStorage.setItem(username + "_totalReward", totalReward);
             updateUI();
             
-            withdrawMessage.textContent = "Withdraw berhasil!";
-            withdrawMessage.style.color = "lime";
+            withdrawMessage.textContent = "✅ Withdraw berhasil! Akan diproses dalam 1x24 jam.";
+            withdrawMessage.style.color = "green";
             
             document.getElementById("withdrawAmount").value = "";
             document.getElementById("withdrawDana").value = "";
@@ -366,7 +476,7 @@
             setTimeout(() => {
                 withdrawForm.style.display = "none";
                 withdrawMessage.textContent = "";
-            }, 1000);
+            }, 3000);
         };
         
         cancelWithdraw.onclick = () => {
@@ -376,47 +486,62 @@
             document.getElementById("withdrawDana").value = "";
         };
         
-        // TikTok button functionality
-        const tiktokBtn = document.getElementById("tiktokBtn");
-        tiktokBtn.addEventListener("click", () => {
-            localStorage.setItem("watchedTikTok", "true");
-            window.open("https://vm.tiktok.com/ZSSFXt8CE/", "_blank");
-            
-            // Beri reward setelah menonton TikTok
-            setTimeout(() => {
-                totalReward += 1000;
-                localStorage.setItem(username + "_totalReward", totalReward);
-                updateUI();
-                alert("🎉 Kamu dapat 1000 poin dari menonton TikTok!");
-            }, 30000); // Beri reward setelah 30 detik
-        });
-        
-        // Referral system
+        // Sistem Referral
         const referralBtn = document.getElementById("referralBtn");
         const referralModal = document.getElementById("referralModal");
         const referralLinkInput = document.getElementById("referralLink");
         
+        function loadReferralData() {
+            const referralData = JSON.parse(localStorage.getItem(username + "_referralData") || {
+                referrals: [],
+                totalPoints: 0
+            };
+            
+            const referralList = document.getElementById("referralList");
+            referralList.innerHTML = "";
+            
+            referralData.referrals.forEach(user => {
+                const li = document.createElement("li");
+                li.innerHTML = `${user} <span>+${REFERRAL_REWARD} poin</span>`;
+                referralList.appendChild(li);
+            });
+            
+            document.getElementById("referralTotalPoin").textContent = referralData.totalPoints;
+        }
+        
         referralBtn.addEventListener("click", () => {
-            const username = localStorage.getItem("currentUser") || "user";
-            const referralLink = `${window.location.origin}?ref=${username}`;
+            const referralLink = `${window.location.origin}/index.html?ref=${username}`;
             referralLinkInput.value = referralLink;
             referralModal.style.display = "block";
+            loadReferralData();
         });
         
         function copyReferralLink() {
             referralLinkInput.select();
             referralLinkInput.setSelectionRange(0, 99999);
             document.execCommand("copy");
-            alert("Link referral disalin!");
+            
+            const copyBtn = document.querySelector("#referralModal button[onclick='copyReferralLink()']");
+            copyBtn.textContent = "✔ Link Disalin!";
+            copyBtn.style.backgroundColor = "#4CAF50";
+            setTimeout(() => {
+                copyBtn.textContent = "Salin Link";
+                copyBtn.style.backgroundColor = "";
+            }, 2000);
         }
         
-        // Initialize UI
+        // Cek reward TikTok saat kembali ke dashboard
+        if (localStorage.getItem("watchedTikTok") === "true") {
+            totalReward += 1000;
+            localStorage.setItem(username + "_totalReward", totalReward);
+            localStorage.removeItem("watchedTikTok");
+            updateUI();
+            alert("🎉 Kamu dapat 1000 poin dari TikTok!");
+        }
+        
+        // Inisialisasi
         updateUI();
         setInterval(updateUI, 1000);
     </script>
-    
-    <!-- Iklan tambahan dari profitableratecpm.com -->
-    <script type='text/javascript' src='//pl27292205.profitableratecpm.com/df/1b/f6/df1bf6dfa5e026ae1544a28586693749.js'></script>
-    <script type='text/javascript' src='//pl27291047.profitableratecpm.com/34/90/d4/3490d49d6ad49b5ca70bed008db3f77c.js'></script>
 </body>
-</html>
+                                                                  </html>
