@@ -161,10 +161,8 @@ transform: translateY(-10px);
 <body>    
   <div class="rewards-top">    
     <div class="reward-card">    
-      <div class="reward-title">Total Rewards</div>
-     <span id="totalReward"></span></p>
-      <div class="reward-value" id="totalRewards">0</div>    
-    </div>    
+     <div class="reward-title">Total Rewards</div>
+     <div class="reward-value" id="totalRewards">0</div>
     <div class="reward-card">    
       <div class="reward-title">1h Rewards</div>    
       <div class="reward-value" id="dailyRewards">0.000</div>   
@@ -466,7 +464,6 @@ setInterval(updateUI, 1000);
   const user = localStorage.getItem("currentUser");
   const rewardKey = user + "_totalRewards";
   const totalReward = parseInt(localStorage.getItem(rewardKey) || "0");
-
   const rewardDisplay = document.getElementById("totalReward");
   if (rewardDisplay) {
     rewardDisplay.textContent = totalReward.toLocaleString() + " Poin";
