@@ -81,8 +81,7 @@ margin-bottom: 20px; /* Tambah jarak bawah */
   if (ref) {
     localStorage.setItem('referrer', ref);
   }
-
-  loginBtn.onclick = () => {
+ loginBtn.onclick = () => {
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
     const saved = JSON.parse(localStorage.getItem("users") || "{}");
@@ -168,7 +167,6 @@ registerBtn.onclick = () => {
   }  
 };
 
-  </script>  
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3665788659374137"
      crossorigin="anonymous"></script>
 <!-- Dana miner1 -->
