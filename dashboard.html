@@ -160,7 +160,7 @@
       <div class="reward-value" id="totalRewards">0</div>
     </div>
     <div class="reward-card">
-      <div class="reward-title">24h Rewards</div>
+      <div class="reward-title">1h Rewards</div>
       <div class="reward-value" id="dailyRewards">0.000</div>
     </div>
   </div>
@@ -228,8 +228,8 @@
     const username = localStorage.getItem('currentUser');
     if (!username) window.location.href = 'index.html';
 
-    const CLAIM_REWARD = 1000;
-    const COOLDOWN_MS = 24 * 60 * 60 * 1000;
+    const CLAIM_REWARD = 50;
+    const COOLDOWN_MS = 1 * 60 * 60 * 50;
 
     const totalEl = document.getElementById('totalRewards');
     const dailyEl = document.getElementById('dailyRewards');
@@ -254,8 +254,8 @@
         let progress = elapsed / COOLDOWN_MS;
         dailyEl.textContent = (CLAIM_REWARD * progress).toFixed(3);
         claimBtn.disabled = true;
-        let sisa = Math.ceil((COOLDOWN_MS - elapsed) / 3600000);
-        statusText.textContent = `Tunggu ${sisa} jam lagi untuk klaim berikutnya.`;
+        let sisa = Math.ceil((COOLDOWN_MS - elapsed) / 60000);
+        statusText.textContent = `Tunggu ${sisa} Menit lagi untuk klaim berikutnya.`;
       }
 
       totalEl.textContent = totalReward.toFixed(3);
