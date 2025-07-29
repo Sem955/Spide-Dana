@@ -1,243 +1,170 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Login Game</title>
-  <!-- Gunakan CSS Internal untuk menghindari masalah path -->
+  <meta name="66d5b35c8d1ba7206ce8c59fe4fa5d2fa0f75493" content="66d5b35c8d1ba7206ce8c59fe4fa5d2fa0f75493" />
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
-    
     body {
       background-color: #F9F6EE;
+      color: #FFD700;
+      font-family: Arial, sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
-      padding: 20px;
+      margin: 0;
     }
-    
-    .logo {
-      width: 100px;
-      margin-bottom: 20px;
-    }
-    
     h1 {
-      color: #333;
       margin-bottom: 30px;
       font-size: 28px;
-      text-align: center;
     }
-    
-    .login-container {
-      width: 100%;
-      max-width: 350px;
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-    
     input {
-      width: 100%;
-      padding: 12px 15px;
-      margin-bottom: 15px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      font-size: 16px;
-    }
-    
-    button {
-      width: 100%;
+      width: 300px;
       padding: 12px;
-      border: none;
-      border-radius: 5px;
+      margin: 10px 0;
       font-size: 16px;
-      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+    }
+    button {
+      width: 320px;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
       cursor: pointer;
-      transition: background 0.3s;
+      margin-top: 10px;
     }
-    
     #loginBtn {
-      background: #1877f2;
+      background-color: #1877f2;
       color: white;
-      margin-bottom: 10px;
     }
-    
-    #loginBtn:hover {
-      background: #166fe5;
-    }
-    
     #registerBtn {
-      background: #42b72a;
-      color: white;
-    }
-    
-    #registerBtn:hover {
-      background: #36a420;
-    }
-    
-    .referral-notice {
-      margin-top: 15px;
-      color: #1877f2;
-      font-size: 14px;
-      text-align: center;
-      font-weight: bold;
-    }
-    
-    .error-message {
-      color: red;
-      font-size: 12px;
-      margin: -10px 0 10px 0;
-      display: none;
+      background-color: transparent;
+      border: 1px solid #00ff00;
+      color: #00ff00;
+      margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
-  <div class="login-container">
-    <img src="https://i.postimg.cc/0KZ505rV/file-0000000084f062309e6fd2523e94f3de.png" alt="Logo" class="logo">
-    <h1>LOGIN DAFTAR</h1>
-    
-    <input type="text" id="username" placeholder="Masukan email" required>
-    <div id="usernameError" class="error-message">Email harus mengandung @ dan domain</div>
-    
-    <input type="password" id="password" placeholder="Kata sandi" required>
-    <div id="passwordError" class="error-message">Password minimal 6 karakter</div>
-    
-    <button id="loginBtn">Login</button>
-    <button id="registerBtn">Buat akun baru</button>
-    
-    <div id="referralNotice" class="referral-notice"></div>
-  </div>
+  <h1>LOGIN DAFTAR</h1>
+  <input type="text" id="username" placeholder="Masukan email" />
+  <input type="password" id="password" placeholder="Kata sandi" />
+  <button id="loginBtn">Login</button>
+  <button id="registerBtn">Buat akun baru</button>
 
-  <script>
-    // Fungsi validasi email
-    function isValidEmail(email) {
-      return email.includes('@') && email.includes('.') && email.length > 5;
-    }
-
-    // Fungsi validasi password
-    function isValidPassword(password) {
-      return password.length >= 6;
-    }
-
-    // Tangkap referral code dari URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const refCode = urlParams.get('ref');
-    if (refCode) {
-      localStorage.setItem('referrer', refCode);
-      document.getElementById('referralNotice').textContent = `🔗 Diundang oleh: ${refCode} (Dapat 500 poin bonus!)`;
-    }
-
-    // Sistem Login
-    document.getElementById('loginBtn').addEventListener('click', function() {
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value.trim();
-      
-      // Reset error
-      document.getElementById('usernameError').style.display = 'none';
-      document.getElementById('passwordError').style.display = 'none';
-      
-      // Validasi
-      if (!isValidEmail(username)) {
-        document.getElementById('usernameError').style.display = 'block';
-        return;
-      }
-      
-      if (!isValidPassword(password)) {
-        document.getElementById('passwordError').style.display = 'block';
-        return;
-      }
-      
-      // Cek user di localStorage
-      const users = JSON.parse(localStorage.getItem('users') || {});
-      
-      if (!users[username]) {
-        alert('Email belum terdaftar. Silakan daftar terlebih dahulu.');
-        return;
-      }
-      
-      if (users[username].password !== password) {
-        alert('Password salah. Silakan coba lagi.');
-        return;
-      }
-      
-      // Login sukses
-      localStorage.setItem('currentUser', username);
-      window.location.href = 'dashboard.html';
-    });
-
-    // Sistem Pendaftaran
-    document.getElementById('registerBtn').addEventListener('click', function() {
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value.trim();
-      
-      // Reset error
-      document.getElementById('usernameError').style.display = 'none';
-      document.getElementById('passwordError').style.display = 'none';
-      
-      // Validasi
-      if (!isValidEmail(username)) {
-        document.getElementById('usernameError').style.display = 'block';
-        return;
-      }
-      
-      if (!isValidPassword(password)) {
-        document.getElementById('passwordError').style.display = 'block';
-        return;
-      }
-      
-      // Cek duplikasi
-      const users = JSON.parse(localStorage.getItem('users') || {});
-      
-      if (users[username]) {
-        alert('Email sudah terdaftar. Silakan login.');
-        return;
-      }
-      
-      // Simpan user baru
-      users[username] = {
-        password: password,
-        createdAt: new Date().toISOString()
-      };
-      localStorage.setItem('users', JSON.stringify(users));
-      
-      // Set data awal
-      localStorage.setItem(username + '_totalReward', '500');
-      localStorage.setItem(username + '_lastClaim', Date.now().toString());
-      localStorage.setItem('currentUser', username);
-      
-      // Proses referral
-      const referrer = localStorage.getItem('referrer');
-      if (referrer && referrer !== username) {
-        const referralData = JSON.parse(localStorage.getItem(referrer + '_referralData') || {
-          referrals: [],
-          totalPoints: 0
-        };
-        
-        if (!referralData.referrals.includes(username)) {
-          referralData.referrals.push(username);
-          referralData.totalPoints += 2000;
-          localStorage.setItem(referrer + '_referralData', JSON.stringify(referralData));
-          
-          // Update poin referrer
-          let referrerPoints = parseFloat(localStorage.getItem(referrer + '_totalReward') || 0);
-          referrerPoints += 2000;
-          localStorage.setItem(referrer + '_totalReward', referrerPoints.toString());
-        }
-        
-        localStorage.removeItem('referrer');
-      }
-      
-      alert('🎉 Pendaftaran berhasil! Anda mendapatkan 500 poin awal.');
-      window.location.href = 'dashboard.html';
-    });
+  <!-- Popunder Iklan -->
+  <script type="text/javascript">
+    atOptions = {
+      'key' : 'a4756fd525e25cbed5ac79db27595f95',
+      'format' : 'iframe',
+      'height' : 50,
+      'width' : 320,
+      'params' : {}
+    };
   </script>
+  <script type="text/javascript" src="//www.highperformanceformat.com/a4756fd525e25cbed5ac79db27595f95/invoke.js"></script>
+
+  <!-- Script Login + Referral -->
+  <script>
+    const loginBtn = document.getElementById("loginBtn");
+    const registerBtn = document.getElementById("registerBtn");
+
+    // Tangkap kode referral dari URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const ref = urlParams.get('ref');
+    if (ref) {
+      localStorage.setItem('referrer', ref);
+    }
+
+    loginBtn.onclick = () => {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      const saved = JSON.parse(localStorage.getItem("users") || "{}");
+
+      if (saved[username] === password) {
+        localStorage.setItem("currentUser", username);
+        window.location.href = "dashboard.html";
+      } else {
+        alert("Login gagal: Username atau password salah.");
+      }
+    };
+
+    registerBtn.onclick = () => {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      let saved = JSON.parse(localStorage.getItem("users") || "{}");
+
+      if (username === "" || password === "") {
+        alert("Isi semua kolom!");
+        return;
+      }
+
+      if (saved[username]) {
+        alert("Username sudah terdaftar.");
+      } else {
+        saved[username] = password;
+        localStorage.setItem("users", JSON.stringify(saved));
+        localStorage.setItem("currentUser", username);
+
+        // Tambah data referral
+        const referrer = localStorage.getItem('referrer');
+        if (referrer) {
+          const referralKey = referrer + '_referrals';
+          const existing = JSON.parse(localStorage.getItem(referralKey) || '[]');
+          const alreadyInvited = existing.some(u => u.username === username);
+
+          if (!alreadyInvited) {
+            existing.push({ username: username, poin: 2000 });
+            localStorage.setItem(referralKey, JSON.stringify(existing));
+
+            const rewardKey = referrer + '_totalRewards';
+            const currentReward = parseInt(localStorage.getItem(rewardKey) || '0');
+            const updatedReward = currentReward + 2000;
+            localStorage.setItem(rewardKey, updatedReward);
+
+            const log = (...args) => {
+              const el = document.getElementById("debugLog");
+              if (el) {
+                el.textContent += args.join(" ") + "\n";
+              } else {
+                console.log(...args);
+              }
+            };
+
+            log("Referrer yang tersimpan:", referrer);
+            log("Data existing referral:", JSON.stringify(existing));
+            log("Menambahkan:", username);
+            log("Total reward sebelumnya:", currentReward);
+          }
+
+          localStorage.removeItem('referrer');
+        }
+
+        alert("Akun berhasil dibuat. Silakan login.");
+      }
+    };
+  </script>
+
+  <!-- AdSense Iklan -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3665788659374137"
+     crossorigin="anonymous"></script>
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-3665788659374137"
+       data-ad-slot="2726494782"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+
+  <!-- Debug log tampilan -->
+  <pre id="debugLog" style="background:#000; color:#0f0; padding:10px; font-size:12px;"></pre>
 </body>
 </html>
