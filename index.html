@@ -4,173 +4,271 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Login Game</title>
+  <meta name="66d5b35c8d1ba7206ce8c59fe4fa5d2fa0f75493" content="66d5b35c8d1ba7206ce8c59fe4fa5d2fa0f75493" />
   <style>
+    :root {
+      --primary: #FF6B00;
+      --secondary: #FFD700;
+      --dark: #1A1A1A;
+      --light: #F9F6EE;
+      --accent: #4CAF50;
+    }
+    
     body {
-      background-color: #F9F6EE;
-      color: #FFD700;
-      font-family: Arial, sans-serif;
+      background-color: var(--dark);
+      color: var(--light);
+      font-family: 'Arial', sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
       margin: 0;
+      background-image: radial-gradient(circle at center, #2a2a2a 0%, #1A1A1A 100%);
     }
+    
+    .logo {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 20px;
+      background-color: var(--primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(255, 107, 0, 0.4);
+    }
+    
+    .logo span {
+      font-size: 48px;
+      font-weight: bold;
+      color: white;
+    }
+    
+    .login-container {
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      width: 350px;
+      text-align: center;
+    }
+    
     h1 {
       margin-bottom: 30px;
       font-size: 28px;
-      color: #333;
+      color: var(--secondary);
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     }
+    
+    .input-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    
+    .input-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--secondary);
+      font-size: 14px;
+    }
+    
     input {
-      width: 300px;
-      padding: 12px;
-      margin: 10px 0;
+      width: 100%;
+      padding: 12px 15px;
       font-size: 16px;
       border: none;
-      border-radius: 6px;
-      background-color: #fff;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    button {
-      width: 320px;
-      padding: 12px;
-      font-size: 16px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-top: 10px;
-      font-weight: bold;
+      border-radius: 8px;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+      box-sizing: border-box;
       transition: all 0.3s;
     }
-    #loginBtn {
-      background-color: #1877f2;
-      color: white;
+    
+    input:focus {
+      outline: none;
+      background-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 0 2px var(--primary);
     }
-    #loginBtn:hover {
-      background-color: #166fe5;
+    
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
     }
-    #registerBtn {
-      background-color: #42b72a;
-      color: white;
-      margin-bottom: 20px;
-    }
-    #registerBtn:hover {
-      background-color: #36a420;
-    }
-    .referral-notice {
-      color: #1877f2;
-      margin-top: 10px;
-      font-size: 14px;
+    
+    button {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
       font-weight: bold;
-      text-align: center;
-      max-width: 320px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 10px;
     }
-    .logo {
-      width: 100px;
-      margin-bottom: 20px;
+    
+    #loginBtn {
+      background-color: var(--primary);
+      color: white;
+      box-shadow: 0 4px 15px rgba(255, 107, 0, 0.4);
+    }
+    
+    #loginBtn:hover {
+      background-color: #E05D00;
+      transform: translateY(-2px);
+    }
+    
+    #registerBtn {
+      background-color: transparent;
+      border: 2px solid var(--accent);
+      color: var(--accent);
+    }
+    
+    #registerBtn:hover {
+      background-color: rgba(76, 175, 80, 0.1);
+      transform: translateY(-2px);
+    }
+    
+    .footer-text {
+      margin-top: 20px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
     }
   </style>
 </head>
 <body>
-  <img src="https://i.postimg.cc/0KZ505rV/file-0000000084f062309e6fd2523e94f3de.png" alt="Logo" class="logo">
-  <h1>LOGIN DAFTAR</h1>
-  <input type="text" id="username" placeholder="Masukan email" />
-  <input type="password" id="password" placeholder="Kata sandi" />
-  <button id="loginBtn">Login</button>
-  <button id="registerBtn">Buat akun baru</button>
-  <div id="referralNotice" class="referral-notice"></div>
+  <div class="logo">
+    <span>G</span>
+  </div>
+  
+  <div class="login-container">
+    <h1>LOGIN DAFTAR</h1>
+    
+    <div class="input-group">
+      <label for="username">EMAIL</label>
+      <input type="text" id="username" placeholder="Masukan email" />
+    </div>
+    
+    <div class="input-group">
+      <label for="password">KATA SANDI</label>
+      <input type="password" id="password" placeholder="Kata sandi" />
+    </div>
+    
+    <button id="loginBtn">Login</button>
+    <button id="registerBtn">Buat akun baru</button>
+    
+    <p class="footer-text">© 2025 Game Platform. All rights reserved.</p>
+  </div>
 
+  <!-- Popunder Iklan -->
+  <script type="text/javascript">
+    atOptions = {
+      'key' : 'a4756fd525e25cbed5ac79db27595f95',
+      'format' : 'iframe',
+      'height' : 50,
+      'width' : 320,
+      'params' : {}
+    };
+  </script>
+  <script type="text/javascript" src="//www.highperformanceformat.com/a4756fd525e25cbed5ac79db27595f95/invoke.js"></script>
+
+  <!-- Script Login + Referral -->
   <script>
     const loginBtn = document.getElementById("loginBtn");
     const registerBtn = document.getElementById("registerBtn");
-    const referralNotice = document.getElementById("referralNotice");
 
     // Tangkap kode referral dari URL
     const urlParams = new URLSearchParams(window.location.search);
     const ref = urlParams.get('ref');
     if (ref) {
       localStorage.setItem('referrer', ref);
-      referralNotice.textContent = `🔗 Anda diundang oleh: ${ref} (Dapat 500 poin bonus!)`;
     }
 
     loginBtn.onclick = () => {
-      const username = document.getElementById("username").value.trim();
-      const password = document.getElementById("password").value.trim();
-      
-      if (!username || !password) {
-        alert("Harap isi email dan password!");
-        return;
-      }
-
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
       const saved = JSON.parse(localStorage.getItem("users") || "{}");
 
       if (saved[username] === password) {
         localStorage.setItem("currentUser", username);
         window.location.href = "dashboard.html";
       } else {
-        alert("Login gagal: Email atau password salah.");
+        alert("Login gagal: Username atau password salah.");
       }
     };
 
     registerBtn.onclick = () => {
-      const username = document.getElementById("username").value.trim();
-      const password = document.getElementById("password").value.trim();
-      
-      if (!username || !password) {
-        alert("Harap isi email dan password!");
-        return;
-      }
-
-      // Validasi format email sederhana
-      if (!username.includes('@') || !username.includes('.')) {
-        alert("Harap masukkan email yang valid!");
-        return;
-      }
-
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
       let saved = JSON.parse(localStorage.getItem("users") || "{}");
 
+      if (username === "" || password === "") {
+        alert("Isi semua kolom!");
+        return;
+      }
+
       if (saved[username]) {
-        alert("Email sudah terdaftar.");
+        alert("Username sudah terdaftar.");
       } else {
         saved[username] = password;
         localStorage.setItem("users", JSON.stringify(saved));
-        
-        // Set user baru dengan 500 poin awal
-        localStorage.setItem(username + '_totalReward', '500');
-        localStorage.setItem(username + '_lastClaim', Date.now().toString());
         localStorage.setItem("currentUser", username);
 
-        // Proses referral jika ada
+        // Tambah data referral
         const referrer = localStorage.getItem('referrer');
-        if (referrer && referrer !== username) {
-          // Simpan data referral untuk referrer
-          const referralData = JSON.parse(localStorage.getItem(referrer + '_referralData') || {
-            referrals: [],
-            totalPoints: 0
-          };
-          
-          // Cek apakah user sudah pernah di-refer
-          if (!referralData.referrals.includes(username)) {
-            referralData.referrals.push(username);
-            referralData.totalPoints += 2000;
-            localStorage.setItem(referrer + '_referralData', JSON.stringify(referralData));
-            
-            // Update poin total referrer
-            let referrerPoints = parseFloat(localStorage.getItem(referrer + '_totalReward') || "0");
-            referrerPoints += 2000;
-            localStorage.setItem(referrer + '_totalReward', referrerPoints.toString());
-            
-            // Beri notifikasi
-            alert(`🎉 Selamat! Anda mendapatkan 500 poin bonus dari referral!`);
+        if (referrer) {
+          const referralKey = referrer + '_referrals';
+          const existing = JSON.parse(localStorage.getItem(referralKey) || '[]');
+          const alreadyInvited = existing.some(u => u.username === username);
+
+          if (!alreadyInvited) {
+            existing.push({ username: username, poin: 2000 });
+            localStorage.setItem(referralKey, JSON.stringify(existing));
+
+            const rewardKey = referrer + '_totalRewards';
+            const currentReward = parseInt(localStorage.getItem(rewardKey) || '0');
+            const updatedReward = currentReward + 2000;
+            localStorage.setItem(rewardKey, updatedReward);
+
+            const log = (...args) => {
+              const el = document.getElementById("debugLog");
+              if (el) {
+                el.textContent += args.join(" ") + "\n";
+              } else {
+                console.log(...args);
+              }
+            };
+
+            log("Referrer yang tersimpan:", referrer);
+            log("Data existing referral:", JSON.stringify(existing));
+            log("Menambahkan:", username);
+            log("Total reward sebelumnya:", currentReward);
           }
-          
+
           localStorage.removeItem('referrer');
         }
 
-        alert("🎊 Akun berhasil dibuat! Anda mendapatkan 500 poin awal.");
-        window.location.href = "dashboard.html";
+        alert("Akun berhasil dibuat. Silakan login.");
       }
     };
   </script>
+
+  <!-- AdSense Iklan -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3665788659374137"
+     crossorigin="anonymous"></script>
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-3665788659374137"
+       data-ad-slot="2726494782"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+
+  <!-- Debug log tampilan -->
+  <pre id="debugLog" style="background:#000; color:#0f0; padding:10px; font-size:12px; position: fixed; bottom: 10px; right: 10px; max-width: 300px; max-height: 200px; overflow: auto;"></pre>
 </body>
 </html>
