@@ -458,16 +458,5 @@ setInterval(updateUI, 1000);
   // Tampilkan total poin referral
   document.getElementById("referralPoints").textContent = `Total Poin Referral: ${totalPoints.toLocaleString()} Poin`;
     </script>
-
-<!-- Script tampilkan totalReward -->
-<script>
-  const user = localStorage.getItem("currentUser");
-  const rewardKey = user + "_totalRewards";
-  const totalReward = parseInt(localStorage.getItem(rewardKey) || "0");
-  const rewardDisplay = document.getElementById("totalReward");
-  if (rewardDisplay) {
-    rewardDisplay.textContent = totalReward.toLocaleString() + " Poin";
-  }
-</script>
 </body>
   </html>
