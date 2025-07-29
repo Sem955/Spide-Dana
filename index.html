@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Login Game</title>
-  <meta name="66d5b35c8d1ba7206ce8c59fe4fa5d2fa0f75493" content="66d5b35c8d1ba7206ce8c59fe4fa5d2fa0f75493" />
   <style>
     body {
       background-color: #F9F6EE;
@@ -20,6 +19,7 @@
     h1 {
       margin-bottom: 30px;
       font-size: 28px;
+      color: #333;
     }
     input {
       width: 300px;
@@ -28,6 +28,8 @@
       font-size: 16px;
       border: none;
       border-radius: 6px;
+      background-color: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     button {
       width: 320px;
@@ -37,89 +39,136 @@
       border-radius: 6px;
       cursor: pointer;
       margin-top: 10px;
+      font-weight: bold;
+      transition: all 0.3s;
     }
     #loginBtn {
       background-color: #1877f2;
       color: white;
     }
+    #loginBtn:hover {
+      background-color: #166fe5;
+    }
     #registerBtn {
-      background-color: transparent;
-      border: 1px solid #00ff00;
-      color: #00ff00;
+      background-color: #42b72a;
+      color: white;
+      margin-bottom: 20px;
+    }
+    #registerBtn:hover {
+      background-color: #36a420;
+    }
+    .referral-notice {
+      color: #1877f2;
+      margin-top: 10px;
+      font-size: 14px;
+      font-weight: bold;
+      text-align: center;
+      max-width: 320px;
+    }
+    .logo {
+      width: 100px;
       margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
+  <img src="https://i.postimg.cc/0KZ505rV/file-0000000084f062309e6fd2523e94f3de.png" alt="Logo" class="logo">
   <h1>LOGIN DAFTAR</h1>
   <input type="text" id="username" placeholder="Masukan email" />
   <input type="password" id="password" placeholder="Kata sandi" />
   <button id="loginBtn">Login</button>
   <button id="registerBtn">Buat akun baru</button>
+  <div id="referralNotice" class="referral-notice"></div>
 
-  <!-- Script Login + Referral -->
   <script>
     const loginBtn = document.getElementById("loginBtn");
     const registerBtn = document.getElementById("registerBtn");
+    const referralNotice = document.getElementById("referralNotice");
 
     // Tangkap kode referral dari URL
     const urlParams = new URLSearchParams(window.location.search);
     const ref = urlParams.get('ref');
     if (ref) {
       localStorage.setItem('referrer', ref);
+      referralNotice.textContent = `🔗 Anda diundang oleh: ${ref} (Dapat 500 poin bonus!)`;
     }
 
     loginBtn.onclick = () => {
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      
+      if (!username || !password) {
+        alert("Harap isi email dan password!");
+        return;
+      }
+
       const saved = JSON.parse(localStorage.getItem("users") || "{}");
 
       if (saved[username] === password) {
         localStorage.setItem("currentUser", username);
         window.location.href = "dashboard.html";
       } else {
-        alert("Login gagal: Username atau password salah.");
+        alert("Login gagal: Email atau password salah.");
       }
     };
 
     registerBtn.onclick = () => {
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
-      let saved = JSON.parse(localStorage.getItem("users") || "{}");
-
-      if (username === "" || password === "") {
-        alert("Isi semua kolom!");
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      
+      if (!username || !password) {
+        alert("Harap isi email dan password!");
         return;
       }
 
+      // Validasi format email sederhana
+      if (!username.includes('@') || !username.includes('.')) {
+        alert("Harap masukkan email yang valid!");
+        return;
+      }
+
+      let saved = JSON.parse(localStorage.getItem("users") || "{}");
+
       if (saved[username]) {
-        alert("Username sudah terdaftar.");
+        alert("Email sudah terdaftar.");
       } else {
         saved[username] = password;
         localStorage.setItem("users", JSON.stringify(saved));
+        
+        // Set user baru dengan 500 poin awal
+        localStorage.setItem(username + '_totalReward', '500');
+        localStorage.setItem(username + '_lastClaim', Date.now().toString());
         localStorage.setItem("currentUser", username);
 
-        // Tambah data referral
+        // Proses referral jika ada
         const referrer = localStorage.getItem('referrer');
-        if (referrer) {
-          const referralKey = referrer + '_referrals';
-          const existing = JSON.parse(localStorage.getItem(referralKey) || '[]');
-          const alreadyInvited = existing.some(u => u.username === username);
-
-          if (!alreadyInvited) {
-            existing.push({ username: username, poin: 2000 });
-            localStorage.setItem(referralKey, JSON.stringify(existing));
-
-            const rewardKey = referrer + '_totalRewards';
-            const currentReward = parseInt(localStorage.getItem(rewardKey) || '0');
-            const updatedReward = currentReward + 2000;
-            localStorage.setItem(rewardKey, updatedReward);
+        if (referrer && referrer !== username) {
+          // Simpan data referral untuk referrer
+          const referralData = JSON.parse(localStorage.getItem(referrer + '_referralData') || {
+            referrals: [],
+            totalPoints: 0
+          };
+          
+          // Cek apakah user sudah pernah di-refer
+          if (!referralData.referrals.includes(username)) {
+            referralData.referrals.push(username);
+            referralData.totalPoints += 2000;
+            localStorage.setItem(referrer + '_referralData', JSON.stringify(referralData));
+            
+            // Update poin total referrer
+            let referrerPoints = parseFloat(localStorage.getItem(referrer + '_totalReward') || "0");
+            referrerPoints += 2000;
+            localStorage.setItem(referrer + '_totalReward', referrerPoints.toString());
+            
+            // Beri notifikasi
+            alert(`🎉 Selamat! Anda mendapatkan 500 poin bonus dari referral!`);
           }
-
+          
           localStorage.removeItem('referrer');
         }
 
-        alert("Akun berhasil dibuat. Silakan login.");
+        alert("🎊 Akun berhasil dibuat! Anda mendapatkan 500 poin awal.");
+        window.location.href = "dashboard.html";
       }
     };
   </script>
