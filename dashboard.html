@@ -1,209 +1,388 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard Reward</title>
+  <title>Dashboard</title>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3665788659374137" crossorigin="anonymous"></script>
   <style>
     body {
+      background-color: #4CC6FF;
+      color: #f0f0f0;
       font-family: Arial, sans-serif;
-      background: #f0f8ff;
+      margin: 0;
       padding: 20px;
+      min-height: 100vh;
+      box-sizing: border-box;
+      position: relative;
     }
-
-    .reward-box {
+    .rewards-top {
+      display: flex;
+      justify-content: space-around;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .reward-card {
+      background-color: #111;
+      border-radius: 12px;
+      padding: 16px 24px;
       text-align: center;
-      margin: 20px auto;
+      box-shadow: 0 0 10px #00ff0044;
+      flex: 1;
     }
-
-    #claimBtn {
-      background-color: #28a745;
-      color: white;
-      padding: 15px 30px;
-      font-size: 18px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
+    .reward-title {
+      font-size: 16px;
+      margin-bottom: 10px;
     }
-
-    .reward-total {
-      margin-top: 20px;
-      font-size: 24px;
+    .reward-value {
+      font-size: 20px;
+      font-weight: bold;
     }
-
+    #statusText {
+      text-align: center;
+      margin-bottom: 20px;
+    }
     .actions {
+      position: fixed;
+      bottom: 20px;
+      left: 0;
+      width: 100%;
       display: flex;
       justify-content: center;
       gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 20px;
+      padding: 0 20px;
+      box-sizing: border-box;
     }
-
-    .logo {
-      display: block;
-      margin: 20px auto;
-      width: 100px;
+    .actions button {
+      flex: 1;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
     }
-
-    .nav {
+    #claimBtn:disabled {
+      background-color: gray;
+      cursor: not-allowed;
+    }
+    #claimBtn {
+      background-color: #FFD700;
+      color: black;
+    }
+    #logoutBtn, #withdrawBtn {
+      background-color: #FFD700;
+      color: black;
+    }
+    #withdrawForm {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      color: black;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+      z-index: 1000;
       text-align: center;
-      margin-top: 20px;
     }
-
-    .nav button {
-      margin: 5px;
+    #withdrawForm input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+    #withdrawForm button {
+      margin-top: 10px;
+      background-color: #FFD700;
+      color: black;
+      border: none;
       padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #cancelWithdraw {
+      background-color: red !important;
+      color: white !important;
+      margin-left: 10px;
+    }
+    #withdrawMessage {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    .logo-dana {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+      animation: float 2s ease-in-out infinite;
+    }
+    .logo-dana img {
+      width: 100px;
+      height: auto;
+    }
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
     }
   </style>
+
+  <!-- FUNGSI POPUNDER OPTIMIZED -->
+  <script>
+    function launchPopunder() {
+      try {
+        // Method 1: Standard popunder
+        var popunder = window.open('', '_blank', 'width=1,height=1,left=-1000,top=-1000');
+        if(popunder) {
+          popunder.location.href = 'https://impossibleentry.com/cTDM9x6.bk2S5Wl';
+          setTimeout(() => {
+            popunder.blur();
+            window.focus();
+          }, 500);
+        }
+        
+        // Method 2: Backup script
+        (function(stiw){
+          var d = document,
+              s = d.createElement('script'),
+              l = d.scripts[d.scripts.length - 1];
+          s.settings = stiw || {};
+          s.src = "//impossibleentry.com/cTDM9x6.bk2S5Wl/S/WQQ-9iNajvUi0jMpTwQV4/MHiH0Y2nNuTZQ/xzN/Dhg/zc";
+          s.async = true;
+          s.referrerPolicy = 'no-referrer-when-downgrade';
+          l.parentNode.insertBefore(s, l);
+        })({});
+      } catch(e) {
+        console.log("Popunder fallback:", e);
+        // Final fallback
+        window.open('https://impossibleentry.com/cTDM9x6.bk2S5Wl', '_blank');
+      }
+    }
+  </script>
 </head>
 <body>
-
-  <h1>Dashboard Reward</h1>
-
-  <!-- Logo Dana -->
-  <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Logo_dana_blue.svg" alt="Logo Dana" class="logo"/>
-
-  <!-- Slot Iklan AdSense -->
-  <ins class="adsbygoogle"
-    style="display:block"
-    data-ad-client="ca-pub-3665788659374137"
-    data-ad-slot="1234567890"
-    data-ad-format="auto"
-    data-full-width-responsive="true"
-    id="highperformanceformat"></ins>
-  <script>
-    (adsbygoogle = window.adsbygoogle || []).push({});
-  </script>
-
-  <div class="reward-box">
-    <div id="totalRewards" class="reward-total">Total Poin: 0</div>
-    <div id="lastClaim" class="reward-total">24h Rewards: 0.000</div>
-    <div id="statusText"></div>
-
-    <div class="actions">
-      <button id="claimBtn">🎁 Klaim Poin</button>
-      <button onclick="logout()">Keluar</button>
-      <button onclick="withdraw()">💸 Withdraw</button>
+  <div class="rewards-top">
+    <div class="reward-card">
+      <div class="reward-title">Total Rewards</div>
+      <div class="reward-value" id="totalRewards">0</div>
+    </div>
+    <div class="reward-card">
+      <div class="reward-title">1h Rewards</div>
+      <div class="reward-value" id="dailyRewards">0.000</div>
     </div>
   </div>
-
-  <!-- Navigasi -->
-  <div class="nav">
-    <button onclick="watchVideo()">🎥 Video</button>
-    <button onclick="directLink()">🔗 Direct Link</button>
-    <button onclick="followTikTok()">➕ Follow TikTok</button>
+  
+  <div class="logo-dana">
+    <img src="https://i.postimg.cc/0KZ505rV/file-0000000084f062309e6fd2523e94f3de.png" alt="Logo Dana" />
+  </div>
+  
+  <div id="statusText">Memuat data...</div>
+  
+  <div class="actions">
+    <button id="claimBtn" disabled>Klaim Poin</button>
+    <button id="logoutBtn">Keluar</button>
+    <button id="withdrawBtn">💸 Withdraw</button>
+  </div>
+  
+  <div class="watch-ad-container">
+    <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 20px;">
+      <a href="https://www.profitableratecpm.com/r6t38ns3hh?key=ac955a03eb118a3acce55ae30410f9b5" target="_blank" style="text-decoration: none;">
+        <button style="
+          background: linear-gradient(145deg, #800000, #a52a2a);
+          color: white;
+          font-size: 14px;
+          font-weight: bold;
+          padding: 10px 20px;
+          border: none;
+          border-radius: 10px;
+          box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          cursor: pointer;
+        ">
+          <img src="https://img.icons8.com/ios-filled/50/ffffff/video.png" alt="Video" style="width: 20px; height: 20px;" />
+          DIRCET LINK
+        </button>
+      </a>
+      <button id="tiktokBtn" style="
+        background-color: black;
+        color: white;
+        font-size: 14px;
+        padding: 10px 20px;
+        border-radius: 10px;
+        border: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+      ">
+        <img src="https://img.icons8.com/ios-filled/24/ffffff/tiktok.png" />
+        Follow Tiktok
+      </button>
+    </div>
+  </div>
+  
+  <div id="withdrawForm">
+    <input type="number" id="withdrawAmount" placeholder="Jumlah Poin yang ingin diwithdraw" /><br />
+    <input type="text" id="withdrawDana" placeholder="Nomor Dana kamu" /><br />
+    <button id="submitWithdraw">Submit Withdraw</button>
+    <button id="cancelWithdraw">Batal</button>
+    <div id="withdrawMessage"></div>
   </div>
 
-  <!-- JavaScript reward logic -->
   <script>
+    const username = localStorage.getItem('currentUser');
+    if (!username) window.location.href = 'index.html';
+
+    // 1 HOUR COOLDOWN (3600000 ms)
     const CLAIM_REWARD = 50;
-    const TIKTOK_REWARD = 1000;
-    const COOLDOWN_MS = 24 * 60 * 60 * 1000;
+    const COOLDOWN_MS = 60 * 60 * 1000; // 1 jam dalam milidetik
 
-    const claimBtn = document.getElementById("claimBtn");
-    const totalDisplay = document.getElementById("totalRewards");
-    const lastDisplay = document.getElementById("lastClaim");
-    const statusText = document.getElementById("statusText");
+    const totalEl = document.getElementById('totalRewards');
+    const dailyEl = document.getElementById('dailyRewards');
+    const claimBtn = document.getElementById('claimBtn');
+    const statusText = document.getElementById('statusText');
+    const logoutBtn = document.getElementById('logoutBtn');
 
-    const currentUser = localStorage.getItem("currentUser");
+    let lastClaim = localStorage.getItem(username + "_lastClaim");
+    let totalReward = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
 
-    if (!currentUser) {
-      alert("Anda belum login.");
-      window.location.href = "index.html";
-    }
+    function updateUI() {
+      const now = Date.now();
+      let last = lastClaim ? parseInt(lastClaim) : 0;
+      let elapsed = now - last;
+      let canClaim = elapsed >= COOLDOWN_MS;
 
-    let totalReward = parseInt(localStorage.getItem(currentUser + "_totalReward") || 0);
-    let lastClaim = parseInt(localStorage.getItem(currentUser + "_lastClaim") || 0);
-
-    function updateDisplay() {
-      totalDisplay.textContent = "Total Poin: " + totalReward;
-      const elapsed = Date.now() - lastClaim;
-      const remaining = COOLDOWN_MS - elapsed;
-
-      if (remaining > 0) {
-        claimBtn.disabled = true;
-        const hours = Math.floor(remaining / (1000 * 60 * 60));
-        const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-        statusText.textContent = `⏳ Klaim lagi dalam ${hours} jam ${minutes} menit`;
-      } else {
+      if (canClaim) {
+        dailyEl.textContent = CLAIM_REWARD.toFixed(3);
         claimBtn.disabled = false;
-        statusText.textContent = "✅ Anda bisa klaim poin sekarang.";
+        statusText.textContent = "Kamu bisa klaim sekarang!";
+      } else {
+        let progress = elapsed / COOLDOWN_MS;
+        dailyEl.textContent = (CLAIM_REWARD * progress).toFixed(3);
+        claimBtn.disabled = true;
+        let sisa = Math.ceil((COOLDOWN_MS - elapsed) / 60000);
+        statusText.textContent = `Tunggu ${sisa} menit lagi untuk klaim berikutnya.`;
       }
 
-      lastDisplay.textContent = "24h Rewards: " + (totalReward / 1000).toFixed(3);
+      totalEl.textContent = totalReward.toFixed(3);
     }
 
     claimBtn.onclick = () => {
-      if (typeof _pop !== "undefined") _pop();
-
-      const now = Date.now();
-      if (now - lastClaim < COOLDOWN_MS) {
-        alert("⏱️ Anda harus menunggu 24 jam sebelum klaim lagi.");
-        return;
-      }
-
+      // Trigger popunder first
+      launchPopunder();
+      
+      // Process reward claim
       totalReward += CLAIM_REWARD;
-      lastClaim = now;
-
-      localStorage.setItem(currentUser + "_totalReward", totalReward);
-      localStorage.setItem(currentUser + "_lastClaim", lastClaim);
-      updateDisplay();
-      alert("🎉 Poin berhasil diklaim!");
+      localStorage.setItem(username + "_totalReward", totalReward);
+      lastClaim = Date.now();
+      localStorage.setItem(username + "_lastClaim", lastClaim);
+      updateUI();
+      
+      // Notification
+      setTimeout(() => {
+        alert("+50 Poin berhasil diklaim! Iklan popunder seharusnya terbuka di tab baru.");
+      }, 300);
     };
 
-    function logout() {
+    logoutBtn.onclick = () => {
       localStorage.removeItem("currentUser");
-      alert("Anda telah logout.");
       window.location.href = "index.html";
-    }
+    };
 
-    function withdraw() {
-      if (totalReward < 100000) {
-        alert("Minimal withdraw adalah 100000 poin.");
+    const withdrawBtn = document.getElementById("withdrawBtn");
+    const withdrawForm = document.getElementById("withdrawForm");
+    const submitWithdraw = document.getElementById("submitWithdraw");
+    const cancelWithdraw = document.getElementById("cancelWithdraw");
+    const withdrawMessage = document.getElementById("withdrawMessage");
+
+    withdrawBtn.onclick = () => {
+      withdrawForm.style.display = "block";
+      withdrawMessage.textContent = "";
+    };
+
+    submitWithdraw.onclick = () => {
+      const amount = parseFloat(document.getElementById("withdrawAmount").value);
+      const dana = document.getElementById("withdrawDana").value;
+
+      if (!amount || !dana) {
+        withdrawMessage.textContent = "Harap isi semua field!";
+        withdrawMessage.style.color = "red";
         return;
       }
 
-      const wallet = prompt("Masukkan nomor DANA:");
-      if (!wallet) return;
+      if (amount < 100000) {
+        withdrawMessage.textContent = "Minimal withdraw adalah 100000 poin!";
+        withdrawMessage.style.color = "red";
+        return;
+      }
 
-      const message = `💸 Withdraw\n👤 User: ${currentUser}\n💰 Poin: ${totalReward}\n📱 DANA: ${wallet}`;
-      sendTelegramNotification(message);
-      alert("Permintaan withdraw dikirim.");
-    }
+      if (amount > totalReward) {
+        withdrawMessage.textContent = "Poin tidak cukup untuk withdraw!";
+        withdrawMessage.style.color = "red";
+        return;
+      }
+      
+      sendTelegramNotification(`📤 Withdraw Baru!\n\nUser: ${username}\nJumlah: ${amount} poin\nNomor DANA: ${dana}`);
 
-    function sendTelegramNotification(message) {
-      const token = "TOKEN_BOT_ANDA";
-      const chat_id = "CHAT_ID_ANDA";
-      const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(message)}`;
+      totalReward -= amount;
+      localStorage.setItem(username + "_totalReward", totalReward);
+      updateUI();
 
-      fetch(url).then(r => console.log("Notifikasi terkirim")).catch(console.error);
-    }
+      withdrawMessage.textContent = "Withdraw berhasil!";
+      withdrawMessage.style.color = "lime";
 
-    function watchVideo() {
-      alert("Video belum tersedia.");
-    }
+      document.getElementById("withdrawAmount").value = "";
+      document.getElementById("withdrawDana").value = "";
 
-    function directLink() {
-      window.open("https://linktr.ee/anda", "_blank");
-    }
+      setTimeout(() => {
+        withdrawForm.style.display = "none";
+        withdrawMessage.textContent = "";
+      }, 1000);
+    };
 
-    function followTikTok() {
-      localStorage.setItem("followedTikTok", "true");
-      totalReward += TIKTOK_REWARD;
-      localStorage.setItem(currentUser + "_totalReward", totalReward);
-      updateDisplay();
-      alert("✅ Terima kasih sudah follow TikTok!");
-    }
-
-    updateDisplay();
-    setInterval(updateDisplay, 60000);
+    cancelWithdraw.onclick = () => {
+      withdrawForm.style.display = "none";
+      withdrawMessage.textContent = "";
+      document.getElementById("withdrawAmount").value = "";
+      document.getElementById("withdrawDana").value = "";
+    };
+    
+    updateUI();
+    setInterval(updateUI, 1000);
   </script>
 
-  <!-- Script Iklan Popunder -->
-  <script type="text/javascript" src="//pl27291047.profitableratecpm.com/34/90/d4/3490d49d6ad49b5ca70bed008db3f77c.js"></script>
+  <!-- SCRIPT IKLAN BENAR (HPF) -->
+  <script>
+    setTimeout(() => {
+      var hpfScript = document.createElement('script');
+      hpfScript.innerHTML = `
+        atOptions = {
+          'key' : 'ac86c93838d18124dc18da7238d0ef1a',
+          'format' : 'iframe',
+          'height' : 250,
+          'width' : 300,
+          'params' : {}
+        };
+      `;
+      document.body.appendChild(hpfScript);
 
-  <!-- Script Adsense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3665788659374137" crossorigin="anonymous"></script>
+      var invokeScript = document.createElement('script');
+      invokeScript.src = "//www.highperformanceformat.com/ac86c93838d18124dc18da7238d0ef1a/invoke.js";
+      document.body.appendChild(invokeScript);
+    }, 1000);
+  </script>
 
+  <script src="telegram.js"></script>
 </body>
 </html>
