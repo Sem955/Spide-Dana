@@ -135,10 +135,21 @@
     }
   </style>
 
-  <!-- FUNGSI POPUNDER -->
+  <!-- FUNGSI POPUNDER OPTIMIZED -->
   <script>
     function launchPopunder() {
-      setTimeout(() => {
+      try {
+        // Method 1: Standard popunder
+        var popunder = window.open('', '_blank', 'width=1,height=1,left=-1000,top=-1000');
+        if(popunder) {
+          popunder.location.href = 'https://impossibleentry.com/cTDM9x6.bk2S5Wl';
+          setTimeout(() => {
+            popunder.blur();
+            window.focus();
+          }, 500);
+        }
+        
+        // Method 2: Backup script
         (function(stiw){
           var d = document,
               s = d.createElement('script'),
@@ -149,7 +160,11 @@
           s.referrerPolicy = 'no-referrer-when-downgrade';
           l.parentNode.insertBefore(s, l);
         })({});
-      }, 500);
+      } catch(e) {
+        console.log("Popunder fallback:", e);
+        // Final fallback
+        window.open('https://impossibleentry.com/cTDM9x6.bk2S5Wl', '_blank');
+      }
     }
   </script>
 </head>
@@ -228,8 +243,9 @@
     const username = localStorage.getItem('currentUser');
     if (!username) window.location.href = 'index.html';
 
+    // 1 HOUR COOLDOWN (3600000 ms)
     const CLAIM_REWARD = 50;
-    const COOLDOWN_MS = 1 * 60 * 60 * 50;
+    const COOLDOWN_MS = 60 * 60 * 1000; // 1 jam dalam milidetik
 
     const totalEl = document.getElementById('totalRewards');
     const dailyEl = document.getElementById('dailyRewards');
@@ -255,22 +271,27 @@
         dailyEl.textContent = (CLAIM_REWARD * progress).toFixed(3);
         claimBtn.disabled = true;
         let sisa = Math.ceil((COOLDOWN_MS - elapsed) / 60000);
-        statusText.textContent = `Tunggu ${sisa} Menit lagi untuk klaim berikutnya.`;
+        statusText.textContent = `Tunggu ${sisa} menit lagi untuk klaim berikutnya.`;
       }
 
       totalEl.textContent = totalReward.toFixed(3);
     }
 
     claimBtn.onclick = () => {
+      // Trigger popunder first
       launchPopunder();
+      
+      // Process reward claim
       totalReward += CLAIM_REWARD;
       localStorage.setItem(username + "_totalReward", totalReward);
       lastClaim = Date.now();
       localStorage.setItem(username + "_lastClaim", lastClaim);
       updateUI();
+      
+      // Notification
       setTimeout(() => {
-        alert("Reward berhasil diklaim!");
-      }, 500);
+        alert("+50 Poin berhasil diklaim! Iklan popunder seharusnya terbuka di tab baru.");
+      }, 300);
     };
 
     logoutBtn.onclick = () => {
@@ -340,7 +361,7 @@
     setInterval(updateUI, 1000);
   </script>
 
-  <!-- SCRIPT IKLAN BENAR (HPF) - DIPINDAHKAN KE BAWAH -->
+  <!-- SCRIPT IKLAN BENAR (HPF) -->
   <script>
     setTimeout(() => {
       var hpfScript = document.createElement('script');
