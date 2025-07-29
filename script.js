@@ -105,5 +105,3 @@ document.getElementById('claimBtn').addEventListener('click', async () => {
 });
 
 fetchUserData();
-<script type='text/javascript' src='//pl27292205.profitableratecpm.com/df/1b/f6/df1bf6dfa5e026ae1544a28586693749.js'></script>
-<script type='text/javascript' src='//pl27291047.profitableratecpm.com/34/90/d4/3490d49d6ad49b5ca70bed008db3f77c.js'></script>
