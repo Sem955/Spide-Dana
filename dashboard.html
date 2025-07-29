@@ -440,5 +440,24 @@ setInterval(updateUI, 1000);
     alert("Link referral disalin!");
   }
    </script>
+    <script>
+  const user = localStorage.getItem("currentUser");
+  const referralKey = user + "_referrals";
+  const rewardKey = user + "_totalRewards";
+
+  const list = JSON.parse(localStorage.getItem(referralKey) || "[]");
+  const totalPoints = parseInt(localStorage.getItem(rewardKey) || "0");
+
+  // Tampilkan daftar orang yang diundang
+  const referralList = document.getElementById("referralList");
+  list.forEach(u => {
+    const li = document.createElement("li");
+    li.textContent = `${u.username} (+${u.poin} poin)`;
+    referralList.appendChild(li);
+  });
+
+  // Tampilkan total poin referral
+  document.getElementById("referralPoints").textContent = `Total Poin Referral: ${totalPoints.toLocaleString()} Poin`;
+    </script>
 </body>
   </html>
