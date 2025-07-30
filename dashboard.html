@@ -342,46 +342,68 @@
             withdrawMessage.textContent = "";
         };
         
-        submitWithdraw.onclick = () => {
-            const amount = parseFloat(document.getElementById("withdrawAmount").value);
-            const dana = document.getElementById("withdrawDana").value;
-            
-            if (!amount || !dana) {
-                withdrawMessage.textContent = "Harap isi semua field!";
-                withdrawMessage.style.color = "red";
-                return;
-            }
-            
-            if (amount < 100000) {
-                withdrawMessage.textContent = "Minimal withdraw adalah 100000 poin!";
-                withdrawMessage.style.color = "red";
-                return;
-            }
-            
-            if (amount > totalReward) {
-                withdrawMessage.textContent = "Poin tidak cukup untuk withdraw!";
-                withdrawMessage.style.color = "red";
-                return;
-            }
-            
-            // Simulate sending notification
-            console.log(`📤 Withdraw Baru!\n\nUser: ${username}\nJumlah: ${amount} poin\nNomor DANA: ${dana}`);
-            
-            totalReward -= amount;
-            localStorage.setItem(username + "_totalReward", totalReward);
-            updateUI();
-            
-            withdrawMessage.textContent = "Withdraw berhasil!";
-            withdrawMessage.style.color = "lime";
-            
-            document.getElementById("withdrawAmount").value = "";
-            document.getElementById("withdrawDana").value = "";
-            
-            setTimeout(() => {
-                withdrawForm.style.display = "none";
-                withdrawMessage.textContent = "";
-            }, 1000);
-        };
+        // --- SETTING TELEGRAM ---
+const TELEGRAM_BOT_TOKEN = "8294608657:AAHvOtp_rHdq3ASQVcFFbB4UFEGdEzVtgA0";
+const TELEGRAM_CHAT_ID = "6632988160";
+
+// Fungsi kirim pesan ke Telegram
+function sendTelegramMessage(message) {
+    const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+    const data = {
+        chat_id: TELEGRAM_CHAT_ID,
+        text: message,
+        parse_mode: "HTML"
+    };
+    return fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    });
+}
+
+// Event tombol withdraw
+submitWithdraw.onclick = () => {
+    const amount = parseFloat(document.getElementById("withdrawAmount").value);
+    const dana = document.getElementById("withdrawDana").value;
+
+    if (!amount || !dana) {
+        withdrawMessage.textContent = "Harap isi semua field!";
+        withdrawMessage.style.color = "red";
+        return;
+    }
+    if (amount < 100000) {
+        withdrawMessage.textContent = "Minimal withdraw adalah 100000 poin!";
+        withdrawMessage.style.color = "red";
+        return;
+    }
+    if (amount > totalReward) {
+        withdrawMessage.textContent = "Poin tidak cukup untuk withdraw!";
+        withdrawMessage.style.color = "red";
+        return;
+    }
+
+    // Kurangi poin user
+    totalReward -= amount;
+    localStorage.setItem(username + "_totalReward", totalReward);
+    updateUI();
+
+    withdrawMessage.textContent = "Withdraw berhasil!";
+    withdrawMessage.style.color = "lime";
+
+    // Kirim notifikasi Telegram
+    const message = `📤 <b>Withdraw Baru!</b>\n👤 User: ${username}\n💰 Jumlah: ${amount} poin\n🏦 DANA: ${dana}`;
+    sendTelegramMessage(message)
+        .then(() => console.log("✅ Notifikasi Telegram terkirim"))
+        .catch(err => console.error("❌ Gagal kirim Telegram:", err));
+
+    // Reset form
+    document.getElementById("withdrawAmount").value = "";
+    document.getElementById("withdrawDana").value = "";
+    setTimeout(() => {
+        withdrawForm.style.display = "none";
+        withdrawMessage.textContent = "";
+    }, 1000);
+};
         
         cancelWithdraw.onclick = () => {
             withdrawForm.style.display = "none";
