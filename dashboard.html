@@ -296,7 +296,7 @@
                 dailyEl.textContent = CLAIM_REWARD.toFixed(3);
                 claimBtn.disabled = false;
                 statusText.textContent = "Kamu bisa klaim sekarang!";
-  else {
+   } else {
     let progress = elapsed / COOLDOWN_MS;
     dailyEl.textContent = (CLAIM_REWARD * progress).toFixed(3);
     claimBtn.disabled = true;
