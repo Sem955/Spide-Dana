@@ -315,7 +315,7 @@
     statusText.textContent = `Tunggu ${mStr}m ${sStr}s lagi untuk klaim berikutnya.`;
 }
             
-            totalEl.textContent = totalReward.toFixed(3);
+            totalEl.textContent = Math.floor(totalReward).toLocaleString('en-US');
         }
         
         claimBtn.onclick = () => {
