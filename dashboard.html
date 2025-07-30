@@ -301,7 +301,7 @@
                 statusText.textContent = "Kamu bisa klaim sekarang!";
    } else {
     let progress = elapsed / COOLDOWN_MS;
-    dailyEl.textContent = (CLAIM_REWARD * progress).toFixed(3);
+    dailyEl.textContent = Math.floor(CLAIM_REWARD * progress).toLocaleString('en-US');
     claimBtn.disabled = true;
 
     let remaining = COOLDOWN_MS - elapsed;
