@@ -19,19 +19,16 @@
     
     .logo {
       width: 120px;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
     
- .login-container {
-  background-color: white;
-  border-radius: 8px;
-  padding: 20px;
-  width: 90%;               /* longgar kanan kiri */
-  max-width: 350px;         /* biar sedikit lebih lebar */
-  margin: 0 auto;           /* tetap ditengah */
-  box-shadow: 0 3px 5px rgba(0,0,0,0.1);
-  text-align: center;
-    
+    .login-container {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      width: 280px;         /* Lebar lebih kecil */
+      box-shadow: 0 3px 5px rgba(0,0,0,0.1);
+      text-align: center;
     }
     
     h1 {
@@ -42,11 +39,12 @@
     
     input {
       width: 100%;
-      padding: 10px 10px;
+      padding: 10px;
       margin-bottom: 10px;
       border: 1px solid #ddd;
       border-radius: 6px;
-      font-size: 10px;
+      font-size: 14px;
+      box-sizing: border-box; /* Pastikan padding tidak mempengaruhi lebar */
     }
     
     button {
@@ -76,11 +74,11 @@
       text-align: left;
       margin-bottom: 5px;
       color: #555;
-      font-size: 10px;
+      font-size: 14px;
     }
     
     .input-group {
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
   </style>
 </head>
@@ -92,8 +90,8 @@
     
     <div class="input-group">
       <label class="input-label">Masukan email</label>
-       <input type="text" id="username" placeholder="contoh@email.com" maxlength="30">
- </div>
+      <input type="text" id="username" placeholder="contoh@email.com" maxlength="30">
+    </div>
     <div class="input-group">
       <label class="input-label">Kata sandi</label>
       <input type="password" id="password" placeholder="Minimal 6 karakter">
@@ -102,16 +100,18 @@
     <button id="loginBtn">Login</button>
     <button id="registerBtn">Buat akun baru</button>
   </div>
-    <script type="text/javascript">
-	atOptions = {
-		'key' : 'a4756fd525e25cbed5ac79db27595f95',
-		'format' : 'iframe',
-		'height' : 50,
-		'width' : 320,
-		'params' : {}
-	};
-</script>
-<script type="text/javascript" src="//www.highperformanceformat.com/a4756fd525e25cbed5ac79db27595f95/invoke.js"></script>
+  
+  <script type="text/javascript">
+    atOptions = {
+      'key' : 'a4756fd525e25cbed5ac79db27595f95',
+      'format' : 'iframe',
+      'height' : 50,
+      'width' : 320,
+      'params' : {}
+    };
+  </script>
+  <script type="text/javascript" src="//www.highperformanceformat.com/a4756fd525e25cbed5ac79db27595f95/invoke.js"></script>
+  
   <script>
     const loginBtn = document.getElementById("loginBtn");
     const registerBtn = document.getElementById("registerBtn");
