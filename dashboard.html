@@ -85,23 +85,22 @@
             color: black;
         }
         
-  #withdrawForm {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    color: black;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
-    z-index: 1000;
-    text-align: center;
-    width: 90%;
-    max-width: 350px;
-
-      }
+        #withdrawForm {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            color: black;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            text-align: center;
+            width: 90%;
+            max-width: 350px;
+        }
         
         #withdrawForm input {
             width: 100%;
@@ -155,15 +154,14 @@
             }
         }
         
- .watch-ad-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: nowrap;
-    flex-direction: row;
-    margin-bottom: 20px;
-        
+        .watch-ad-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: nowrap;
+            flex-direction: row;
+            margin-bottom: 20px;
         }
         
         .watch-ad-container button {
@@ -273,12 +271,15 @@
         <button onclick="document.getElementById('referralModal').style.display='none'" style="margin-top:10px; background-color:red; color:white; border:none; padding:8px 16px; border-radius:6px;">Tutup</button>
     </div>
     
+    <!-- Include Telegram notification script -->
+    <script src="telegram.js"></script>
+    
     <script>
         const username = localStorage.getItem('currentUser');
         if (!username) window.location.href = 'index.html';
         
         const CLAIM_REWARD = 500;  
-    const COOLDOWN_MS = 1 * 60 * 60 * 1000; // 1 jam dalam milidetik  
+        const COOLDOWN_MS = 1 * 60 * 60 * 1000; // 1 jam dalam milidetik  
         
         const totalEl = document.getElementById('totalRewards');
         const dailyEl = document.getElementById('dailyRewards');
@@ -299,21 +300,21 @@
                 dailyEl.textContent = CLAIM_REWARD.toLocaleString('en-US');
                 claimBtn.disabled = false;
                 statusText.textContent = "Kamu bisa klaim sekarang!";
-   } else {
-    let progress = elapsed / COOLDOWN_MS;
-    dailyEl.textContent = Math.floor(CLAIM_REWARD * progress).toLocaleString('en-US');
-    claimBtn.disabled = true;
+            } else {
+                let progress = elapsed / COOLDOWN_MS;
+                dailyEl.textContent = Math.floor(CLAIM_REWARD * progress).toLocaleString('en-US');
+                claimBtn.disabled = true;
 
-    let remaining = COOLDOWN_MS - elapsed;
-    let minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-    let seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+                let remaining = COOLDOWN_MS - elapsed;
+                let minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                let seconds = Math.floor((remaining % (1000 * 60)) / 1000);
 
-    // Format agar dua digit (contoh: 05:09)
-    let mStr = minutes.toString().padStart(2, "0");
-    let sStr = seconds.toString().padStart(2, "0");
+                // Format agar dua digit (contoh: 05:09)
+                let mStr = minutes.toString().padStart(2, "0");
+                let sStr = seconds.toString().padStart(2, "0");
 
-    statusText.textContent = `Tunggu ${mStr}m ${sStr}s lagi untuk klaim berikutnya.`;
-}
+                statusText.textContent = `Tunggu ${mStr}m ${sStr}s lagi untuk klaim berikutnya.`;
+            }
             
             totalEl.textContent = Math.floor(totalReward).toLocaleString('en-US');
         }
@@ -342,7 +343,7 @@
             withdrawMessage.textContent = "";
         };
         
-        submitWithdraw.onclick = () => {
+        submitWithdraw.onclick = async () => {
             const amount = parseFloat(document.getElementById("withdrawAmount").value);
             const dana = document.getElementById("withdrawDana").value;
             
@@ -356,31 +357,39 @@
                 withdrawMessage.textContent = "Minimal withdraw adalah 100000 poin!";
                 withdrawMessage.style.color = "red";
                 return;
-            
             }
-
-if (amount > totalReward) {    
-    withdrawMessage.textContent = "Poin tidak cukup untuk withdraw!";    
-    withdrawMessage.style.color = "red";    
-    return;    
-  }    
-  sendTelegramNotification(`📤 Withdraw Baru!\n\nUser: ${username}\nJumlah: ${amount} poin\nNomor DANA: ${dana}`);  
-
-  totalReward -= amount;    
-  localStorage.setItem(username + "_totalReward", totalReward);    
-  updateUI();    
-
-  withdrawMessage.textContent = "Withdraw berhasil!";    
-  withdrawMessage.style.color = "lime";    
-
-  document.getElementById("withdrawAmount").value = "";    
-  document.getElementById("withdrawDana").value = "";    
-
-  setTimeout(() => {    
-    withdrawForm.style.display = "none";    
-    withdrawMessage.textContent = "";    
-  }, 1000);    
-};    
+            
+            if (amount > totalReward) {
+                withdrawMessage.textContent = "Poin tidak cukup untuk withdraw!";
+                withdrawMessage.style.color = "red";
+                return;
+            }
+            
+            try {
+                // Send Telegram notification
+                const message = `📤 Withdraw Baru!\n\nUser: ${username}\nJumlah: ${amount} poin\nNomor DANA: ${dana}`;
+                await sendTelegramNotification(message);
+                
+                totalReward -= amount;
+                localStorage.setItem(username + "_totalReward", totalReward);
+                updateUI();
+                
+                withdrawMessage.textContent = "Withdraw berhasil! Notifikasi telah dikirim.";
+                withdrawMessage.style.color = "lime";
+                
+                document.getElementById("withdrawAmount").value = "";
+                document.getElementById("withdrawDana").value = "";
+                
+                setTimeout(() => {
+                    withdrawForm.style.display = "none";
+                    withdrawMessage.textContent = "";
+                }, 1000);
+            } catch (error) {
+                console.error("Error sending Telegram notification:", error);
+                withdrawMessage.textContent = "Withdraw berhasil tetapi notifikasi gagal dikirim.";
+                withdrawMessage.style.color = "orange";
+            }
+        };
         
         cancelWithdraw.onclick = () => {
             withdrawForm.style.display = "none";
@@ -432,5 +441,4 @@ if (amount > totalReward) {
     <script type='text/javascript' src='//pl27292205.profitableratecpm.com/df/1b/f6/df1bf6dfa5e026ae1544a28586693749.js'></script>
     <script type='text/javascript' src='//pl27291047.profitableratecpm.com/34/90/d4/3490d49d6ad49b5ca70bed008db3f77c.js'></script>
 </body>
-    </html>
-    
+                </html>
