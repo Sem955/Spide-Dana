@@ -388,15 +388,13 @@ submitWithdraw.onclick = () => {
     updateUI();
 
     withdrawMessage.textContent = "Withdraw berhasil!";
-    withdrawMessage.style.color = "lime";
-
-    // Kirim notifikasi Telegram
-    const message = `📤 <b>Withdraw Baru!</b>\n👤 User: ${username}\n💰 Jumlah: ${amount} poin\n🏦 DANA: ${dana}`;
-    sendTelegramMessage(message)
-        .then(() => console.log("✅ Notifikasi Telegram terkirim"))
-        .catch(err => console.error("❌ Gagal kirim Telegram:", err));
-
-    // Reset form
+    withdrawMessage.style.color = "lime"; 
+    
+    // Kirim notifikasi ke Telegram
+sendTelegramNotification(
+  `📤 Withdraw Baru!\n👤 User: ${username}\n💰 Jumlah: ${amount} poin\n🏦 DANA: ${dana}`
+);
+  // Reset form
     document.getElementById("withdrawAmount").value = "";
     document.getElementById("withdrawDana").value = "";
     setTimeout(() => {
