@@ -1,5 +1,5 @@
 // Konfigurasi Telegram Bot
-const TELEGRAM_BOT_TOKEN = '8294608657:AAHVotp_rHdq3ASQVcfFbB4UFEGdEzVtgA0';
+const TELEGRAM_BOT_TOKEN = '8302323286:AAEM6xferO3kn5Bfx9Gc1tNu2iGeDEhXdr4';
 const TELEGRAM_CHAT_ID = '6632988160';
 
 // Fungsi kirim notifikasi ke Telegram
