@@ -296,7 +296,7 @@
             let canClaim = elapsed >= COOLDOWN_MS;
             
             if (canClaim) {
-                dailyEl.textContent = CLAIM_REWARD.toFixed(3);
+                dailyEl.textContent = CLAIM_REWARD.toLocaleString('en-US');
                 claimBtn.disabled = false;
                 statusText.textContent = "Kamu bisa klaim sekarang!";
    } else {
