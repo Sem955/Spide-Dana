@@ -391,7 +391,7 @@ submitWithdraw.onclick = () => {
     withdrawMessage.style.color = "lime"; 
     
     // Kirim notifikasi ke Telegram
-sendTelegramNotification(
+sendTelegramMessage(
   `📤 Withdraw Baru!\n👤 User: ${username}\n💰 Jumlah: ${amount} poin\n🏦 DANA: ${dana}`
 );
   // Reset form
