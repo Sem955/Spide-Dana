@@ -296,13 +296,21 @@
                 dailyEl.textContent = CLAIM_REWARD.toFixed(3);
                 claimBtn.disabled = false;
                 statusText.textContent = "Kamu bisa klaim sekarang!";
-            } else {
-                let progress = elapsed / COOLDOWN_MS;
-                dailyEl.textContent = (CLAIM_REWARD * progress).toFixed(3);
-                claimBtn.disabled = true;
-                let sisa = Math.ceil((COOLDOWN_MS - elapsed) / 3600000);
-                statusText.textContent = `Tunggu ${sisa} jam lagi untuk klaim berikutnya.`;
-            }
+  else {
+    let progress = elapsed / COOLDOWN_MS;
+    dailyEl.textContent = (CLAIM_REWARD * progress).toFixed(3);
+    claimBtn.disabled = true;
+
+    let remaining = COOLDOWN_MS - elapsed;
+    let minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+    let seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+
+    // Format agar dua digit (contoh: 05:09)
+    let mStr = minutes.toString().padStart(2, "0");
+    let sStr = seconds.toString().padStart(2, "0");
+
+    statusText.textContent = `Tunggu ${mStr}m ${sStr}s lagi untuk klaim berikutnya.`;
+}
             
             totalEl.textContent = totalReward.toFixed(3);
         }
