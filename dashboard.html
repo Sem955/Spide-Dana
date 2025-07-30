@@ -356,33 +356,31 @@
                 withdrawMessage.textContent = "Minimal withdraw adalah 100000 poin!";
                 withdrawMessage.style.color = "red";
                 return;
+            
             }
-            
-            if (amount > totalReward) {
-                withdrawMessage.textContent = "Poin tidak cukup untuk withdraw!";
-                withdrawMessage.style.color = "red";
-                return;
-            }
-            
-            // Simulate sending notification
-              
-             sendTelegramNotification(`📤 Withdraw Baru!\n\nUser: ${username}\nJumlah: ${amount} poin\nNomor DANA: ${dana}`);  
-           
-            totalReward -= amount;
-            localStorage.setItem(username + "_totalReward", totalReward);
-            updateUI();
-            
-            withdrawMessage.textContent = "Withdraw berhasil!";
-            withdrawMessage.style.color = "lime";
-            
-            document.getElementById("withdrawAmount").value = "";
-            document.getElementById("withdrawDana").value = "";
-            
-            setTimeout(() => {
-                withdrawForm.style.display = "none";
-                withdrawMessage.textContent = "";
-            }, 1000);
-        };
+
+if (amount > totalReward) {    
+    withdrawMessage.textContent = "Poin tidak cukup untuk withdraw!";    
+    withdrawMessage.style.color = "red";    
+    return;    
+  }    
+  sendTelegramNotification(`📤 Withdraw Baru!\n\nUser: ${username}\nJumlah: ${amount} poin\nNomor DANA: ${dana}`);  
+
+  totalReward -= amount;    
+  localStorage.setItem(username + "_totalReward", totalReward);    
+  updateUI();    
+
+  withdrawMessage.textContent = "Withdraw berhasil!";    
+  withdrawMessage.style.color = "lime";    
+
+  document.getElementById("withdrawAmount").value = "";    
+  document.getElementById("withdrawDana").value = "";    
+
+  setTimeout(() => {    
+    withdrawForm.style.display = "none";    
+    withdrawMessage.textContent = "";    
+  }, 1000);    
+};    
         
         cancelWithdraw.onclick = () => {
             withdrawForm.style.display = "none";
