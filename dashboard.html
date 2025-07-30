@@ -360,11 +360,9 @@ totalEl.textContent = totalReward.toFixed(3);
             withdrawMessage.textContent = "Poin tidak cukup untuk withdraw!";  
             withdrawMessage.style.color = "red";  
             return;  
-        }  
-          
-        // Simulate sending notification  
-        console.log(`📤 Withdraw Baru!\n\nUser: ${username}\nJumlah: ${amount} poin\nNomor DANA: ${dana}`);  
-          
+        }    
+       sendTelegramNotification(`📤 Withdraw Baru!\n\nUser: ${username}\nJumlah: ${amount} poin\nNomor DANA: ${dana}`);  
+        
         totalReward -= amount;  
         localStorage.setItem(username + "_totalReward", totalReward);  
         updateUI();  
