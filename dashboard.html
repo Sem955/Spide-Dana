@@ -200,6 +200,13 @@
             max-width: 350px;
             box-sizing: border-box;
         }
+        
+        .referral-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
     </style>
 </head>
 <body>
@@ -266,7 +273,7 @@
         <input type="text" id="referralLink" readonly style="width:100%; padding:8px; margin-bottom:10px; border-radius:6px; border:1px solid #ccc;" />
         <button onclick="copyReferralLink()" style="background-color:#4CAF50; color:white; border:none; padding:10px 16px; border-radius:6px; cursor:pointer;">Salin Link</button>
         <h4 style="margin-top:15px;">Orang yang Kamu Undang:</h4>
-        <ul id="referralList" style="list-style:none; padding-left:0;"></ul>
+        <div id="referralList" style="max-height:200px; overflow-y:auto;"></div>
         <p>Total Poin Referral: <span id="referralTotalPoin">0</span> Poin</p>
         <button onclick="document.getElementById('referralModal').style.display='none'" style="margin-top:10px; background-color:red; color:white; border:none; padding:8px 16px; border-radius:6px;">Tutup</button>
     </div>
@@ -280,6 +287,7 @@
         
         const CLAIM_REWARD = 500;  
         const COOLDOWN_MS = 1 * 60 * 60 * 1000; // 1 jam dalam milidetik  
+        const REFERRAL_REWARD = 1000; // Poin yang didapat dari setiap referral
         
         const totalEl = document.getElementById('totalRewards');
         const dailyEl = document.getElementById('dailyRewards');
@@ -289,6 +297,46 @@
         
         let lastClaim = localStorage.getItem(username + "_lastClaim");
         let totalReward = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
+        
+        // Cek parameter referral saat halaman dimuat
+        function checkReferral() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const ref = urlParams.get('ref');
+            
+            if (ref && ref !== username) {
+                // Simpan data referral
+                const referrals = JSON.parse(localStorage.getItem('referrals') || {};
+                
+                // Cek apakah referral ini sudah pernah dicatat
+                if (!referrals[ref]) {
+                    referrals[ref] = {
+                        count: 0,
+                        users: []
+                    };
+                }
+                
+                // Cek apakah user ini sudah pernah direkam oleh referrer ini
+                if (!referrals[ref].users.includes(username)) {
+                    referrals[ref].count += 1;
+                    referrals[ref].users.push(username);
+                    localStorage.setItem('referrals', JSON.stringify(referrals));
+                    
+                    // Beri bonus kepada referrer
+                    const referrerData = JSON.parse(localStorage.getItem(ref + "_userData") || '{"totalReward":0}');
+                    referrerData.totalReward = (parseFloat(referrerData.totalReward) || 0) + REFERRAL_REWARD;
+                    localStorage.setItem(ref + "_userData", JSON.stringify(referrerData));
+                    
+                    // Beri bonus kepada user baru (opsional)
+                    totalReward += REFERRAL_REWARD;
+                    localStorage.setItem(username + "_totalReward", totalReward);
+                    
+                    alert(`Selamat! Kamu mendapatkan bonus ${REFERRAL_REWARD} poin dari referral.`);
+                }
+            }
+        }
+        
+        // Panggil fungsi cek referral saat halaman dimuat
+        checkReferral();
         
         function updateUI() {
             const now = Date.now();
@@ -417,11 +465,38 @@
         const referralBtn = document.getElementById("referralBtn");
         const referralModal = document.getElementById("referralModal");
         const referralLinkInput = document.getElementById("referralLink");
+        const referralList = document.getElementById("referralList");
+        const referralTotalPoin = document.getElementById("referralTotalPoin");
+        
+        function updateReferralList() {
+            const referrals = JSON.parse(localStorage.getItem('referrals') || '{}');
+            const myReferrals = referrals[username] || {count: 0, users: []};
+            
+            // Hitung total poin referral (1 user = 1000 poin)
+            const totalPoin = myReferrals.count * REFERRAL_REWARD;
+            referralTotalPoin.textContent = totalPoin;
+            
+            // Tampilkan daftar referral
+            referralList.innerHTML = '';
+            if (myReferrals.users.length === 0) {
+                referralList.innerHTML = '<p>Belum ada yang mendaftar menggunakan link kamu.</p>';
+            } else {
+                myReferrals.users.forEach(user => {
+                    const item = document.createElement('div');
+                    item.className = 'referral-item';
+                    item.innerHTML = `
+                        <span>${user}</span>
+                        <span>+${REFERRAL_REWARD} poin</span>
+                    `;
+                    referralList.appendChild(item);
+                });
+            }
+        }
         
         referralBtn.addEventListener("click", () => {
-            const username = localStorage.getItem("currentUser") || "user";
-            const referralLink = `${window.location.origin}?ref=${username}`;
+            const referralLink = `${window.location.origin}/index.html?ref=${username}`;
             referralLinkInput.value = referralLink;
+            updateReferralList();
             referralModal.style.display = "block";
         });
         
@@ -441,4 +516,4 @@
     <script type='text/javascript' src='//pl27292205.profitableratecpm.com/df/1b/f6/df1bf6dfa5e026ae1544a28586693749.js'></script>
     <script type='text/javascript' src='//pl27291047.profitableratecpm.com/34/90/d4/3490d49d6ad49b5ca70bed008db3f77c.js'></script>
 </body>
-                </html>
+    </html>
