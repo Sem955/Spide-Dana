@@ -219,11 +219,13 @@
         localStorage.removeItem('referrer');
       }
 
-      alert("Akun berhasil dibuat. Anda akan dialihkan ke dashboard.");
+      alert("Akun berhasil dibuat. Anda akan dialihkan ke halaman login.");
       setTimeout(() => {
-        window.location.href = "dashboard.html";
+        // Clear the form and redirect to the same page (login page)
+        document.getElementById("username").value = "";
+        document.getElementById("password").value = "";
       }, 1500);
     };
   </script>
 </body>
-  </html>
+</html>
