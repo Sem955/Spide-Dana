@@ -51,13 +51,18 @@
     width: 180px;
     margin: 30px auto 10px auto;
   }
-  .login-container {
+  .login-container, .register-container {
     background-color: white;
     border-radius: 8px;
     padding: 20px;
     width: 280px;
     box-shadow: 0 3px 5px rgba(0,0,0,0.1);
     text-align: center;
+    margin-bottom: 20px;
+    display: none;
+  }
+  .login-container.active, .register-container.active {
+    display: block;
   }
   h1 {
     color: #333;
@@ -86,12 +91,13 @@
     background-color: #1877f2;
     color: white;
   }
-  .register-link {
+  .register-link, .login-link {
     margin-top: 15px;
     font-size: 14px;
     color: #1877f2;
     cursor: pointer;
     display: block;
+    text-decoration: none;
   }
 </style>
 </head>
@@ -107,7 +113,8 @@
 <div id="main-content" class="main-content">
   <img src="https://i.postimg.cc/W1pS8mCy/file-00000000cf086246b6a7f81dca869d1c.png" alt="Logo DANA" class="logo">
   
-  <div class="login-container">
+  <!-- Login Form -->
+  <div class="login-container active" id="loginForm">
     <h1>LOGIN</h1>
     <div class="input-group">
       <input type="text" id="loginEmail" placeholder="Email">
@@ -117,6 +124,25 @@
     </div>
     <button id="loginBtn">Login</button>
     <a class="register-link" id="showRegister">Belum punya akun? Daftar</a>
+  </div>
+
+  <!-- Register Form -->
+  <div class="register-container" id="registerForm">
+    <h1>DAFTAR</h1>
+    <div class="input-group">
+      <input type="text" id="registerName" placeholder="Nama lengkap">
+    </div>
+    <div class="input-group">
+      <input type="email" id="registerEmail" placeholder="Email">
+    </div>
+    <div class="input-group">
+      <input type="password" id="registerPassword" placeholder="Kata sandi">
+    </div>
+    <div class="input-group">
+      <input type="password" id="registerConfirmPassword" placeholder="Konfirmasi kata sandi">
+    </div>
+    <button id="registerBtn">Daftar</button>
+    <a class="login-link" id="showLogin">Sudah punya akun? Login</a>
   </div>
 
   <!-- Iklan Google AdSense -->
@@ -155,9 +181,15 @@
     }, 3000);
   });
 
-  // Show register form
+  // Toggle between login and register forms
   document.getElementById("showRegister").addEventListener("click", function() {
-    alert("Form register belum ditambahkan di sini, bisa kita tambah nanti.");
+    document.getElementById("loginForm").classList.remove("active");
+    document.getElementById("registerForm").classList.add("active");
+  });
+
+  document.getElementById("showLogin").addEventListener("click", function() {
+    document.getElementById("registerForm").classList.remove("active");
+    document.getElementById("loginForm").classList.add("active");
   });
 
   // Login functionality
@@ -177,6 +209,47 @@
     } else {
       alert("Login gagal: Email atau password salah.");
     }
+  });
+
+  // Register functionality
+  document.getElementById("registerBtn").addEventListener("click", function() {
+    const name = document.getElementById("registerName").value;
+    const email = document.getElementById("registerEmail").value;
+    const password = document.getElementById("registerPassword").value;
+    const confirmPassword = document.getElementById("registerConfirmPassword").value;
+    
+    if (!name || !email || !password || !confirmPassword) {
+      alert("Harap isi semua field");
+      return;
+    }
+    
+    if (password !== confirmPassword) {
+      alert("Konfirmasi password tidak cocok");
+      return;
+    }
+    
+    let users = JSON.parse(localStorage.getItem("users") || "{}");
+    
+    if (users[email]) {
+      alert("Email sudah terdaftar");
+      return;
+    }
+    
+    users[email] = {
+      name: name,
+      password: password
+    };
+    
+    localStorage.setItem("users", JSON.stringify(users));
+    alert("Pendaftaran berhasil! Silakan login.");
+    document.getElementById("registerForm").classList.remove("active");
+    document.getElementById("loginForm").classList.add("active");
+    
+    // Clear register form
+    document.getElementById("registerName").value = "";
+    document.getElementById("registerEmail").value = "";
+    document.getElementById("registerPassword").value = "";
+    document.getElementById("registerConfirmPassword").value = "";
   });
 </script>
 
