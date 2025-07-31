@@ -4,6 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Dashboard</title>
+    <!-- AdSense Script -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3665788659374137"
+     crossorigin="anonymous"></script>
     <style>
         body {
             background-color: #4CC6FF;
@@ -200,9 +203,29 @@
             max-width: 350px;
             box-sizing: border-box;
         }
+
+        /* AdSense Container Style */
+        .adsense-container {
+            margin: 20px auto;
+            text-align: center;
+            max-width: 728px;
+        }
     </style>
-    <head>
+</head>
 <body>
+    <!-- AdSense Interstitial Ad (Will show as full-screen when triggered) -->
+    <div class="adsense-container">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-3665788659374137"
+             data-ad-slot="2726494782"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+
     <div class="rewards-top">
         <div class="reward-card">
             <div class="reward-title">POIN ANDA</div>
@@ -290,6 +313,16 @@
         let lastClaim = localStorage.getItem(username + "_lastClaim");
         let totalReward = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
         
+        // Function to show interstitial ad
+        function showInterstitialAd() {
+            if (typeof adsbygoogle !== 'undefined') {
+                adsbygoogle.requestNonPersonalizedAds = 1;
+                adsbygoogle.push({});
+                console.log('Interstitial ad requested');
+            }
+        }
+        
+        // Show ad on specific events
         function updateUI() {
             const now = Date.now();
             let last = lastClaim ? parseInt(lastClaim) : 0;
@@ -300,6 +333,9 @@
                 dailyEl.textContent = CLAIM_REWARD.toLocaleString('en-US');
                 claimBtn.disabled = false;
                 statusText.textContent = "Kamu bisa klaim sekarang!";
+                
+                // Show ad when reward is available
+                setTimeout(showInterstitialAd, 1000);
             } else {
                 let progress = elapsed / COOLDOWN_MS;
                 dailyEl.textContent = Math.floor(CLAIM_REWARD * progress).toLocaleString('en-US');
@@ -309,7 +345,6 @@
                 let minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
                 let seconds = Math.floor((remaining % (1000 * 60)) / 1000);
 
-                // Format agar dua digit (contoh: 05:09)
                 let mStr = minutes.toString().padStart(2, "0");
                 let sStr = seconds.toString().padStart(2, "0");
 
@@ -325,6 +360,9 @@
             lastClaim = Date.now();
             localStorage.setItem(username + "_lastClaim", lastClaim);
             updateUI();
+            
+            // Show ad after claiming
+            setTimeout(showInterstitialAd, 1500);
         };
         
         logoutBtn.onclick = () => {
@@ -341,6 +379,9 @@
         withdrawBtn.onclick = () => {
             withdrawForm.style.display = "block";
             withdrawMessage.textContent = "";
+            
+            // Show ad when opening withdraw form
+            showInterstitialAd();
         };
         
         submitWithdraw.onclick = async () => {
@@ -366,7 +407,6 @@
             }
             
             try {
-                // Send Telegram notification
                 const message = `📤 Withdraw Baru!\n\nUser: ${username}\nJumlah: ${amount} poin\nNomor DANA: ${dana}`;
                 await sendTelegramNotification(message);
                 
@@ -404,29 +444,32 @@
             localStorage.setItem("watchedriwedpoin", "true");
             window.open("https://www.profitableratecpm.com/r6t38ns3hh?key=ac955a03eb118a3acce55ae30410f9b5"," _blank");
             
-            // Beri reward setelah menonton riwedpoin
             setTimeout(() => {
                 totalReward += 300;
                 localStorage.setItem(username + "_totalReward", totalReward);
                 updateUI();
                 alert("🎉 Kamu dapat 300 poin dari klik riwed!");
-            }, 30000); // Beri reward setelah 30 detik
+                
+                // Show ad after watching video
+                showInterstitialAd();
+            }, 30000);
         });
 
-    
         // TikTok button functionality
         const tiktokBtn = document.getElementById("tiktokBtn");
         tiktokBtn.addEventListener("click", () => {
             localStorage.setItem("watchedTikTok", "true");
             window.open("https://idioticleadership.com/bz3.Vx0qPd3_pdvxbkmLVRJdZVDm0M2jNeTwQyx/NEDqg/yELVTrYk1DNQDxEd0SOeDqM_"," _blank");
             
-            // Beri reward setelah menonton TikTok
             setTimeout(() => {
                 totalReward += 300;
                 localStorage.setItem(username + "_totalReward", totalReward);
                 updateUI();
                 alert("🎉 Kamu dapat 300 poin dari klik riwed!");
-            }, 30000); // Beri reward setelah 30 detik
+                
+                // Show ad after watching TikTok
+                showInterstitialAd();
+            }, 30000);
         });
         
         // Referral system
@@ -439,6 +482,9 @@
             const referralLink = `${window.location.origin}?ref=${username}`;
             referralLinkInput.value = referralLink;
             referralModal.style.display = "block";
+            
+            // Show ad when opening referral modal
+            showInterstitialAd();
         });
         
         function copyReferralLink() {
@@ -456,7 +502,5 @@
     <!-- Iklan tambahan dari profitableratecpm.com -->
     <script type='text/javascript' src='//pl27292205.profitableratecpm.com/df/1b/f6/df1bf6dfa5e026ae1544a28586693749.js'></script>
     <script type='text/javascript' src='//pl27291047.profitableratecpm.com/34/90/d4/3490d49d6ad49b5ca70bed008db3f77c.js'></script>
-</script>
 </body>
     </html>
-    
