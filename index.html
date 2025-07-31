@@ -1,277 +1,195 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login DANA Rewards</title>
-  <style>
-    body {
-      background-color: #F9F6EE;
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-      padding: 20px;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login DANA Rewards</title>
+<style>
+  body {
+    background-color: #F9F6EE;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
 
-  /* Lingkaran berputar */
-.loader {
-  margin: 20px auto 0;
-  border: 6px solid #f3f3f3; /* abu-abu muda */
-  border-top: 6px solid #1877f2; /* biru */
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-}
+  /* Splash Screen */
+  #splash {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #F9F6EE;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-    .logo {
-      display: block;
-      margin: 30px auto 10px auto;
-      width: 180px;
-      height: auto;
-    }
+  /* Loader lingkaran berputar */
+  .loader {
+    margin-top: 20px;
+    border: 6px solid #f3f3f3; /* abu-abu muda */
+    border-top: 6px solid #1877f2; /* biru */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+  }
 
-    .login-container {
-      background-color: white;
-      border-radius: 8px;
-      padding: 20px;
-      width: 280px;
-      box-shadow: 0 3px 5px rgba(0,0,0,0.1);
-      text-align: center;
-    }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
 
-    h1 {
-      color: #333;
-      margin-bottom: 20px;
-      font-size: 18px;
-    }
+  /* Konten utama login */
+  .logo {
+    display: block;
+    margin: 30px auto 10px auto;
+    width: 180px;
+    height: auto;
+  }
 
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-size: 14px;
-      box-sizing: border-box;
-    }
+  .login-container {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    width: 280px;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.1);
+    text-align: center;
+    margin: auto;
+  }
 
-    button {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 8px;
-    }
+  h1 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 18px;
+  }
 
-    #loginBtn {
-      background-color: #1877f2;
-      color: white;
-    }
+  input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
 
-    .register-link {
-      margin-top: 15px;
-      font-size: 14px;
-      color: #1877f2;
-      cursor: pointer;
-      text-decoration: none;
-      display: block;
-    }
+  button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 8px;
+    background-color: #1877f2;
+    color: white;
+  }
 
-    /* Tombol biru */
-#loginBtn,
-#registerBtn {
-  background-color: #1877f2; /* biru Facebook */
-  color: white;
-  border: none;
-}
+  .register-link {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #1877f2;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+  }
 
-#loginBtn:hover,
-#registerBtn:hover {
-  background-color: #0f62d8; /* biru lebih gelap saat hover */
-}
-    .input-label {
-      display: block;
-      text-align: left;
-      margin-bottom: 5px;
-      color: #555;
-      font-size: 14px;
-    }
-
-    .input-group {
-      margin-bottom: 15px;
-    }
-
-    /* Splash screen */
-    #splash {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: #F9F6EE;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-    }
-
-    #main-content, #register-content {
-      display: none;
-    }
-  </style>
+  #main-content, #register-content {
+    display: none;
+    padding: 20px;
+  }
+</style>
 </head>
 <body>
 
-  <!-- Splash Screen -->
+<!-- Splash Screen -->
 <div id="splash">
-  <div style="text-align:center;">
-    <img src="https://i.postimg.cc/W1pS8mCy/file-00000000cf086246b6a7f81dca869d1c.png" alt="Logo DANA" style="width: 220px;">
-    <div class="loader"></div>
+  <img src="https://i.postimg.cc/W1pS8mCy/file-00000000cf086246b6a7f81dca869d1c.png" alt="Logo DANA" style="width: 220px;">
+  <div class="loader"></div>
+</div>
+
+<!-- Login Content -->
+<div id="main-content">
+  <img src="https://i.postimg.cc/W1pS8mCy/file-00000000cf086246b6a7f81dca869d1c.png" alt="Logo DANA" class="logo">
+  
+  <div class="login-container">
+    <h1>LOGIN</h1>
+    <input type="text" id="loginEmail" placeholder="Email">
+    <input type="password" id="loginPassword" placeholder="Password">
+    <button id="loginBtn">Login</button>
+    <a class="register-link" id="showRegister">Belum punya akun? Daftar</a>
   </div>
+</div>
 
-  <!-- Login Content -->
-  <div id="main-content">
-    <img src="https://i.postimg.cc/W1pS8mCy/file-00000000cf086246b6a7f81dca869d1c.png" alt="Logo DANA" class="logo">
-    
-    <div class="login-container">
-      <h1>LOGIN</h1>
-      
-      <div class="input-group">
-        <label class="input-label">Email</label>
-        <input type="text" id="loginEmail" placeholder="contoh@email.com">
-      </div>
-      <div class="input-group">
-        <label class="input-label">Kata sandi</label>
-        <input type="password" id="loginPassword" placeholder="Masukkan password">
-      </div>
-      
-      <button id="loginBtn">Login</button>
-      <a class="register-link" id="showRegister">Belum punya akun? Daftar</a>
-    </div>
+<!-- Register Content -->
+<div id="register-content">
+  <img src="https://i.postimg.cc/W1pS8mCy/file-00000000cf086246b6a7f81dca869d1c.png" alt="Logo DANA" class="logo">
+  
+  <div class="login-container">
+    <h1>DAFTAR AKUN</h1>
+    <input type="text" id="registerName" placeholder="Nama lengkap">
+    <input type="text" id="registerEmail" placeholder="Email">
+    <input type="password" id="registerPassword" placeholder="Password">
+    <button id="registerBtn">Daftar</button>
+    <a class="register-link" id="showLogin">Sudah punya akun? Login</a>
   </div>
+</div>
 
-  <!-- Register Content -->
-  <div id="register-content">
-    <img src="https://i.postimg.cc/W1pS8mCy/file-00000000cf086246b6a7f81dca869d1c.png" alt="Logo DANA" class="logo">
-    
-    <div class="login-container">
-      <h1>DAFTAR AKUN BARU</h1>
-      
-      <div class="input-group">
-        <label class="input-label">Nama Pengguna</label>
-        <input type="text" id="registerName" placeholder="Nama lengkap">
-      </div>
-      <div class="input-group">
-        <label class="input-label">Email</label>
-        <input type="text" id="registerEmail" placeholder="contoh@email.com">
-      </div>
-      <div class="input-group">
-        <label class="input-label">Kata sandi</label>
-        <input type="password" id="registerPassword" placeholder="Minimal 6 karakter">
-      </div>
-      
-      <button id="registerBtn">Daftar</button>
-      <a class="register-link" id="showLogin">Sudah punya akun? Login</a>
-    </div>
-  </div>
-
-  <script type="text/javascript">
-    // Tampilkan splash screen selama 3 detik
-    window.addEventListener("load", function () {
-      setTimeout(() => {
-        document.getElementById("splash").style.display = "none";
-        document.getElementById("main-content").style.display = "block";
-      }, 3000);
-    });
-  </script>
-
-  <script type="text/javascript">
-    atOptions = {
-      'key' : 'a4756fd525e25cbed5ac79db27595f95',
-      'format' : 'iframe',
-      'height' : 50,
-      'width' : 320,
-      'params' : {}
-    };
-  </script>
-  <script type="text/javascript" src="//www.highperformanceformat.com/a4756fd525e25cbed5ac79db27595f95/invoke.js"></script>
-
-  <script>
-    // Toggle between login and register forms
-    document.getElementById("showRegister").addEventListener("click", function() {
-      document.getElementById("main-content").style.display = "none";
-      document.getElementById("register-content").style.display = "block";
-    });
-
-    document.getElementById("showLogin").addEventListener("click", function() {
-      document.getElementById("register-content").style.display = "none";
+<script>
+  // Splash screen hilang setelah 3 detik
+  window.addEventListener("load", function () {
+    setTimeout(() => {
+      document.getElementById("splash").style.display = "none";
       document.getElementById("main-content").style.display = "block";
-    });
+    }, 3000);
+  });
 
-    // Login functionality
-    document.getElementById("loginBtn").addEventListener("click", function() {
-      const email = document.getElementById("loginEmail").value;
-      const password = document.getElementById("loginPassword").value;
-      const saved = JSON.parse(localStorage.getItem("users") || "{}");
+  // Toggle form
+  document.getElementById("showRegister").addEventListener("click", function() {
+    document.getElementById("main-content").style.display = "none";
+    document.getElementById("register-content").style.display = "block";
+  });
 
-      if (!email || !password) {
-        alert("Harap isi email dan password");
-        return;
-      }
+  document.getElementById("showLogin").addEventListener("click", function() {
+    document.getElementById("register-content").style.display = "none";
+    document.getElementById("main-content").style.display = "block";
+  });
 
-      if (saved[email] && saved[email].password === password) {
-        localStorage.setItem("currentUser", email);
-        window.location.href = "dashboard.html";
-      } else {
-        alert("Login gagal: Email atau password salah.");
-      }
-    });
+  // Login
+  document.getElementById("loginBtn").addEventListener("click", function() {
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
+    const saved = JSON.parse(localStorage.getItem("users") || "{}");
 
-    // Register functionality
-    document.getElementById("registerBtn").addEventListener("click", function() {
-      const name = document.getElementById("registerName").value;
-      const email = document.getElementById("registerEmail").value;
-      const password = document.getElementById("registerPassword").value;
-      let saved = JSON.parse(localStorage.getItem("users") || "{}");
+    if (saved[email] && saved[email].password === password) {
+      localStorage.setItem("currentUser", email);
+      window.location.href = "dashboard.html";
+    } else {
+      alert("Email atau password salah.");
+    }
+  });
 
-      if (!name || !email || !password) {
-        alert("Harap isi semua kolom!");
-        return;
-      }
+  // Register
+  document.getElementById("registerBtn").addEventListener("click", function() {
+    const name = document.getElementById("registerName").value;
+    const email = document.getElementById("registerEmail").value;
+    const password = document.getElementById("registerPassword").value;
+    let saved = JSON.parse(localStorage.getItem("users") || "{}");
 
-      if (password.length < 6) {
-        alert("Password minimal 6 karakter");
-        return;
-      }
+    if (saved[email]) {
+      alert("Email sudah terdaftar.");
+      return;
+    }
 
-      if (saved[email]) {
-        alert("Email sudah terdaftar.");
-        return;
-      }
+    saved[email] = { name, password };
+    localStorage.setItem("users", JSON.stringify(saved));
+    alert("Pendaftaran berhasil! Silakan login.");
+    document.getElementById("register-content").style.display = "none";
+    document.getElementById("main-content").style.display = "block";
+  });
+</script>
 
-      saved[email] = {
-        name: name,
-        password: password
-      };
-      localStorage.setItem("users", JSON.stringify(saved));
-
-      alert("Pendaftaran berhasil! Silakan login.");
-      // Clear form and show login page
-      document.getElementById("registerName").value = "";
-      document.getElementById("registerEmail").value = "";
-      document.getElementById("registerPassword").value = "";
-      document.getElementById("register-content").style.display = "none";
-      document.getElementById("main-content").style.display = "block";
-    });
-  </script>
 </body>
-  </html>
+      </html>
