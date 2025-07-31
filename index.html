@@ -10,10 +10,6 @@
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
   }
 
   /* Splash screen */
@@ -43,56 +39,45 @@
     100% { transform: rotate(360deg); }
   }
 
-  /* Main container */
-  .container {
-    width: 100%;
-    max-width: 400px;
+  /* Login/Register content */
+  .main-content {
+    display: none;
     padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
   }
-
-  /* Logo */
   .logo {
     width: 180px;
-    margin-bottom: 30px;
+    margin: 30px auto 10px auto;
   }
-
-  /* Form containers */
-  .form-container {
+  .login-container, .register-container {
     background-color: white;
     border-radius: 8px;
-    padding: 25px;
-    width: 100%;
+    padding: 20px;
+    width: 280px;
     box-shadow: 0 3px 5px rgba(0,0,0,0.1);
     text-align: center;
     margin-bottom: 20px;
+    display: none;
   }
-
-  /* Form styling */
-  .form-group {
-    margin-bottom: 15px;
-    text-align: left;
-  }
-
-  .form-group label {
+  .login-container.active, .register-container.active {
     display: block;
-    margin-bottom: 5px;
-    font-size: 14px;
-    color: #555;
   }
-
-  .form-control {
+  h1 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 18px;
+  }
+  input {
     width: 100%;
-    padding: 12px;
+    padding: 10px;
+    margin-bottom: 10px;
     border: 1px solid #ddd;
     border-radius: 6px;
     font-size: 14px;
-    box-sizing: border-box;
   }
-
-  .btn {
+  button {
     width: 100%;
     padding: 12px;
     border: none;
@@ -100,40 +85,19 @@
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
-    margin-top: 10px;
+    margin-top: 8px;
+  }
+  #loginBtn, #registerBtn {
     background-color: #1877f2;
     color: white;
   }
-
-  .btn:hover {
-    background-color: #166fe5;
-  }
-
-  .form-footer {
+  .register-link, .login-link {
     margin-top: 15px;
     font-size: 14px;
-  }
-
-  .form-link {
     color: #1877f2;
-    text-decoration: none;
     cursor: pointer;
-  }
-
-  /* Form visibility */
-  .form-active {
     display: block;
-  }
-
-  .form-hidden {
-    display: none;
-  }
-
-  /* Ad container */
-  .ad-container {
-    width: 100%;
-    margin-top: 20px;
-    text-align: center;
+    text-decoration: none;
   }
 </style>
 </head>
@@ -145,91 +109,67 @@
   <div class="spinner"></div>
 </div>
 
-<!-- Main Content -->
-<div class="container" id="main-content">
+<!-- Main Login Content -->
+<div id="main-content" class="main-content">
   <img src="https://i.postimg.cc/W1pS8mCy/file-00000000cf086246b6a7f81dca869d1c.png" alt="Logo DANA" class="logo">
   
   <!-- Login Form -->
-  <div class="form-container form-active" id="loginForm">
+  <div class="login-container active" id="loginForm">
     <h1>LOGIN</h1>
-    
-    <div class="form-group">
-      <label for="loginEmail">Email</label>
-      <input type="text" id="loginEmail" class="form-control" placeholder="Masukkan email Anda">
+    <div class="input-group">
+      <input type="text" id="loginEmail" placeholder="Email">
     </div>
-    
-    <div class="form-group">
-      <label for="loginPassword">Kata sandi</label>
-      <input type="password" id="loginPassword" class="form-control" placeholder="Masukkan kata sandi">
+    <div class="input-group">
+      <input type="password" id="loginPassword" placeholder="Kata sandi">
     </div>
-    
-    <button class="btn" id="loginBtn">Login</button>
-    
-    <div class="form-footer">
-      <span>Belum punya akun? </span>
-      <a class="form-link" id="showRegister">Daftar</a>
-    </div>
+    <button id="loginBtn">Login</button>
+    <a class="register-link" id="showRegister">Belum punya akun? Daftar</a>
   </div>
 
   <!-- Register Form -->
-  <div class="form-container form-hidden" id="registerForm">
+  <div class="register-container" id="registerForm">
     <h1>DAFTAR</h1>
-    
-    <div class="form-group">
-      <label for="registerName">Nama lengkap</label>
-      <input type="text" id="registerName" class="form-control" placeholder="Masukkan nama lengkap">
+    <div class="input-group">
+      <input type="text" id="registerName" placeholder="Nama lengkap">
     </div>
-    
-    <div class="form-group">
-      <label for="registerEmail">Email</label>
-      <input type="email" id="registerEmail" class="form-control" placeholder="Masukkan email Anda">
+    <div class="input-group">
+      <input type="email" id="registerEmail" placeholder="Email">
     </div>
-    
-    <div class="form-group">
-      <label for="registerPassword">Kata sandi</label>
-      <input type="password" id="registerPassword" class="form-control" placeholder="Buat kata sandi">
+    <div class="input-group">
+      <input type="password" id="registerPassword" placeholder="Kata sandi">
     </div>
-    
-    <div class="form-group">
-      <label for="registerConfirmPassword">Konfirmasi kata sandi</label>
-      <input type="password" id="registerConfirmPassword" class="form-control" placeholder="Ulangi kata sandi">
+    <div class="input-group">
+      <input type="password" id="registerConfirmPassword" placeholder="Konfirmasi kata sandi">
     </div>
-    
-    <button class="btn" id="registerBtn">Daftar</button>
-    
-    <div class="form-footer">
-      <span>Sudah punya akun? </span>
-      <a class="form-link" id="showLogin">Login</a>
-    </div>
+    <button id="registerBtn">Daftar</button>
+    <a class="login-link" id="showLogin">Sudah punya akun? Login</a>
   </div>
 
-  <!-- Ads -->
-  <div class="ad-container">
-    <!-- Iklan Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3665788659374137"
-     crossorigin="anonymous"></script>
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-3665788659374137"
-         data-ad-slot="2726494782"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-    <script>
-         (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
+  <!-- Iklan Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3665788659374137"
+   crossorigin="anonymous"></script>
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-3665788659374137"
+       data-ad-slot="2726494782"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
 
-    <!-- Iklan profitableratecpm.com -->
-    <script type="text/javascript">
-        atOptions = {
-            'key' : 'a4756fd525e25cbed5ac79db27595f95',
-            'format' : 'iframe',
-            'height' : 50,
-            'width' : 320,
-            'params' : {}
-        };
-    </script>
-    <script type="text/javascript" src="//www.highperformanceformat.com/a4756fd525e25cbed5ac79db27595f95/invoke.js"></script>
-  </div>
+  <!-- Iklan profitableratecpm.com -->
+  <script type="text/javascript">
+      atOptions = {
+          'key' : 'a4756fd525e25cbed5ac79db27595f95',
+          'format' : 'iframe',
+          'height' : 50,
+          'width' : 320,
+          'params' : {}
+      };
+  </script>
+  <script type="text/javascript" src="//www.highperformanceformat.com/a4756fd525e25cbed5ac79db27595f95/invoke.js"></script>
+
 </div>
 
 <script>
@@ -237,23 +177,19 @@
   window.addEventListener("load", function () {
     setTimeout(() => {
       document.getElementById("splash").style.display = "none";
-      document.querySelector(".container").style.display = "flex";
+      document.getElementById("main-content").style.display = "flex";
     }, 3000);
   });
 
   // Toggle between login and register forms
   document.getElementById("showRegister").addEventListener("click", function() {
-    document.getElementById("loginForm").classList.remove("form-active");
-    document.getElementById("loginForm").classList.add("form-hidden");
-    document.getElementById("registerForm").classList.remove("form-hidden");
-    document.getElementById("registerForm").classList.add("form-active");
+    document.getElementById("loginForm").classList.remove("active");
+    document.getElementById("registerForm").classList.add("active");
   });
 
   document.getElementById("showLogin").addEventListener("click", function() {
-    document.getElementById("registerForm").classList.remove("form-active");
-    document.getElementById("registerForm").classList.add("form-hidden");
-    document.getElementById("loginForm").classList.remove("form-hidden");
-    document.getElementById("loginForm").classList.add("form-active");
+    document.getElementById("registerForm").classList.remove("active");
+    document.getElementById("loginForm").classList.add("active");
   });
 
   // Login functionality
@@ -306,10 +242,8 @@
     
     localStorage.setItem("users", JSON.stringify(users));
     alert("Pendaftaran berhasil! Silakan login.");
-    document.getElementById("registerForm").classList.remove("form-active");
-    document.getElementById("registerForm").classList.add("form-hidden");
-    document.getElementById("loginForm").classList.remove("form-hidden");
-    document.getElementById("loginForm").classList.add("form-active");
+    document.getElementById("registerForm").classList.remove("active");
+    document.getElementById("loginForm").classList.add("active");
     
     // Clear register form
     document.getElementById("registerName").value = "";
