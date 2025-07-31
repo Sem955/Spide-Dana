@@ -18,11 +18,10 @@
     }
 
     .logo {
-  display: block;
-  margin: 30px auto 10px auto;
-  width: 180px;
-  height: auto;
-    
+      display: block;
+      margin: 30px auto 10px auto;
+      width: 180px;
+      height: auto;
     }
 
     .login-container {
@@ -66,10 +65,13 @@
       color: white;
     }
 
-    #registerBtn {
-      background-color: #42b72a;
-      color: white;
+    .register-link {
       margin-top: 15px;
+      font-size: 14px;
+      color: #1877f2;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
     }
 
     .input-label {
@@ -95,7 +97,7 @@
       z-index: 9999;
     }
 
-    #main-content {
+    #main-content, #register-content {
       display: none;
     }
   </style>
@@ -106,24 +108,49 @@
     <img src="https://i.postimg.cc/W1pS8mCy/file-00000000cf086246b6a7f81dca869d1c.png" alt="Logo DANA" style="width: 220px;">
   </div>
 
-  <!-- Konten utama -->
+  <!-- Login Content -->
   <div id="main-content">
     <img src="https://i.postimg.cc/W1pS8mCy/file-00000000cf086246b6a7f81dca869d1c.png" alt="Logo DANA" class="logo">
     
     <div class="login-container">
-      <h1>LOGIN DAFTAR</h1>
+      <h1>LOGIN</h1>
       
       <div class="input-group">
-        <label class="input-label">Masukan email</label>
-        <input type="text" id="username" placeholder="contoh@email.com" maxlength="30">
+        <label class="input-label">Email</label>
+        <input type="text" id="loginEmail" placeholder="contoh@email.com">
       </div>
       <div class="input-group">
         <label class="input-label">Kata sandi</label>
-        <input type="password" id="password" placeholder="Minimal 6 karakter">
+        <input type="password" id="loginPassword" placeholder="Masukkan password">
       </div>
       
       <button id="loginBtn">Login</button>
-      <button id="registerBtn">Buat akun baru</button>
+      <a class="register-link" id="showRegister">Belum punya akun? Daftar</a>
+    </div>
+  </div>
+
+  <!-- Register Content -->
+  <div id="register-content">
+    <img src="https://i.postimg.cc/W1pS8mCy/file-00000000cf086246b6a7f81dca869d1c.png" alt="Logo DANA" class="logo">
+    
+    <div class="login-container">
+      <h1>DAFTAR AKUN BARU</h1>
+      
+      <div class="input-group">
+        <label class="input-label">Nama Pengguna</label>
+        <input type="text" id="registerName" placeholder="Nama lengkap">
+      </div>
+      <div class="input-group">
+        <label class="input-label">Email</label>
+        <input type="text" id="registerEmail" placeholder="contoh@email.com">
+      </div>
+      <div class="input-group">
+        <label class="input-label">Kata sandi</label>
+        <input type="password" id="registerPassword" placeholder="Minimal 6 karakter">
+      </div>
+      
+      <button id="registerBtn">Daftar</button>
+      <a class="register-link" id="showLogin">Sudah punya akun? Login</a>
     </div>
   </div>
 
@@ -149,39 +176,44 @@
   <script type="text/javascript" src="//www.highperformanceformat.com/a4756fd525e25cbed5ac79db27595f95/invoke.js"></script>
 
   <script>
-    const loginBtn = document.getElementById("loginBtn");
-    const registerBtn = document.getElementById("registerBtn");
+    // Toggle between login and register forms
+    document.getElementById("showRegister").addEventListener("click", function() {
+      document.getElementById("main-content").style.display = "none";
+      document.getElementById("register-content").style.display = "block";
+    });
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const ref = urlParams.get('ref');
-    if (ref) {
-      localStorage.setItem('referrer', ref);
-    }
+    document.getElementById("showLogin").addEventListener("click", function() {
+      document.getElementById("register-content").style.display = "none";
+      document.getElementById("main-content").style.display = "block";
+    });
 
-    loginBtn.onclick = () => {
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
+    // Login functionality
+    document.getElementById("loginBtn").addEventListener("click", function() {
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
       const saved = JSON.parse(localStorage.getItem("users") || "{}");
 
-      if (!username || !password) {
+      if (!email || !password) {
         alert("Harap isi email dan password");
         return;
       }
 
-      if (saved[username] === password) {
-        localStorage.setItem("currentUser", username);
+      if (saved[email] && saved[email].password === password) {
+        localStorage.setItem("currentUser", email);
         window.location.href = "dashboard.html";
       } else {
         alert("Login gagal: Email atau password salah.");
       }
-    };
+    });
 
-    registerBtn.onclick = () => {
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
+    // Register functionality
+    document.getElementById("registerBtn").addEventListener("click", function() {
+      const name = document.getElementById("registerName").value;
+      const email = document.getElementById("registerEmail").value;
+      const password = document.getElementById("registerPassword").value;
       let saved = JSON.parse(localStorage.getItem("users") || "{}");
 
-      if (!username || !password) {
+      if (!name || !email || !password) {
         alert("Harap isi semua kolom!");
         return;
       }
@@ -191,41 +223,25 @@
         return;
       }
 
-      if (saved[username]) {
+      if (saved[email]) {
         alert("Email sudah terdaftar.");
         return;
       }
 
-      saved[username] = password;
+      saved[email] = {
+        name: name,
+        password: password
+      };
       localStorage.setItem("users", JSON.stringify(saved));
-      localStorage.setItem("currentUser", username);
 
-      const referrer = localStorage.getItem('referrer');
-      if (referrer && referrer !== username) {
-        const referralKey = referrer + '_referrals';
-        const existing = JSON.parse(localStorage.getItem(referralKey) || '[]');
-        const alreadyInvited = existing.some(u => u.username === username);
-
-        if (!alreadyInvited) {
-          existing.push({ username: username, poin: 2000 });
-          localStorage.setItem(referralKey, JSON.stringify(existing));
-
-          const rewardKey = referrer + '_totalRewards';
-          const currentReward = parseInt(localStorage.getItem(rewardKey) || '0');
-          const updatedReward = currentReward + 2000;
-          localStorage.setItem(rewardKey, updatedReward);
-        }
-
-        localStorage.removeItem('referrer');
-      }
-
-      alert("Akun berhasil dibuat. Anda akan dialihkan ke halaman login.");
-      setTimeout(() => {
-        // Clear the form and redirect to the same page (login page)
-        document.getElementById("username").value = "";
-        document.getElementById("password").value = "";
-      }, 1500);
-    };
+      alert("Pendaftaran berhasil! Silakan login.");
+      // Clear form and show login page
+      document.getElementById("registerName").value = "";
+      document.getElementById("registerEmail").value = "";
+      document.getElementById("registerPassword").value = "";
+      document.getElementById("register-content").style.display = "none";
+      document.getElementById("main-content").style.display = "block";
+    });
   </script>
 </body>
-</html>
+  </html>
