@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -62,7 +63,6 @@
         
         .actions button {
             flex: 1;
-            min-width: 80px;
             padding: 12px 16px;
             font-size: 14px;
             font-weight: bold;
@@ -81,7 +81,7 @@
             color: black;
         }
         
-        #logoutBtn, #withdrawBtn, #referralBtn {
+        #logoutBtn, #withdrawBtn {
             background-color: #FFD700;
             color: black;
         }
@@ -201,31 +201,9 @@
             max-width: 350px;
             box-sizing: border-box;
         }
-        
-        .referral-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .notification {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.7);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            z-index: 10000;
-            display: none;
-        }
     </style>
 </head>
 <body>
-    <div class="notification" id="notification"></div>
-    
     <div class="rewards-top">
         <div class="reward-card">
             <div class="reward-title">POIN ANDA</div>
@@ -256,6 +234,18 @@
         </button>
     </div>
     
+    <!-- Iklan dari profitableratecpm.com -->
+    <script type="text/javascript">
+        atOptions = {
+            'key' : 'ac86c93838d18124dc18da7238d0ef1a',
+            'format' : 'iframe',
+            'height' : 250,
+            'width' : 300,
+            'params' : {}
+        };
+    </script>
+    <script type="text/javascript" src="//www.highperformanceformat.com/ac86c93838d18124dc18da7238d0ef1a/invoke.js"></script>
+    
     <div class="actions">
         <button id="claimBtn">Claim</button>
         <button id="withdrawBtn">Withdraw</button>
@@ -277,269 +267,180 @@
         <input type="text" id="referralLink" readonly style="width:100%; padding:8px; margin-bottom:10px; border-radius:6px; border:1px solid #ccc;" />
         <button onclick="copyReferralLink()" style="background-color:#4CAF50; color:white; border:none; padding:10px 16px; border-radius:6px; cursor:pointer;">Salin Link</button>
         <h4 style="margin-top:15px;">Orang yang Kamu Undang:</h4>
-        <div id="referralList" style="max-height:200px; overflow-y:auto;"></div>
+        <ul id="referralList" style="list-style:none; padding-left:0;"></ul>
         <p>Total Poin Referral: <span id="referralTotalPoin">0</span> Poin</p>
         <button onclick="document.getElementById('referralModal').style.display='none'" style="margin-top:10px; background-color:red; color:white; border:none; padding:8px 16px; border-radius:6px;">Tutup</button>
     </div>
-
+    
+    <!-- Include Telegram notification script -->
+    <script src="telegram.js"></script>
+    
     <script>
-        // Fungsi notifikasi
-        function showNotification(message, duration = 3000) {
-            const notif = document.getElementById('notification');
-            notif.textContent = message;
-            notif.style.display = 'block';
-            setTimeout(() => {
-                notif.style.display = 'none';
-            }, duration);
-        }
-
-        // Inisialisasi user
         const username = localStorage.getItem('currentUser');
-        if (!username) {
-            window.location.href = 'index.html';
-            throw new Error('User not logged in');
-        }
-
-        // Konstanta sistem
+        if (!username) window.location.href = 'index.html';
+        
         const CLAIM_REWARD = 500;  
-        const COOLDOWN_MS = 1 * 60 * 60 * 1000; // 1 jam dalam milidetik
-        const REFERRAL_REWARD = 1000;
-        const MIN_WITHDRAW = 100000;
-
-        // Inisialisasi elemen UI
+        const COOLDOWN_MS = 1 * 60 * 60 * 1000; // 1 jam dalam milidetik  
+        
         const totalEl = document.getElementById('totalRewards');
         const dailyEl = document.getElementById('dailyRewards');
         const claimBtn = document.getElementById('claimBtn');
         const statusText = document.getElementById('statusText');
         const logoutBtn = document.getElementById('logoutBtn');
-        const withdrawBtn = document.getElementById('withdrawBtn');
-        const withdrawForm = document.getElementById('withdrawForm');
-        const submitWithdraw = document.getElementById('submitWithdraw');
-        const cancelWithdraw = document.getElementById('cancelWithdraw');
-        const withdrawMessage = document.getElementById('withdrawMessage');
-        const tiktokBtn = document.getElementById('tiktokBtn');
-        const referralBtn = document.getElementById('referralBtn');
-        const referralModal = document.getElementById('referralModal');
-        const referralLinkInput = document.getElementById('referralLink');
-        const referralList = document.getElementById('referralList');
-        const referralTotalPoin = document.getElementById('referralTotalPoin');
-
-        // Inisialisasi data user
-        let userData = JSON.parse(localStorage.getItem(username + '_userData') || {
-            totalReward: 0,
-            lastClaim: 0,
-            referrals: []
-        };
-
-        // Fungsi untuk menyimpan data user
-        function saveUserData() {
-            localStorage.setItem(username + '_userData', JSON.stringify(userData));
-        }
-
-        // Fungsi untuk memeriksa referral
-        function checkReferral() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const ref = urlParams.get('ref');
-            
-            if (ref && ref !== username) {
-                let referralsData = JSON.parse(localStorage.getItem('referralsData') || {};
-                
-                if (!referralsData[ref]) {
-                    referralsData[ref] = {
-                        count: 0,
-                        users: []
-                    };
-                }
-                
-                if (!referralsData[ref].users.includes(username)) {
-                    referralsData[ref].count += 1;
-                    referralsData[ref].users.push(username);
-                    localStorage.setItem('referralsData', JSON.stringify(referralsData));
-                    
-                    // Beri bonus kepada referrer
-                    const referrerData = JSON.parse(localStorage.getItem(ref + '_userData') || {
-                        totalReward: 0,
-                        lastClaim: 0,
-                        referrals: []
-                    };
-                    
-                    referrerData.totalReward += REFERRAL_REWARD;
-                    localStorage.setItem(ref + '_userData', JSON.stringify(referrerData));
-                    
-                    // Beri bonus kepada user baru
-                    userData.totalReward += REFERRAL_REWARD;
-                    saveUserData();
-                    
-                    showNotification(`Selamat! Kamu mendapatkan bonus ${REFERRAL_REWARD} poin dari referral.`);
-                }
-            }
-        }
-
-        // Fungsi untuk memperbarui UI
+        
+        let lastClaim = localStorage.getItem(username + "_lastClaim");
+        let totalReward = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
+        
         function updateUI() {
             const now = Date.now();
-            const elapsed = now - userData.lastClaim;
-            const canClaim = elapsed >= COOLDOWN_MS;
+            let last = lastClaim ? parseInt(lastClaim) : 0;
+            let elapsed = now - last;
+            let canClaim = elapsed >= COOLDOWN_MS;
             
             if (canClaim) {
                 dailyEl.textContent = CLAIM_REWARD.toLocaleString('en-US');
                 claimBtn.disabled = false;
                 statusText.textContent = "Kamu bisa klaim sekarang!";
             } else {
-                const progress = elapsed / COOLDOWN_MS;
+                let progress = elapsed / COOLDOWN_MS;
                 dailyEl.textContent = Math.floor(CLAIM_REWARD * progress).toLocaleString('en-US');
                 claimBtn.disabled = true;
 
-                const remaining = COOLDOWN_MS - elapsed;
-                const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+                let remaining = COOLDOWN_MS - elapsed;
+                let minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                let seconds = Math.floor((remaining % (1000 * 60)) / 1000);
 
-                statusText.textContent = `Tunggu ${minutes.toString().padStart(2, "0")}m ${seconds.toString().padStart(2, "0")}s lagi untuk klaim berikutnya.`;
+                // Format agar dua digit (contoh: 05:09)
+                let mStr = minutes.toString().padStart(2, "0");
+                let sStr = seconds.toString().padStart(2, "0");
+
+                statusText.textContent = `Tunggu ${mStr}m ${sStr}s lagi untuk klaim berikutnya.`;
             }
             
-            totalEl.textContent = Math.floor(userData.totalReward).toLocaleString('en-US');
+            totalEl.textContent = Math.floor(totalReward).toLocaleString('en-US');
         }
-
-        // Fungsi untuk memperbarui daftar referral
-        function updateReferralList() {
-            const referralsData = JSON.parse(localStorage.getItem('referralsData') || '{}');
-            const myReferrals = referralsData[username] || {count: 0, users: []};
-            
-            // Hitung total poin referral
-            const totalPoin = myReferrals.count * REFERRAL_REWARD;
-            referralTotalPoin.textContent = totalPoin;
-            
-            // Tampilkan daftar referral
-            referralList.innerHTML = '';
-            if (myReferrals.users.length === 0) {
-                referralList.innerHTML = '<p>Belum ada yang mendaftar menggunakan link kamu.</p>';
-            } else {
-                myReferrals.users.forEach(user => {
-                    const item = document.createElement('div');
-                    item.className = 'referral-item';
-                    item.innerHTML = `
-                        <span>${user}</span>
-                        <span>+${REFERRAL_REWARD} poin</span>
-                    `;
-                    referralList.appendChild(item);
-                });
-            }
-        }
-
-        // Event listener untuk tombol claim
+        
         claimBtn.onclick = () => {
-            userData.totalReward += CLAIM_REWARD;
-            userData.lastClaim = Date.now();
-            saveUserData();
+            totalReward += CLAIM_REWARD;
+            localStorage.setItem(username + "_totalReward", totalReward);
+            lastClaim = Date.now();
+            localStorage.setItem(username + "_lastClaim", lastClaim);
             updateUI();
-            showNotification(`Kamu mendapatkan ${CLAIM_REWARD} poin!`);
         };
-
-        // Event listener untuk tombol logout
+        
         logoutBtn.onclick = () => {
-            localStorage.removeItem('currentUser');
-            window.location.href = 'index.html';
+            localStorage.removeItem("currentUser");
+            window.location.href = "index.html";
         };
-
-        // Event listener untuk tombol withdraw
+        
+        const withdrawBtn = document.getElementById("withdrawBtn");
+        const withdrawForm = document.getElementById("withdrawForm");
+        const submitWithdraw = document.getElementById("submitWithdraw");
+        const cancelWithdraw = document.getElementById("cancelWithdraw");
+        const withdrawMessage = document.getElementById("withdrawMessage");
+        
         withdrawBtn.onclick = () => {
-            withdrawForm.style.display = 'block';
-            withdrawMessage.textContent = '';
+            withdrawForm.style.display = "block";
+            withdrawMessage.textContent = "";
         };
-
-        // Event listener untuk submit withdraw
-        submitWithdraw.onclick = () => {
-            const amount = parseFloat(document.getElementById('withdrawAmount').value);
-            const dana = document.getElementById('withdrawDana').value;
+        
+        submitWithdraw.onclick = async () => {
+            const amount = parseFloat(document.getElementById("withdrawAmount").value);
+            const dana = document.getElementById("withdrawDana").value;
             
             if (!amount || !dana) {
-                withdrawMessage.textContent = 'Harap isi semua field!';
-                withdrawMessage.style.color = 'red';
+                withdrawMessage.textContent = "Harap isi semua field!";
+                withdrawMessage.style.color = "red";
                 return;
             }
             
-            if (amount < MIN_WITHDRAW) {
-                withdrawMessage.textContent = `Minimal withdraw adalah ${MIN_WITHDRAW.toLocaleString()} poin!`;
-                withdrawMessage.style.color = 'red';
+            if (amount < 100000) {
+                withdrawMessage.textContent = "Minimal withdraw adalah 100000 poin!";
+                withdrawMessage.style.color = "red";
                 return;
             }
             
-            if (amount > userData.totalReward) {
-                withdrawMessage.textContent = 'Poin tidak cukup untuk withdraw!';
-                withdrawMessage.style.color = 'red';
+            if (amount > totalReward) {
+                withdrawMessage.textContent = "Poin tidak cukup untuk withdraw!";
+                withdrawMessage.style.color = "red";
                 return;
             }
             
-            // Proses withdraw
-            userData.totalReward -= amount;
-            saveUserData();
-            
-            // Simpan riwayat withdraw
-            const withdrawHistory = JSON.parse(localStorage.getItem('withdrawHistory') || []);
-            withdrawHistory.push({
-                username: username,
-                amount: amount,
-                dana: dana,
-                date: new Date().toISOString()
-            });
-            localStorage.setItem('withdrawHistory', JSON.stringify(withdrawHistory));
-            
-            // Update UI
-            updateUI();
-            withdrawMessage.textContent = 'Withdraw berhasil! Admin akan memproses pembayaran.';
-            withdrawMessage.style.color = 'green';
-            
-            // Reset form
-            document.getElementById('withdrawAmount').value = '';
-            document.getElementById('withdrawDana').value = '';
-            
-            // Tutup form setelah 3 detik
-            setTimeout(() => {
-                withdrawForm.style.display = 'none';
-                withdrawMessage.textContent = '';
-            }, 3000);
-        };
-
-        // Event listener untuk batal withdraw
-        cancelWithdraw.onclick = () => {
-            withdrawForm.style.display = 'none';
-            withdrawMessage.textContent = '';
-            document.getElementById('withdrawAmount').value = '';
-            document.getElementById('withdrawDana').value = '';
-        };
-
-        // Event listener untuk tombol TikTok
-        tiktokBtn.addEventListener('click', () => {
-            window.open('https://idioticleadership.com/bz3.Vx0qPd3_pdvxbkmLVRJdZVDm0M2jNeTwQyx/NEDqg/yELVTrYk1DNQDxEd0SOeDqM_', '_blank');
-            
-            // Beri reward setelah 30 detik
-            setTimeout(() => {
-                userData.totalReward += 1000000;
-                saveUserData();
+            try {
+                // Send Telegram notification
+                const message = `📤 Withdraw Baru!\n\nUser: ${username}\nJumlah: ${amount} poin\nNomor DANA: ${dana}`;
+                await sendTelegramNotification(message);
+                
+                totalReward -= amount;
+                localStorage.setItem(username + "_totalReward", totalReward);
                 updateUI();
-                showNotification('🎉 Kamu dapat 1.000.000 poin dari klik riwed!');
-            }, 30000);
+                
+                withdrawMessage.textContent = "Withdraw berhasil! Notifikasi telah dikirim.";
+                withdrawMessage.style.color = "lime";
+                
+                document.getElementById("withdrawAmount").value = "";
+                document.getElementById("withdrawDana").value = "";
+                
+                setTimeout(() => {
+                    withdrawForm.style.display = "none";
+                    withdrawMessage.textContent = "";
+                }, 1000);
+            } catch (error) {
+                console.error("Error sending Telegram notification:", error);
+                withdrawMessage.textContent = "Withdraw berhasil tetapi notifikasi gagal dikirim.";
+                withdrawMessage.style.color = "orange";
+            }
+        };
+        
+        cancelWithdraw.onclick = () => {
+            withdrawForm.style.display = "none";
+            withdrawMessage.textContent = "";
+            document.getElementById("withdrawAmount").value = "";
+            document.getElementById("withdrawDana").value = "";
+        };
+        
+        // TikTok button functionality
+        const tiktokBtn = document.getElementById("tiktokBtn");
+        tiktokBtn.addEventListener("click", () => {
+            localStorage.setItem("watchedTikTok", "true");
+            window.open("https://idioticleadership.com/bz3.Vx0qPd3_pdvxbkmLVRJdZVDm0M2jNeTwQyx/NEDqg/yELVTrYk1DNQDxEd0SOeDqM_"," _blank");
+            
+            // Beri reward setelah menonton TikTok
+            setTimeout(() => {
+                totalReward += 1000000;
+                localStorage.setItem(username + "_totalReward", totalReward);
+                updateUI();
+                alert("🎉 Kamu dapat 1000000 poin dari klik riwed!");
+            }, 30000); // Beri reward setelah 30 detik
         });
-
-        // Event listener untuk tombol referral
-        referralBtn.addEventListener('click', () => {
-            const referralLink = `${window.location.origin}/index.html?ref=${username}`;
+        
+        // Referral system
+        const referralBtn = document.getElementById("referralBtn");
+        const referralModal = document.getElementById("referralModal");
+        const referralLinkInput = document.getElementById("referralLink");
+        
+        referralBtn.addEventListener("click", () => {
+            const username = localStorage.getItem("currentUser") || "user";
+            const referralLink = `${window.location.origin}?ref=${username}`;
             referralLinkInput.value = referralLink;
-            updateReferralList();
-            referralModal.style.display = 'block';
+            referralModal.style.display = "block";
         });
-
-        // Fungsi untuk menyalin link referral
+        
         function copyReferralLink() {
             referralLinkInput.select();
-            document.execCommand('copy');
-            showNotification('Link referral berhasil disalin!');
+            referralLinkInput.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+            alert("Link referral disalin!");
         }
-
-        // Inisialisasi
-        checkReferral();
+        
+        // Initialize UI
         updateUI();
         setInterval(updateUI, 1000);
     </script>
+    
+    <!-- Iklan tambahan dari profitableratecpm.com -->
+    <script type='text/javascript' src='//pl27292205.profitableratecpm.com/df/1b/f6/df1bf6dfa5e026ae1544a28586693749.js'></script>
+    <script type='text/javascript' src='//pl27291047.profitableratecpm.com/34/90/d4/3490d49d6ad49b5ca70bed008db3f77c.js'></script>
 </body>
-            </html>
+    </html>
+    
