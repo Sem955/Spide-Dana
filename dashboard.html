@@ -222,7 +222,7 @@
     
     <div class="watch-ad-container">
         <a href="https://www.profitableratecpm.com/r6t38ns3hh?key=ac955a03eb118a3acce55ae30410f9b5" target="_blank" style="text-decoration: none;">
-            <button>
+             <button id="riwedpoin">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/video.png" alt="Video" style="width: 20px; height: 20px;" />
                 300-1000 Riwed 
             </button>
@@ -397,7 +397,23 @@
             document.getElementById("withdrawAmount").value = "";
             document.getElementById("withdrawDana").value = "";
         };
-        
+
+        // riwedpoin button functionality
+        const riwedpoin = document.getElementById("riwedpoin");
+        riwedpoin.addEventListener("click", () => {
+            localStorage.setItem("watchedriwedpoin", "true");
+            window.open("https://www.profitableratecpm.com/r6t38ns3hh?key=ac955a03eb118a3acce55ae30410f9b5"," _blank");
+            
+            // Beri reward setelah menonton riwedpoin
+            setTimeout(() => {
+                totalReward += 300;
+                localStorage.setItem(username + "_totalReward", totalReward);
+                updateUI();
+                alert("🎉 Kamu dapat 300 poin dari klik riwed!");
+            }, 30000); // Beri reward setelah 30 detik
+        });
+
+    
         // TikTok button functionality
         const tiktokBtn = document.getElementById("tiktokBtn");
         tiktokBtn.addEventListener("click", () => {
