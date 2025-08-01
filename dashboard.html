@@ -650,60 +650,60 @@ claimRewardBtn.addEventListener("click", () => {
             referralLinkInput.value = referralLink;
             referralModal.style.display = "block";
         });
-        <script>
-        function copyReferralLink() {
-            referralLinkInput.select();
-            referralLinkInput.setSelectionRange(0, 99999);
-            document.execCommand("copy");
-            alert("Link referral disalin!");
-        }
-        
-        // Initialize UI
-        updateUI();
-        setInterval(updateUI, 1000);
 
-    
-      
-<!-- Iklan tambahan dari profitableratecpm.com -->  
-<script type='text/javascript' src='//pl27292205.profitableratecpm.com/df/1b/f6/df1bf6dfa5e026ae1544a28586693749.js'></script>  
-<script type='text/javascript' src='//pl27291047.profitableratecpm.com/34/90/d4/3490d49d6ad49b5ca70bed008db3f77c.js'></script>
-<!-- Video.js (untuk memutar video) -->
+        <!-- JS fungsi copy link -->
+<script>
+function copyReferralLink() {
+    referralLinkInput.select();
+    referralLinkInput.setSelectionRange(0, 99999);
+    document.execCommand("copy");
+    alert("Link referral disalin!");
+}
+
+// Initialize UI
+updateUI();
+setInterval(updateUI, 1000);
+</script>
+
+<!-- Iklan tambahan dari profitableratecpm.com -->
+<script src="//pl27292205.profitableratecpm.com/df/1b/f6/df1bf6dfa5e026ae1544a28586693749.js"></script>
+<script src="//pl27291047.profitableratecpm.com/34/90/d4/3490d49d6ad49b5ca70bed008db3f77c.js"></script>
+
+<!-- Video.js dan Plugin VAST -->
 <link href="https://vjs.zencdn.net/7.21.0/video-js.css" rel="stylesheet" />
 <script src="https://vjs.zencdn.net/7.21.0/video.min.js"></script>
-
-<!-- Plugin iklan VAST untuk Video.js -->
 <script src="https://imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/videojs-contrib-ads@6/videojs.ads.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/videojs-ima@1.8.0/dist/videojs.ima.min.js"></script>
 
+<!-- Kode VAST (putar iklan saat tombol diklik) -->
 <script>
-  const videoBtn = document.getElementById('videoRewardBtn');
-  const videoPlayer = document.getElementById('vastVideo');
+const videoBtn = document.getElementById('videoRewardBtn');
+const videoPlayer = document.getElementById('vastVideo');
 
-  const player = videojs('vastVideo');
+const player = videojs('vastVideo');
+const vastUrl = 'https://idioticleadership.com/dGm.FizgdsGaNgvdZ_GMUY/EejmD9vuNZcUklTkAPBTpYd1XN/TBUc1zNCDcE-teNKjqUr1_NHTmUp0sM/gH';
 
-  const vastUrl = 'https://idioticleadership.com/dGm.FizgdsGaNgvdZ_GMUY/EejmD9vuNZcUklTkAPBTpYd1XN/TBUc1zNCDcE-teNKjqUr1_NHTmUp0sM/gH';
-
-  videoBtn.addEventListener('click', () => {
+videoBtn.addEventListener('click', () => {
     videoPlayer.style.display = "block";
 
     player.ima({
-      id: 'vastVideo',
-      adTagUrl: vastUrl
+        id: 'vastVideo',
+        adTagUrl: vastUrl
     });
 
-    player.ready(function () {
-      player.ima.requestAds();
-      player.play();
+    player.ready(() => {
+        player.ima.requestAds();
+        player.play();
     });
-  });
+});
 
-  player.on('adend', function () {
+player.on('adend', () => {
     alert("✅ Iklan selesai! Silakan klaim reward Anda.");
     videoPlayer.style.display = "none";
     player.pause();
-    player.src({ type: 'video/mp4', src: '' }); // kosongkan video
-  });
+    player.src({ type: 'video/mp4', src: '' }); // Kosongkan player
+});
 </script>
 </body>
 </html>
