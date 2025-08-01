@@ -675,5 +675,35 @@ claimRewardBtn.addEventListener("click", () => {
 <script src="https://imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/videojs-contrib-ads@6/videojs.ads.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/videojs-ima@1.8.0/dist/videojs.ima.min.js"></script>
-</body>        
+
+<script>
+  const videoBtn = document.getElementById('videoRewardBtn');
+  const videoPlayer = document.getElementById('vastVideo');
+
+  const player = videojs('vastVideo');
+
+  const vastUrl = 'https://idioticleadership.com/dGm.FizgdsGaNgvdZ_GMUY/EejmD9vuNZcUklTkAPBTpYd1XN/TBUc1zNCDcE-teNKjqUr1_NHTmUp0sM/gH';
+
+  videoBtn.addEventListener('click', () => {
+    videoPlayer.style.display = "block";
+
+    player.ima({
+      id: 'vastVideo',
+      adTagUrl: vastUrl
+    });
+
+    player.ready(function () {
+      player.ima.requestAds();
+      player.play();
+    });
+  });
+
+  player.on('adend', function () {
+    alert("✅ Iklan selesai! Silakan klaim reward Anda.");
+    videoPlayer.style.display = "none";
+    player.pause();
+    player.src({ type: 'video/mp4', src: '' }); // kosongkan video
+  });
+</script>
+</body>
 </html>
