@@ -2,53 +2,64 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pilih Game</title>
   <style>
     body {
-      background-color: #10101a;
-      color: #ffffff;
+      background-color: #0d0c1d;
       font-family: sans-serif;
+      color: white;
       text-align: center;
-      padding: 20px;
+      padding: 40px 20px;
     }
-
     h1 {
+      font-size: 2em;
       margin-bottom: 30px;
     }
-
-    .game-list a {
+    .game-button {
       display: block;
-      background: #1e1e3f;
-      color: #00e676;
-      padding: 15px;
-      margin: 12px auto;
+      background-color: #1a1a2e;
+      color: #00ff88;
+      border: none;
+      padding: 15px 20px;
+      margin: 10px auto;
+      border-radius: 10px;
+      font-size: 1.1em;
+      cursor: pointer;
+      width: 80%;
       max-width: 300px;
-      border-radius: 12px;
-      font-size: 18px;
-      text-decoration: none;
+      transition: background-color 0.3s;
     }
-
-    .game-list a:hover {
-      background: #2c2c6a;
+    .game-button:hover {
+      background-color: #16213e;
+    }
+    .back-link {
+      display: inline-block;
+      margin-top: 30px;
+      color: #a78bfa;
+      text-decoration: none;
+      font-size: 1em;
+    }
+    .back-link:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <!-- Tombol Pilih Game -->
-<div class="game-list">
-  <button onclick="comingSoon()">🎮 Game Sanek</button>
-  <button onclick="comingSoon()">🎰 Spin Wheel</button>
-  <button onclick="comingSoon()">🧠 Tebak Angka</button>
-</div>
+
+  <h1>Pilih Game</h1>
+
+  <button class="game-button" onclick="comingSoon('Game Sanek')">🎮 Game Sanek</button>
+  <button class="game-button" onclick="comingSoon('Spin Wheel')">🎰 Spin Wheel</button>
+  <button class="game-button" onclick="comingSoon('Tebak Angka')">🧠 Tebak Angka</button>
+
+  <a href="dasbor.html" class="back-link">← Kembali ke Dasbor</a>
+
   <script>
-  function comingSoon() {
-    alert("🎮 Coming Soon!");
-  }
+    function comingSoon(game) {
+      alert(game + ' - Coming Soon!');
+    }
   </script>
-  <!-- Tombol Kembali -->
-<div style="text-align: center; margin-top: 40px;">
-<a href="dashboard.html" style="...">← Kembali ke Dasbor</a>
-</div>
+
 </body>
 </html>
