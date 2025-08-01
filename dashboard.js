@@ -63,3 +63,7 @@ document.getElementById("tiktokBtn").addEventListener("click", function () {
   // Setelah poin ditambahkan, baru buka link TikTok
   window.open("https://vm.tiktok.com/ZSSFXt8CE/", "_blank");
 });
+function toggleGameMenu() {
+  const menu = document.getElementById("gameMenu");
+  menu.style.display = menu.style.display === "none" ? "block" : "none";
+}
