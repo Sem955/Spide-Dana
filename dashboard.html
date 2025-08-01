@@ -334,6 +334,44 @@
   <button onclick="editProfile()">✏️</button>
      </div>
     
+     <!-- Script Profil -->
+<script>
+  // Ambil email user dari localStorage
+  const currentUserEmail = localStorage.getItem("currentUser");
+
+  // Ambil nama dari email (bagian sebelum @)
+  if (currentUserEmail) {
+    const username = currentUserEmail.split("@")[0];
+    const usernameElement = document.getElementById("usernameDisplay");
+    if (usernameElement) {
+      usernameElement.textContent = "@" + username;
+    }
+  }
+
+  // Load foto profil dari localStorage jika ada
+  const storedPhoto = localStorage.getItem("userPhoto");
+  if (storedPhoto) {
+    document.getElementById("userPhoto").src = storedPhoto;
+  }
+
+  // Fungsi untuk ubah foto
+  function editProfile() {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.onchange = function () {
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onloadend = function () {
+        document.getElementById("userPhoto").src = reader.result;
+        localStorage.setItem("userPhoto", reader.result);
+      };
+      reader.readAsDataURL(file);
+    };
+    input.click();
+  }
+</script>
+    
     <div class="rewards-top">
         <div class="reward-card">
             <div class="reward-title">IDR</div>
