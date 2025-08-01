@@ -428,10 +428,10 @@
         notif.textContent = `✅ Penarikan berhasil ke DANA ${dana}`;
         notif.style.display = "block";
         
-        // Hilangkan notifikasi setelah 30 detik
-        setTimeout(() => {
-            notif.style.display = "none";
-        }, 30000);
+        // Hilangkan notifikasi setelah 10 detik
+setTimeout(() => {
+    notif.style.display = "none";
+}, 10000);
         
     } catch (error) {
         console.error("Error sending Telegram notification:", error);
