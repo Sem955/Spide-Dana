@@ -673,31 +673,35 @@ setInterval(updateUI, 1000);
 
 <!-- Kode VAST (putar iklan saat tombol diklik) -->
 <script>
-const videoBtn = document.getElementById('videoRewardBtn');
-const videoPlayer = document.getElementById('vastVideo');
+document.addEventListener("DOMContentLoaded", function () {
+    const videoBtn = document.getElementById('videoRewardBtn');
+    const videoPlayer = document.getElementById('vastVideo');
 
-const player = videojs('vastVideo');
-const vastUrl = 'https://idioticleadership.com/dGm.FizgdsGaNgvdZ_GMUY/EejmD9vuNZcUklTkAPBTpYd1XN/TBUc1zNCDcE-teNKjqUr1_NHTmUp0sM/gH';
+    if (!videoBtn || !videoPlayer) return;
 
-videoBtn.addEventListener('click', () => {
-    videoPlayer.style.display = "block";
+    const player = videojs('vastVideo');
+    const vastUrl = 'https://idioticleadership.com/dGm.FizgdsGaNgvdZ_GMUY/EejmD9vuNZcUklTkAPBTpYd1XN/TBUc1zNCDcE-teNKjqUr1_NHTmUp0sM/gH';
 
-    player.ima({
-        id: 'vastVideo',
-        adTagUrl: vastUrl
+    videoBtn.addEventListener('click', () => {
+        videoPlayer.style.display = "block";
+
+        player.ima({
+            id: 'vastVideo',
+            adTagUrl: vastUrl
+        });
+
+        player.ready(() => {
+            player.ima.requestAds();
+            player.play();
+        });
     });
 
-    player.ready(() => {
-        player.ima.requestAds();
-        player.play();
+    player.on('adend', () => {
+        alert("✅ Iklan selesai! Silakan klaim reward Anda.");
+        videoPlayer.style.display = "none";
+        player.pause();
+        player.src({ type: 'video/mp4', src: '' }); // Kosongkan player
     });
-});
-
-player.on('adend', () => {
-    alert("✅ Iklan selesai! Silakan klaim reward Anda.");
-    videoPlayer.style.display = "none";
-    player.pause();
-    player.src({ type: 'video/mp4', src: '' }); // Kosongkan player
 });
 </script>
 </body>
