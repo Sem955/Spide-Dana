@@ -403,17 +403,21 @@
             500-1000 Riwed 
         </button>
     </div>
-
-      <div class="game-button">
+  
+   <div class="game-button">
   <div class="left">
     <div class="icon">🎮</div>
     <div class="text">
       <div class="title">Play and Earn</div>
       <div class="subtitle">Earn Rewards</div>
-    </div>   
-  <!-- Tombol Play Now dan Menu Pilihan Game -->
-<button class="play-now" onclick="toggleGameMenu()">Play Now →</button>
+    </div>
+  </div>
 
+  <!-- Tombol Play Now -->
+  <button class="play-now" onclick="toggleGameMenu()">Play Now →</button>
+</div>
+
+<!-- Menu Pilihan Game -->
 <div id="gameMenu" style="display: none; margin-top: 15px; text-align: left; padding: 15px; background: #1c1c3d; border-radius: 12px; max-width: 400px; margin-left: auto; margin-right: auto;">
   <p style="color: #ffffff; font-weight: bold; margin-bottom: 10px;">Pilih Game:</p>
   <ul style="list-style: none; padding-left: 0;">
@@ -423,7 +427,14 @@
   </ul>
 </div>
 
-    </script>
+<!-- Fungsi tombol toggle game -->
+<script>
+function toggleGameMenu() {
+  const menu = document.getElementById("gameMenu");
+  menu.style.display = menu.style.display === "none" ? "block" : "none";
+}
+</script>
+
     <script type="text/javascript" src="//www.highperformanceformat.com/ac86c93838d18124dc18da7238d0ef1a/invoke.js"></script>
     
     <div class="actions">
