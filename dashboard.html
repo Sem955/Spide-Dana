@@ -6,7 +6,7 @@
     <title>Dashboard</title>
     <style>
         body {
-            background-color: #F5F2E9;
+            background-color: #d3d3d3;
             color: #f0f0f0;
             font-family: Arial, sans-serif;
             margin: 0;
@@ -16,6 +16,90 @@
             position: relative;
         }
         
+  .game-button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(145deg, #2c1a50, #392366);
+    border-radius: 16px;
+    padding: 16px 20px;
+    color: #fff;
+    max-width: 400px;
+    font-family: sans-serif;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    margin: 20px auto;
+  }
+
+  .left {
+    display: flex;
+    align-items: center;
+  }
+
+  .icon {
+    background-color: #7f5af0;
+    color: white;
+    font-size: 24px;
+    padding: 10px;
+    border-radius: 12px;
+    margin-right: 12px;
+  }
+
+  .text .title {
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .text .subtitle {
+    font-size: 14px;
+    color: #bbb;
+  }
+
+  .play-now {
+    background-color: #a78bfa;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.3s ease;
+  }
+
+  .play-now:hover {
+    background-color: #c4b5fd;
+  }
+
+     .user-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #1c1c3d;
+  border-radius: 16px;
+  padding: 12px 16px;
+  color: white;
+  margin: 10px 16px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.user-profile img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+}
+
+.user-info p {
+  margin: 0;
+  font-size: 14px;
+  color: #ccc;
+}
+
+.user-info h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+    
       .rewards-top {
     display: flex;
     justify-content: space-around;
@@ -244,7 +328,51 @@
     text-align:center;
 ">
     Penarikan Berhasil!
+    </div>
+    
+     <div id="user-profile" style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+  <img id="userPhoto" src="https://via.placeholder.com/40" alt="Foto Profil" style="width: 40px; height: 40px; border-radius: 50%;">
+  <span id="usernameDisplay" style="color: #000000;">@username</span> 
+<button onclick="editProfile()">✏️</button>
 </div>
+    
+     <!-- Script Profil -->
+<script>
+  // Ambil email user dari localStorage
+  const currentUserEmail = localStorage.getItem("currentUser");
+
+  // Ambil nama dari email (bagian sebelum @)
+  if (currentUserEmail) {
+    const username = currentUserEmail.split("@")[0];
+    const usernameElement = document.getElementById("usernameDisplay");
+    if (usernameElement) {
+      usernameElement.textContent = "@" + username;
+    }
+  }
+
+  // Load foto profil dari localStorage jika ada
+  const storedPhoto = localStorage.getItem("userPhoto");
+  if (storedPhoto) {
+    document.getElementById("userPhoto").src = storedPhoto;
+  }
+
+  // Fungsi untuk ubah foto
+  function editProfile() {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.onchange = function () {
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onloadend = function () {
+        document.getElementById("userPhoto").src = reader.result;
+        localStorage.setItem("userPhoto", reader.result);
+      };
+      reader.readAsDataURL(file);
+    };
+    input.click();
+  }
+</script>
     
     <div class="rewards-top">
         <div class="reward-card">
@@ -275,16 +403,18 @@
             500-1000 Riwed 
         </button>
     </div>
-    
-    <!-- Iklan dari profitableratecpm.com -->
-    <script type="text/javascript">
-        atOptions = {
-            'key' : 'ac86c93838d18124dc18da7238d0ef1a',
-            'format' : 'iframe',
-            'height' : 250,
-            'width' : 300,
-            'params' : {}
-        };
+
+      <div class="game-button">
+  <div class="left">
+    <div class="icon">🎮</div>
+    <div class="text">
+      <div class="title">Play and Earn</div>
+      <div class="subtitle">Earn Rewards</div>
+    </div>
+  </div>
+  <a href="game.html" class="play-now">Play Now →</a>
+</div>
+
     </script>
     <script type="text/javascript" src="//www.highperformanceformat.com/ac86c93838d18124dc18da7238d0ef1a/invoke.js"></script>
     
