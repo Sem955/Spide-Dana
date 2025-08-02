@@ -27,6 +27,9 @@
       background-color: #111122;
       border-radius: 20px;
       box-shadow: 0 0 20px #00ffcc;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
 
     .content {
@@ -75,6 +78,17 @@
     .back-link:hover {
       text-decoration: underline;
     }
+
+    .ad-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 200px;
+      margin-bottom: 20px;
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+    }
   </style>
 </head>
 <body>
@@ -84,7 +98,9 @@
   <div class="content">
     <div class="container">
       <p style="margin-bottom: 20px;">Tonton iklan dan dapatkan reward harianmu!</p>
-      <!-- Iklan akan muncul otomatis dari skrip di bawah -->
+      <div class="ad-container">
+        <!-- Iklan akan muncul otomatis dari skrip di bawah -->
+      </div>
     </div>
   </div>
 
