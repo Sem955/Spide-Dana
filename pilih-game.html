@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pilih Game</title>
+  <title>Tugas Harian</title>
   <script>
-(function(aczc){
-var d = document,
-    s = d.createElement('script'),
-    l = d.scripts[d.scripts.length - 1];
-s.settings = aczc || {};
-s.src = "\/\/agreeable-ice.com\/byXBV.ssdnGJle0kYaW\/cx\/peim\/9duzZTUzlxk\/PZTMYl1lN-Tjg\/3\/MsjHYptLNdjyUu1LOoDwcAyVNvwW";
-s.async = true;
-s.referrerPolicy = 'no-referrer-when-downgrade';
-l.parentNode.insertBefore(s, l);
-})({})
- </script>
+  (function(aczc){
+    var d = document,
+        s = d.createElement('script'),
+        l = d.scripts[d.scripts.length - 1];
+    s.settings = aczc || {};
+    s.src = "\/\/agreeable-ice.com\/byXBV.ssdnGJle0kYaW\/cx\/peim\/9duzZTUzlxk\/PZTMYl1lN-Tjg\/3\/MsjHYptLNdjyUu1LOoDwcAyVNvwW";
+    s.async = true;
+    s.referrerPolicy = 'no-referrer-when-downgrade';
+    l.parentNode.insertBefore(s, l);
+  })({})
+  </script>
   <style>
     body {
       background-color: #0d0c1d;
@@ -24,17 +24,19 @@ l.parentNode.insertBefore(s, l);
       text-align: center;
       padding: 40px 20px;
     }
+
     h1 {
       font-size: 2em;
       margin-bottom: 30px;
     }
-    .game-button {
+
+    .refresh-button {
       display: block;
-      background-color: #1a1a2e;
-      color: #00ff88;
+      background-color: #2196F3;
+      color: white;
       border: none;
-      padding: 15px 20px;
-      margin: 10px auto;
+      padding: 15px 25px;
+      margin: 20px auto;
       border-radius: 10px;
       font-size: 1.1em;
       cursor: pointer;
@@ -42,16 +44,49 @@ l.parentNode.insertBefore(s, l);
       max-width: 300px;
       transition: background-color 0.3s;
     }
-    .game-button:hover {
-      background-color: #16213e;
+
+    .refresh-button:hover {
+      background-color: #1e88e5;
     }
+
+    .iklan-box {
+      background-color: #1a1a2e;
+      border-radius: 15px;
+      padding: 20px;
+      margin-top: 20px;
+      box-shadow: 0 0 10px #00ff88;
+      width: 90%;
+      max-width: 350px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .iklan-box img,
+    .iklan-box video {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .iklan-box button {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      border: none;
+      background-color: #00ff88;
+      color: black;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
     .back-link {
-      display: inline-block;
-      margin-top: 30px;
+      display: block;
+      margin-top: 50px;
       color: #a78bfa;
       text-decoration: none;
       font-size: 1em;
     }
+
     .back-link:hover {
       text-decoration: underline;
     }
@@ -59,18 +94,18 @@ l.parentNode.insertBefore(s, l);
 </head>
 <body>
 
-  <h1>Pilih Game</h1>
+  <h1>Tugas Harian</h1>
 
- <button class="game-button" onclick="comingSoon('Game Sanek')">🎮 Game Sanek</button
- <button class="game-button" onclick="comingSoon('Spin Wheel')">🎰 Spin Wheel</button>
-  <button class="game-button" onclick="comingSoon('Tebak Angka')">🧠 Tebak Angka</button>
+  <button class="refresh-button" onclick="location.reload()">🔄 Refresh</button>
+
+  <div class="iklan-box">
+    <img src="https://via.placeholder.com/350x150" alt="Iklan Gambar">
+    <video src="video.mp4" controls></video>
+    <p>Tonton iklan dan dapatkan reward harianmu!</p>
+    <button onclick="alert('Poin berhasil ditambahkan!')">✅ Klaim Poin</button>
+  </div>
 
   <a href="dashboard.html" class="back-link">← Kembali ke Dasbor</a>
-
-  <script>
-    function comingSoon(game) {
-      alert(game + ' - Coming Soon!');
-<script>
 
 </body>
 </html>
