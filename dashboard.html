@@ -619,14 +619,24 @@ const claimRewardBtn = document.getElementById("claimRewardBtn");
 const tiktokBtn = document.getElementById("tiktokBtn");
 
 // Event klik TikTok
-tiktokBtn.addEventListener("click", () => {
-    localStorage.setItem("watchedTikTok", "true");
-    window.open("https://www.profitableratecpm.com/r6t38ns3hh?key=ac955a03eb118a3acce55ae30410f9b5","_blank");
+ tiktokBtn.addEventListener("click", () => {
+    const container = document.getElementById("vastPlayerContainer");
+    container.style.display = "block";
 
-    // Setelah 30 detik tampilkan modal klaim
+    const player = videojs('vastVideo');
+    player.ima({
+        adTagUrl: 'https://idioticleadership.com/dfmxFPzZd.GUNUv/ZFG_UN/Eermb9Wu/ZIUal/kfPOT/YUTN14/ND/EfPt-aNaiDUR1BNOTnLoGM-qg'
+    });
+
+    player.ready(function () {
+        player.ima.requestAds();
+        player.play();
+    });
+
+    // Setelah 35 detik, tampilkan modal klaim reward
     setTimeout(() => {
         rewardModal.style.display = "flex";
-    }, 30000);
+    }, 35000);
 });
 
 // Event klik tombol klaim di modal
