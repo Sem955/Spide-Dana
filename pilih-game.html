@@ -61,8 +61,18 @@ l.parentNode.insertBefore(s, l);
 
   <h1>Pilih Game</h1>
 
-  <button class="game-button" onclick="comingSoon('Game Sanek')">🎮 Game Sanek</button>
+ <button class="game-button" onclick="comingSoon('Game Sanek')">🎮 Game Sanek</button
+ <button class="game-button" onclick="comingSoon('Spin Wheel')">🎰 Spin Wheel</button>
+  <button class="game-button" onclick="comingSoon('Tebak Angka')">🧠 Tebak Angka</button>
+
+  <a href="dashboard.html" class="back-link">← Kembali ke Dasbor</a>
+
   <script>
+    function comingSoon(game) {
+      alert(game + ' - Coming Soon!');
+    }
+</script>
+    <script>
 (function(bnfb){
 var d = document,
     s = d.createElement('script'),
@@ -73,16 +83,6 @@ s.async = true;
 s.referrerPolicy = 'no-referrer-when-downgrade';
 l.parentNode.insertBefore(s, l);
 })({})
-</script>
-  <button class="game-button" onclick="comingSoon('Spin Wheel')">🎰 Spin Wheel</button>
-  <button class="game-button" onclick="comingSoon('Tebak Angka')">🧠 Tebak Angka</button>
-
-  <a href="dashboard.html" class="back-link">← Kembali ke Dasbor</a>
-
-  <script>
-    function comingSoon(game) {
-      alert(game + ' - Coming Soon!');
-    }
-</script>
+ </script>
 </body>
 </html>
