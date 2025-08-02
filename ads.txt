@@ -1,1 +1,1 @@
-ads.txt
+redirect=https://adstxt.pubfuture.com/site/688e16a6fae2ae01596dbe60/spide-dana.vercel.app/ads.txt
