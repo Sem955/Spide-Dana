@@ -625,17 +625,26 @@ const tiktokBtn = document.getElementById("tiktokBtn");
  tiktokBtn.addEventListener("click", () => {
     const container = document.getElementById("vastPlayerContainer");
     container.style.display = "block";
-
+ 
     const player = videojs('vastVideo');
-    player.ima({
-        adTagUrl: 'https://idioticleadership.com/dfmxFPzZd.GUNUv/ZFG_UN/Eermb9Wu/ZIUal/kfPOT/YUTN14/ND/EfPt-aNaiDUR1BNOTnLoGM-qg'
-    });
 
-    player.ready(function () {
-        player.ima.requestAds();
-        player.play();
-    });
+// Tambahkan video dummy sebagai konten utama agar player bisa start
+player.src({
+  type: 'video/mp4',
+  src: 'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4' // video placeholder
+});
 
+player.ima({
+  adTagUrl: 'https://idioticleadership.com/dfmxFPzZd.GUNUv/ZFG_UN/Eermb9Wu/ZIUal/kfPOT/YUTN14/ND/EfPt-aNaiDUR1BNOTnLoGM-qg',
+  debug: true
+});
+
+player.ready(function () {
+  player.ima.initializeAdDisplayContainer();
+  player.ima.requestAds();
+  player.play();
+});
+ 
     // Setelah 35 detik, tampilkan modal klaim reward
     setTimeout(() => {
         rewardModal.style.display = "flex";
