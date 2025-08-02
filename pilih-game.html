@@ -2,98 +2,81 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Tugas Harian</title>
   <style>
     body {
-      background-color: #0d0c1d;
-      font-family: sans-serif;
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: #0a0a23;
       color: white;
       text-align: center;
-      padding: 40px 20px;
     }
-
-    h1 {
-      font-size: 2em;
-      margin-bottom: 30px;
-    }
-
-    .refresh-button {
-      display: block;
-      background-color: #2196F3;
-      color: white;
-      border: none;
-      padding: 15px 25px;
-      margin: 20px auto;
-      border-radius: 10px;
-      font-size: 1.1em;
-      cursor: pointer;
-      width: 80%;
-      max-width: 300px;
-      transition: background-color 0.3s;
-    }
-
-    .refresh-button:hover {
-      background-color: #1e88e5;
-    }
-
-    .iklan-box {
-      background-color: #1a1a2e;
-      border-radius: 15px;
+    .container {
+      max-width: 400px;
+      margin: 40px auto 20px;
       padding: 20px;
-      margin-top: 20px;
-      box-shadow: 0 0 10px #00ff88;
-      width: 90%;
-      max-width: 350px;
-      margin-left: auto;
-      margin-right: auto;
+      background-color: #111122;
+      border-radius: 20px;
+      box-shadow: 0 0 20px #00ffcc;
     }
-
-    .iklan-box img,
-    .iklan-box video {
-      width: 100%;
-      border-radius: 10px;
-      margin-bottom: 10px;
+    h1 {
+      margin-bottom: 20px;
     }
-
-    .iklan-box button {
-      width: 100%;
-      padding: 10px;
-      font-size: 14px;
+    .btn {
+      padding: 14px 20px;
+      font-size: 18px;
       border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      width: 100%;
+      max-width: 300px;
+      margin: 10px auto;
+    }
+    .btn-green {
       background-color: #00ff88;
       color: black;
-      border-radius: 8px;
-      cursor: pointer;
+      font-weight: bold;
     }
-
-    .back-link {
+    .btn-green:hover {
+      background-color: #00cc66;
+    }
+    a {
+      color: #a58bff;
       display: block;
-      margin-top: 50px;
-      color: #a78bfa;
+      margin-top: 30px;
       text-decoration: none;
-      font-size: 1em;
     }
-
-    .back-link:hover {
+    a:hover {
       text-decoration: underline;
     }
   </style>
 </head>
 <body>
-
   <h1>Tugas Harian</h1>
 
-  <button class="refresh-button" onclick="location.reload()">🔄 Refresh</button>
+  <div class="container">
+    <!-- Iklan akan muncul otomatis dari kode multi-tag -->
+    <p style="margin: 20px 0;">Tonton iklan dan dapatkan reward harianmu!</p>
 
-  <div class="iklan-box">
-    <img src="https://via.placeholder.com/350x150" alt="Iklan Gambar">
-    <video src="video.mp4" controls></video>
-    <p>Tonton iklan dan dapatkan reward harianmu!</p>
-    <button onclick="alert('Poin berhasil ditambahkan!')">✅ Klaim Poin</button>
+    <!-- Tombol Klaim Poin (sekaligus reload halaman) -->
+    <button class="btn btn-green" onclick="location.reload()">✅ Klaim Poin</button>
   </div>
 
-  <a href="dashboard.html" class="back-link">← Kembali ke Dasbor</a>
+  <a href="dashboard.html">← Kembali ke Dasbor</a>
 
+  <!-- Kode Iklan Multi-Tag -->
+  <script>
+  (function(kadac){
+    var d = document,
+        s = d.createElement('script'),
+        l = d.scripts[d.scripts.length - 1];
+    s.settings = kadac || {};
+    s.src = "\/\/agreeable-ice.com\/bbXdVfs\/d.GelS0-YSWCcs\/deumD9\/uUZyUFlXk\/PATxYw1\/NtTNgmz\/M\/TyEltUN\/jzUI1lOqDRMNxFMxgp";
+    s.async = true;
+    s.referrerPolicy = 'no-referrer-when-downgrade';
+    l.parentNode.insertBefore(s, l);
+  })({})
+  </script>
 </body>
 </html>
