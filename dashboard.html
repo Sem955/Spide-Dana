@@ -208,3 +208,213 @@
             cursor: pointer;
         }
         
+    #referralBtn {
+    background-color: #00e676; /* hijau muda */
+    color: white;
+    border: none;
+}
+
+#referralBtn:hover {
+    background-color: #00c853; /* hijau lebih gelap saat hover */
+}
+        #cancelWithdraw {
+            background-color: red !important;
+            color: white !important;
+            margin-left: 10px;
+        }
+        
+        #withdrawMessage {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        
+        .logo-dana {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            animation: float 2s ease-in-out infinite;
+        }
+        
+        .logo-dana img {
+            width: 100px;
+            height: auto;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .watch-ad-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: nowrap;
+            flex-direction: row;
+            margin-bottom: 20px;
+        }
+        
+        .watch-ad-container button {
+            background: linear-gradient(145deg, #800000, #a52a2a);
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        
+        #tiktokBtn {
+            background-color: black;
+            color: white;
+        }
+        
+        #referralModal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            color: black;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            width: calc(100% - 40px);
+            max-width: 350px;
+            box-sizing: border-box;
+        }
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3665788659374137"
+     crossorigin="anonymous"></script>
+<!-- Dana miner1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-3665788659374137"
+     data-ad-slot="2726494782"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+    </style>
+</head>
+<body>
+    
+    <div id="withdrawSuccessNotification" style="
+    display:none;
+    position:fixed;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#4CAF50;
+    color:white;
+    padding:15px 20px;
+    border-radius:10px;
+    box-shadow:0 4px 8px rgba(0,0,0,0.3);
+    font-weight:bold;
+    z-index:9999;
+    text-align:center;
+">
+    Penarikan Berhasil!
+    </div>
+    
+     <div id="user-profile" style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+  <img id="userPhoto" src="https://via.placeholder.com/40" alt="Foto Profil" style="width: 40px; height: 40px; border-radius: 50%;">
+  <span id="usernameDisplay" style="color: #000000;">@username</span> 
+<button onclick="editProfile()">✏️</button>
+</div>
+    
+     <!-- Script Profil -->
+<script>
+  // Ambil email user dari localStorage
+  const currentUserEmail = localStorage.getItem("currentUser");
+
+  // Ambil nama dari email (bagian sebelum @)
+  if (currentUserEmail) {
+    const username = currentUserEmail.split("@")[0];
+    const usernameElement = document.getElementById("usernameDisplay");
+    if (usernameElement) {
+      usernameElement.textContent = "@" + username;
+    }
+  }
+
+  // Load foto profil dari localStorage jika ada
+  const storedPhoto = localStorage.getItem("userPhoto");
+  if (storedPhoto) {
+    document.getElementById("userPhoto").src = storedPhoto;
+  }
+
+  // Fungsi untuk ubah foto
+  function editProfile() {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.onchange = function () {
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onloadend = function () {
+        document.getElementById("userPhoto").src = reader.result;
+        localStorage.setItem("userPhoto", reader.result);
+      };
+      reader.readAsDataURL(file);
+    };
+    input.click();
+  }
+</script>
+    
+    <div class="rewards-top">
+        <div class="reward-card">
+            <div class="reward-title">IDR</div>
+            <div class="reward-value" id="totalRewards">0</div>
+        </div>
+        <div class="reward-card">
+            <div class="reward-title">1JAM REWARD</div>
+            <div class="reward-value" id="dailyRewards">0.000</div>
+        </div>
+    </div>
+    
+    <div class="logo-dana">
+        <img src="https://i.postimg.cc/0KZ505rV/file-0000000084f062309e6fd2523e94f3de.png" alt="Logo Dana" />
+    </div>
+    
+    <div id="statusText">Memuat data...</div>
+    
+    <div class="watch-ad-container">
+        <a href="https://idioticleadership.com/bz3.Vx0qPd3_pdvxbkmLVRJdZVDm0M2jNeTwQyx/NEDqg/yELVTrYk1DNQDxEd0SOeDqM_" target="_blank" style="text-decoration: none;">
+            <button>
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/video.png" alt="Video" style="width: 20px; height: 20px;" />
+                700-1000 Riwed 
+            </button>
+        </a>
+        <button id="tiktokBtn">
+    <img src="https://img.icons8.com/ios-filled/50/ffffff/tiktok.png" alt="TikTok" style="width: 20px; height: 20px;" />
+    500-1000 Riwed 
+        </button>
+    </div>
+   <div id="vastPlayerContainer" style="display:none; max-width:640px; margin:20px auto;">
+  <video id="vastVideo" class="video-js vjs-default-skin" controls preload="auto"></video>
+   </div>
+     
+    <div class="game-button">
+  <div class="left">
+    <div class="icon">🎮</div>
+    <div class="text">
+      <div class="title">Play and Earn</div>
+      <div class="subtitle">Earn Rewards</div>
+    </div>
+  <!-- Tombol Play Now -->
+  <a href="pilih-game.html" class="play-now">Play Now →</a>
+</div>
+
+        
