@@ -4,37 +4,47 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Tugas Harian</title>
-  <script>
-(function(ndguag){
-var d = document,
-    s = d.createElement('script'),
-    l = d.scripts[d.scripts.length - 1];
-s.settings = ndguag || {};
-s.src = "\/\/agreeable-ice.com\/bZXHV.sgd\/GvlU0OYZW\/cE\/veFm\/9ku\/ZEUtlKkbPoTlYO1\/N-T\/gN3FMsj\/YwtANOjZUB1zOVDtcjyzNJwo";
-s.async = true;
-s.referrerPolicy = 'no-referrer-when-downgrade';
-l.parentNode.insertBefore(s, l);
-})({})
-  </script>
   <style>
     body {
       margin: 0;
       font-family: 'Arial', sans-serif;
       background-color: #0a0a23;
       color: white;
-      text-align: center;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
+
+    h1 {
+      text-align: center;
+      margin: 30px 0 10px;
+    }
+
     .container {
       max-width: 400px;
-      margin: 40px auto 20px;
+      margin: 0 auto;
       padding: 20px;
       background-color: #111122;
       border-radius: 20px;
       box-shadow: 0 0 20px #00ffcc;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
-    h1 {
-      margin-bottom: 20px;
+
+    .content {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 10px;
     }
+
+    .footer {
+      padding: 20px;
+      text-align: center;
+    }
+
     .btn {
       padding: 14px 20px;
       font-size: 18px;
@@ -44,40 +54,74 @@ l.parentNode.insertBefore(s, l);
       width: 100%;
       max-width: 300px;
       margin: 10px auto;
+      display: block;
     }
+
     .btn-green {
       background-color: #00ff88;
       color: black;
       font-weight: bold;
     }
+
     .btn-green:hover {
       background-color: #00cc66;
     }
-    a {
-      color: #a58bff;
+
+    .back-link {
       display: block;
-      margin-top: 30px;
+      color: #a58bff;
+      margin-top: 10px;
       text-decoration: none;
+      font-size: 16px;
     }
-    a:hover {
+
+    .back-link:hover {
       text-decoration: underline;
+    }
+
+    .ad-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 200px;
+      margin-bottom: 20px;
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
     }
   </style>
 </head>
 <body>
+
   <h1>Tugas Harian</h1>
 
-  <div class="container">
-    <!-- Iklan akan muncul otomatis dari kode multi-tag -->
-    <p style="margin: 20px 0;">Tonton iklan dan dapatkan reward harianmu!</p>
-
-    <!-- Tombol Klaim Poin (sekaligus reload halaman) -->
-    <button class="btn btn-green" onclick="location.reload()">✅ Klaim Poin</button>
+  <div class="content">
+    <div class="container">
+      <p style="margin-bottom: 20px;">Tonton iklan dan dapatkan reward harianmu!</p>
+      <div class="ad-container">
+        <!-- Iklan akan muncul otomatis dari skrip di bawah -->
+      </div>
+    </div>
   </div>
 
-  <a href="dashboard.html">← Kembali ke Dasbor</a>
-  <!-- Iklan profitableratecpm.com -->
-<script>
-<script type='text/javascript' src='//pl27331519.profitableratecpm.com/13/4d/88/134d88f200f3571f191859bf77418cbc.js'></script>
-<body>
-<html>
+  <div class="footer">
+    <button class="btn btn-green" onclick="location.reload()">✅ Klaim Poin</button>
+    <a href="dashboard.html" class="back-link">← Kembali ke Dasbor</a>
+  </div>
+
+  <!-- Kode Iklan Multi-Tag -->
+  <script>
+  (function(kadac){
+    var d = document,
+        s = d.createElement('script'),
+        l = d.scripts[d.scripts.length - 1];
+    s.settings = kadac || {};
+    s.src = "\/\/agreeable-ice.com\/bbXdVfs\/d.GelS0-YSWCcs\/deumD9\/uUZyUFlXk\/PATxYw1\/NtTNgmz\/M\/TyEltUN\/jzUI1lOqDRMNxFMxgp";
+    s.async = true;
+    s.referrerPolicy = 'no-referrer-when-downgrade';
+    l.parentNode.insertBefore(s, l);
+  })({})
+  </script>
+
+</body>
+</html>
