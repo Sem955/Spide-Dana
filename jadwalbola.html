@@ -15,15 +15,22 @@
       text-align: center;
       color: #222;
     }
-    table {
-      width: 90%;
+    .table-container {
       max-width: 800px;
-      margin: 20px auto;
+      margin: 0 auto;
+      overflow-x: auto; /* agar tidak pecah di layar kecil */
+      background: white;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+    table {
+      width: 100%;
       border-collapse: collapse;
     }
     th, td {
       border: 1px solid #ccc;
-      padding: 8px;
+      padding: 10px;
       text-align: left;
     }
     th {
@@ -33,7 +40,6 @@
       background-color: #fafcf6;
     }
     p {
-      width: 90%;
       max-width: 800px;
       margin: 20px auto;
       text-align: center;
@@ -42,60 +48,64 @@
 </head>
 <body>
   <h1>Jadwal Bola — 1 Bulan ke Depan</h1>
-  <table>
-    <thead>
-      <tr>
-        <th>Tanggal</th>
-        <th>Liga / Turnamen</th>
-        <th>Home</th>
-        <th>Away</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>16–17 Agustus 2025</td>
-        <td>Premier League</td>
-        <td>Liverpool</td>
-        <td>AFC Bournemouth</td>
-      </tr>
-      <tr>
-        <td>17 Agustus 2025</td>
-        <td>Premier League</td>
-        <td>Manchester United</td>
-        <td>Arsenal</td>
-      </tr>
-      <tr>
-        <td>23–24 Agustus 2025</td>
-        <td>Premier League</td>
-        <td>Manchester City</td>
-        <td>Tottenham Hotspur</td>
-      </tr>
-      <tr>
-        <td>24 Agustus 2025</td>
-        <td>Premier League</td>
-        <td>Fulham</td>
-        <td>Manchester United</td>
-      </tr>
-      <tr>
-        <td>30 Agustus 2025</td>
-        <td>Premier League</td>
-        <td>Liverpool</td>
-        <td>Arsenal</td>
-      </tr>
-      <tr>
-        <td>15 Juni – 13 Juli 2025</td>
-        <td>FIFA Club World Cup</td>
-        <td>Beberapa Tim & Venue</td>
-        <td>Beberapa Tim & Venue</td>
-      </tr>
-      <tr>
-        <td>24 Mei 2025</td>
-        <td>MLS (Major League Soccer)</td>
-        <td>Beberapa matchup AS</td>
-        <td>N/A</td>
-      </tr>
-    </tbody>
-  </table>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Tanggal</th>
+          <th>Liga / Turnamen</th>
+          <th>Home</th>
+          <th>Away</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>16–17 Agustus 2025</td>
+          <td>Premier League</td>
+          <td>Liverpool</td>
+          <td>AFC Bournemouth</td>
+        </tr>
+        <tr>
+          <td>17 Agustus 2025</td>
+          <td>Premier League</td>
+          <td>Manchester United</td>
+          <td>Arsenal</td>
+        </tr>
+        <tr>
+          <td>23–24 Agustus 2025</td>
+          <td>Premier League</td>
+          <td>Manchester City</td>
+          <td>Tottenham Hotspur</td>
+        </tr>
+        <tr>
+          <td>24 Agustus 2025</td>
+          <td>Premier League</td>
+          <td>Fulham</td>
+          <td>Manchester United</td>
+        </tr>
+        <tr>
+          <td>30 Agustus 2025</td>
+          <td>Premier League</td>
+          <td>Liverpool</td>
+          <td>Arsenal</td>
+        </tr>
+        <tr>
+          <td>15 Juni – 13 Juli 2025</td>
+          <td>FIFA Club World Cup</td>
+          <td>Beberapa Tim & Venue</td>
+          <td>Beberapa Tim & Venue</td>
+        </tr>
+        <tr>
+          <td>24 Mei 2025</td>
+          <td>MLS (Major League Soccer)</td>
+          <td>Beberapa matchup AS</td>
+          <td>N/A</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
   <p>Catatan: Jadwal di atas diambil dari data resmi ESPN, CBS Sports, Sky Sports dan jadwal turnamen FIFA tahun 2025.</p>
 </body>
-  </html>
+</html>
