@@ -1,30 +1,75 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Live Harga Bitcoin</title>
+  <meta charset="UTF-8" />
+  <title>Harga Bitcoin Live</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .price { font-size: 24px; font-weight: bold; }
+    .converter { margin-top: 20px; }
+    label { margin-right: 10px; }
+  </style>
 </head>
-<body style="margin:0; padding:0;">
-  <div class="tradingview-widget-container">
-    <div id="tradingview_btc"></div>
-    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-    <script type="text/javascript">
-      new TradingView.widget({
-        "width": "100%",
-        "height": 500,
-        "symbol": "BINANCE:BTCUSDT",
-        "interval": "1",
-        "timezone": "Asia/Jakarta",
-        "theme": "light",
-        "style": "1",
-        "locale": "id",
-        "toolbar_bg": "#f1f3f6",
-        "enable_publishing": false,
-        "hide_legend": false,
-        "save_image": false,
-        "container_id": "tradingview_btc"
-      });
-    </script>
+<body>
+  <h2>Harga Bitcoin Live</h2>
+  <div class="price" id="btcPrice">Loading...</div>
+  <canvas id="btcChart" height="100"></canvas>
+
+  <div class="converter">
+    <label for="btcAmount">Jumlah BTC:</label>
+    <input type="number" id="btcAmount" value="1" step="0.01" />
+    <span>=</span>
+    <span id="converted">Loading...</span> IDR
   </div>
+
+  <script>
+    let btcPriceIDR = 0;
+
+    // tarik data harga
+    async function fetchBTC() {
+      const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=idr");
+      const data = await res.json();
+      btcPriceIDR = data.bitcoin.idr;
+      document.getElementById("btcPrice").textContent = `1 BTC = Rp ${btcPriceIDR.toLocaleString()}`;
+      updateConversion();
+    }
+
+    // tarik data historis untuk chart
+    async function fetchChart() {
+      const res = await fetch("https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=idr&days=1&interval=hourly");
+      const data = await res.json();
+      const labels = data.prices.map(price => {
+        const d = new Date(price[0]);
+        return d.getHours() + ":00";
+      });
+      const prices = data.prices.map(price => price[1]);
+      const ctx = document.getElementById("btcChart").getContext("2d");
+      new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: labels,
+          datasets: [{
+            label: "Harga BTC (IDR)",
+            data: prices,
+            borderColor: "red",
+            fill: false
+          }]
+        }
+      });
+    }
+
+    // konversi btc ke idr
+    function updateConversion() {
+      const amount = parseFloat(document.getElementById("btcAmount").value);
+      document.getElementById("converted").textContent = (btcPriceIDR * amount).toLocaleString();
+    }
+
+    document.getElementById("btcAmount").addEventListener("input", updateConversion);
+
+    fetchBTC();
+    fetchChart();
+    setInterval(fetchBTC, 10000); // refresh tiap 10 detik
+  </script>
 </body>
 </html>
