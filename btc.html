@@ -7,17 +7,23 @@
     body {
       margin: 0;
       padding: 0;
-      background-color: #f0f3e9; /* warna mirip gambar kamu */
+      background-color: #f0f3e9;
       font-family: Arial, sans-serif;
-    }
-    .tradingview-widget-container {
-      margin-top: 150px;
     }
     .judul {
       text-align: center;
       font-weight: 600;
       font-size: 18px;
       margin-top: 20px;
+    }
+    .harga {
+      text-align: center;
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    .tradingview-widget-container {
+      margin-top: 30px;
     }
   </style>
 </head>
@@ -44,5 +50,21 @@
       });
     </script>
   </div>
+  <div class="harga" id="hargaBtc">Memuat harga BTC...</div>
+
+  <script>
+    async function updateHarga() {
+      try {
+        const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=idr");
+        const data = await res.json();
+        const harga = data.bitcoin.idr.toLocaleString("id-ID");
+        document.getElementById("hargaBtc").textContent = `Harga saat ini: Rp ${harga}`;
+      } catch(e) {
+        document.getElementById("hargaBtc").textContent = "Gagal memuat harga BTC";
+      }
+    }
+    updateHarga();
+    setInterval(updateHarga, 10000); // update tiap 10 detik
+  </script>
 </body>
 </html>
