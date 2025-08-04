@@ -13,22 +13,28 @@
     .judul {
       text-align: center;
       font-weight: 700;
-      font-size: 80px; /* diperbesar */
+      font-size: 80px;
       margin-top: 40px;
     }
     .harga {
       text-align: center;
       margin-top: 20px;
       font-weight: bold;
-      font-size: 50px; /* diperbesar */
+      font-size: 50px;
     }
     .tradingview-widget-container {
-      margin-top: 150px; /* jarak atas lebih jauh */
+      margin-top: 150px;
+    }
+    .iklan-center {
+      display: flex;
+      justify-content: center;
+      margin-top: 50px; /* Tambahkan jarak dari tulisan harga */
     }
   </style>
 </head>
 <body>
   <div class="judul">LIVE BTC HARI INI</div>
+  
   <div class="tradingview-widget-container">
     <div id="tradingview_btc"></div>
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
@@ -50,7 +56,21 @@
       });
     </script>
   </div>
+
   <div class="harga" id="hargaBtc">Memuat harga BTC...</div>
+
+  <div class="iklan-center">
+    <script type="text/javascript">
+      atOptions = {
+        'key' : '3c59e4d44077a502c4e170cc28072963',
+        'format' : 'iframe',
+        'height' : 250,
+        'width' : 300,
+        'params' : {}
+      };
+    </script>
+    <script type="text/javascript" src="//www.highperformanceformat.com/3c59e4d44077a502c4e170cc28072963/invoke.js"></script>
+  </div>
 
   <script>
     async function updateHarga() {
@@ -66,19 +86,5 @@
     updateHarga();
     setInterval(updateHarga, 10000); // update tiap 10 detik
   </script>
-</div>
-  
-   <div class="iklan-center">
-  <script type="text/javascript">
-    atOptions = {
-      'key' : '3c59e4d44077a502c4e170cc28072963',
-      'format' : 'iframe',
-      'height' : 250,
-      'width' : 300,
-      'params' : {}
-    };
-  </script>
-  <script type="text/javascript" src="//www.highperformanceformat.com/3c59e4d44077a502c4e170cc28072963/invoke.js"></script>
-   </div>
 </body>
 </html>
