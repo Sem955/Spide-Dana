@@ -4,12 +4,25 @@
   <meta charset="UTF-8">
   <title>Live Harga Bitcoin</title>
   <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f0f3e9; /* warna mirip gambar kamu */
+      font-family: Arial, sans-serif;
+    }
     .tradingview-widget-container {
-      margin-top: 150px; /* jarak dari atas */
+      margin-top: 150px;
+    }
+    .judul {
+      text-align: center;
+      font-weight: 600;
+      font-size: 18px;
+      margin-top: 20px;
     }
   </style>
 </head>
-<body style="margin:0; padding:0;">
+<body>
+  <div class="judul">LIVE BTC HARI INI</div>
   <div class="tradingview-widget-container">
     <div id="tradingview_btc"></div>
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
