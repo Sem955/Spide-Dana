@@ -63,11 +63,26 @@
       position: fixed;
       top: 0;
       left: 0; right: 0;
-      height: 60%;
+      height: 100%;
       background: white;
       z-index: 99;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
       animation: slideDown 0.3s ease forwards;
+    }
+    .menu-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      background-color: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .menu-header .logo {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+    .menu-header .menu-icon {
+      font-size: 1.8em;
+      cursor: pointer;
     }
     .menu-overlay ul {
       list-style: none;
@@ -82,7 +97,6 @@
       color: #000;
       text-decoration: none;
     }
-
     @keyframes slideDown {
       from { transform: translateY(-100%); }
       to { transform: translateY(0); }
@@ -96,36 +110,37 @@
     <div class="menu-icon" onclick="toggleMenu()">&#9776;</div>
   </header>
 
+  <!-- Menu Overlay -->
   <div class="menu-overlay" id="menuOverlay">
+    <div class="menu-header">
+      <div class="logo">DANA MINER</div>
+      <div class="menu-icon" onclick="toggleMenu()">&#9776;</div>
+    </div>
     <ul>
-      <li><a href="index.login.html">Gabung</a></li>
+      <li><a href="#">Gabung</a></li>
       <li><a href="#">Aturan Game</a></li>
     </ul>
   </div>
 
   <div class="hero">
     <p>Dipercaya oleh lebih dari 3 juta pengguna</p>
-   <h1>Mainin DANA MINER<br> kumpulin koin.</h1> 
-    <p>tukar ke saldo DANA tiap hari!Modal HP aja, gak ribet.</p>
+    <h1>Mainin DANA MINER<br> kumpulin koin.</h1> 
+    <p>tukar ke saldo DANA tiap hari! Modal HP aja, gak ribet.</p>
     
     <!-- Tombol Play Now -->
     <a href="index.login.html" class="play-now-btn">PLAY NOW →</a>
   </div>
-<div>
+
   <div class="hero">
-  <p>DANA MINER adalah platform game mining koin</p>
-  <h1>yang memberikan reward nyata<br>Setiap koin yang Anda dapatkan.</h1>
-  <p>bisa ditukar langsung ke saldo DANA.<p>
-    </div>
+    <p>DANA MINER adalah platform game mining koin</p>
+    <h1>yang memberikan reward nyata<br>Setiap koin yang Anda dapatkan.</h1>
+    <p>bisa ditukar langsung ke saldo DANA.</p>
+  </div>
 
   <script>
     function toggleMenu() {
       const menu = document.getElementById('menuOverlay');
-      if (menu.style.display === 'block') {
-        menu.style.display = 'none';
-      } else {
-        menu.style.display = 'block';
-      }
+      menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
     }
   </script>
 
