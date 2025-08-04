@@ -6,15 +6,17 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body { font-family: Arial, sans-serif; padding: 20px; }
-    .price { font-size: 24px; font-weight: bold; }
+    .price { font-size: 24px; font-weight: bold; margin-bottom: 10px; }
     .converter { margin-top: 20px; }
     label { margin-right: 10px; }
+    #btcChart { max-width: 100%; }
   </style>
 </head>
 <body>
   <h2>Harga Bitcoin Live</h2>
   <div class="price" id="btcPrice">Loading...</div>
-  <canvas id="btcChart" height="100"></canvas>
+
+  <canvas id="btcChart" height="200"></canvas>
 
   <div class="converter">
     <label for="btcAmount">Jumlah BTC:</label>
@@ -25,6 +27,7 @@
 
   <script>
     let btcPriceIDR = 0;
+    let btcChart = null;
 
     // tarik data harga
     async function fetchBTC() {
@@ -44,8 +47,10 @@
         return d.getHours() + ":00";
       });
       const prices = data.prices.map(price => price[1]);
+
       const ctx = document.getElementById("btcChart").getContext("2d");
-      new Chart(ctx, {
+      if (btcChart) btcChart.destroy(); // hapus chart lama supaya tidak dobel
+      btcChart = new Chart(ctx, {
         type: "line",
         data: {
           labels: labels,
@@ -53,8 +58,17 @@
             label: "Harga BTC (IDR)",
             data: prices,
             borderColor: "red",
-            fill: false
+            fill: true,
+            backgroundColor: "rgba(255,0,0,0.1)",
+            tension: 0.3
           }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: false
+            }
+          }
         }
       });
     }
@@ -69,7 +83,7 @@
 
     fetchBTC();
     fetchChart();
-    setInterval(fetchBTC, 10000); // refresh tiap 10 detik
+    setInterval(fetchBTC, 10000); // refresh harga tiap 10 detik
   </script>
 </body>
 </html>
