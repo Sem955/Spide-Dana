@@ -1,103 +1,182 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Jadwal Bola</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jadwal Bola Bulan Depan</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       padding: 10px;
       background: #f5f5f5;
-      font-size: 13px;
     }
     h1 {
       text-align: center;
-      font-size: 15px;
-      margin: 10px 0;
+      font-size: 18px;
+      margin-bottom: 15px;
       color: #333;
     }
-    table {
+    .scroll-container {
       width: 100%;
-      border-collapse: collapse;
-      font-size: 12px;
+      overflow-x: auto;
+      white-space: nowrap;
+      margin-bottom: 20px;
       background: white;
-      box-shadow: 0 0 3px rgba(0,0,0,0.1);
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    .league-table {
+      display: inline-block;
+      vertical-align: top;
+      margin-right: 20px;
+      min-width: 300px;
+    }
+    table {
+      border-collapse: collapse;
+      font-size: 13px;
+      width: 100%;
     }
     th, td {
-      border: 1px solid #e0e0e0;
-      padding: 6px 8px;
+      border: 1px solid #ddd;
+      padding: 8px 10px;
       text-align: left;
     }
     th {
       background-color: #f0f0f0;
-      font-weight: normal;
+      position: sticky;
+      top: 0;
     }
     tr:nth-child(even) {
-      background-color: #fafafa;
+      background-color: #f9f9f9;
+    }
+    .league-title {
+      font-weight: bold;
+      text-align: center;
+      background-color: #e0e0e0;
+      padding: 8px;
+      margin-bottom: 5px;
     }
   </style>
 </head>
 <body>
-  <h1>LIGE PRIMER LEAGUE</h1>
-       
-  <table>
-    <thead>
-      <tr>
-        <th>Tanggal</th>
-        <th>Liga / Turnamen</th>
-        <th>Home</th>
-        <th>Away</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>16–17 Agustus 2025</td>
-        <td>Premier League</td>
-        <td>Liverpool</td>
-        <td>AFC Bournemouth</td>
-      </tr>
-      <tr>
-        <td>17 Agustus 2025</td>
-        <td>Premier League</td>
-        <td>Manchester United</td>
-        <td>Arsenal</td>
-      </tr>
-      <tr>
-        <td>23–24 Agustus 2025</td>
-        <td>Premier League</td>
-        <td>Manchester City</td>
-        <td>Tottenham Hotspur</td>
-      </tr>
-      <tr>
-        <td>24 Agustus 2025</td>
-        <td>Premier League</td>
-        <td>Fulham</td>
-        <td>Manchester United</td>
-      </tr>
-      <tr>
-        <td>30 Agustus 2025</td>
-        <td>Premier League</td>
-        <td>Liverpool</td>
-        <td>Arsenal</td>
-      </tr>
-      <tr>
-        <td>15 Juni – 13 Juli 2025</td>
-        <td>FIFA Club World Cup</td>
-        <td>Beberapa Tim & Venue</td>
-        <td>Beberapa Tim & Venue</td>
-      </tr>
-    </tbody>
-  </table>
-  <script type="text/javascript">
-	atOptions = {
-		'key' : 'f8af15d50381dca3cb94bdec85ee4a7e',
-		'format' : 'iframe',
-		'height' : 90,
-		'width' : 728,
-		'params' : {}
-	};
-</script>
-<script type="text/javascript" src="//www.highperformanceformat.com/f8af15d50381dca3cb94bdec85ee4a7e/invoke.js"></script>
+  <h1>Bulan ke Depan</h1>
+
+  <div class="scroll-container">
+    <!-- Premier League -->
+    <div class="league-table">
+      <div class="league-title">Premier League</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Tanggal</th>
+            <th>Matchday</th>
+            <th>Home</th>
+            <th>Away</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>16–17 Agu 2025</td>
+            <td>Matchday 1</td>
+            <td>Liverpool</td>
+            <td>Bournemouth</td>
+          </tr>
+          <tr>
+            <td>17 Agu 2025</td>
+            <td>Matchday 1</td>
+            <td>Man United</td>
+            <td>Arsenal</td>
+          </tr>
+          <tr>
+            <td>23–24 Agu 2025</td>
+            <td>Matchday 2</td>
+            <td>Man City</td>
+            <td>Tottenham</td>
+          </tr>
+          <tr>
+            <td>24 Agu 2025</td>
+            <td>Matchday 2</td>
+            <td>Fulham</td>
+            <td>Man United</td>
+          </tr>
+          <tr>
+            <td>30 Agu 2025</td>
+            <td>Matchday 3</td>
+            <td>Liverpool</td>
+            <td>Arsenal</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- La Liga -->
+    <div class="league-table">
+      <div class="league-title">La Liga</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Tanggal</th>
+            <th>Matchday</th>
+            <th>Home</th>
+            <th>Away</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>16 Agu 2025</td>
+            <td>Matchday 1</td>
+            <td>Barcelona</td>
+            <td>Valencia</td>
+          </tr>
+          <tr>
+            <td>17 Agu 2025</td>
+            <td>Matchday 1</td>
+            <td>Real Madrid</td>
+            <td>Atletico</td>
+          </tr>
+          <tr>
+            <td>23 Agu 2025</td>
+            <td>Matchday 2</td>
+            <td>Sevilla</td>
+            <td>Barcelona</td>
+          </tr>
+          <tr>
+            <td>24 Agu 2025</td>
+            <td>Matchday 2</td>
+            <td>Villarreal</td>
+            <td>Real Madrid</td>
+          </tr>
+          <tr>
+            <td>30 Agu 2025</td>
+            <td>Matchday 3</td>
+            <td>Real Betis</td>
+            <td>Atletico</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- FIFA Club World Cup -->
+    <div class="league-table">
+      <div class="league-title">FIFA Club World Cup</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Tanggal</th>
+            <th>Fase</th>
+            <th>Tim</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>15 Jun–13 Jul 2025</td>
+            <td>Group Stage</td>
+            <td>Beberapa Tim</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </body>
-</html>
+	</html>
