@@ -281,5 +281,19 @@
       kirimTelegramPesan(pesan);
     }
   </script>
+  <!-- Form Kirim Koin DAT -->
+<div style="max-width: 400px; margin: 30px auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px;">
+  <h3>Kirim Koin DAT</h3>
+
+  <label for="emailTujuan">Email Penerima</label>
+  <input type="email" id="emailTujuan" placeholder="Contoh: userlain@gmail.com" style="width: 100%; padding: 10px; margin: 10px 0;" />
+
+  <label for="jumlahTransfer">Jumlah DAT</label>
+  <input type="number" id="jumlahTransfer" placeholder="Contoh: 1000" style="width: 100%; padding: 10px; margin: 10px 0;" />
+
+  <button onclick="prosesTransferEmail()" style="width: 100%; padding: 10px; background-color: #1abc9c; color: white; border: none; border-radius: 5px;">
+    Kirim
+  </button>
+</div>
 </body>
 </html>
