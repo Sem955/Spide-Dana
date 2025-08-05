@@ -552,8 +552,8 @@
         return;
     }
     
-    if (amount < 100000) {
-        withdrawMessage.textContent = "Minimal withdraw adalah 100000 poin!";
+    if (amount < 400000) {
+        withdrawMessage.textContent = "Minimal withdraw adalah 400000 poin!";
         withdrawMessage.style.color = "red";
         return;
     }
@@ -657,7 +657,7 @@ tiktokBtn.addEventListener("click", () => {
 
 // Event klik tombol klaim di modal
 claimRewardBtn.addEventListener("click", () => {
-    totalReward += 1000000;
+    totalReward += 300;
     localStorage.setItem(username + "_totalReward", totalReward);
     updateUI();
     rewardModal.style.display = "none";
