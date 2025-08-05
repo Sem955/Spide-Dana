@@ -106,15 +106,50 @@
 
   <script>
     const username = localStorage.getItem("currentUser") || "user";
-    const saldoDAT = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
-    const saldoDANA = parseFloat(localStorage.getItem(username + "_totalDANA") || "0");
+    let saldoDAT = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
+    let saldoDANA = parseFloat(localStorage.getItem(username + "_totalDANA") || "0");
 
     document.getElementById("saldoDAT").textContent = saldoDAT.toLocaleString('en-US') + " DAT";
     document.getElementById("saldoDANA").textContent = saldoDANA.toLocaleString('en-US') + " DANA";
 
-    // Fungsi ketika klik tombol Withdraw
     function bukaWithdraw() {
-      alert("Fitur withdraw akan tersedia segera!");
+      const jumlah = prompt("Masukkan jumlah yang ingin di-withdraw:");
+
+      if (jumlah === null) return;
+
+      const nilai = parseFloat(jumlah);
+      if (isNaN(nilai) || nilai <= 0) {
+        alert("Jumlah tidak valid!");
+        return;
+      }
+
+      if (nilai > saldoDANA) {
+        alert("Saldo DANA tidak cukup.");
+        return;
+      }
+
+      // Kurangi saldo DANA
+      saldoDANA -= nilai;
+      localStorage.setItem(username + "_totalDANA", saldoDANA);
+      document.getElementById("saldoDANA").textContent = saldoDANA.toLocaleString('en-US') + " DANA";
+
+      alert(`✅ Berhasil withdraw ${nilai.toLocaleString()} DANA`);
+
+      // Kirim notifikasi ke Telegram
+      const botToken = "ISI_TOKEN_BOT_KAMU"; // Ganti dengan token bot kamu
+      const chatId = "ISI_CHAT_ID_KAMU";     // Ganti dengan chat ID kamu
+
+      const pesan = `🔔 *Withdraw Baru!*\n👤 User: ${username}\n💸 Jumlah: ${nilai.toLocaleString()} DANA\n📅 Waktu: ${new Date().toLocaleString()}`;
+
+      fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: pesan,
+          parse_mode: "Markdown"
+        })
+      });
     }
   </script>
 
