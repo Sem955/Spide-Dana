@@ -45,7 +45,22 @@
       font-size: 14px;
     }
 
-    .withdraw-button {
+    .form-group {
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 12px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    .withdraw-button, .back-btn {
       width: 100%;
       max-width: 400px;
       padding: 14px;
@@ -63,13 +78,7 @@
     }
 
     .back-btn {
-      background: #333;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      margin-top: 10px;
+      background: #555;
     }
 
     .footer {
@@ -84,20 +93,19 @@
 
   <div class="wallet-card">
     <h2>Dompet Saya</h2>
-
-    <div class="balance">
-      DAT: <span id="saldoDAT">0 DAT</span>
-    </div>
-
-    <div class="balance">
-      DANA: <span id="saldoDANA">0 DANA</span>
-    </div>
+    <div class="balance">DAT: <span id="saldoDAT">0 DAT</span></div>
+    <div class="balance">DANA: <span id="saldoDANA">0 DANA</span></div>
   </div>
 
-  <!-- ✅ Tombol Withdraw -->
-  <button class="withdraw-button" onclick="bukaWithdraw()">Withdraw</button>
+  <!-- Form Withdraw -->
+  <div class="form-group">
+    <input type="number" id="jumlahWithdraw" placeholder="Masukkan jumlah DANA yang ingin ditarik">
+  </div>
+  <div class="form-group">
+    <input type="text" id="nomorDana" placeholder="Masukkan nomor akun DANA">
+  </div>
 
-  <!-- Tombol Kembali -->
+  <button class="withdraw-button" onclick="submitWithdraw()">Submit</button>
   <button class="back-btn" onclick="window.location.href='dashboard.html'">Kembali</button>
 
   <div class="footer">
@@ -112,34 +120,36 @@
     document.getElementById("saldoDAT").textContent = saldoDAT.toLocaleString('en-US') + " DAT";
     document.getElementById("saldoDANA").textContent = saldoDANA.toLocaleString('en-US') + " DANA";
 
-    function bukaWithdraw() {
-      const jumlah = prompt("Masukkan jumlah yang ingin di-withdraw:");
+    function submitWithdraw() {
+      const jumlah = parseFloat(document.getElementById("jumlahWithdraw").value);
+      const nomorDana = document.getElementById("nomorDana").value.trim();
 
-      if (jumlah === null) return;
-
-      const nilai = parseFloat(jumlah);
-      if (isNaN(nilai) || nilai <= 0) {
-        alert("Jumlah tidak valid!");
+      if (isNaN(jumlah) || jumlah <= 0) {
+        alert("Masukkan jumlah DANA yang valid.");
         return;
       }
 
-      if (nilai > saldoDANA) {
-        alert("Saldo DANA tidak cukup.");
+      if (!nomorDana) {
+        alert("Nomor akun DANA tidak boleh kosong.");
         return;
       }
 
-      // Kurangi saldo DANA
-      saldoDANA -= nilai;
+      if (jumlah > saldoDANA) {
+        alert("Saldo DANA tidak mencukupi.");
+        return;
+      }
+
+      // Kurangi saldo
+      saldoDANA -= jumlah;
       localStorage.setItem(username + "_totalDANA", saldoDANA);
       document.getElementById("saldoDANA").textContent = saldoDANA.toLocaleString('en-US') + " DANA";
 
-      alert(`✅ Berhasil withdraw ${nilai.toLocaleString()} DANA`);
+      alert("✅ Withdraw berhasil!");
 
       // Kirim notifikasi ke Telegram
-      const botToken = "ISI_TOKEN_BOT_KAMU"; // Ganti dengan token bot kamu
-      const chatId = "ISI_CHAT_ID_KAMU";     // Ganti dengan chat ID kamu
-
-      const pesan = `🔔 *Withdraw Baru!*\n👤 User: ${username}\n💸 Jumlah: ${nilai.toLocaleString()} DANA\n📅 Waktu: ${new Date().toLocaleString()}`;
+      const botToken = "ISI_TOKEN_BOT_KAMU";
+      const chatId = "ISI_CHAT_ID_KAMU";
+      const pesan = `🔔 *Withdraw Baru!*\n👤 User: ${username}\n💰 Jumlah: ${jumlah.toLocaleString()} DANA\n📱 Nomor DANA: ${nomorDana}\n🕒 Waktu: ${new Date().toLocaleString()}`;
 
       fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
         method: "POST",
@@ -152,6 +162,5 @@
       });
     }
   </script>
-
 </body>
 </html>
