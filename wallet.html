@@ -49,6 +49,9 @@
       width: 100%;
       max-width: 400px;
       margin-bottom: 12px;
+      display: none;
+      flex-direction: column;
+      gap: 10px;
     }
 
     .form-group input {
@@ -60,7 +63,7 @@
       box-sizing: border-box;
     }
 
-    .withdraw-button, .back-btn {
+    .withdraw-button, .submit-button, .cancel-button, .back-btn {
       width: 100%;
       max-width: 400px;
       padding: 14px;
@@ -73,12 +76,16 @@
       margin-bottom: 10px;
     }
 
-    .withdraw-button:hover {
+    .withdraw-button:hover, .submit-button:hover {
       background: #1565c0;
     }
 
+    .cancel-button {
+      background: #888;
+    }
+
     .back-btn {
-      background: #555;
+      background: #333;
     }
 
     .footer {
@@ -97,15 +104,18 @@
     <div class="balance">DANA: <span id="saldoDANA">0 DANA</span></div>
   </div>
 
-  <!-- Form Withdraw -->
-  <div class="form-group">
-    <input type="number" id="jumlahWithdraw" placeholder="Masukkan jumlah DANA yang ingin ditarik">
-  </div>
-  <div class="form-group">
+  <!-- Tombol Withdraw utama -->
+  <button class="withdraw-button" onclick="tampilkanForm()">Withdraw</button>
+
+  <!-- Form Withdraw (disembunyikan awalnya) -->
+  <div id="formWithdraw" class="form-group">
+    <input type="number" id="jumlahWithdraw" placeholder="Masukkan jumlah DANA">
     <input type="text" id="nomorDana" placeholder="Masukkan nomor akun DANA">
+    <button class="submit-button" onclick="submitWithdraw()">Submit</button>
+    <button class="cancel-button" onclick="sembunyikanForm()">Batal</button>
   </div>
 
-  <button class="withdraw-button" onclick="submitWithdraw()">Submit</button>
+  <!-- Tombol Kembali -->
   <button class="back-btn" onclick="window.location.href='dashboard.html'">Kembali</button>
 
   <div class="footer">
@@ -119,6 +129,14 @@
 
     document.getElementById("saldoDAT").textContent = saldoDAT.toLocaleString('en-US') + " DAT";
     document.getElementById("saldoDANA").textContent = saldoDANA.toLocaleString('en-US') + " DANA";
+
+    function tampilkanForm() {
+      document.getElementById("formWithdraw").style.display = "flex";
+    }
+
+    function sembunyikanForm() {
+      document.getElementById("formWithdraw").style.display = "none";
+    }
 
     function submitWithdraw() {
       const jumlah = parseFloat(document.getElementById("jumlahWithdraw").value);
@@ -145,6 +163,9 @@
       document.getElementById("saldoDANA").textContent = saldoDANA.toLocaleString('en-US') + " DANA";
 
       alert("✅ Withdraw berhasil!");
+
+      // Sembunyikan form
+      sembunyikanForm();
 
       // Kirim notifikasi ke Telegram
       const botToken = "ISI_TOKEN_BOT_KAMU";
