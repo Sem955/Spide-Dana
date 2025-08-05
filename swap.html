@@ -186,7 +186,8 @@ const username = localStorage.getItem("currentUser") || "user";
 
 // Ambil saldo DAT user dari localStorage (totalReward)
 const saldoDAT = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
-    
+    document.getElementById("saldoDanaText").textContent = "Saldo: " + saldoDANA.toLocaleString('en-US') + " DANA";
+ 
   </script>
   
 
