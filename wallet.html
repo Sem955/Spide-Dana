@@ -99,17 +99,19 @@
   </div>
 
   <!-- Halaman form withdraw -->
-  <div class="withdraw-form hidden" id="halamanWithdraw">
-    <h2>Form Withdraw</h2>
-    <div class="form-group">
-      <input type="number" id="jumlahWithdraw" placeholder="Jumlah poin yang ingin diwithdraw" />
+  <div class="actions">
+        <button id="claimBtn">Claim</button>
+        <button id="withdrawBtn">Withdraw</button>
+        <button id="logoutBtn">Logout</button>
+        <button id="referralBtn">Invite</button>
     </div>
-    <div class="form-group">
-      <input type="text" id="nomorDana" placeholder="Nomor Dana kamu" />
-    </div>
-    <button class="submit-btn" onclick="submitWithdraw()">Submit Withdraw</button>
-    <button class="cancel-btn" onclick="batalWithdraw()">Batal</button>
-  </div>
+    
+    <div id="withdrawForm">
+        <input type="number" id="withdrawAmount" placeholder="Jumlah Poin yang ingin diwithdraw" /><br />
+        <input type="text" id="withdrawDana" placeholder="Nomor Dana kamu" /><br />
+        <button id="submitWithdraw">Submit Withdraw</button>
+        <button id="cancelWithdraw">Batal</button>
+        <div id="
 
   <div class="footer">© 2025 Dompet Digital</div>
 
