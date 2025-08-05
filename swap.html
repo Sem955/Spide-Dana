@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Swap DAT & DANA</title>
+  <title>Swap DAT, DANA & USDT</title>
   <style>
     body {
       margin: 0;
@@ -15,7 +15,6 @@
       align-items: center;
       height: 100vh;
     }
-
     .swap-box {
       background: white;
       border-radius: 16px;
@@ -24,24 +23,20 @@
       max-width: 400px;
       box-shadow: 0 8px 24px rgba(0,0,0,0.1);
     }
-
     .swap-box h2 {
       margin: 0 0 20px;
       font-size: 24px;
       text-align: center;
       color: #333;
     }
-
     .input-group {
       margin-bottom: 16px;
     }
-
     .label {
       font-size: 14px;
       color: #555;
       margin-bottom: 6px;
     }
-
     .input-field {
       display: flex;
       justify-content: space-between;
@@ -50,7 +45,6 @@
       border-radius: 12px;
       padding: 12px;
     }
-
     .input-field input {
       border: none;
       background: transparent;
@@ -58,25 +52,21 @@
       width: 100%;
       outline: none;
     }
-
     .token-select {
       margin-left: 12px;
       font-weight: bold;
     }
-
     .arrow {
       text-align: center;
       margin: 16px 0;
       font-size: 24px;
     }
-
     .slippage {
       font-size: 12px;
       text-align: right;
       color: #888;
       margin-bottom: 12px;
     }
-
     .swap-button {
       width: 100%;
       background: #00c853;
@@ -88,25 +78,12 @@
       font-weight: bold;
       cursor: pointer;
     }
-
     .swap-button:hover {
       background: #00b34d;
-    }
-
-    .switch-btn {
-      display: block;
-      margin: 12px auto 0;
-      background: #ccc;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 12px;
-      border: none;
-      cursor: pointer;
     }
   </style>
 </head>
 <body>
-
   <div class="swap-box">
     <h2>Exchange</h2>
 
@@ -115,11 +92,13 @@
       <div class="label">From</div>
       <div class="input-field">
         <input type="number" id="fromAmount" placeholder="0.0" />
-        <span class="token-select" id="fromToken">DAT</span>
+        <select id="fromToken" class="token-select">
+          <option value="DAT">DAT</option>
+          <option value="DANA">DANA</option>
+          <option value="USDT">USDT</option>
+        </select>
       </div>
-      <div id="saldoDatText" style="font-size: 12px; color: #666; text-align: right; margin-top: 4px;">
-        Saldo: 0 DAT
-      </div>
+      <div id="fromSaldo" style="font-size: 12px; color: #666; text-align: right; margin-top: 4px;"></div>
     </div>
 
     <div class="arrow">↓</div>
@@ -129,106 +108,109 @@
       <div class="label">To</div>
       <div class="input-field">
         <input type="number" id="toAmount" placeholder="0.0" disabled />
-        <span class="token-select" id="toToken">DANA</span>
+        <select id="toToken" class="token-select">
+          <option value="DANA">DANA</option>
+          <option value="DAT">DAT</option>
+          <option value="USDT">USDT</option>
+        </select>
       </div>
-      <div id="saldoDanaText" style="font-size: 12px; color: #666; text-align: right; margin-top: 4px;">
-        Saldo: 0 DANA
-      </div>
+      <div id="toSaldo" style="font-size: 12px; color: #666; text-align: right; margin-top: 4px;"></div>
     </div>
 
     <div class="slippage">Slippage Tolerance: 0.8%</div>
-
     <button class="swap-button" onclick="prosesSwap()">Swap Sekarang</button>
-    <button class="switch-btn" onclick="tukarToken()">Tukar Arah ↕</button>
   </div>
 
   <script>
-    let isDATtoDANA = true;
-    const rateDATtoDANA = 0.5;
-    const rateDANAtoDAT = 2;
-
-    const fromToken = document.getElementById("fromToken");
-    const toToken = document.getElementById("toToken");
-    const fromAmount = document.getElementById("fromAmount");
-    const toAmount = document.getElementById("toAmount");
-
-    // Ambil username
     const username = localStorage.getItem("currentUser") || "user";
 
-    // Ambil saldo dari localStorage
-    let saldoDAT = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
-    let saldoDANA = parseFloat(localStorage.getItem(username + "_totalDANA") || "0");
+    let saldo = {
+      DAT: parseFloat(localStorage.getItem(username + "_totalReward") || "0"),
+      DANA: parseFloat(localStorage.getItem(username + "_totalDANA") || "0"),
+      USDT: parseFloat(localStorage.getItem(username + "_totalUSDT") || "0")
+    };
 
-    // Tampilkan saldo
-    document.getElementById("saldoDatText").textContent = "Saldo: " + saldoDAT.toLocaleString('en-US') + " DAT";
-    document.getElementById("saldoDanaText").textContent = "Saldo: " + saldoDANA.toLocaleString('en-US') + " DANA";
+    const rates = {
+      "DAT_DANA": 0.5,
+      "DANA_DAT": 2,
+      "DAT_USDT": 0.1,
+      "USDT_DAT": 10
+    };
+
+    const fromAmount = document.getElementById("fromAmount");
+    const toAmount = document.getElementById("toAmount");
+    const fromToken = document.getElementById("fromToken");
+    const toToken = document.getElementById("toToken");
+    const fromSaldo = document.getElementById("fromSaldo");
+    const toSaldo = document.getElementById("toSaldo");
+
+    function updateSaldoTampilan() {
+      fromSaldo.textContent = "Saldo: " + (saldo[fromToken.value] || 0).toLocaleString('en-US') + " " + fromToken.value;
+      toSaldo.textContent = "Saldo: " + (saldo[toToken.value] || 0).toLocaleString('en-US') + " " + toToken.value;
+    }
 
     function updateConversion() {
       const amount = parseFloat(fromAmount.value) || 0;
-      if (isDATtoDANA) {
-        toAmount.value = (amount * rateDATtoDANA).toFixed(2);
-      } else {
-        toAmount.value = (amount * rateDANAtoDAT).toFixed(2);
+      const key = `${fromToken.value}_${toToken.value}`;
+      const rate = rates[key];
+
+      if (!rate) {
+        toAmount.value = "0.0";
+        return;
       }
+
+      toAmount.value = (amount * rate).toFixed(2);
     }
 
     fromAmount.addEventListener("input", updateConversion);
-
-    function tukarToken() {
-      isDATtoDANA = !isDATtoDANA;
-      fromToken.textContent = isDATtoDANA ? "DAT" : "DANA";
-      toToken.textContent = isDATtoDANA ? "DANA" : "DAT";
-      fromAmount.value = "";
-      toAmount.value = "";
-    }
+    fromToken.addEventListener("change", () => {
+      updateSaldoTampilan();
+      updateConversion();
+    });
+    toToken.addEventListener("change", () => {
+      updateSaldoTampilan();
+      updateConversion();
+    });
 
     function prosesSwap() {
       const amount = parseFloat(fromAmount.value);
+      const from = fromToken.value;
+      const to = toToken.value;
+      const rate = rates[`${from}_${to}`];
+
+      if (!rate) {
+        alert("Pasangan token tidak valid.");
+        return;
+      }
+
       if (!amount || amount <= 0) {
         alert("Masukkan jumlah yang valid.");
         return;
       }
 
-      const hasil = isDATtoDANA
-        ? amount * rateDATtoDANA
-        : amount * rateDANAtoDAT;
-
-      // Validasi saldo
-      if (isDATtoDANA && amount > saldoDAT) {
-        alert("❌ Saldo DAT tidak cukup!");
+      if (saldo[from] < amount) {
+        alert(`❌ Saldo ${from} tidak cukup!`);
         return;
       }
 
-      if (!isDATtoDANA && amount > saldoDANA) {
-        alert("❌ Saldo DANA tidak cukup!");
-        return;
-      }
+      const hasil = amount * rate;
 
-      // Update saldo
-      if (isDATtoDANA) {
-        saldoDAT -= amount;
-        saldoDANA += hasil;
-      } else {
-        saldoDANA -= amount;
-        saldoDAT += hasil;
-      }
+      saldo[from] -= amount;
+      saldo[to] += hasil;
 
-      // Simpan saldo
-      localStorage.setItem(username + "_totalReward", saldoDAT);
-      localStorage.setItem(username + "_totalDANA", saldoDANA);
+      localStorage.setItem(username + "_totalReward", saldo["DAT"]);
+      localStorage.setItem(username + "_totalDANA", saldo["DANA"]);
+      localStorage.setItem(username + "_totalUSDT", saldo["USDT"]);
 
-      // Update tampilan
-      document.getElementById("saldoDatText").textContent = "Saldo: " + saldoDAT.toLocaleString('en-US') + " DAT";
-      document.getElementById("saldoDanaText").textContent = "Saldo: " + saldoDANA.toLocaleString('en-US') + " DANA";
-
-      // Reset input
+      updateSaldoTampilan();
       fromAmount.value = "";
       toAmount.value = "";
 
-      // Notifikasi
-      alert(`✅ Swap berhasil!\n${amount} ${isDATtoDANA ? "DAT" : "DANA"} ➝ ${hasil.toFixed(2)} ${isDATtoDANA ? "DANA" : "DAT"}`);
+      alert(`✅ Swap berhasil!\n${amount} ${from} ➝ ${hasil.toFixed(2)} ${to}`);
     }
-  </script>
 
+    updateSaldoTampilan();
+    updateConversion();
+  </script>
 </body>
 </html>
