@@ -15,7 +15,7 @@
       padding: 20px;
     }
 
-    .wallet-card {
+    .wallet-card, .withdraw-form {
       background: linear-gradient(135deg, #ff6f00, #ff8f00);
       color: white;
       border-radius: 16px;
@@ -26,10 +26,11 @@
       margin-bottom: 20px;
     }
 
-    .wallet-card h2 {
+    h2 {
       margin-top: 0;
       font-size: 22px;
       margin-bottom: 16px;
+      text-align: center;
     }
 
     .balance {
@@ -45,48 +46,22 @@
       font-size: 14px;
     }
 
-    .form-group {
-      width: 100%;
-      max-width: 400px;
-      margin-bottom: 12px;
-      display: none;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .form-group input {
-      width: 100%;
-      padding: 10px;
-      font-size: 14px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-    }
-
-    .withdraw-button, .submit-button, .cancel-button, .back-btn {
+    .withdraw-button, .back-btn, .submit-btn, .cancel-btn {
       width: 100%;
       max-width: 400px;
       padding: 14px;
-      background: #1976d2;
-      color: white;
+      font-size: 16px;
       border: none;
       border-radius: 10px;
-      font-size: 16px;
       cursor: pointer;
-      margin-bottom: 10px;
+      margin-top: 10px;
     }
 
-    .withdraw-button:hover, .submit-button:hover {
-      background: #1565c0;
-    }
+    .withdraw-button { background: #1976d2; color: white; }
+    .withdraw-button:hover { background: #1565c0; }
 
-    .cancel-button {
-      background: #888;
-    }
-
-    .back-btn {
-      background: #333;
-    }
+    .back-btn, .cancel-btn { background: #333; color: white; }
+    .submit-btn { background: green; color: white; }
 
     .footer {
       text-align: center;
@@ -94,93 +69,90 @@
       color: #888;
       margin-top: 20px;
     }
+
+    .form-group {
+      margin: 12px 0;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+    }
+
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
 
-  <div class="wallet-card">
+  <!-- Halaman utama dompet -->
+  <div class="wallet-card" id="halamanUtama">
     <h2>Dompet Saya</h2>
     <div class="balance">DAT: <span id="saldoDAT">0 DAT</span></div>
     <div class="balance">DANA: <span id="saldoDANA">0 DANA</span></div>
+    <button class="withdraw-button" onclick="tampilkanFormWithdraw()">Withdraw</button>
+    <button class="back-btn" onclick="window.location.href='dashboard.html'">Kembali</button>
   </div>
 
-  <!-- Tombol Withdraw utama -->
-  <button class="withdraw-button" onclick="tampilkanForm()">Withdraw</button>
-
-  <!-- Form Withdraw (disembunyikan awalnya) -->
-  <div id="formWithdraw" class="form-group">
-    <input type="number" id="jumlahWithdraw" placeholder="Masukkan jumlah DANA">
-    <input type="text" id="nomorDana" placeholder="Masukkan nomor akun DANA">
-    <button class="submit-button" onclick="submitWithdraw()">Submit</button>
-    <button class="cancel-button" onclick="sembunyikanForm()">Batal</button>
+  <!-- Halaman form withdraw -->
+  <div class="withdraw-form hidden" id="halamanWithdraw">
+    <h2>Form Withdraw</h2>
+    <div class="form-group">
+      <input type="number" id="jumlahWithdraw" placeholder="Jumlah poin yang ingin diwithdraw" />
+    </div>
+    <div class="form-group">
+      <input type="text" id="nomorDana" placeholder="Nomor Dana kamu" />
+    </div>
+    <button class="submit-btn" onclick="submitWithdraw()">Submit Withdraw</button>
+    <button class="cancel-btn" onclick="batalWithdraw()">Batal</button>
   </div>
 
-  <!-- Tombol Kembali -->
-  <button class="back-btn" onclick="window.location.href='dashboard.html'">Kembali</button>
-
-  <div class="footer">
-    © 2025 Dompet Digital
-  </div>
+  <div class="footer">© 2025 Dompet Digital</div>
 
   <script>
     const username = localStorage.getItem("currentUser") || "user";
-    let saldoDAT = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
-    let saldoDANA = parseFloat(localStorage.getItem(username + "_totalDANA") || "0");
+    const saldoDAT = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
+    const saldoDANA = parseFloat(localStorage.getItem(username + "_totalDANA") || "0");
 
     document.getElementById("saldoDAT").textContent = saldoDAT.toLocaleString('en-US') + " DAT";
     document.getElementById("saldoDANA").textContent = saldoDANA.toLocaleString('en-US') + " DANA";
 
-    function tampilkanForm() {
-      document.getElementById("formWithdraw").style.display = "flex";
+    function tampilkanFormWithdraw() {
+      document.getElementById("halamanUtama").classList.add("hidden");
+      document.getElementById("halamanWithdraw").classList.remove("hidden");
     }
 
-    function sembunyikanForm() {
-      document.getElementById("formWithdraw").style.display = "none";
+    function batalWithdraw() {
+      document.getElementById("halamanWithdraw").classList.add("hidden");
+      document.getElementById("halamanUtama").classList.remove("hidden");
     }
 
     function submitWithdraw() {
       const jumlah = parseFloat(document.getElementById("jumlahWithdraw").value);
       const nomorDana = document.getElementById("nomorDana").value.trim();
 
-      if (isNaN(jumlah) || jumlah <= 0) {
-        alert("Masukkan jumlah DANA yang valid.");
-        return;
-      }
-
-      if (!nomorDana) {
-        alert("Nomor akun DANA tidak boleh kosong.");
+      if (!jumlah || jumlah <= 0 || nomorDana === "") {
+        alert("Harap isi semua kolom dengan benar.");
         return;
       }
 
       if (jumlah > saldoDANA) {
-        alert("Saldo DANA tidak mencukupi.");
+        alert("Saldo DANA tidak cukup.");
         return;
       }
 
-      // Kurangi saldo
-      saldoDANA -= jumlah;
-      localStorage.setItem(username + "_totalDANA", saldoDANA);
-      document.getElementById("saldoDANA").textContent = saldoDANA.toLocaleString('en-US') + " DANA";
+      // Simpan saldo baru
+      const saldoBaru = saldoDANA - jumlah;
+      localStorage.setItem(username + "_totalDANA", saldoBaru);
 
-      alert("✅ Withdraw berhasil!");
+      alert("Withdraw berhasil!");
 
-      // Sembunyikan form
-      sembunyikanForm();
-
-      // Kirim notifikasi ke Telegram
-      const botToken = "ISI_TOKEN_BOT_KAMU";
-      const chatId = "ISI_CHAT_ID_KAMU";
-      const pesan = `🔔 *Withdraw Baru!*\n👤 User: ${username}\n💰 Jumlah: ${jumlah.toLocaleString()} DANA\n📱 Nomor DANA: ${nomorDana}\n🕒 Waktu: ${new Date().toLocaleString()}`;
-
-      fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: chatId,
-          text: pesan,
-          parse_mode: "Markdown"
-        })
-      });
+      // Refresh halaman
+      window.location.reload();
     }
   </script>
 </body>
