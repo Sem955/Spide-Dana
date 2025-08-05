@@ -465,6 +465,10 @@
         const claimBtn = document.getElementById('claimBtn');
         const statusText = document.getElementById('statusText');
         const logoutBtn = document.getElementById('logoutBtn');
+   logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("currentUser");
+    window.location.href = "index.html";
+    });
         
         let lastClaim = localStorage.getItem(username + "_lastClaim");
         let totalReward = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
