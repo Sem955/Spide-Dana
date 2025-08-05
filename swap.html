@@ -180,7 +180,15 @@
 
       alert(`Swap ${amount} ${isDATtoDANA ? "DAT" : "DANA"} → ${hasil} ${isDATtoDANA ? "DANA" : "DAT"}`);
     }
+  
+   // Ambil username dari localStorage
+const username = localStorage.getItem("currentUser") || "user";
+
+// Ambil saldo DAT user dari localStorage (totalReward)
+const saldoDAT = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
+    
   </script>
+  
 
 </body>
       </html>
