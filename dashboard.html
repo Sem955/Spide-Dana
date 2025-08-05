@@ -549,38 +549,7 @@
             lastClaim = Date.now();
             localStorage.setItem(username + "_lastClaim", lastClaim);
             updateUI();
-        };
         
-        logoutBtn.onclick = () => {
-            localStorage.removeItem("currentUser");
-            window.location.href = "index.html";
-        };
-        
-        const withdrawBtn = document.getElementById("withdrawBtn");
-        const withdrawForm = document.getElementById("withdrawForm");
-        const submitWithdraw = document.getElementById("submitWithdraw");
-        const cancelWithdraw = document.getElementById("cancelWithdraw");
-        const withdrawMessage = document.getElementById("withdrawMessage");
-        
-        withdrawBtn.onclick = () => {
-            withdrawForm.style.display = "block";
-            withdrawMessage.textContent = "";
-        };
-        
-        submitWithdraw.onclick = async () => {
-    const amount = parseFloat(document.getElementById("withdrawAmount").value);
-    const dana = document.getElementById("withdrawDana").value;
-    
-    if (!amount || !dana) {
-        withdrawMessage.textContent = "Harap isi semua field!";
-        withdrawMessage.style.color = "red";
-        return;
-    }
-    
-    if (amount < 400000) {
-        withdrawMessage.textContent = "Minimal withdraw adalah 400000 poin!";
-        withdrawMessage.style.color = "red";
-        return;
     }
     
     if (amount > totalReward) {
