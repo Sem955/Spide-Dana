@@ -203,15 +203,7 @@
             max-width: 350px;
         }
         
-        #withdrawForm input {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            font-size: 16px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
+        
         
         #withdrawForm button {
             margin-top: 10px;
@@ -231,16 +223,7 @@
 
 #referralBtn:hover {
     background-color: #00c853; /* hijau lebih gelap saat hover */
-}
-        #cancelWithdraw {
-            background-color: red !important;
-            color: white !important;
-            margin-left: 10px;
-        }
-        
-        #withdrawMessage {
-            margin-top: 10px;
-            font-weight: bold;
+       
         }
         
         .logo-dana {
@@ -325,23 +308,7 @@
     </style>
 </head>
 <body>
-    
-    <div id="withdrawSuccessNotification" style="
-    display:none;
-    position:fixed;
-    top:20px;
-    left:50%;
-    transform:translateX(-50%);
-    background:#4CAF50;
-    color:white;
-    padding:15px 20px;
-    border-radius:10px;
-    box-shadow:0 4px 8px rgba(0,0,0,0.3);
-    font-weight:bold;
-    z-index:9999;
-    text-align:center;
-">
-    Penarikan Berhasil!
+
     </div>
     
      <div id="user-profile" style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
@@ -471,19 +438,10 @@
     
     <div class="actions">
         <button id="claimBtn">Claim</button>
-        <button id="withdrawBtn">Withdraw</button>
         <button id="logoutBtn">Logout</button>
         <button id="referralBtn">Invite</button>
     </div>
     
-    <div id="withdrawForm">
-        <input type="number" id="withdrawAmount" placeholder="Jumlah Poin yang ingin diwithdraw" /><br />
-        <input type="text" id="withdrawDana" placeholder="Nomor Dana kamu" /><br />
-        <button id="submitWithdraw">Submit Withdraw</button>
-        <button id="cancelWithdraw">Batal</button>
-        <div id="withdrawMessage"></div>
-      </div>
-
         <div id="referralModal">
         <h3>Referral Kamu</h3>
         <p>Bagikan link ini ke temanmu:</p>
@@ -494,9 +452,6 @@
         <p>Total Poin Referral: <span id="referralTotalPoin">0</span> Poin</p>
         <button onclick="document.getElementById('referralModal').style.display='none'" style="margin-top:10px; background-color:red; color:white; border:none; padding:8px 16px; border-radius:6px;">Tutup</button>
     </div>
-    
-    <!-- Include Telegram notification script -->
-    <script src="telegram.js"></script>
     
     <script>
         const username = localStorage.getItem('currentUser');
@@ -549,81 +504,9 @@
             localStorage.setItem(username + "_totalReward", totalReward);
             lastClaim = Date.now();
             localStorage.setItem(username + "_lastClaim", lastClaim);
-            updateUI();  
-        }
-
-      const withdrawBtn = document.getElementById("withdrawBtn");
-        const withdrawForm = document.getElementById("withdrawForm");
-        const submitWithdraw = document.getElementById("submitWithdraw");
-        const cancelWithdraw = document.getElementById("cancelWithdraw");
-        const withdrawMessage = document.getElementById("withdrawMessage");
-        
-        withdrawBtn.onclick = () => {
-            withdrawForm.style.display = "block";
-            withdrawMessage.textContent = "";
-        };
-        
-        submitWithdraw.onclick = async () => {
-    const amount = parseFloat(document.getElementById("withdrawAmount").value);
-    const dana = document.getElementById("withdrawDana").value;
-    
-    if (!amount || !dana) {
-        withdrawMessage.textContent = "Harap isi semua field!";
-        withdrawMessage.style.color = "red";
-        return;
-    }
-    
-    if (amount < 400000) {
-        withdrawMessage.textContent = "Minimal withdraw adalah 400000 poin!";
-        withdrawMessage.style.color = "red";
-        return;
-    }
-        
-    if (amount > totalReward) {
-        withdrawMessage.textContent = "Poin tidak cukup untuk withdraw!";
-        withdrawMessage.style.color = "red";
-        return;
-    }
-    
-    try {
-        // Kirim notifikasi Telegram
-        const message = `📤 Withdraw Baru!\n\nUser: ${username}\nJumlah: ${amount} poin\nNomor DANA: ${dana}`;
-        await sendTelegramNotification(message);
-        
-        // Kurangi saldo poin
-        totalReward -= amount;
-        localStorage.setItem(username + "_totalReward", totalReward);
-        updateUI();
-        
-        // Bersihkan form
-        document.getElementById("withdrawAmount").value = "";
-        document.getElementById("withdrawDana").value = "";
-        withdrawForm.style.display = "none";
-        
-        // Tampilkan notifikasi berhasil
-        const notif = document.getElementById("withdrawSuccessNotification");
-        notif.textContent = `✅ Penarikan berhasil ke DANA ${dana}`;
-        notif.style.display = "block";
-        
-        // Hilangkan notifikasi setelah 10 detik
-setTimeout(() => {
-    notif.style.display = "none";
-}, 10000);
-        
-    } catch (error) {
-        console.error("Error sending Telegram notification:", error);
-        withdrawMessage.textContent = "Withdraw berhasil tetapi notifikasi gagal dikirim.";
-        withdrawMessage.style.color = "orange";
-    }
-};
-      
-        cancelWithdraw.onclick = () => {
-            withdrawForm.style.display = "none";
-            withdrawMessage.textContent = "";
-            document.getElementById("withdrawAmount").value = "";
-            document.getElementById("withdrawDana").value = "";
-        };
-      
+            updateUI();            
+}
+           
         // Tambahkan modal klaim reward ke HTML
 document.body.insertAdjacentHTML("beforeend", `
 <div id="rewardModal" style="
