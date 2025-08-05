@@ -110,25 +110,29 @@
   <div class="swap-box">
     <h2>Exchange</h2>
 
+    <!-- From -->
     <div class="input-group">
       <div class="label">From</div>
       <div class="input-field">
         <input type="number" id="fromAmount" placeholder="0.0" />
         <span class="token-select" id="fromToken">DAT</span>
       </div>
+      <div id="saldoDatText" style="font-size: 12px; color: #666; text-align: right; margin-top: 4px;">
+        Saldo: 0 DAT
+      </div>
     </div>
 
-    <div id="saldoDatText" style="font-size: 12px; color: #666; text-align: right; margin-top: 4px;">
-  Saldo: 0 DAT
-    </div>
-    
     <div class="arrow">↓</div>
 
+    <!-- To -->
     <div class="input-group">
       <div class="label">To</div>
       <div class="input-field">
         <input type="number" id="toAmount" placeholder="0.0" disabled />
         <span class="token-select" id="toToken">DANA</span>
+      </div>
+      <div id="saldoDanaText" style="font-size: 12px; color: #666; text-align: right; margin-top: 4px;">
+        Saldo: 0 DANA
       </div>
     </div>
 
@@ -147,6 +151,17 @@
     const toToken = document.getElementById("toToken");
     const fromAmount = document.getElementById("fromAmount");
     const toAmount = document.getElementById("toAmount");
+
+    // Ambil username
+    const username = localStorage.getItem("currentUser") || "user";
+
+    // Ambil saldo dari localStorage
+    let saldoDAT = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
+    let saldoDANA = parseFloat(localStorage.getItem(username + "_totalDANA") || "0");
+
+    // Tampilkan saldo
+    document.getElementById("saldoDatText").textContent = "Saldo: " + saldoDAT.toLocaleString('en-US') + " DAT";
+    document.getElementById("saldoDanaText").textContent = "Saldo: " + saldoDANA.toLocaleString('en-US') + " DANA";
 
     function updateConversion() {
       const amount = parseFloat(fromAmount.value) || 0;
@@ -175,21 +190,45 @@
       }
 
       const hasil = isDATtoDANA
-        ? (amount * rateDATtoDANA).toFixed(2)
-        : (amount * rateDANAtoDAT).toFixed(2);
+        ? amount * rateDATtoDANA
+        : amount * rateDANAtoDAT;
 
-      alert(`Swap ${amount} ${isDATtoDANA ? "DAT" : "DANA"} → ${hasil} ${isDATtoDANA ? "DANA" : "DAT"}`);
+      // Validasi saldo
+      if (isDATtoDANA && amount > saldoDAT) {
+        alert("❌ Saldo DAT tidak cukup!");
+        return;
+      }
+
+      if (!isDATtoDANA && amount > saldoDANA) {
+        alert("❌ Saldo DANA tidak cukup!");
+        return;
+      }
+
+      // Update saldo
+      if (isDATtoDANA) {
+        saldoDAT -= amount;
+        saldoDANA += hasil;
+      } else {
+        saldoDANA -= amount;
+        saldoDAT += hasil;
+      }
+
+      // Simpan saldo
+      localStorage.setItem(username + "_totalReward", saldoDAT);
+      localStorage.setItem(username + "_totalDANA", saldoDANA);
+
+      // Update tampilan
+      document.getElementById("saldoDatText").textContent = "Saldo: " + saldoDAT.toLocaleString('en-US') + " DAT";
+      document.getElementById("saldoDanaText").textContent = "Saldo: " + saldoDANA.toLocaleString('en-US') + " DANA";
+
+      // Reset input
+      fromAmount.value = "";
+      toAmount.value = "";
+
+      // Notifikasi
+      alert(`✅ Swap berhasil!\n${amount} ${isDATtoDANA ? "DAT" : "DANA"} ➝ ${hasil.toFixed(2)} ${isDATtoDANA ? "DANA" : "DAT"}`);
     }
-  
-   // Ambil username dari localStorage
-const username = localStorage.getItem("currentUser") || "user";
-
-// Ambil saldo DAT user dari localStorage (totalReward)
-const saldoDAT = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
-    document.getElementById("saldoDanaText").textContent = "Saldo: " + saldoDANA.toLocaleString('en-US') + " DANA";
- 
   </script>
-  
 
 </body>
-      </html>
+</html>
