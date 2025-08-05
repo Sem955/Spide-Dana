@@ -685,9 +685,30 @@ claimRewardBtn.addEventListener("click", () => {
         // Initialize UI
         updateUI();
         setInterval(updateUI, 1000);
+   
+      // Tampilkan/Sembunyikan Menu Garis Tiga
+function toggleMenu() {
+  const menu = document.getElementById("menuDropdown");
+  menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
+
+// Tutup menu saat klik di luar
+document.addEventListener("click", function (event) {
+  const menu = document.getElementById("menuDropdown");
+  const button = event.target.closest("button");
+  if (!menu.contains(event.target) && (!button || button.innerText !== "☰")) {
+    menu.style.display = "none";
+  }
+});
+
+// Fungsi DOMPET (nanti bisa diubah jadi popup / halaman)
+function bukaDompet() {
+  const dana = localStorage.getItem(username + "_totalDANA") || "0.00";
+  alert(`Saldo DANA Anda: ${parseFloat(dana).toFixed(2)}\nSaldo DAT Anda: ${Math.floor(totalReward).toLocaleString('en-US')}`);
+}
+      
     </script>
     
-      
 <!-- Iklan tambahan dari profitableratecpm.com -->  
 <script type='text/javascript' src='//pl27331380.profitableratecpm.com/8b/a8/2b/8ba82b25b1bd88c46aa90ed2f191719a.js'></script>
      
