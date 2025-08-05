@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Dashboard</title>
+    <style>
+        body {
+            background-color: #C8C6C2;
+            color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            box-sizing: border-box;
+            position: relative;
+        }
+        
+  .game-button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(145deg, #2c1a50, #392366);
+    border-radius: 16px;
+    padding: 16px 20px;
+    color: #fff;
+    max-width: 400px;
+    font-family: sans-serif;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    margin: 20px auto;
+  }
+
+.support-button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(145deg, #2c1a50, #392366);
+    border-radius: 16px;
+    padding: 16px 20px;
+    color: #fff;
+    max-width: 400px;
+    font-family: sans-serif;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    margin: 20px auto;
+}
+
+  .left {
+    display: flex;
+    align-items: center;
+  }
+
+  .icon {
+    background-color: #7f5af0;
+    color: white;
+    font-size: 24px;
+    padding: 10px;
+    border-radius: 12px;
+    margin-right: 12px;
+  }
+
+  .text .title {
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .text .subtitle {
+    font-size: 14px;
+    color: #bbb;
+  }
+
+  .play-now {
+    background-color: #a78bfa;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.3s ease;
+  }
+
+  .play-now:hover {
+    background-color: #c4b5fd;
+  }
+
+     .user-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #1c1c3d;
+  border-radius: 16px;
+  padding: 12px 16px;
+  color: white;
+  margin: 10px 16px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.user-profile img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+}
+
+.user-info p {
+  margin: 0;
+  font-size: 14px;
+  color: #ccc;
+}
+
+.user-info h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+    
+      .rewards-top {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.reward-card {
+    flex: 1;
+    padding: 16px 24px;
+    text-align: center;
+    background-color: #111;
+    border-radius: 12px;
+    box-shadow: 0 0 10px #00ff0044;
+}
+      
+        .reward-title {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .reward-value {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        #statusText {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #00e676; /* hijau muda */
+    font-weight: bold;
+
+        }
+        
+        .actions {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 10px;
+            box-sizing: border-box;
+            flex-wrap: wrap;
+        }
+        
+        .actions button {
+            flex: 1;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        #claimBtn:disabled {
+            background-color: gray;
+            cursor: not-allowed;
+        }
+        
+        #claimBtn {
+            background-color: #00e676;
+            color: black;
+        }
+        
+        #logoutBtn, #withdrawBtn {
+            background-color: #00e676;
+            color: black;
+        }
+        
+        #withdrawForm {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            color: black;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            text-align: center;
+            width: 90%;
+            max-width: 350px;
+        }
+        
+        #withdrawForm input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        
+        #withdrawForm button {
+            margin-top: 10px;
+            background-color: #1877f2;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+      
+      #referralBtn {
+    background-color: #00e676; /* hijau muda */
+    color: white;
+    border: none;
+}
+
+#referralBtn:hover {
+    background-color: #00c853; /* hijau lebih gelap saat hover */
+}
+        #cancelWithdraw {
+            background-color: red !important;
+            color: white !important;
+            margin-left: 10px;
+        }
+        
+        #withdrawMessage {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        
+        .logo-dana {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            animation: float 2s ease-in-out infinite;
+        }
+        
+        .logo-dana img {
+            width: 100px;
+            height: auto;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .watch-ad-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: nowrap;
+            flex-direction: row;
+            margin-bottom: 20px;
+        }
+        
+        .watch-ad-container button {
+            background: linear-gradient(145deg, #800000, #a52a2a);
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        
+        #tiktokBtn {
+            background-color: black;
+            color: white;
+        }
+        
+        #referralModal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            color: black;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            width: calc(100% - 40px);
+            max-width: 350px;
+            box-sizing: border-box;
+        }
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3665788659374137"
+     crossorigin="anonymous"></script>
+<!-- Dana miner1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-3665788659374137"
+     data-ad-slot="2726494782"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+    </style>
+</head>
+<body>
+    
+    <div id="withdrawSuccessNotification" style="
+    display:none;
+    position:fixed;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#4CAF50;
+    color:white;
+    padding:15px 20px;
+    border-radius:10px;
+    box-shadow:0 4px 8px rgba(0,0,0,0.3);
+    font-weight:bold;
+    z-index:9999;
+    text-align:center;
+">
+    Penarikan Berhasil!
+    </div>
+    
+     <div id="user-profile" style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+  <img id="userPhoto" src="https://via.placeholder.com/40" alt="Foto Profil" style="width: 40px; height: 40px; border-radius: 50%;">
+  <span id="usernameDisplay" style="color: #000000;">@username</span> 
+<button onclick="editProfile()">✏️</button>
+</div>
+    
+     <!-- Script Profil -->
+<script>
+  // Ambil email user dari localStorage
+  const currentUserEmail = localStorage.getItem("currentUser");
+
+  // Ambil nama dari email (bagian sebelum @)
+  if (currentUserEmail) {
+    const username = currentUserEmail.split("@")[0];
+    const usernameElement = document.getElementById("usernameDisplay");
+    if (usernameElement) {
+      usernameElement.textContent = "@" + username;
+    }
+  }
+
+  // Load foto profil dari localStorage jika ada
+  const storedPhoto = localStorage.getItem("userPhoto");
+  if (storedPhoto) {
+    document.getElementById("userPhoto").src = storedPhoto;
+  }
+
+  // Fungsi untuk ubah foto
+  function editProfile() {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.onchange = function () {
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onloadend = function () {
+        document.getElementById("userPhoto").src = reader.result;
+        localStorage.setItem("userPhoto", reader.result);
+      };
+      reader.readAsDataURL(file);
+    };
+    input.click();
+  }
+</script>
+
+  <!-- Menu Garis Tiga -->
+<div style="position: absolute; top: 10px; right: 16px; z-index: 9999;">
+  <button onclick="toggleMenu()" style="background: none; border: none; font-size: 28px; color: black; cursor: pointer;">☰</button>
+</div>
+
+<!-- Isi Menu -->
+<div id="menuDropdown" style="
+  display: none;
+  position: absolute;
+  top: 50px;
+  right: 16px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  z-index: 9999;
+  width: 160px;
+  padding: 10px;
+">
+  <a href="swap.html" style="display:block; width:100%; background:none; border:none; padding:10px; text-align:left; text-decoration:none; color:black;">🔁 SWAP KOIN</a>
+
+   <a href="wallet.html" style="display:block; width:100%; background:none; border:none; padding:10px; text-align:left; text-decoration:none; color:black;">💼 DOMPET</a>
+    
+</div>
+    
+    <div class="rewards-top">
+        <div class="reward-card">
+            <div class="reward-title">DAT</div>
+            <div class="reward-value" id="totalRewards">0</div>
+        </div>
+        <div class="reward-card">
+            <div class="reward-title">1JAM REWARD</div>
+            <div class="reward-value" id="dailyRewards">0.000</div>
+        </div>
+    </div>
+    
+    <div class="logo-dana">
+    <img src="https://i.postimg.cc/vmZBCtrD/file-00000000b8d461f6882343b2ef2e3d1f.png" alt="Logo Dana" />
+    </div>
+    
+    <div id="statusText">Memuat data...</div>
+    
+    <div class="watch-ad-container">
+        <a href="https://vast-size.com/ULT3Sw" target="_blank" style="text-decoration: none;">
+            <button>
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/video.png" alt="Video" style="width: 20px; height: 20px;" />
+                700-1000 Riwed 
+            </button>
+        </a>
+        <button id="tiktokBtn">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/tiktok.png" alt="TikTok" style="width: 20px; height: 20px;" />
+            500-1000 Riwed 
+        </button>
+    </div>
+
+     <div class="game-button">
+  <div class="left">
+    <div class="icon">🎮</div>
+    <div class="text">
+      <div class="title">Play and Earn</div>
+      <div class="subtitle">Earn Rewards</div>
+    </div>
+  <!-- Tombol Play Now -->
+  <a href="pilih-game.html" class="play-now">Play Now →</a>
+  </div>
+
+     </div>
+ <div class="support-button">
+  <div class="left">
+    <div class="icon">⚽</div>
+    <div class="text">
+      <div class="title">Support</div>
+      <div class="subtitle">Earn Rewards</div>
+     </div>
+  <!-- Tombol Play Now -->
+  <a href="support.html" class="play-now">Bola72→</a>
+     </div>
+         
+     </script>
+    <script type="text/javascript" src="//www.highperformanceformat.com/ac86c93838d18124dc18da7238d0ef1a/invoke.js"></script>
+    
+    <div class="actions">
+        <button id="claimBtn">Claim</button>
+        <button id="withdrawBtn">Withdraw</button>
+        <button id="logoutBtn">Logout</button>
+        <button id="referralBtn">Invite</button>
+    </div>
+    
+    <div id="withdrawForm">
+        <input type="number" id="withdrawAmount" placeholder="Jumlah Poin yang ingin diwithdraw" /><br />
+        <input type="text" id="withdrawDana" placeholder="Nomor Dana kamu" /><br />
+        <button id="submitWithdraw">Submit Withdraw</button>
+        <button id="cancelWithdraw">Batal</button>
+        <div id="withdrawMessage"></div>
+      </div>
+
+        <div id="referralModal">
+        <h3>Referral Kamu</h3>
+        <p>Bagikan link ini ke temanmu:</p>
+        <input type="text" id="referralLink" readonly style="width:100%; padding:8px; margin-bottom:10px; border-radius:6px; border:1px solid #ccc;" />
+        <button onclick="copyReferralLink()" style="background-color:#4CAF50; color:white; border:none; padding:10px 16px; border-radius:6px; cursor:pointer;">Salin Link</button>
+        <h4 style="margin-top:15px;">Orang yang Kamu Undang:</h4>
+        <ul id="referralList" style="list-style:none; padding-left:0;"></ul>
+        <p>Total Poin Referral: <span id="referralTotalPoin">0</span> Poin</p>
+        <button onclick="document.getElementById('referralModal').style.display='none'" style="margin-top:10px; background-color:red; color:white; border:none; padding:8px 16px; border-radius:6px;">Tutup</button>
+    </div>
+    
+    <!-- Include Telegram notification script -->
+    <script src="telegram.js"></script>
+    
+    <script>
+        const username = localStorage.getItem('currentUser');
+        if (!username) window.location.href = 'index.html';
+        
+        const CLAIM_REWARD = 500;  
+        const COOLDOWN_MS = 1 * 60 * 60 * 1000; // 1 jam dalam milidetik  
+        
+        const totalEl = document.getElementById('totalRewards');
+        const dailyEl = document.getElementById('dailyRewards');
+        const claimBtn = document.getElementById('claimBtn');
+        const statusText = document.getElementById('statusText');
+        const logoutBtn = document.getElementById('logoutBtn');
+        
+        let lastClaim = localStorage.getItem(username + "_lastClaim");
+        let totalReward = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
+        
+        function updateUI() {
+            const now = Date.now();
+            let last = lastClaim ? parseInt(lastClaim) : 0;
+            let elapsed = now - last;
+            let canClaim = elapsed >= COOLDOWN_MS;
+            
+            if (canClaim) {
+                dailyEl.textContent = CLAIM_REWARD.toLocaleString('en-US');
+                claimBtn.disabled = false;
+                statusText.textContent = "Kamu bisa klaim sekarang!";
+            } else {
+                let progress = elapsed / COOLDOWN_MS;
+                dailyEl.textContent = Math.floor(CLAIM_REWARD * progress).toLocaleString('en-US');
+                claimBtn.disabled = true;
+
+                let remaining = COOLDOWN_MS - elapsed;
+                let minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                let seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+
+                // Format agar dua digit (contoh: 05:09)
+                let mStr = minutes.toString().padStart(2, "0");
+                let sStr = seconds.toString().padStart(2, "0");
+
+                statusText.textContent = `Tunggu ${mStr}m ${sStr}s lagi untuk klaim.`;
+            }
+            
+            totalEl.textContent = Math.floor(totalReward).toLocaleString('en-US');
+       
+        }
+        
+        claimBtn.onclick = () => {
+            totalReward += CLAIM_REWARD;
+            localStorage.setItem(username + "_totalReward", totalReward);
+            lastClaim = Date.now();
+            localStorage.setItem(username + "_lastClaim", lastClaim);
+            updateUI();  
+        }
+
+      const withdrawBtn = document.getElementById("withdrawBtn");
+        const withdrawForm = document.getElementById("withdrawForm");
+        const submitWithdraw = document.getElementById("submitWithdraw");
+        const cancelWithdraw = document.getElementById("cancelWithdraw");
+        const withdrawMessage = document.getElementById("withdrawMessage");
+        
+        withdrawBtn.onclick = () => {
+            withdrawForm.style.display = "block";
+            withdrawMessage.textContent = "";
+        };
+        
+        submitWithdraw.onclick = async () => {
+    const amount = parseFloat(document.getElementById("withdrawAmount").value);
+    const dana = document.getElementById("withdrawDana").value;
+    
+    if (!amount || !dana) {
+        withdrawMessage.textContent = "Harap isi semua field!";
+        withdrawMessage.style.color = "red";
+        return;
+    }
+    
+    if (amount < 400000) {
+        withdrawMessage.textContent = "Minimal withdraw adalah 400000 poin!";
+        withdrawMessage.style.color = "red";
+        return;
+    }
+        
+    if (amount > totalReward) {
+        withdrawMessage.textContent = "Poin tidak cukup untuk withdraw!";
+        withdrawMessage.style.color = "red";
+        return;
+    }
+    
+    try {
+        // Kirim notifikasi Telegram
+        const message = `📤 Withdraw Baru!\n\nUser: ${username}\nJumlah: ${amount} poin\nNomor DANA: ${dana}`;
+        await sendTelegramNotification(message);
+        
+        // Kurangi saldo poin
+        totalReward -= amount;
+        localStorage.setItem(username + "_totalReward", totalReward);
+        updateUI();
+        
+        // Bersihkan form
+        document.getElementById("withdrawAmount").value = "";
+        document.getElementById("withdrawDana").value = "";
+        withdrawForm.style.display = "none";
+        
+        // Tampilkan notifikasi berhasil
+        const notif = document.getElementById("withdrawSuccessNotification");
+        notif.textContent = `✅ Penarikan berhasil ke DANA ${dana}`;
+        notif.style.display = "block";
+        
+        // Hilangkan notifikasi setelah 10 detik
+setTimeout(() => {
+    notif.style.display = "none";
+}, 10000);
+        
+    } catch (error) {
+        console.error("Error sending Telegram notification:", error);
+        withdrawMessage.textContent = "Withdraw berhasil tetapi notifikasi gagal dikirim.";
+        withdrawMessage.style.color = "orange";
+    }
+};
+      
+        cancelWithdraw.onclick = () => {
+            withdrawForm.style.display = "none";
+            withdrawMessage.textContent = "";
+            document.getElementById("withdrawAmount").value = "";
+            document.getElementById("withdrawDana").value = "";
+        };
+      
+        // Tambahkan modal klaim reward ke HTML
+document.body.insertAdjacentHTML("beforeend", `
+<div id="rewardModal" style="
+    display:none;
+    position:fixed;
+    top:0; left:0; width:100%; height:100%;
+    background:rgba(0,0,0,0.5);
+    z-index:99999;
+    justify-content:center;
+    align-items:center;
+">
+  <div style="
+      background:white;
+      border-radius:12px;
+      padding:20px;
+      text-align:center;
+      width:90%;
+      max-width:320px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.3);
+  ">
+    <img src="https://i.postimg.cc/0KZ505rV/file-0000000084f062309e6fd2523e94f3de.png" 
+         alt="Logo Dana" style="width:80px; margin-bottom:15px;">
+    <h3 style="color:black; margin-bottom:15px;">🎉 Dapat 300 Poin Riwed</h3>
+    <button id="claimRewardBtn" style="
+        background:#00e676;
+        color:black;
+        font-weight:bold;
+        padding:10px 20px;
+        border:none;
+        border-radius:8px;
+        cursor:pointer;
+    ">Klaim</button>
+  </div>
+</div>
+`);
+
+// Ambil elemen modal dan tombol klaim
+const rewardModal = document.getElementById("rewardModal");
+const claimRewardBtn = document.getElementById("claimRewardBtn");
+const tiktokBtn = document.getElementById("tiktokBtn");
+
+// Event klik TikTok
+tiktokBtn.addEventListener("click", () => {
+    localStorage.setItem("watchedTikTok", "true");
+    window.open("https://www.profitableratecpm.com/mt7tws0f?key=28a564b0d68db558b31e19e77850b85e","_blank");
+
+    // Setelah 30 detik tampilkan modal klaim
+    setTimeout(() => {
+        rewardModal.style.display = "flex";
+    }, 30000);
+});
+
+// Event klik tombol klaim di modal
+claimRewardBtn.addEventListener("click", () => {
+    totalReward += 300;
+    localStorage.setItem(username + "_totalReward", totalReward);
+    updateUI();
+    rewardModal.style.display = "none";
+});
+
+      // Referral system
+        const referralBtn = document.getElementById("referralBtn");
+        const referralModal = document.getElementById("referralModal");
+        const referralLinkInput = document.getElementById("referralLink");
+        
+        referralBtn.addEventListener("click", () => {
+            const username = localStorage.getItem("currentUser") || "user";
+            const referralLink = `${window.location.origin}?ref=${username}`;
+            referralLinkInput.value = referralLink;
+            referralModal.style.display = "block";
+        });
+        
+        function copyReferralLink() {
+            referralLinkInput.select();
+            referralLinkInput.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+            alert("Link referral disalin!");
+        }
+        
+        // Initialize UI
+        updateUI();
+        setInterval(updateUI, 1000);
+   
+      // Tampilkan/Sembunyikan Menu Garis Tiga
+function toggleMenu() {
+  const menu = document.getElementById("menuDropdown");
+  menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
+
+// Tutup menu saat klik di luar
+document.addEventListener("click", function (event) {
+  const menu = document.getElementById("menuDropdown");
+  const button = event.target.closest("button");
+  if (!menu.contains(event.target) && (!button || button.innerText !== "☰")) {
+    menu.style.display = "none";
+  }
+});
+
+// Fungsi DOMPET (nanti bisa diubah jadi popup / halaman)
+function bukaDompet() {
+  const dana = localStorage.getItem(username + "_totalDANA") || "0.00";
+  alert(`Saldo DANA Anda: ${parseFloat(dana).toFixed(2)}\nSaldo DAT Anda: ${Math.floor(totalReward).toLocaleString('en-US')}`);
+}
+      
+    </script>
+    
+<!-- Iklan tambahan dari profitableratecpm.com -->  
+<script type='text/javascript' src='//pl27331380.profitableratecpm.com/8b/a8/2b/8ba82b25b1bd88c46aa90ed2f191719a.js'></script>
+     
+</body>  
+</html>
