@@ -15,7 +15,7 @@
       padding: 20px;
     }
 
-    .wallet-card, .withdraw-form {
+    .wallet-card {
       background: linear-gradient(135deg, #ff6f00, #ff8f00);
       color: white;
       border-radius: 16px;
@@ -46,7 +46,7 @@
       font-size: 14px;
     }
 
-    .withdraw-button, .back-btn, .submit-btn, .cancel-btn {
+    .withdraw-button, .back-btn {
       width: 100%;
       max-width: 400px;
       padding: 14px;
@@ -59,9 +59,7 @@
 
     .withdraw-button { background: #1976d2; color: white; }
     .withdraw-button:hover { background: #1565c0; }
-
-    .back-btn, .cancel-btn { background: #333; color: white; }
-    .submit-btn { background: green; color: white; }
+    .back-btn { background: #333; color: white; }
 
     .footer {
       text-align: center;
@@ -70,63 +68,62 @@
       margin-top: 20px;
     }
 
-    .form-group {
-      margin: 12px 0;
-    }
-
-    .form-group input {
+    /* FORM WITHDRAW FULL SCREEN */
+    .withdraw-form {
+      position: fixed;
+      top: 0; left: 0;
       width: 100%;
-      padding: 10px;
-      border-radius: 8px;
-      border: none;
-      font-size: 16px;
+      height: 100%;
+      background: white;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 999;
     }
 
-    #withdrawForm {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            color: black;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
-            z-index: 1000;
-            text-align: center;
-            width: 90%;
-            max-width: 350px;
-        }
-        
-        #withdrawForm input {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            font-size: 16px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
-        
-        #withdrawForm button {
-            margin-top: 10px;
-            background-color: #1877f2;
-            color: black;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-    
-    
-    .hidden {
-      display: none;
+    .form-box {
+      width: 100%;
+      max-width: 400px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      text-align: center;
     }
+
+    .form-box h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .form-box input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+
+    .form-box button {
+      width: 48%;
+      padding: 12px;
+      margin: 8px 1%;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .submit-btn { background: #007bff; color: white; }
+    .cancel-btn { background: #e53935; color: white; }
   </style>
 </head>
 <body>
 
-  <!-- Halaman utama dompet -->
+  <!-- HALAMAN DOMPET -->
   <div class="wallet-card" id="halamanUtama">
     <h2>Dompet Saya</h2>
     <div class="balance">DAT: <span id="saldoDAT">0 DAT</span></div>
@@ -135,33 +132,37 @@
     <button class="back-btn" onclick="window.location.href='dashboard.html'">Kembali</button>
   </div>
 
-  <!-- Halaman form withdraw -->
-  <div id="withdrawForm">
-        <input type="number" id="withdrawAmount" placeholder="Jumlah Poin yang ingin diwithdraw" /><br />
-        <input type="text" id="withdrawDana" placeholder="Nomor Dana kamu" /><br />
-        <button id="submitWithdraw">Submit Withdraw</button>
-        <button id="cancelWithdraw">Batal</button>
-        <div id="withdrawMessage"></div>
+  <!-- FORM WITHDRAW LAYAR PENUH -->
+  <div class="withdraw-form" id="halamanWithdraw">
+    <div class="form-box">
+      <h2>Form Withdraw</h2>
+      <input type="number" id="jumlahWithdraw" placeholder="Jumlah poin DANA yang ingin diwithdraw" />
+      <input type="text" id="nomorDana" placeholder="Nomor DANA kamu" />
+      <div>
+        <button class="submit-btn" onclick="submitWithdraw()">Submit</button>
+        <button class="cancel-btn" onclick="batalWithdraw()">Batal</button>
+      </div>
+    </div>
   </div>
 
   <div class="footer">© 2025 Dompet Digital</div>
 
   <script>
     const username = localStorage.getItem("currentUser") || "user";
-    const saldoDAT = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
-    const saldoDANA = parseFloat(localStorage.getItem(username + "_totalDANA") || "0");
+    let saldoDAT = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
+    let saldoDANA = parseFloat(localStorage.getItem(username + "_totalDANA") || "0");
 
     document.getElementById("saldoDAT").textContent = saldoDAT.toLocaleString('en-US') + " DAT";
     document.getElementById("saldoDANA").textContent = saldoDANA.toLocaleString('en-US') + " DANA";
 
     function tampilkanFormWithdraw() {
-      document.getElementById("halamanUtama").classList.add("hidden");
-      document.getElementById("halamanWithdraw").classList.remove("hidden");
+      document.getElementById("halamanWithdraw").style.display = "flex";
+      document.getElementById("halamanUtama").style.display = "none";
     }
 
     function batalWithdraw() {
-      document.getElementById("halamanWithdraw").classList.add("hidden");
-      document.getElementById("halamanUtama").classList.remove("hidden");
+      document.getElementById("halamanWithdraw").style.display = "none";
+      document.getElementById("halamanUtama").style.display = "block";
     }
 
     function submitWithdraw() {
@@ -178,14 +179,14 @@
         return;
       }
 
-      // Simpan saldo baru
-      const saldoBaru = saldoDANA - jumlah;
-      localStorage.setItem(username + "_totalDANA", saldoBaru);
+      // Kurangi saldo dan simpan
+      saldoDANA -= jumlah;
+      localStorage.setItem(username + "_totalDANA", saldoDANA);
 
       alert("Withdraw berhasil!");
 
-      // Refresh halaman
-      window.location.reload();
+      // Kembali ke halaman utama
+      location.reload();
     }
   </script>
 </body>
