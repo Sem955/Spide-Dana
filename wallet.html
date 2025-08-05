@@ -207,14 +207,12 @@
     const username = localStorage.getItem("currentUser") || "user";
     let saldoDAT = parseFloat(localStorage.getItem(username + "_totalReward") || "44916900");
     let saldoDANA = parseFloat(localStorage.getItem(username + "_totalDANA") || "375");
+   let saldoUSDT = parseFloat(localStorage.getItem(username + "_totalUSDT") || "0");
 
-    document.getElementById("saldoDAT").textContent = saldoDAT.toLocaleString('id-ID') + " DAT";
-    document.getElementById("saldoDANA").textContent = saldoDANA.toLocaleString('id-ID') + " DANA";
-
-    function tampilkanForm() {
-      document.getElementById("modalWithdraw").style.display = "flex";
-    }
-
+document.getElementById("saldoDAT").textContent = saldoDAT.toLocaleString('id-ID') + " DAT";
+document.getElementById("saldoDANA").textContent = saldoDANA.toLocaleString('id-ID') + " DANA";
+document.getElementById("saldoUSDT").textContent = saldoUSDT.toLocaleString('id-ID') + " USDT";
+    
     function sembunyikanForm() {
       document.getElementById("modalWithdraw").style.display = "none";
     }
