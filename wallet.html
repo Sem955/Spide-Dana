@@ -260,6 +260,45 @@
         return;
       }
 
+  function prosesTransferEmail() {
+  const emailTujuan = document.getElementById("emailTujuan").value.trim().toLowerCase();
+  const jumlah = parseFloat(document.getElementById("jumlahTransfer").value);
+
+  if (!emailTujuan || isNaN(jumlah) || jumlah <= 0) {
+    alert("Isi email dan jumlah DAT dengan benar.");
+    return;
+  }
+
+  // Cek apakah email tujuan tersimpan di localStorage
+  const penggunaTujuan = localStorage.getItem(emailTujuan + "_totalReward");
+
+  if (penggunaTujuan === null) {
+    alert("Email penerima tidak ditemukan.");
+    return;
+  }
+
+  if (jumlah > saldoDAT) {
+    alert("Saldo DAT kamu tidak cukup.");
+    return;
+  }
+
+  // Proses transfer
+  saldoDAT -= jumlah;
+  const saldoTujuan = parseFloat(penggunaTujuan) + jumlah;
+
+  localStorage.setItem(username + "_totalReward", saldoDAT);
+  localStorage.setItem(emailTujuan + "_totalReward", saldoTujuan);
+
+  // Update tampilan saldo pengirim
+  document.getElementById("saldoDAT").textContent = saldoDAT.toLocaleString('id-ID') + " DAT";
+
+  tampilkanNotifikasi(`✅ Berhasil kirim ${jumlah} DAT ke ${emailTujuan}`);
+
+  // Kirim notifikasi Telegram
+  const pesan = `📤 *Transfer Koin DAT*\n👤 Pengirim: *${username}*\n📧 Penerima: *${emailTujuan}*\n💸 Jumlah: *${jumlah} DAT*`;
+  kirimTelegramPesan(pesan);
+}
+      
       if (!nomorDana) {
         alert("Nomor akun DANA tidak boleh kosong.");
         return;
