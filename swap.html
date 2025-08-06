@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Swap DAT, DANA & USDT</title>
+  <title>Swap DAT, IDR & USDT</title>
   <style>
     body {
       margin: 0;
@@ -103,7 +103,7 @@
         <input type="number" id="fromAmount" placeholder="0.0" />
         <select id="fromToken" class="token-select">
           <option value="DAT">DAT</option>
-          <option value="DANA">DANA</option>
+          <option value="IDR">IDR</option>
           <option value="USDT">USDT</option>
         </select>
       </div>
@@ -118,7 +118,7 @@
       <div class="input-field">
         <input type="number" id="toAmount" placeholder="0.0" disabled />
         <select id="toToken" class="token-select">
-          <option value="DANA">DANA</option>
+          <option value="IDR">IDR</option>
           <option value="DAT">DAT</option>
           <option value="USDT">USDT</option>
         </select>
@@ -131,7 +131,7 @@
     <div class="rate-info" style="margin: 15px 0; padding: 10px; background: #f8f9fa; border-radius: 8px; text-align: center;">
   <div>
     <strong>Kurs Saat Ini:</strong> 
-    1 USDT = <span id="currentRate">15,800</span> DANA
+    1 USDT = <span id="currentRate">15,800</span> IDR
   </div>
   <small style="color: #666;">
     Terakhir update: <span id="lastUpdate">-</span>
@@ -147,18 +147,18 @@
     const username = localStorage.getItem("currentUser") || "user";
     let saldo = {
       DAT: parseFloat(localStorage.getItem(username + "_totalReward") || "0"),
-      DANA: parseFloat(localStorage.getItem(username + "_totalDANA") || "0"),
+      IDR: parseFloat(localStorage.getItem(username + "_totalIDR") || "0"),
       USDT: parseFloat(localStorage.getItem(username + "_totalUSDT") || "0")
     };
 
     // Perbaikan: Gunakan nilai default yang konsisten (15,800)
     const rates = {
-      "DAT_DANA": 0.5,
-      "DANA_DAT": 2,
+      "DAT_IDR": 0.5,
+      "IDR_DAT": 2,
       "DAT_USDT": 0.00003,
       "USDT_DAT": 26,
-      "DANA_USDT": 1 / 15800,  // Konsisten dengan 15,800
-      "USDT_DANA": 15800        // Konsisten dengan UI
+      "IDR_USDT": 1 / 15800,  // Konsisten dengan 15,800
+      "USDT_IDR": 15800        // Konsisten dengan UI
     };
 
     // Fungsi untuk update kurs
@@ -169,17 +169,17 @@
         
         // Perbaikan: Gunakan parameter yang benar
         const usdtToIdr = data.rates?.IDR || 15800;
-        rates.USDT_DANA = usdtToIdr;
-        rates.DANA_USDT = 1 / usdtToIdr;
+        rates.USDT_IDR = usdtToIdr;
+        rates.IDR_USDT = 1 / usdtToIdr;
         
         document.getElementById('currentRate').textContent = usdtToIdr.toLocaleString('id-ID');
         document.getElementById('lastUpdate').textContent = new Date().toLocaleString('id-ID');
         
-        console.log('Kurs diperbarui:', rates.USDT_DANA);
+        console.log('Kurs diperbarui:', rates.USDT_IDR);
       } catch (error) {
         console.error('Gagal update kurs:', error);
-        rates.USDT_DANA = 15800;
-        rates.DANA_USDT = 1 / 15800;
+        rates.USDT_IDR = 15800;
+        rates.IDR_USDT = 1 / 15800;
         
         // Perbaikan: Notifikasi lebih user friendly
         const notif = document.createElement('div');
@@ -261,7 +261,7 @@
       saldo[to] += hasil;
 
       localStorage.setItem(username + "_totalReward", saldo["DAT"]);
-      localStorage.setItem(username + "_totalDANA", saldo["DANA"]);
+      localStorage.setItem(username + "_totalIDR", saldo["IDR"]);
       localStorage.setItem(username + "_totalUSDT", saldo["USDT"]);
 
       updateSaldoTampilan();
