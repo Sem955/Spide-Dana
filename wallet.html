@@ -256,9 +256,10 @@ document.getElementById("saldoUSDT").textContent = saldoUSDT.toLocaleString('id-
         return;
       }
 
-      if (!nomorDana) {
-        alert("Nomor akun DANA tidak boleh kosong.");
-        return;
+      if (!/^08\d{8,11}$/.test(nomorDana)) {
+  alert("❌ Nomor DANA tidak valid. Harus dimulai dengan 08 dan panjang 10–13 digit.");
+  return;
+    
       }
 
       if (jumlah > saldoDANA) {
