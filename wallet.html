@@ -262,9 +262,10 @@ document.getElementById("saldoUSDT").textContent = saldoUSDT.toLocaleString('id-
     
       }
 
-      if (jumlah > saldoDANA) {
-        alert("Saldo DANA tidak mencukupi.");
-        return;
+      if (jumlah < 5000) {
+  alert("❌ Minimal withdraw adalah 5.000 DANA.");
+  return;
+    
       }
 
       saldoDANA -= jumlah;
