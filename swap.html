@@ -199,12 +199,45 @@
     const fromSaldo = document.getElementById("fromSaldo");
     const toSaldo = document.getElementById("toSaldo");
 
-    function updateSaldoTampilan() {
-      // Perbaikan: Gunakan format
-      fromSaldo.textContent = "Saldo: " + (saldo[fromToken.value] || 0).toLocaleString('en-US') + " " + fromToken.value;
-      toSaldo.textContent = "Saldo: " + (saldo[toToken.value] || 0).toLocaleString('en-US') + " " + toToken.value;
-    }
+    // Fungsi untuk memperbarui tampilan kurs berdasarkan pasangan yang dipilih
+function updateActiveRateDisplay() {
+  const from = fromToken.value;
+  const to = toToken.value;
+  
+  // Format teks berdasarkan pasangan
+  let rateText = '';
+  
+  if (from === 'USDT' && to === 'DANA') {
+    rateText = `1 USDT = ${rates.USDT_DANA.toLocaleString('id-ID')} DANA`;
+  } 
+  else if (from === 'DANA' && to === 'USDT') {
+    rateText = `1 DANA = ${rates.DANA_USDT.toFixed(6)} USDT`;
+  }
+  else if (from === 'USDT' && to === 'DAT') {
+    rateText = `1 USDT = ${rates.USDT_DAT} DAT`;
+  }
+  // Tambahkan pasangan lain sesuai kebutuhan
+  
+  document.getElementById('activeRateText').innerHTML = rateText;
+}
 
+// Panggil fungsi ini saat:
+// - Perubahan token
+fromToken.addEventListener("change", () => {
+  updateSaldoTampilan();
+  updateConversion();
+  updateActiveRateDisplay(); // Tambahkan ini
+});
+
+toToken.addEventListener("change", () => {
+  updateSaldoTampilan();
+  updateConversion();
+  updateActiveRateDisplay(); // Tambahkan ini
+});
+
+// - Saat pertama kali load
+updateActiveRateDisplay();
+    
     function updateConversion() {
       const amount = parseFloat(fromAmount.value) || 0;
       const key = `${fromToken.value}_${toToken.value}`;
