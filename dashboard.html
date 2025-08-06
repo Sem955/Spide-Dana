@@ -611,8 +611,8 @@ document.addEventListener("click", function (event) {
 
 // Fungsi DOMPET (nanti bisa diubah jadi popup / halaman)
 function bukaDompet() {
-  const dana = localStorage.getItem(username + "_totalDANA") || "0.00";
-  alert(`Saldo DANA Anda: ${parseFloat(dana).toFixed(2)}\nSaldo DAT Anda: ${Math.floor(totalReward).toLocaleString('en-US')}`);
+  const dana = localStorage.getItem(username + "_totalIDR") || "0.00";
+  alert(`Saldo IDR Anda: ${parseFloat(dana).toFixed(2)}\nSaldo DAT Anda: ${Math.floor(totalReward).toLocaleString('en-US')}`);
 }
       
     </script>
