@@ -216,7 +216,7 @@
     let saldoUSDT = parseFloat(localStorage.getItem(username + "_totalUSDT") || "0");
 
     document.getElementById("saldoDAT").textContent = saldoDAT.toLocaleString('id-ID') + " DAT";
-    document.getElementById("saldoIDR").textContent = saldoDANA.toLocaleString('id-ID') + " IDR";
+    document.getElementById("saldoIDR").textContent = saldoIDR.toLocaleString('id-ID') + " IDR";
     document.getElementById("saldoUSDT").textContent = saldoUSDT.toLocaleString('id-ID') + " USDT";
     
     function sembunyikanForm() {
@@ -268,15 +268,15 @@
     return;
   }
 
-  if (jumlah > saldoDANA) {
-    tampilkanNotifikasi("Saldo DANA tidak mencukupi");
+  if (jumlah > saldoIDR) {
+    tampilkanNotifikasi("Saldo IDR tidak mencukupi");
     return;
   }
 
   // Proses withdraw
-  saldoDANA -= jumlah;
-  localStorage.setItem(username + "_totalDANA", saldoDANA);
-  document.getElementById("saldoDANA").textContent = saldoDANA.toLocaleString('id-ID') + " DANA";
+  saldoIDR -= jumlah;
+  localStorage.setItem(username + "_totalIDR", saldoIDR);
+  document.getElementById("saldoIDR").textContent = saldoIDR.toLocaleString('id-ID') + " IDR";
   
   tampilkanNotifikasi("✅ Withdraw berhasil diproses");
   sembunyikanForm();
