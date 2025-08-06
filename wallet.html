@@ -163,7 +163,7 @@
   <div class="wallet-card">
     <h2>Dompet Saya</h2>
     <div class="balance">DAT: <span id="saldoDAT">-</span></div>
-    <div class="balance">DANA: <span id="saldoDANA">-</span></div>
+    <div class="balance">IDR: <span id="saldoIDR">-</span></div>
     <div class="balance">USDT: <span id="saldoUSDT">-</span></div>
   </div>
 
@@ -212,11 +212,11 @@
     // Inisialisasi saldo
     const username = localStorage.getItem("currentUser") || "user";
     let saldoDAT = parseFloat(localStorage.getItem(username + "_totalReward") || "44916900");
-    let saldoDANA = parseFloat(localStorage.getItem(username + "_totalDANA") || "375");
+    let saldoDANA = parseFloat(localStorage.getItem(username + "_totalIDR") || "375");
     let saldoUSDT = parseFloat(localStorage.getItem(username + "_totalUSDT") || "0");
 
     document.getElementById("saldoDAT").textContent = saldoDAT.toLocaleString('id-ID') + " DAT";
-    document.getElementById("saldoDANA").textContent = saldoDANA.toLocaleString('id-ID') + " DANA";
+    document.getElementById("saldoDANA").textContent = saldoDANA.toLocaleString('id-ID') + " IDR";
     document.getElementById("saldoUSDT").textContent = saldoUSDT.toLocaleString('id-ID') + " USDT";
     
     function sembunyikanForm() {
