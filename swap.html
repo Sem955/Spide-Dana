@@ -118,6 +118,19 @@
     </div>
 
     <div class="slippage">Slippage Tolerance: 0.8%</div>
+  
+    <div class="rate-info" style="margin: 15px 0; padding: 10px; background: #f8f9fa; border-radius: 8px; text-align: center;">
+  <div>
+    <strong>Kurs Saat Ini:</strong> 
+    1 USDT = <span id="currentRate">15,800</span> DANA
+  </div>
+  <small style="color: #666;">
+    Terakhir update: <span id="lastUpdate">-</span>
+    <button onclick="updateExchangeRates()" style="margin-left: 10px; padding: 2px 8px; font-size: 12px; background: #e0e0e0; border: none; border-radius: 4px;">
+      Manual Update
+    </button>
+  </small>
+</div>
     <button class="swap-button" onclick="prosesSwap()">Swap Sekarang</button>
   </div>
 
