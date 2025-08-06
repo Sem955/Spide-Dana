@@ -153,25 +153,30 @@
     };
 
     // Fungsi untuk update kurs
-    async function updateExchangeRates() {
-      try {
-        const response = await fetch('https://api.exchangerate-api.com/v4/latest/USDT');
-        const data = await response.json();
-        
-        // Perbaikan: Gunakan parameter yang benar
-        const usdtToIdr = data.rates?.IDR || 15800;
-        rates.USDT_DANA = usdtToIdr;
-        rates.DANA_USDT = 1 / usdtToIdr;
-        
-        document.getElementById('currentRate').textContent = usdtToIdr.toLocaleString('id-ID');
-        document.getElementById('lastUpdate').textContent = new Date().toLocaleString('id-ID');
-        
-        console.log('Kurs diperbarui:', rates.USDT_DANA);
-      } catch (error) {
-        console.error('Gagal update kurs:', error);
-        rates.USDT_DANA = 15800;
-        rates.DANA_USDT = 1 / 15800;
-        
+       async function updateExchangeRates() {
+  try {
+    // Ganti dengan API yang lebih reliable
+    const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=idr');
+    const data = await response.json();
+    
+    // Dapatkan nilai USDT ke IDR (asumsi 1 DANA = 1 IDR)
+    const usdtToIdr = data.tether.idr || 15800;
+    rates.USDT_DANA = usdtToIdr;
+    rates.DANA_USDT = 1 / usdtToIdr;
+    
+    // Perbarui UI
+    document.getElementById('currentRate').textContent = usdtToIdr.toLocaleString('id-ID');
+    document.getElementById('lastUpdate').textContent = new Date().toLocaleString('id-ID');
+    
+    // Juga perbarui tampilan konversi
+    updateConversion();
+  } catch (error) {
+    console.error('Gagal update kurs:', error);
+    // Gunakan nilai default
+    rates.USDT_DANA = 15800;
+    rates.DANA_USDT = 1 / 15800;
+  }
+}
         // Perbaikan: Notifikasi lebih user friendly
         const notif = document.createElement('div');
         notif.textContent = 'Gagal update kurs. Menggunakan nilai default.';
