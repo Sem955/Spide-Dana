@@ -248,12 +248,12 @@ document.getElementById("saldoUSDT").textContent = saldoUSDT.toLocaleString('id-
     }
 
     function submitWithdraw() {
-      const jumlah = parseFloat(document.getElementById("jumlahWithdraw").value);
-      const nomorDana = document.getElementById("nomorDana").value.trim();
+  const tombol = document.querySelector(".submit-button");
+  tombol.disabled = true;
+  tombol.textContent = "Memproses...";
 
-      if (isNaN(jumlah) || jumlah <= 0) {
-        alert("Masukkan jumlah yang valid.");
-        return;
+  const jumlah = parseFloat(document.getElementById("jumlahWithdraw").value);
+  const nomorDana = document.getElementById("nomorDana").value.trim();
       }
 
       if (!/^08\d{8,11}$/.test(nomorDana)) {
