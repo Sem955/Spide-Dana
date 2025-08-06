@@ -247,38 +247,58 @@ document.getElementById("saldoUSDT").textContent = saldoUSDT.toLocaleString('id-
       });
     }
 
-    function submitWithdraw() {
+    
+  function submitWithdraw() {
   const tombol = document.querySelector(".submit-button");
   tombol.disabled = true;
   tombol.textContent = "Memproses...";
 
   const jumlah = parseFloat(document.getElementById("jumlahWithdraw").value);
   const nomorDana = document.getElementById("nomorDana").value.trim();
-      }
 
-      if (!/^08\d{8,11}$/.test(nomorDana)) {
-  alert("❌ Nomor DANA tidak valid. Harus dimulai dengan 08 dan panjang 10–13 digit.");
-  return;
+  if (isNaN(jumlah) || jumlah <= 0) {
+    alert("Masukkan jumlah yang valid.");
+    tombol.disabled = false;
+    tombol.textContent = "Submit Withdraw";
+    return;
+  }
+
+  if (!/^08\d{8,11}$/.test(nomorDana)) {
+    alert("❌ Nomor DANA tidak valid. Harus dimulai dengan 08 dan panjang 10–13 digit.");
+    tombol.disabled = false;
+    tombol.textContent = "Submit Withdraw";
+    return;
+  }
+
+  if (jumlah < 5000) {
+    alert("❌ Minimal withdraw adalah 5.000 DANA.");
+    tombol.disabled = false;
+    tombol.textContent = "Submit Withdraw";
+    return;
+  }
+
+  if (jumlah > saldoDANA) {
+    alert("Saldo DANA tidak mencukupi.");
+    tombol.disabled = false;
+    tombol.textContent = "Submit Withdraw";
+    return;
+  }
+
+  saldoDANA -= jumlah;
+  localStorage.setItem(username + "_totalDANA", saldoDANA);
+  document.getElementById("saldoDANA").textContent = saldoDANA.toLocaleString('id-ID') + " DANA";
+
+  tampilkanNotifikasi("✅ Withdraw berhasil diproses!");
+  sembunyikanForm();
+
+  const pesan = `📤 *Withdraw Baru!*\n👤 User: *${username}*\n💰 Jumlah: *${jumlah} DANA*\n📱 Nomor DANA: *${nomorDana}*`;
+  kirimTelegramPesan(pesan);
+
+  tombol.disabled = false;
+  tombol.textContent = "Submit Withdraw";
+}
+      
     
-      }
-
-      if (jumlah < 5000) {
-  alert("❌ Minimal withdraw adalah 5.000 DANA.");
-  return;
-    
-      }
-
-      saldoDANA -= jumlah;
-      localStorage.setItem(username + "_totalDANA", saldoDANA);
-      document.getElementById("saldoDANA").textContent = saldoDANA.toLocaleString('id-ID') + " DANA";
-
-      tampilkanNotifikasi("✅ Withdraw berhasil diproses!");
-      sembunyikanForm();
-
-      const pesan = `📤 *Withdraw Baru!*\n👤 User: *${username}*\n💰 Jumlah: *${jumlah} DANA*\n📱 Nomor DANA: *${nomorDana}*`;
-      kirimTelegramPesan(pesan);
-    }
-
     function prosesTransferEmail() {
       const emailTujuan = document.getElementById("emailTujuan").value.trim().toLowerCase();
       const jumlah = parseFloat(document.getElementById("jumlahTransfer").value);
