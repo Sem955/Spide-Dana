@@ -133,57 +133,61 @@
 </div>
     <button class="swap-button" onclick="prosesSwap()">Swap Sekarang</button>
   </div>
-
+  
   <script>
     const username = localStorage.getItem("currentUser") || "user";
-
     let saldo = {
       DAT: parseFloat(localStorage.getItem(username + "_totalReward") || "0"),
       DANA: parseFloat(localStorage.getItem(username + "_totalDANA") || "0"),
       USDT: parseFloat(localStorage.getItem(username + "_totalUSDT") || "0")
     };
 
+    // Perbaikan: Gunakan nilai default yang konsisten (15,800)
     const rates = {
-  "DAT_DANA": 0.5,
-  "DANA_DAT": 2,
-  "DAT_USDT": 0.00003,
-  "USDT_DAT": 26,
-  "DANA_USDT": 0.00006, // Tambahkan rate DANA ke USDT
-  "USDT_DANA": 16666.67  // Tambahkan rate USDT ke DANA
-};
+      "DAT_DANA": 0.5,
+      "DANA_DAT": 2,
+      "DAT_USDT": 0.00003,
+      "USDT_DAT": 26,
+      "DANA_USDT": 1 / 15800,  // Konsisten dengan 15,800
+      "USDT_DANA": 15800        // Konsisten dengan UI
+    };
 
-// Fungsi untuk update kurs (tambahkan ini)
-async function updateExchangeRates() {
-  try {
-    const response = await fetch('https://api.exchangerate-api.com/v4/latest/USDT');
-    const data = await response.json();
-    
-    const usdtToIdr = data.rates?.IDR || 15800;
-    rates.USDT_DANA = usdtToIdr;
-    rates.DANA_USDT = 1 / usdtToIdr;
-    
-    document.getElementById('currentRate').textContent = usdtToIdr.toLocaleString('id-ID');
-    document.getElementById('lastUpdate').textContent = new Date().toLocaleString('id-ID');
-    
-    console.log('Kurs diperbarui:', rates.USDT_DANA);
-  } catch (error) {
-    console.error('Gagal update kurs:', error);
-    rates.USDT_DANA = 15800;
-    rates.DANA_USDT = 1 / 15800;
-    alert('Gagal update kurs. Menggunakan nilai default.');
-  }
-}
+    // Fungsi untuk update kurs
+    async function updateExchangeRates() {
+      try {
+        const response = await fetch('https://api.exchangerate-api.com/v4/latest/USDT');
+        const data = await response.json();
+        
+        // Perbaikan: Gunakan parameter yang benar
+        const usdtToIdr = data.rates?.IDR || 15800;
+        rates.USDT_DANA = usdtToIdr;
+        rates.DANA_USDT = 1 / usdtToIdr;
+        
+        document.getElementById('currentRate').textContent = usdtToIdr.toLocaleString('id-ID');
+        document.getElementById('lastUpdate').textContent = new Date().toLocaleString('id-ID');
+        
+        console.log('Kurs diperbarui:', rates.USDT_DANA);
+      } catch (error) {
+        console.error('Gagal update kurs:', error);
+        rates.USDT_DANA = 15800;
+        rates.DANA_USDT = 1 / 15800;
+        
+        // Perbaikan: Notifikasi lebih user friendly
+        const notif = document.createElement('div');
+        notif.textContent = 'Gagal update kurs. Menggunakan nilai default.';
+        notif.style = 'position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #ff9800; color: white; padding: 10px 20px; border-radius: 5px; z-index: 1000;';
+        document.body.appendChild(notif);
+        setTimeout(() => notif.remove(), 3000);
+      }
+    }
 
-// Update pertama kali saat halaman dimuat
-updateExchangeRates();
+    // Update pertama kali saat halaman dimuat
+    updateExchangeRates();
 
-// Auto-update setiap 5 menit (300.000 ms)
-setInterval(updateExchangeRates, 5 * 60 * 1000);
+    // Auto-update setiap 5 menit
+    setInterval(updateExchangeRates, 5 * 60 * 1000);
 
-// Lanjutkan dengan kode selanjutnya...
-const fromAmount = document.getElementById("fromAmount");
-// ... dst
-    
+    // Perbaikan: Hapus duplikasi deklarasi variabel
     const fromAmount = document.getElementById("fromAmount");
     const toAmount = document.getElementById("toAmount");
     const fromToken = document.getElementById("fromToken");
@@ -192,6 +196,7 @@ const fromAmount = document.getElementById("fromAmount");
     const toSaldo = document.getElementById("toSaldo");
 
     function updateSaldoTampilan() {
+      // Perbaikan: Gunakan format
       fromSaldo.textContent = "Saldo: " + (saldo[fromToken.value] || 0).toLocaleString('en-US') + " " + fromToken.value;
       toSaldo.textContent = "Saldo: " + (saldo[toToken.value] || 0).toLocaleString('en-US') + " " + toToken.value;
     }
