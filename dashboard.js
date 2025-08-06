@@ -1,69 +1,54 @@
-const supabase = supabase.createClient(
-  'https://mppordupklxrmqhrtxrc.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1wcG9yZHVwa2x4cm1xaHJ0eHJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI4NzQ3NjUsImV4cCI6MjA2ODQ1MDc2NX0.RtDugPVzWjIA6TjZmyXw3MI2oamApryHYmLArQq17Jw'
-);
+// dashboard.js - versi pakai Supabase database
 
-// Simulasi pertumbuhan reward dari 0 ke 1000 dalam 24 jam
-const startTime = localStorage.getItem('miningStart') || Date.now();
-localStorage.setItem('miningStart', startTime);
+const supabase = supabase.createClient( 'https://mppordupklxrmqhrtxrc.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1wcG9yZHVwa2x4cm1xaHJ0eHJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI4NzQ3NjUsImV4cCI6MjA2ODQ1MDc2NX0.RtDugPVzWjIA6TjZmyXw3MI2oamApryHYmLArQq17Jw' );
 
-function updateRewards() {
-  const now = Date.now();
-  const elapsed = now - startTime;
-  const totalMillisIn24h = 24 * 60 * 60 * 1000;
+let currentUserEmail = "";
 
-  let progress = elapsed / totalMillisIn24h;
-  if (progress > 1) progress = 1;
+async function initDashboard() { const { data: { user }, error } = await supabase.auth.getUser(); if (error || !user) { alert("Silakan login terlebih dahulu."); return location.href = "index.html"; }
 
-  const dailyReward = 1000 * progress;
-  document.getElementById('dailyRewards').innerText = dailyReward.toFixed(3);
+currentUserEmail = user.email;
 
-  const total = parseFloat(localStorage.getItem('totalRewards') || 0);
-  document.getElementById('totalRewards').innerText = total.toFixed(3);
-}
+// Ambil reward user dari tabel const { data, error: fetchError } = await supabase .from("users") .select("total_rewards, last_claim") .eq("email", currentUserEmail) .single();
 
-// ✅ Tambahkan ini agar tombol bekerja dan poin berkurang
-function handleWithdraw() {
-  const withdrawAmountStr = prompt("Masukkan jumlah poin yang ingin di-withdraw:");
-  if (!withdrawAmountStr) return;
+if (fetchError) { alert("Gagal mengambil data pengguna."); return; }
 
-  const withdrawAmount = parseFloat(withdrawAmountStr);
-  if (isNaN(withdrawAmount) || withdrawAmount <= 0) {
-    alert("Jumlah tidak valid.");
-    return;
-  }
+const totalReward = parseFloat(data.total_rewards || 0); const lastClaim = new Date(data.last_claim || 0).getTime(); const now = Date.now(); const cooldown = 1 * 60 * 60 * 1000; const elapsed = now - lastClaim;
 
-  const currentTotal = parseFloat(localStorage.getItem('totalRewards') || 0);
-  if (withdrawAmount > currentTotal) {
-    alert("Poin tidak cukup.");
-    return;
-  }
+const canClaim = elapsed >= cooldown; const claimBtn = document.getElementById("claimBtn"); const totalEl = document.getElementById("totalRewards"); const dailyEl = document.getElementById("dailyRewards"); const statusText = document.getElementById("statusText");
 
-  const newTotal = currentTotal - withdrawAmount;
-  localStorage.setItem('totalRewards', newTotal.toFixed(3));
-  document.getElementById('totalRewards').innerText = newTotal.toFixed(3);
+totalEl.innerText = totalReward.toLocaleString();
 
-  alert("Withdraw berhasil sejumlah " + withdrawAmount.toFixed(3) + " poin.");
-}
+if (canClaim) { dailyEl.innerText = "500"; statusText.innerText = "Kamu bisa klaim sekarang!"; claimBtn.disabled = false; claimBtn.onclick = async () => { const newTotal = totalReward + 500; const { error: updateError } = await supabase .from("users") .update({ total_rewards: newTotal, last_claim: new Date().toISOString() }) .eq("email", currentUserEmail);
 
-const withdrawBtn = document.getElementById("withdrawBtn");
-if (withdrawBtn) {
-  withdrawBtn.onclick = handleWithdraw;
-}
+if (updateError) return alert("Gagal klaim: " + updateError.message);
 
-// ✅ Jalankan update awal saat halaman dibuka
-updateRewards();
-setInterval(updateRewards, 5000); // Perbarui setiap 5 detik
-}
-document.getElementById("tiktokBtn").addEventListener("click", function () {
-  let current = parseFloat(localStorage.getItem('totalRewards') || 0);
-  current += 1000;
-  localStorage.setItem('totalRewards', current);
+  alert("Berhasil klaim 500 poin!");
+  location.reload();
+};
 
-  // Setelah poin ditambahkan, baru buka link TikTok
-  window.open("https://vm.tiktok.com/ZSSFXt8CE/", "_blank");
-});
-function toggleGameMenu() {
-  const menu = document.getElementById("gameMenu");
-  menu.style.display = menu.style.display === "none" ? "block" : "none";
-}
+} else { const remaining = cooldown - elapsed; const mins = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60)); const secs = Math.floor((remaining % (1000 * 60)) / 1000); statusText.innerText = Tunggu ${mins}m ${secs}s lagi untuk klaim.; claimBtn.disabled = true; dailyEl.innerText = "0"; }
+
+// Tombol withdraw const withdrawBtn = document.getElementById("withdrawBtn"); if (withdrawBtn) { withdrawBtn.onclick = async () => { const amountStr = prompt("Masukkan jumlah poin yang ingin di-withdraw:"); const amount = parseFloat(amountStr); if (!amount || amount <= 0 || amount > totalReward) return alert("Jumlah tidak valid atau saldo tidak cukup.");
+
+const nomorDana = prompt("Masukkan nomor akun DANA:");
+  if (!nomorDana) return alert("Nomor DANA wajib diisi.");
+
+  const newTotal = totalReward - amount;
+  const { error: withdrawError } = await supabase.from("withdraws").insert({
+    email: currentUserEmail,
+    jumlah: amount,
+    nomor_dana: nomorDana
+  });
+
+  if (withdrawError) return alert("Gagal simpan withdraw: " + withdrawError.message);
+
+  await supabase.from("users").update({ total_rewards: newTotal }).eq("email", currentUserEmail);
+
+  alert("Berhasil withdraw: " + amount + " poin ke DANA: " + nomorDana);
+  location.reload();
+};
+
+} }
+
+initDashboard();
+
