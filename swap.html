@@ -175,17 +175,18 @@
       updateSaldoTampilan();
       updateConversion();
     });
-
+  
     function prosesSwap() {
-      const amount = parseFloat(fromAmount.value);
-      const from = fromToken.value;
-      const to = toToken.value;
-      const rate = rates[`${from}_${to}`];
+  const amount = parseFloat(fromAmount.value);
+  const from = fromToken.value;
+  const to = toToken.value;
+  const rateKey = `${from}_${to}`;
+  const rate = rates[rateKey];
 
-      if (!rate) {
-        alert("Pasangan token tidak valid.");
-        return;
-      }
+  if (!rate) {
+    alert(`Konversi ${from} ke ${to} belum tersedia`);
+    return;
+  }
 
       if (!amount || amount <= 0) {
         alert("Masukkan jumlah yang valid.");
