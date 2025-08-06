@@ -150,28 +150,24 @@
   "USDT_DAT": 26,
   "DANA_USDT": 0.00006, // Tambahkan rate DANA ke USDT
   "USDT_DANA": 16666.67  // Tambahkan rate USDT ke DANA
-    };
+};
 
-    // Fungsi untuk update kurs (tambahkan ini)
+// Fungsi untuk update kurs (tambahkan ini)
 async function updateExchangeRates() {
   try {
-    // Contoh: Ambil data dari API (ganti dengan API yang nyata)
     const response = await fetch('https://api.exchangerate-api.com/v4/latest/USDT');
     const data = await response.json();
     
-    // Update rate USDT-DANA (asumsi 1 DANA = 1 IDR)
-    const usdtToIdr = data.rates?.IDR || 15800; // Fallback ke 15800 jika API error
+    const usdtToIdr = data.rates?.IDR || 15800;
     rates.USDT_DANA = usdtToIdr;
     rates.DANA_USDT = 1 / usdtToIdr;
     
-    // Update tampilan
     document.getElementById('currentRate').textContent = usdtToIdr.toLocaleString('id-ID');
     document.getElementById('lastUpdate').textContent = new Date().toLocaleString('id-ID');
     
     console.log('Kurs diperbarui:', rates.USDT_DANA);
   } catch (error) {
     console.error('Gagal update kurs:', error);
-    // Tetap gunakan nilai default jika API error
     rates.USDT_DANA = 15800;
     rates.DANA_USDT = 1 / 15800;
     alert('Gagal update kurs. Menggunakan nilai default.');
@@ -183,6 +179,10 @@ updateExchangeRates();
 
 // Auto-update setiap 5 menit (300.000 ms)
 setInterval(updateExchangeRates, 5 * 60 * 1000);
+
+// Lanjutkan dengan kode selanjutnya...
+const fromAmount = document.getElementById("fromAmount");
+// ... dst
     
     const fromAmount = document.getElementById("fromAmount");
     const toAmount = document.getElementById("toAmount");
