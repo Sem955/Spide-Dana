@@ -3,140 +3,104 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Berita Bola</title>
+  <title>Tugas Harian</title>
   <style>
     body {
       margin: 0;
-      font-family: sans-serif;
-      background-color: #f5f5f5;
-    }
-
-    header {
-      background-color: #006400;
+      font-family: 'Arial', sans-serif;
+      background-color: #0a0a23;
       color: white;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 15px;
-      position: relative;
-    }
-
-    .menu-icon {
-      font-size: 24px;
-      cursor: pointer;
-    }
-
-    .logo {
-      font-weight: bold;
-      font-size: 24px;
-    }
-
-    .logo span {
-      color: #FFD700;
-    }
-
-    .side-menu {
-      position: absolute;
-      top: 60px;
-      left: 0;
-      width: 100%;
-      background-color: white;
-      border-top: 1px solid #ccc;
-      display: none;
       flex-direction: column;
-      z-index: 999;
+      min-height: 100vh;
     }
-
-    .side-menu a {
-      padding: 15px;
-      text-decoration: none;
-      color: #333;
-      border-bottom: 1px solid #eee;
-      font-weight: bold;
+    h1 {
+      text-align: center;
+      margin: 30px 0 10px;
     }
-
-    .side-menu a:hover {
-      background-color: #f2f2f2;
-    }
-
     .container {
-      padding: 15px;
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #111122;
+      border-radius: 20px;
+      box-shadow: 0 0 20px #00ffcc;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
-
-    .score-box {
-      background: white;
-      border-radius: 8px;
+    .content {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
       padding: 10px;
-      margin-bottom: 15px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
     }
-
-    .score-box h3 {
-      margin: 0 0 10px 0;
+    .footer {
+      padding: 20px;
+      text-align: center;
     }
-
-    .headline-title {
-      background: white;
+    .btn {
+      padding: 14px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      width: 100%;
+      max-width: 300px;
+      margin: 10px auto;
+      display: block;
+    }
+    .btn-green {
+      background-color: #00ff88;
+      color: black;
       font-weight: bold;
-      padding: 10px;
-      border-radius: 8px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    .btn-green:hover {
+      background-color: #00cc66;
+    }
+    .back-link {
+      display: block;
+      color: #a58bff;
       margin-top: 10px;
+      text-decoration: none;
+      font-size: 16px;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+    .ad-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 200px;
+      margin-bottom: 20px;
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
     }
   </style>
 </head>
 <body>
-
-  <header>
-    <div class="menu-icon" onclick="toggleMenu()">&#9776;</div>
-    <div class="logo">BOLA<span>.72</span></div>
-    <div style="width:24px;"></div>
-  </header>
-
-  <nav class="side-menu" id="menu">
-    <a href="#">Timnas Indonesia</a>
-    <a href="#">Liga Inggris</a>
-    <a href="#">Liga Europa</a>
-    <a href="#">Liga sepayol</a>
-    <a href="#">Piala Dunia</a>
-    <a href="#">Liga Indonesia</a>
-    <a href="#">Cempions</a>
-    <a href="#">🔼 VIDIO SIARAN ULANG LIGA INGGRIS</a>
-    <a href="#">🔼 VIDIO SIARAN ULANG LIGA EROPA</a>
-     <a href="#">🔼 VIDIO SIARAN ULANG LIGA SEPANYOL</a>
-     <a href="#">🔼 VIDIO SIARAN ULANG LIGA INDONESIA</a>
-     <a href="#">🔼 VIDIO SIARAN ULAN TIMNAS INDONESIA</a>
-    
-  </nav>
-  
-  <div class="container">
-    <div class="score-box">
-      <h3>PIALA DUNIA - 14 Jul 2025</h3>
-      <p><strong>Chelsea</strong> 3 - 0 <strong>PSG</strong></p>
+  <h1>Tugas Harian</h1>
+  <div class="content">
+    <div class="container">
+      <div class="watch-ad-container">
+        <a href="https://vast-size.com/b.3/VW0MPA3/pIvVb/mWVVJ/ZXDx0K2pNQTXYiwLNlTuEGyvL-TsYt1VNnjVA/1bM/TEMR" target="_blank" style="text-decoration: none;">
+            <button>
+        <!-- Iklan banner muncul otomatis -->
+      </div>
+      <!-- ✅ IKLAN BANNER -->
+      <script async="async" data-cfasync="false" src="//pl27331466.profitableratecpm.com/0902fb0de32907a7a1b4a47f9cdc3307/invoke.js"></script>
+      <div id="container-0902fb0de32907a7a1b4a47f9cdc3307"></div>
     </div>
-
-    <div class="headline-title">5 Transfer Termahal La Liga Musim Ini</div>
+  </div>
+  <div class="footer">
+    <button class="btn btn-green" onclick="location.reload()">✅ Klaim Poin</button>
+    <a href="dashboard.html" class="back-link">← Kembali ke Dasbor</a>
   </div>
 
-  <script>
-(function(gppsr){
-var d = document,
-    s = d.createElement('script'),
-    l = d.scripts[d.scripts.length - 1];
-s.settings = gppsr || {};
-s.src = "\/\/probableregret.com\/b\/XIVFsHd.GHl\/0rYLWCco\/Yeym_9BuUZCUUlIk\/PeTyY-1tN\/jeAn5\/NxDXk\/tUNpjwUX2nM\/DHkF1pM\/A-";
-s.async = true;
-s.referrerPolicy = 'no-referrer-when-downgrade';
-l.parentNode.insertBefore(s, l);
-})({})
-</script>
-  
-  <script>
-    function toggleMenu() {
-      var menu = document.getElementById("menu");
-      menu.style.display = menu.style.display === "flex" ? "none" : "flex";
-    }
-  </script>
-  <script type='text/javascript' src='//pl27331519.profitableratecpm.com/13/4d/88/134d88f200f3571f191859bf77418cbc.js'></script>
+  <!-- ✅ POPUNDER ANTI-ADBLOCK -->
+   <script>
 </body>
-  </html>
+</html>
