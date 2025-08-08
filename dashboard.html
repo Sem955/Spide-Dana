@@ -16,33 +16,33 @@
             position: relative;
         }
         
-     .actions {
+       .bottom-nav {
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
-  background: white;
+  background: #ffffff;
+  border-top: 1px solid #ccc;
   display: flex;
   justify-content: space-around;
-  border-top: 1px solid #ddd;
-  padding: 8px 0;
-  z-index: 1000;
+  padding: 6px 0;
+  z-index: 9999;
 }
 
-.nav-button {
+.bottom-nav a {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-decoration: none;
-  color: black;
+  color: #333;
   font-size: 12px;
-  font-weight: bold;
+  flex: 1;
 }
 
-.nav-button img {
+.bottom-nav img {
   width: 24px;
   height: 24px;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
         .game-button {
     display: flex;
@@ -199,21 +199,6 @@
             cursor: pointer;
         }
         
-        #claimBtn:disabled {
-            background-color: gray;
-            cursor: not-allowed;
-        }
-        
-        #claimBtn {
-            background-color: #00e676;
-            color: black;
-        }
-        
-        #logoutBtn, #withdrawBtn {
-            background-color: #00e676;
-            color: black;
-        }
-        
         #withdrawForm {
             display: none;
             position: fixed;
@@ -230,9 +215,7 @@
             width: 90%;
             max-width: 350px;
         }
-        
-        
-        
+     
         #withdrawForm button {
             margin-top: 10px;
             background-color: #1877f2;
@@ -243,11 +226,6 @@
             cursor: pointer;
         }
       
-      #referralBtn {
-    background-color: #00e676; /* hijau muda */
-    color: white;
-    border: none;
-}
 
 #referralBtn:hover {
     background-color: #00c853; /* hijau lebih gelap saat hover */
