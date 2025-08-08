@@ -4,9 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Dashboard</title>
-   <!-- Leaflet CSS & JS untuk Map -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <style>
         body {
             background-color: #C8C6C2;
@@ -18,51 +15,7 @@
             box-sizing: border-box;
             position: relative;
         }
-  .bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: #121212;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 8px 0;
-  border-top: 1px solid #2a2a2a;
-  z-index: 999;
-}
-
-.nav-link {
-  color: #aaa;
-  font-size: 11px;
-  text-align: center;
-  text-decoration: none;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.nav-link img {
-  margin-bottom: 3px;
-  width: 24px;
-  height: 24px;
-  opacity: 0.8;
-}
-
-.nav-link:hover,
-.nav-link:active {
-  color: #fff;
-}
-
-.nav-link:hover img,
-.nav-link:active img {
-  opacity: 1;
-}
-   .nav-link.disabled {
-  pointer-events: none;
-  opacity: 0.5;
-        }  
+        
   .game-button {
     display: flex;
     justify-content: space-between;
@@ -90,7 +43,7 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     margin: 20px auto;
 }
-     
+
   .left {
     display: flex;
     align-items: center;
@@ -426,83 +379,24 @@
    <a href="wallet.html" style="display:block; width:100%; background:none; border:none; padding:10px; text-align:left; text-decoration:none; color:black;">💼 DOMPET</a>
     
 </div>
-    <div class="rewards-top">
-  <div class="reward-card">
-      <div class="reward-title">DAT</div>
-      <div class="reward-value" id="totalRewards">0</div>
-  </div>
-  <div class="reward-card">
-      <div class="reward-title">1JAM REWARD</div>
-      <div class="reward-value" id="dailyRewards">0.000</div>
-  </div>
-
-     <!-- TEPAT SETELAH INI -->
-</div>
-    <!-- penutup rewards-top -->  
-</div>
-<!-- DIV MAP -->
-<div id="map" style="width: 100%; max-width: 500px; height: 300px; border-radius: 16px; margin: 0 auto 30px auto; box-shadow: 0 4px 8px rgba(0,0,0,0.3);"></div>
-
-<!-- SCRIPT AKTIFKAN MAP -->
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const map = L.map('map').setView([-6.2, 106.8], 15);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-
-    const currentUserEmail = localStorage.getItem("currentUser");
-    const username = currentUserEmail ? currentUserEmail.split("@")[0] : "Pengguna";
-
-    const marker = L.marker([-6.2, 106.8]).addTo(map)
-      .bindPopup("Menentukan lokasi...").openPopup();
-
-    if (navigator.geolocation) {
-      navigator.geolocation.watchPosition(function (position) {
-        const lat = position.coords.latitude;
-        const lon = position.coords.longitude;
-
-        marker.setLatLng([lat, lon])
-          .bindPopup(`📍 Lokasi ${username}`).openPopup();
-
-        map.setView([lat, lon], 17);
-      }, function () {
-        marker.bindPopup("Gagal mendeteksi lokasi").openPopup();
-      }, {
-        enableHighAccuracy: true
-      });
-    } else {
-      marker.bindPopup("Geolocation tidak didukung").openPopup();
-    }
-  });
-</script>      
-    </div>
-    <div id="statusText">Memuat data...</div>
-
-    <footer class="bottom-nav">
-  <a href="index.html" class="nav-link">
-    <img src="https://i.postimg.cc/tgs7hXw5/power-off.png" alt="Tap">
-    <span>LONGOUT</span>
-  </a>
-  
-  <button id="claimBtn" class="nav-link" style="background:none; border:none;">
-    <img src="https://i.postimg.cc/zXyMZ6sQ/dollar.png" alt="Earning">
-    <span>CLIM POIN</span>
-  </button>
-  
-  <a href="history.html" class="nav-link">
-    <img src="https://img.icons8.com/ios-filled/24/ffffff/clock.png" alt="History">
-    <span>History</span>
-  </a>
-  
-  <a href="setting.html" class="nav-link">
-    <img src="https://img.icons8.com/ios-filled/24/ffffff/settings.png" alt="Setting">
-    <span>Setting</span>
-  </a>
-    </footer>
     
-</div>
+    <div class="rewards-top">
+        <div class="reward-card">
+            <div class="reward-title">DAT</div>
+            <div class="reward-value" id="totalRewards">0</div>
+        </div>
+        <div class="reward-card">
+            <div class="reward-title">1JAM REWARD</div>
+            <div class="reward-value" id="dailyRewards">0.000</div>
+        </div>
+    </div>
+    
+    <div class="logo-dana">
+    <img src="https://i.postimg.cc/vmZBCtrD/file-00000000b8d461f6882343b2ef2e3d1f.png" alt="Logo Dana" />
+    </div>
+    
+    <div id="statusText">Memuat data...</div>
+    
     <div class="watch-ad-container">
         <a href="https://vast-size.com/ULT3Sw" target="_blank" style="text-decoration: none;">
             <button>
@@ -538,9 +432,15 @@
   <!-- Tombol Play Now -->
   <a href="support.html" class="play-now">claim Poin→</a>
      </div>
-        
- </script>
+         
+     </script>
     <script type="text/javascript" src="//www.highperformanceformat.com/ac86c93838d18124dc18da7238d0ef1a/invoke.js"></script>
+    
+    <div class="actions">
+        <button id="claimBtn">Claim</button>
+        <button id="logoutBtn">Logout</button>
+        <button id="referralBtn">Invite</button>
+    </div>
     
         <div id="referralModal">
         <h3>Referral Kamu</h3>
@@ -574,31 +474,32 @@
         let totalReward = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
         
         function updateUI() {
-  const now = Date.now();
-  let last = lastClaim ? parseInt(lastClaim) : 0;
-  let elapsed = now - last;
-  let canClaim = elapsed >= COOLDOWN_MS;
+            const now = Date.now();
+            let last = lastClaim ? parseInt(lastClaim) : 0;
+            let elapsed = now - last;
+            let canClaim = elapsed >= COOLDOWN_MS;
+            
+            if (canClaim) {
+                dailyEl.textContent = CLAIM_REWARD.toLocaleString('en-US');
+                claimBtn.disabled = false;
+                statusText.textContent = "Kamu bisa klaim sekarang!";
+            } else {
+                let progress = elapsed / COOLDOWN_MS;
+                dailyEl.textContent = Math.floor(CLAIM_REWARD * progress).toLocaleString('en-US');
+                claimBtn.disabled = true;
 
-  if (canClaim) {
-    dailyEl.textContent = CLAIM_REWARD.toLocaleString('en-US');
-    claimBtn.classList.remove("disabled");
-    statusText.textContent = "Kamu bisa klaim sekarang!";
-  } else {
-    let progress = elapsed / COOLDOWN_MS;
-    dailyEl.textContent = Math.floor(CLAIM_REWARD * progress).toLocaleString('en-US');
+                let remaining = COOLDOWN_MS - elapsed;
+                let minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                let seconds = Math.floor((remaining % (1000 * 60)) / 1000);
 
-    let remaining = COOLDOWN_MS - elapsed;
-    let minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-    let seconds = Math.floor((remaining % (1000 * 60)) / 1000);
-    let mStr = minutes.toString().padStart(2, "0");
-    let sStr = seconds.toString().padStart(2, "0");
+                // Format agar dua digit (contoh: 05:09)
+                let mStr = minutes.toString().padStart(2, "0");
+                let sStr = seconds.toString().padStart(2, "0");
 
-    claimBtn.classList.add("disabled");
-    statusText.textContent = `Tunggu ${mStr}m ${sStr}s lagi untuk klaim.`;
-  }
-
-  totalEl.textContent = Math.floor(totalReward).toLocaleString('en-US');
-        }
+                statusText.textContent = `Tunggu ${mStr}m ${sStr}s lagi untuk klaim.`;
+            }
+            
+            totalEl.textContent = Math.floor(totalReward).toLocaleString('en-US');
        
         }
         
@@ -720,4 +621,4 @@ function bukaDompet() {
 <script type='text/javascript' src='//pl27331380.profitableratecpm.com/8b/a8/2b/8ba82b25b1bd88c46aa90ed2f191719a.js'></script>
      
 </body>  
-</html>
+     </html>
