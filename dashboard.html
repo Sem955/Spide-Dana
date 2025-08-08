@@ -389,6 +389,43 @@
             <div class="reward-title">1JAM REWARD</div>
             <div class="reward-value" id="dailyRewards">0.000</div>
         </div>
+       <!-- Lokasi Pengguna -->
+<div style="text-align: center; margin: 20px 0;">
+  <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" alt="Map Icon" style="width: 80px;" />
+  <p id="user-location" style="font-weight: bold; font-size: 14px; color: black;">Menentukan lokasi...</p>
+</div>
+
+<script>
+  const OPENCAGE_API_KEY = "88646b5c9ce9435185f21cb024684a53";
+
+  function getCityName(lat, lon) {
+    const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&key=${OPENCAGE_API_KEY}`;
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        const components = data.results[0].components;
+        const city = components.city || components.town || components.village || components.county || "Tidak diketahui";
+        document.getElementById("user-location").innerText = `Lokasi: ${city}`;
+      })
+      .catch(error => {
+        document.getElementById("user-location").innerText = "Gagal mengambil lokasi.";
+        console.error(error);
+      });
+  }
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+      getCityName(lat, lon);
+    }, function() {
+      document.getElementById("user-location").innerText = "Izin lokasi ditolak.";
+    });
+  } else {
+    document.getElementById("user-location").innerText = "Geolokasi tidak didukung.";
+  }
+</script>
+        
     </div>
     
     <div class="logo-dana">
