@@ -591,37 +591,32 @@
         let totalReward = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
         
         function updateUI() {
-            const now = Date.now();
-            let last = lastClaim ? parseInt(lastClaim) : 0;
-            let elapsed = now - last;
-            let canClaim = elapsed >= COOLDOWN_MS;
-            
-            
-            if (canClaim) {
-    dailyEl.textContent = CLAIM_REWARD.toLocaleString('en-US');
-    claimBtn.classList.remove("disabled");
-    statusText.textContent = "Kamu bisa klaim sekarang!";
-} else {
-    claimBtn.classList.add("disabled");
-    statusText.textContent = `Tunggu ${mStr}m ${sStr}s lagi untuk klaim.`;
+    const now = Date.now();
+    let last = lastClaim ? parseInt(lastClaim) : 0;
+    let elapsed = now - last;
+    let canClaim = elapsed >= COOLDOWN_MS;
+
+    if (canClaim) {
+        dailyEl.textContent = CLAIM_REWARD.toLocaleString('en-US');
+        claimBtn.classList.remove("disabled");
+        statusText.textContent = "Kamu bisa klaim sekarang!";
+    } else {
+        let progress = elapsed / COOLDOWN_MS;
+        dailyEl.textContent = Math.floor(CLAIM_REWARD * progress).toLocaleString('en-US');
+
+        let remaining = COOLDOWN_MS - elapsed;
+        let minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+
+        let mStr = minutes.toString().padStart(2, "0");
+        let sStr = seconds.toString().padStart(2, "0");
+
+        claimBtn.classList.add("disabled");
+        statusText.textContent = `Tunggu ${mStr}m ${sStr}s lagi untuk klaim.`;
+    }
+
+    totalEl.textContent = Math.floor(totalReward).toLocaleString('en-US');
 }
-            } else {
-                let progress = elapsed / COOLDOWN_MS;
-                dailyEl.textContent = Math.floor(CLAIM_REWARD * progress).toLocaleString('en-US');
-                claimBtn.disabled = true;
-
-                let remaining = COOLDOWN_MS - elapsed;
-                let minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-                let seconds = Math.floor((remaining % (1000 * 60)) / 1000);
-
-                // Format agar dua digit (contoh: 05:09)
-                let mStr = minutes.toString().padStart(2, "0");
-                let sStr = seconds.toString().padStart(2, "0");
-
-                statusText.textContent = `Tunggu ${mStr}m ${sStr}s lagi untuk klaim.`;
-            }
-            
-            totalEl.textContent = Math.floor(totalReward).toLocaleString('en-US');
        
         }
         
