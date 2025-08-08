@@ -393,51 +393,39 @@
       <div class="reward-title">1JAM REWARD</div>
       <div class="reward-value" id="dailyRewards">0.000</div>
   </div>
-</div>
-<!-- Lokasi Pengguna + Map -->
-<div style="text-align: center; margin: 20px 0;">
-  <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" alt="Map Icon" style="width: 80px;" />
-  <p id="user-location" style="font-weight: bold; font-size: 16px; color: black;">Menentukan lokasi...</p>
-  <div id="map-container" style="width: 100%; max-width: 400px; height: 250px; margin: 10px auto; display: none;">
-    <iframe id="map-frame" width="100%" height="100%" frameborder="0" style="border-radius: 12px;"></iframe>
-  </div>
-</div>
+  <div id="map" style="width: 100%; height: 300px; border-radius: 16px; margin: 20px 0;"></div>
 
 <script>
-  const OPENCAGE_API_KEY = "88646b5c9ce9435185f21cb024684a53";
+  const map = L.map('map').setView([-6.2, 106.8], 15); // Default view sementara
 
-  function getCityName(lat, lon) {
-    const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&key=${OPENCAGE_API_KEY}`;
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        const components = data.results[0].components;
-        const city = components.city || components.town || components.village || components.county || "Tidak diketahui";
-        document.getElementById("user-location").innerText = `Lokasi: ${city}`;
+  // Tambahkan layer dari OpenStreetMap
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
 
-        // Tampilkan Map
-        const mapContainer = document.getElementById("map-container");
-        const mapFrame = document.getElementById("map-frame");
-        const mapURL = `https://www.openstreetmap.org/export/embed.html?bbox=${lon-0.01},${lat-0.01},${lon+0.01},${lat+0.01}&layer=mapnik&marker=${lat},${lon}`;
-        mapFrame.src = mapURL;
-        mapContainer.style.display = "block";
-      })
-      .catch(error => {
-        document.getElementById("user-location").innerText = "Gagal mengambil lokasi.";
-        console.error(error);
-      });
-  }
+  // Buat marker awal kosong
+  const marker = L.marker([-6.2, 106.8]).addTo(map)
+    .bindPopup("Menentukan lokasi...").openPopup();
 
+  // Tracking lokasi user secara live
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(position) {
+    navigator.geolocation.watchPosition(function(position) {
       const lat = position.coords.latitude;
       const lon = position.coords.longitude;
-      getCityName(lat, lon);
+
+      // Update posisi peta dan marker
+      marker.setLatLng([lat, lon])
+        .bindPopup("Lokasi Kamu")
+        .openPopup();
+
+      map.setView([lat, lon], 17);
     }, function() {
-      document.getElementById("user-location").innerText = "Izin lokasi ditolak.";
+      marker.bindPopup("Gagal mendeteksi lokasi").openPopup();
+    }, {
+      enableHighAccuracy: true
     });
   } else {
-    document.getElementById("user-location").innerText = "Geolokasi tidak didukung.";
+    marker.bindPopup("Geolocation tidak didukung").openPopup();
   }
 </script>
         
