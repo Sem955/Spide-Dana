@@ -31,14 +31,7 @@
   border-top: 1px solid #2a2a2a;
   z-index: 999;
 }
-.nav-link.disabled {
-  pointer-events: none;
-  opacity: 0.5;
-}
-.nav-link {
-  cursor: pointer;
-}
-        
+
 .nav-link {
   color: #aaa;
   font-size: 11px;
@@ -66,13 +59,7 @@
 .nav-link:active img {
   opacity: 1;
 }
-
-  .nav-link {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-        }
+     
   .game-button {
     display: flex;
     justify-content: space-between;
@@ -495,24 +482,19 @@
     <img src="https://i.postimg.cc/tgs7hXw5/power-off.png" alt="Tap">
     <span>LONGOUT</span>
   </a>
-  
-  <a href="#" id="claimBtn" class="nav-link">
+  <a href="earning.html" class="nav-link">
     <img src="https://i.postimg.cc/zXyMZ6sQ/dollar.png" alt="Earning">
     <span>CLIM POIN</span>
   </a>
-  
   <a href="history.html" class="nav-link">
     <img src="https://img.icons8.com/ios-filled/24/ffffff/clock.png" alt="History">
     <span>History</span>
   </a>
-  
   <a href="setting.html" class="nav-link">
     <img src="https://img.icons8.com/ios-filled/24/ffffff/settings.png" alt="Setting">
     <span>Setting</span>
   </a>
       </footer>
-
-    
 </div>
     <div class="watch-ad-container">
         <a href="https://vast-size.com/ULT3Sw" target="_blank" style="text-decoration: none;">
@@ -552,10 +534,11 @@
         
  </script>
     <script type="text/javascript" src="//www.highperformanceformat.com/ac86c93838d18124dc18da7238d0ef1a/invoke.js"></script>
- </div>
+    
     <div class="actions">
-    <button id="logoutBtn">Logout</button>
-    <button id="referralBtn">Invite</button>
+        <button id="claimBtn">Claim</button>
+        <button id="logoutBtn">Logout</button>
+        <button id="referralBtn">Invite</button>
     </div>
     
         <div id="referralModal">
@@ -590,32 +573,32 @@
         let totalReward = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
         
         function updateUI() {
-    const now = Date.now();
-    let last = lastClaim ? parseInt(lastClaim) : 0;
-    let elapsed = now - last;
-    let canClaim = elapsed >= COOLDOWN_MS;
+            const now = Date.now();
+            let last = lastClaim ? parseInt(lastClaim) : 0;
+            let elapsed = now - last;
+            let canClaim = elapsed >= COOLDOWN_MS;
+            
+            if (canClaim) {
+                dailyEl.textContent = CLAIM_REWARD.toLocaleString('en-US');
+                claimBtn.disabled = false;
+                statusText.textContent = "Kamu bisa klaim sekarang!";
+            } else {
+                let progress = elapsed / COOLDOWN_MS;
+                dailyEl.textContent = Math.floor(CLAIM_REWARD * progress).toLocaleString('en-US');
+                claimBtn.disabled = true;
 
-    if (canClaim) {
-        dailyEl.textContent = CLAIM_REWARD.toLocaleString('en-US');
-        claimBtn.classList.remove("disabled");
-        statusText.textContent = "Kamu bisa klaim sekarang!";
-    } else {
-        let progress = elapsed / COOLDOWN_MS;
-        dailyEl.textContent = Math.floor(CLAIM_REWARD * progress).toLocaleString('en-US');
+                let remaining = COOLDOWN_MS - elapsed;
+                let minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                let seconds = Math.floor((remaining % (1000 * 60)) / 1000);
 
-        let remaining = COOLDOWN_MS - elapsed;
-        let minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-        let seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+                // Format agar dua digit (contoh: 05:09)
+                let mStr = minutes.toString().padStart(2, "0");
+                let sStr = seconds.toString().padStart(2, "0");
 
-        let mStr = minutes.toString().padStart(2, "0");
-        let sStr = seconds.toString().padStart(2, "0");
-
-        claimBtn.classList.add("disabled");
-        statusText.textContent = `Tunggu ${mStr}m ${sStr}s lagi untuk klaim.`;
-    }
-
-    totalEl.textContent = Math.floor(totalReward).toLocaleString('en-US');
-}
+                statusText.textContent = `Tunggu ${mStr}m ${sStr}s lagi untuk klaim.`;
+            }
+            
+            totalEl.textContent = Math.floor(totalReward).toLocaleString('en-US');
        
         }
         
@@ -666,19 +649,6 @@ document.body.insertAdjacentHTML("beforeend", `
 // Ambil elemen modal dan tombol klaim
 const rewardModal = document.getElementById("rewardModal");
 const claimRewardBtn = document.getElementById("claimRewardBtn");
-
-    // cegah default link agar tidak reload
-claimBtn.addEventListener("click", function(e) {
-  e.preventDefault();
-  if (!claimBtn.classList.contains("disabled")) {
-    // logika claim tetap jalan
-    totalReward += CLAIM_REWARD;
-    localStorage.setItem(username + "_totalReward", totalReward);
-    lastClaim = Date.now();
-    localStorage.setItem(username + "_lastClaim", lastClaim);
-    updateUI();
-  }
-});    
 const tiktokBtn = document.getElementById("tiktokBtn");
 
 // Event klik TikTok
