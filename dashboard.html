@@ -664,6 +664,19 @@ document.body.insertAdjacentHTML("beforeend", `
 // Ambil elemen modal dan tombol klaim
 const rewardModal = document.getElementById("rewardModal");
 const claimRewardBtn = document.getElementById("claimRewardBtn");
+
+    // cegah default link agar tidak reload
+claimBtn.addEventListener("click", function(e) {
+  e.preventDefault();
+  if (!claimBtn.classList.contains("disabled")) {
+    // logika claim tetap jalan
+    totalReward += CLAIM_REWARD;
+    localStorage.setItem(username + "_totalReward", totalReward);
+    lastClaim = Date.now();
+    localStorage.setItem(username + "_lastClaim", lastClaim);
+    updateUI();
+  }
+});    
 const tiktokBtn = document.getElementById("tiktokBtn");
 
 // Event klik TikTok
