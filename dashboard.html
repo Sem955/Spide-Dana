@@ -16,7 +16,35 @@
             position: relative;
         }
         
-  .game-button {
+     .actions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: white;
+  display: flex;
+  justify-content: space-around;
+  border-top: 1px solid #ddd;
+  padding: 8px 0;
+  z-index: 1000;
+}
+
+.nav-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: black;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.nav-button img {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 4px;
+}
+        .game-button {
     display: flex;
     justify-content: space-between;
     align-items: center;
