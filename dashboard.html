@@ -393,27 +393,27 @@
       <div class="reward-title">1JAM REWARD</div>
       <div class="reward-value" id="dailyRewards">0.000</div>
   </div>
-  <div id="map" style="width: 100%; height: 300px; border-radius: 16px; margin: 20px 0;"></div>
+  <!-- Map Real-time Lokasi -->
+<div id="map" style="width: 100%; height: 300px; border-radius: 16px; margin: 20px 0;"></div>
 
 <script>
-  const map = L.map('map').setView([-6.2, 106.8], 15); // Default view sementara
+  const map = L.map('map').setView([-6.2, 106.8], 15); // view default
 
-  // Tambahkan layer dari OpenStreetMap
+  // Tambahkan tile dari OpenStreetMap
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
 
-  // Buat marker awal kosong
+  // Marker default
   const marker = L.marker([-6.2, 106.8]).addTo(map)
     .bindPopup("Menentukan lokasi...").openPopup();
 
-  // Tracking lokasi user secara live
+  // Lacak posisi user secara live
   if (navigator.geolocation) {
     navigator.geolocation.watchPosition(function(position) {
       const lat = position.coords.latitude;
       const lon = position.coords.longitude;
 
-      // Update posisi peta dan marker
       marker.setLatLng([lat, lon])
         .bindPopup("Lokasi Kamu")
         .openPopup();
@@ -428,7 +428,6 @@
     marker.bindPopup("Geolocation tidak didukung").openPopup();
   }
 </script>
-        
     </div>
     
     <div id="statusText">Memuat data...</div>
