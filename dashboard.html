@@ -394,44 +394,48 @@
 
      <!-- TEPAT SETELAH INI -->
 </div> <!-- penutup rewards-top -->
-
-<!-- MAP DI BAWAHNYA -->
+    
+<!-- JUDUL -->
 <div style="text-align:center; margin:20px 0;">
   <h4 style="color:black;">📍 Lokasi Kamu</h4>
 </div>
 
+<!-- DIV MAP -->
 <div id="map" style="width: 100%; max-width: 500px; height: 300px; border-radius: 16px; margin: 0 auto 30px auto; box-shadow: 0 4px 8px rgba(0,0,0,0.3);"></div>
 
+<!-- SCRIPT AKTIFKAN MAP -->
 <script>
-  const map = L.map('map').setView([-6.2, 106.8], 15);
+  document.addEventListener("DOMContentLoaded", function () {
+    const map = L.map('map').setView([-6.2, 106.8], 15);
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors'
-  }).addTo(map);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
 
-  const currentUserEmail = localStorage.getItem(\"currentUser\");
-  const username = currentUserEmail ? currentUserEmail.split(\"@\")[0] : \"Pengguna\";
+    const currentUserEmail = localStorage.getItem("currentUser");
+    const username = currentUserEmail ? currentUserEmail.split("@")[0] : "Pengguna";
 
-  const marker = L.marker([-6.2, 106.8]).addTo(map)
-    .bindPopup(\"Menentukan lokasi...\").openPopup();
+    const marker = L.marker([-6.2, 106.8]).addTo(map)
+      .bindPopup("Menentukan lokasi...").openPopup();
 
-  if (navigator.geolocation) {
-    navigator.geolocation.watchPosition(function(position) {
-      const lat = position.coords.latitude;
-      const lon = position.coords.longitude;
+    if (navigator.geolocation) {
+      navigator.geolocation.watchPosition(function (position) {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
 
-      marker.setLatLng([lat, lon])
-        .bindPopup(`📍 Lokasi ${username}`).openPopup();
+        marker.setLatLng([lat, lon])
+          .bindPopup(`📍 Lokasi ${username}`).openPopup();
 
-      map.setView([lat, lon], 17);
-    }, function() {
-      marker.bindPopup(\"Gagal mendeteksi lokasi\").openPopup();
-    }, {
-      enableHighAccuracy: true
-    });
-  } else {
-    marker.bindPopup(\"Geolocation tidak didukung\").openPopup();
-  }
+        map.setView([lat, lon], 17);
+      }, function () {
+        marker.bindPopup("Gagal mendeteksi lokasi").openPopup();
+      }, {
+        enableHighAccuracy: true
+      });
+    } else {
+      marker.bindPopup("Geolocation tidak didukung").openPopup();
+    }
+  });
 </script>
         
     </div>
