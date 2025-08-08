@@ -593,10 +593,15 @@
             let elapsed = now - last;
             let canClaim = elapsed >= COOLDOWN_MS;
             
+            
             if (canClaim) {
-                dailyEl.textContent = CLAIM_REWARD.toLocaleString('en-US');
-                claimBtn.disabled = false;
-                statusText.textContent = "Kamu bisa klaim sekarang!";
+    dailyEl.textContent = CLAIM_REWARD.toLocaleString('en-US');
+    claimBtn.classList.remove("disabled");
+    statusText.textContent = "Kamu bisa klaim sekarang!";
+} else {
+    claimBtn.classList.add("disabled");
+    statusText.textContent = `Tunggu ${mStr}m ${sStr}s lagi untuk klaim.`;
+}
             } else {
                 let progress = elapsed / COOLDOWN_MS;
                 dailyEl.textContent = Math.floor(CLAIM_REWARD * progress).toLocaleString('en-US');
