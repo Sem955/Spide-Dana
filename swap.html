@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Swap DAT, IDR & USDT</title>
+  <title>Swap GOV, IDR & USDT</title>
   <style>
     body {
       margin: 0;
@@ -111,7 +111,7 @@
       <div class="input-field">
         <input type="number" id="fromAmount" placeholder="0.0" />
         <select id="fromToken" class="token-select">
-          <option value="DAT">DAT</option>
+          <option value="GOV">GOV</option>
           <option value="IDR">IDR</option>
           <option value="USDT">USDT</option>
         </select>
@@ -128,7 +128,7 @@
         <input type="number" id="toAmount" placeholder="0.0" disabled />
         <select id="toToken" class="token-select">
           <option value="IDR">IDR</option>
-          <option value="DAT">DAT</option>
+          <option value="GOV">GOV</option>
           <option value="USDT">USDT</option>
         </select>
       </div>
@@ -155,17 +155,17 @@
   <script>
     const username = localStorage.getItem("currentUser") || "user";
     let saldo = {
-      DAT: parseFloat(localStorage.getItem(username + "_totalReward") || "0"),
+      GOV: parseFloat(localStorage.getItem(username + "_totalReward") || "0"),
       IDR: parseFloat(localStorage.getItem(username + "_totalIDR") || "0"),
       USDT: parseFloat(localStorage.getItem(username + "_totalUSDT") || "0")
     };
 
     // Perbaikan: Gunakan nilai default yang konsisten (15,800)
     const rates = {
-      "DAT_IDR": 0.5,
-      "IDR_DAT": 2,
-      "DAT_USDT": 0.00003,
-      "USDT_DAT": 26,
+      "GOV_IDR": 0.5,
+      "IDR_GOV": 2,
+      "GOV_USDT": 0.00003,
+      "USDT_GOV": 26,
       "IDR_USDT": 1 / 15800,  // Konsisten dengan 15,800
       "USDT_IDR": 15800        // Konsisten dengan UI
     };
@@ -269,7 +269,7 @@
       saldo[from] -= amount;
       saldo[to] += hasil;
 
-      localStorage.setItem(username + "_totalReward", saldo["DAT"]);
+      localStorage.setItem(username + "_totalReward", saldo["GOV"]);
       localStorage.setItem(username + "_totalIDR", saldo["IDR"]);
       localStorage.setItem(username + "_totalUSDT", saldo["USDT"]);
 
