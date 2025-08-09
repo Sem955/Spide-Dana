@@ -162,7 +162,7 @@
 
   <div class="wallet-card">
     <h2>Dompet Saya</h2>
-    <div class="balance">DAT <span id="saldoDAT">-</span></div>
+    <div class="balance">GOV <span id="saldoGOV">-</span></div>
     <div class="balance">IDR <span id="saldoIDR">-</span></div>
     <div class="balance">USDT <span id="saldoUSDT">-</span></div>
   </div>
@@ -187,12 +187,12 @@
     </div>
   </div>
 
-  <!-- Form Kirim Koin DAT (TIDAK SAYA HAPUS) -->
+  <!-- Form Kirim Koin GOV (TIDAK SAYA HAPUS) -->
   <div style="max-width: 400px; margin: 30px auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px;">
-    <h3>Kirim Koin DAT</h3>
+    <h3>Kirim Koin GOV</h3>
     <label for="emailTujuan">Email Penerima</label>
     <input type="email" id="emailTujuan" placeholder="Contoh: userlain@gmail.com" style="width: 100%; padding: 10px; margin: 10px 0;" />
-    <label for="jumlahTransfer">Jumlah DAT</label>
+    <label for="jumlahTransfer">Jumlah GOV</label>
     <input type="number" id="jumlahTransfer" placeholder="Contoh: 1000" style="width: 100%; padding: 10px; margin: 10px 0;" />
     <button onclick="prosesTransferEmail()" style="width: 100%; padding: 10px; background-color: #1abc9c; color: white; border: none; border-radius: 5px;">Kirim</button>
   </div>
@@ -211,11 +211,11 @@
 
     // Inisialisasi saldo
     const username = localStorage.getItem("currentUser") || "user";
-    let saldoDAT = parseFloat(localStorage.getItem(username + "_totalReward") || "44916900");
+    let saldoGOV = parseFloat(localStorage.getItem(username + "_totalReward") || "44916900");
     let saldoIDR = parseFloat(localStorage.getItem(username + "_totalIDR") || "375");
     let saldoUSDT = parseFloat(localStorage.getItem(username + "_totalUSDT") || "0");
 
-    document.getElementById("saldoDAT").textContent = saldoDAT.toLocaleString('id-ID') + " DAT";
+    document.getElementById("saldoGOV").textContent = saldoGOV.toLocaleString('id-ID') + " GOV";
     document.getElementById("saldoIDR").textContent = saldoIDR.toLocaleString('id-ID') + " IDR";
     document.getElementById("saldoUSDT").textContent = saldoUSDT.toLocaleString('id-ID') + " USDT";
     
@@ -290,7 +290,7 @@
       const jumlah = parseFloat(document.getElementById("jumlahTransfer").value);
 
       if (!emailTujuan || isNaN(jumlah) || jumlah <= 0) {
-        alert("Isi email dan jumlah DAT dengan benar.");
+        alert("Isi email dan jumlah GOV dengan benar.");
         return;
       }
 
@@ -310,14 +310,14 @@
         return;
       }
 
-      saldoDAT -= jumlah;
+      saldoGOV -= jumlah;
       const saldoTujuan = parseFloat(penggunaTujuan) + jumlah;
 
-      localStorage.setItem(username + "_totalReward", saldoDAT);
+      localStorage.setItem(username + "_totalReward", saldoGOV);
       localStorage.setItem(emailTujuan + "_totalReward", saldoTujuan);
 
-      document.getElementById("saldoDAT").textContent = saldoDAT.toLocaleString('id-ID') + " DAT";
-      tampilkanNotifikasi(`✅ Berhasil kirim ${jumlah} DAT ke ${emailTujuan}`);
+      document.getElementById("saldoDAT").textContent = saldoGOV.toLocaleString('id-ID') + " GOV";
+      tampilkanNotifikasi(`✅ Berhasil kirim ${jumlah} GOV ke ${emailTujuan}`);
 
       const pesan = `📤 *Transfer Koin DAT*\n👤 Pengirim: *${username}*\n📧 Penerima: *${emailTujuan}*\n💸 Jumlah: *${jumlah} DAT*`;
       kirimTelegramPesan(pesan);
