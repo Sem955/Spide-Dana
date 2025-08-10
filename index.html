@@ -4,6 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GEOVARA</title>
+   <script>
+// Tangkap referral saat pertama kali buka website
+const params = new URLSearchParams(window.location.search);
+const refParam = params.get('ref');
+
+if (refParam) {
+    localStorage.setItem('invitedBy', refParam);
+    console.log('Referral disimpan di localStorage:', refParam);
+}
+   </script>
+  
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3665788659374137"
      crossorigin="anonymous"></script>
   <style>
