@@ -586,11 +586,31 @@ claimRewardBtn.addEventListener("click", () => {
         const referralLinkInput = document.getElementById("referralLink");
         
         referralBtn.addEventListener("click", () => {
-            const username = localStorage.getItem("currentUser") || "user";
-            const referralLink = `${window.location.origin}?ref=${username}`;
-            referralLinkInput.value = referralLink;
-            referralModal.style.display = "block";
+    const currentUserEmail = localStorage.getItem("currentUser") || "user@example.com";
+    const username = currentUserEmail.split("@")[0];
+    const referralLink = `${window.location.origin}?ref=${username}`;
+    referralLinkInput.value = referralLink;
+
+    // Ambil daftar referral dari localStorage
+    let referrals = JSON.parse(localStorage.getItem(username + "_referrals") || "[]");
+    let poin = parseInt(localStorage.getItem(username + "_referralPoints") || "0");
+
+    // Tampilkan daftar referral
+    const listEl = document.getElementById("referralList");
+    listEl.innerHTML = "";
+    if (referrals.length === 0) {
+        listEl.innerHTML = "<li>Belum ada yang diundang</li>";
+    } else {
+        referrals.forEach(r => {
+            listEl.innerHTML += `<li>@${r}</li>`;
         });
+    }
+
+    // Tampilkan total poin
+    document.getElementById("referralTotalPoin").textContent = poin;
+
+    referralModal.style.display = "block";
+});
         
         function copyReferralLink() {
             referralLinkInput.select();
