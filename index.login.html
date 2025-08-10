@@ -4,7 +4,13 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Login DANA Rewards</title>
-<style>
+ <script>
+  const params = new URLSearchParams(window.location.search);
+  console.log('ref param:', params.get('ref'));
+  console.log('invitedBy:', localStorage.getItem('invitedBy'));
+ </script>
+  
+  <style>
   body {
     background-color: #F9F6EE;
     font-family: Arial, sans-serif;
