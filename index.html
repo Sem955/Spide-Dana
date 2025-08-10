@@ -15,7 +15,6 @@
     }
   </script>
   
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3665788659374137" crossorigin="anonymous"></script>
   <style>
     body {
       margin: 0;
@@ -40,7 +39,6 @@
       align-items: center;
       margin: 20px auto;
     }
-
     .iklan-centerr {
       display: flex;
       justify-content: center;
@@ -68,14 +66,12 @@
       font-size: 1em;
       margin-bottom: 20px;
     }
-
     .event-box {
       display: inline-block;
       text-align: center;
       padding: 14px 20px;
       border-radius: 8px;
     }
-
     .event-title {
       margin: 0 0 6px;
       color: #1e90ff;
@@ -83,20 +79,16 @@
       font-weight: 700;
       letter-spacing: 0.6px;
     }
-
     .event-sub {
       margin: 0;
       color: #1e90ff;
       font-size: 18px;
       opacity: 0.95;
     }
-
-    /* Responsif di layar kecil */
     @media (max-width: 420px) {
       .event-title { font-size: 22px; }
       .event-sub { font-size: 16px; }
     }
-    
     .play-now-btn {
       display: block;
       width: 60%;
@@ -181,8 +173,6 @@
       <li><a href="jadwalbola.html">🔜JADWAL BOLA72</a></li>
       <li><a href="bitcoin.html">🔜BITCOIN NEWS</a></li>
       <li><a href="btc.html">🔜BITCOIN LiVE</a></li>
-
-      <!-- ✅ Tombol "Play Game" sejajar -->
       <li style="margin-top: 30px; text-align: center;">
         <a href="tugasa.html" style="
           display: inline-block;
@@ -202,12 +192,11 @@
     <p>Dipercaya oleh lebih dari 1 juta pengguna</p>
     <h1>Gabung dengan GEOVARA<br> kumpulin koin.</h1> 
     <p>Anda Bisa swap ke USDT atau ke IDR .</p>
-    
-    <!-- Tombol Play Now with Popunder -->
-    <button class="play-now-btn" id="playNowBtn">PLAY NOW →</button>
+    <a href="index.login.html" class="play-now-btn">PLAY NOW →</a>
   </div>
 
   <div class="iklan-center">
+    <!-- Iklan pertama -->
     <script type="text/javascript">
       atOptions = {
         'key' : '3c59e4d44077a502c4e170cc28072963',
@@ -227,6 +216,7 @@
   </div>
   
   <div class="iklan-centerr">
+    <!-- Iklan kedua -->
     <script>
       (function(cvngk){
         var d = document,
@@ -295,58 +285,23 @@
   </div>
 
   <script>
-    // Enhanced Popunder Implementation
-    document.getElementById('playNowBtn').addEventListener('click', function(e) {
-      e.preventDefault();
-      
-      // 1. First redirect user
-      window.location.href = "index.login.html";
-      
-      // 2. Then trigger popunder after a small delay
-      setTimeout(function() {
-        try {
-          // Method 1: Standard popunder
-          var popunder = window.open('', '_blank', 'width=1,height=1,left=-1000,top=-1000');
-          if(popunder) {
-            popunder.blur();
-            window.focus();
-            // Redirect the popunder after it opens
-            setTimeout(function() {
-              popunder.location.href = 'https://www.profitableratecpm.com/redirect?from=geovara';
-            }, 100);
-          }
-          
-          // Method 2: Fallback using iframe
-          var iframe = document.createElement('iframe');
-          iframe.style.display = 'none';
-          iframe.srcdoc = `<script>window.open('https://www.profitableratecpm.com/redirect','_blank').blur();window.focus();<\/script>`;
-          document.body.appendChild(iframe);
-          setTimeout(() => iframe.remove(), 1000);
-          
-        } catch(e) {
-          console.error('Popunder error:', e);
-        }
-      }, 500);
-    });
-
-    // Load provider script
-    window.addEventListener('load', function() {
-      var script = document.createElement('script');
-      script.src = '//pl27331519.profitableratecpm.com/13/4d/88/134d88f200f3571f191859bf77418cbc.js';
-      script.async = true;
-      document.body.appendChild(script);
-    });
-
+    // Fungsi toggle menu
     function toggleMenu() {
       const menu = document.getElementById('menuOverlay');
       menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
     }
 
+    // Fungsi ganti bahasa
     function setLanguage(lang) {
-      // Fungsi untuk mengganti bahasa
+      // Implementasi ganti bahasa bisa ditambahkan di sini
       console.log('Bahasa diubah ke: ' + lang);
-      // Implementasi perubahan bahasa bisa ditambahkan di sini
     }
+
+    // Fungsi untuk tombol play now (tanpa popunder)
+    document.querySelector('.play-now-btn').addEventListener('click', function(e) {
+      // Tidak ada aksi khusus, hanya redirect biasa
+      console.log('Redirect ke halaman login');
+    });
   </script>
 </body>
 </html>
