@@ -647,11 +647,17 @@ document.addEventListener("click", function (event) {
 });
 
 // Fungsi DOMPET (nanti bisa diubah jadi popup / halaman)
-function bukaDompet() {
+  function bukaDompet() {
   const dana = localStorage.getItem(username + "_totalIDR") || "0.00";
-  alert(`Saldo IDR Anda: ${parseFloat(dana).toFixed(2)}\nSaldo GOV Anda: ${Math.floor(totalReward).toLocaleString('en-US')}`);
+  const referralPoints = parseInt(localStorage.getItem(username + "_referralPoints") || "0");
+  const totalWithReferral = Math.floor(totalReward + referralPoints);
+
+  alert(
+    `Saldo IDR Anda: ${parseFloat(dana).toFixed(2)}\n` +
+    `Saldo GOV Anda: ${totalWithReferral.toLocaleString('en-US')} (termasuk poin referral)`
+  );
 }
-      
+                
     </script>
     
 <!-- Iklan tambahan dari profitableratecpm.com -->  
