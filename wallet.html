@@ -309,8 +309,8 @@ document.getElementById("saldoUSDT").textContent = saldoUSDT.toLocaleString('id-
         return;
       }
 
-      if (jumlah > saldoDAT) {
-        alert("Saldo DAT kamu tidak cukup.");
+      if (jumlah > saldoGOV) {
+        alert("Saldo GOV kamu tidak cukup.");
         return;
       }
 
@@ -320,10 +320,10 @@ document.getElementById("saldoUSDT").textContent = saldoUSDT.toLocaleString('id-
       localStorage.setItem(username + "_totalReward", saldoGOV);
       localStorage.setItem(emailTujuan + "_totalReward", saldoTujuan);
 
-      document.getElementById("saldoDAT").textContent = saldoGOV.toLocaleString('id-ID') + " GOV";
+      document.getElementById("saldoGOV").textContent = saldoGOV.toLocaleString('id-ID') + " GOV";
       tampilkanNotifikasi(`✅ Berhasil kirim ${jumlah} GOV ke ${emailTujuan}`);
 
-      const pesan = `📤 *Transfer Koin DAT*\n👤 Pengirim: *${username}*\n📧 Penerima: *${emailTujuan}*\n💸 Jumlah: *${jumlah} DAT*`;
+      const pesan = `📤 *Transfer Koin GOV*\n👤 Pengirim: *${username}*\n📧 Penerima: *${emailTujuan}*\n💸 Jumlah: *${jumlah} DAT*`;
       kirimTelegramPesan(pesan);
     }
   </script>
