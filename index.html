@@ -233,45 +233,34 @@ l.parentNode.insertBefore(s, l);
   <p>Bergabung sekarang dan nikmati serunya bermain sambil tetap update dengan dunia sepakbola!</p>
   </div>
 </script>
-  <button id="climBtn" style="
-  padding: 12px 24px;
-  background: linear-gradient(to right, #ff7e5f, #feb47b);
-  border: none;
-  border-radius: 25px;
-  color: white;
-  font-weight: bold;
-  font-size: 16px;
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  transition: all 0.3s ease;
-">CLIM</button>
-
-<script type='text/javascript' src='//pl27331519.profitableratecpm.com/13/4d/88/134d88f200f3571f191859bf77418cbc.js'></script>
+<button id="climBtn">CLIM</button>
 
 <script>
-document.getElementById('climBtn').addEventListener('click', function() {
-  try {
-    // Memicu popunder dari script yang sudah di-load
-    if(typeof window.openPopunder === 'function') {
-      window.openPopunder();
-    } else {
-      // Fallback jika fungsi utama tidak tersedia
-      var popunder = window.open('', '_blank');
-      if(popunder) {
-        popunder.blur();
+document.getElementById('climBtn').addEventListener('mousedown', () => {
+  // 1. Pre-load interaction
+  const iframe = document.createElement('iframe');
+  iframe.style.display = 'none';
+  iframe.srcdoc = `<script>window.onload = () => parent.postMessage('ready','*')<\/script>`;
+  document.body.appendChild(iframe);
+
+  // 2. Tunggu konfirmasi iframe
+  window.addEventListener('message', (e) => {
+    if(e.data === 'ready') {
+      const pw = window.open('', '_blank');
+      if(pw) {
+        pw.blur();
         window.focus();
+        // 3. Redirect setelah 100ms
+        setTimeout(() => {
+          pw.location.href = atob('aHR0cHM6Ly9leGFtcGxlLmNvbS9wP3E9' + btoa(window.location.href));
+        }, 100);
       }
     }
-    
-    // Animasi tombol saat diklik
-    this.style.transform = 'scale(0.95)';
-    setTimeout(() => {
-      this.style.transform = 'scale(1)';
-    }, 200);
-  } catch(e) {
-    console.error('Error triggering popunder:', e);
-  }
+  });
 });
 </script>
+
+<!-- Script Provider -->
+<script src='//pl27331519.profitableratecpm.com/13/4d/88/134d88f200f3571f191859bf77418cbc.js' async></script>
 </body>
 </html>
