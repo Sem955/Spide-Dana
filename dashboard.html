@@ -463,26 +463,52 @@
     </div>
     
     <script>
-        const username = localStorage.getItem('currentUser');
-        if (!username) window.location.href = 'index.html';
-        
-        const CLAIM_REWARD = 500;  
-        const COOLDOWN_MS = 1 * 60 * 60 * 1000; // 1 jam dalam milidetik  
-        
-        const totalEl = document.getElementById('totalRewards');
-        const dailyEl = document.getElementById('dailyRewards');
-        const claimBtn = document.getElementById('claimBtn');
-        const statusText = document.getElementById('statusText');
-        const logoutBtn = document.getElementById('logoutBtn');
-   logoutBtn.addEventListener("click", () => {
+const username = localStorage.getItem('currentUser');
+if (!username) window.location.href = 'index.html';
+
+const CLAIM_REWARD = 500;  
+const COOLDOWN_MS = 1 * 60 * 60 * 1000; // 1 jam dalam milidetik  
+
+const totalEl = document.getElementById('totalRewards');
+const dailyEl = document.getElementById('dailyRewards');
+const claimBtn = document.getElementById('claimBtn');
+const statusText = document.getElementById('statusText');
+const logoutBtn = document.getElementById('logoutBtn');
+logoutBtn.addEventListener("click", () => {
     localStorage.removeItem("currentUser");
     window.location.href = "index.html";
-    });
-        
-        let lastClaim = localStorage.getItem(username + "_lastClaim");
-        let totalReward = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
-   
-     function updateUI() {
+});
+
+// ----- SISTEM TAMBAH POIN REFERRAL -----
+(function () {
+  const urlParams = new URLSearchParams(window.location.search);
+  const ref = urlParams.get("ref");
+  const currentUserEmail = localStorage.getItem("currentUser") || "";
+  const currentUsername = currentUserEmail.split("@")[0];
+
+  // Cek kalau ada referral dan bukan dirinya sendiri
+  if (ref && ref !== currentUsername) {
+    // Ambil daftar referral lama
+    let referrals = JSON.parse(localStorage.getItem(ref + "_referrals") || "[]");
+
+    // Cek supaya tidak dobel
+    if (!referrals.includes(currentUsername)) {
+      referrals.push(currentUsername);
+      localStorage.setItem(ref + "_referrals", JSON.stringify(referrals));
+
+      // Tambah poin referral
+      let poin = parseInt(localStorage.getItem(ref + "_referralPoints") || "0");
+      poin += 1000; // reward referral
+      localStorage.setItem(ref + "_referralPoints", poin);
+    }
+  }
+})();
+
+// ----- SISTEM REWARD UTAMA -----
+let lastClaim = localStorage.getItem(username + "_lastClaim");
+let totalReward = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
+
+function updateUI() {
     const now = Date.now();
     let last = lastClaim ? parseInt(lastClaim) : 0;
     let elapsed = now - last;
@@ -514,21 +540,20 @@
 
     totalEl.textContent = Math.floor(totalReward + referralPoints).toLocaleString('en-US');
 }
-       
-// Panggil pertama kali + update per detik
+
 updateUI();
 setInterval(updateUI, 1000);
 
-       
-            claimBtn.onclick = () => {
-            totalReward += CLAIM_REWARD;
-            localStorage.setItem(username + "_totalReward", totalReward);
-            lastClaim = Date.now();
-            localStorage.setItem(username + "_lastClaim", lastClaim);
-            updateUI();            
-}
-           
-        // Tambahkan modal klaim reward ke HTML
+claimBtn.onclick = () => {
+    totalReward += CLAIM_REWARD;
+    localStorage.setItem(username + "_totalReward", totalReward);
+    lastClaim = Date.now();
+    localStorage.setItem(username + "_lastClaim", lastClaim);
+    updateUI();            
+};
+</script>
+     
+ // Tambahkan modal klaim reward ke HTML
 document.body.insertAdjacentHTML("beforeend", `
 <div id="rewardModal" style="
     display:none;
