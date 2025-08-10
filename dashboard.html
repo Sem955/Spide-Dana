@@ -481,7 +481,7 @@
         
         let lastClaim = localStorage.getItem(username + "_lastClaim");
         let totalReward = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
-  
+   
      function updateUI() {
     const now = Date.now();
     let last = lastClaim ? parseInt(lastClaim) : 0;
@@ -489,36 +489,32 @@
     let canClaim = elapsed >= COOLDOWN_MS;
 
     if (canClaim) {
-        dailyEl.textContent = CLAIM_REWARD.toLocaleString("en-US");
+        dailyEl.textContent = CLAIM_REWARD.toLocaleString('en-US');
         claimBtn.disabled = false;
         statusText.textContent = "Kamu bisa klaim sekarang!";
     } else {
         let progress = elapsed / COOLDOWN_MS;
-        dailyEl.textContent = Math.floor(CLAIM_REWARD * progress).toLocaleString("en-US");
+        dailyEl.textContent = Math.floor(CLAIM_REWARD * progress).toLocaleString('en-US');
         claimBtn.disabled = true;
 
         let remaining = COOLDOWN_MS - elapsed;
         let minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
         let seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+
         let mStr = minutes.toString().padStart(2, "0");
         let sStr = seconds.toString().padStart(2, "0");
+
         statusText.textContent = `Tunggu ${mStr}m ${sStr}s lagi untuk klaim.`;
     }
 
-    // Ambil poin referral
+    // Ambil poin referral dan tambahkan ke tampilan total GEOVARA
+    const currentUserEmail = localStorage.getItem("currentUser") || "";
+    const username = currentUserEmail.split("@")[0];
     let referralPoints = parseInt(localStorage.getItem(username + "_referralPoints") || "0");
 
-    // Jika referralPoints > 0, masukkan ke dompet dan reset referralPoints
-    if (referralPoints > 0) {
-        totalReward += referralPoints;
-        localStorage.setItem(username + "_totalReward", totalReward);
-        localStorage.setItem(username + "_referralPoints", 0);
-    }
-
-    // Update tampilan GEOVARA
-    totalEl.textContent = totalReward.toLocaleString("en-US");
+    totalEl.textContent = Math.floor(totalReward + referralPoints).toLocaleString('en-US');
 }
-        
+       
 // Panggil pertama kali + update per detik
 updateUI();
 setInterval(updateUI, 1000);
