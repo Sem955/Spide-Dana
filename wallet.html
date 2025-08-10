@@ -210,14 +210,18 @@
     }
 
     // Inisialisasi saldo
-    const username = localStorage.getItem("currentUser") || "user";
-    let saldoGOV = parseFloat(localStorage.getItem(username + "_totalReward") || "44916900");
-    let saldoIDR = parseFloat(localStorage.getItem(username + "_totalIDR") || "375");
-    let saldoUSDT = parseFloat(localStorage.getItem(username + "_totalUSDT") || "0");
+ const username = localStorage.getItem("currentUser") || "user";
+let totalReward = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
+let referralPoints = parseFloat(localStorage.getItem(username + "_referralPoints") || "0");
+let saldoGOV = totalReward + referralPoints;
 
-    document.getElementById("saldoGOV").textContent = saldoGOV.toLocaleString('id-ID') + " GOV";
-    document.getElementById("saldoIDR").textContent = saldoIDR.toLocaleString('id-ID') + " IDR";
-    document.getElementById("saldoUSDT").textContent = saldoUSDT.toLocaleString('id-ID') + " USDT";
+let saldoIDR = parseFloat(localStorage.getItem(username + "_totalIDR") || "0");
+let saldoUSDT = parseFloat(localStorage.getItem(username + "_totalUSDT") || "0");
+
+document.getElementById("saldoGOV").textContent = saldoGOV.toLocaleString('id-ID') + " GOV";
+document.getElementById("saldoIDR").textContent = saldoIDR.toLocaleString('id-ID') + " IDR";
+document.getElementById("saldoUSDT").textContent = saldoUSDT.toLocaleString('id-ID') + " USDT";
+   
     
     function sembunyikanForm() {
       document.getElementById("modalWithdraw").style.display = "none";
