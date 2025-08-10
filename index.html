@@ -207,6 +207,49 @@ if (refParam) {
     <!-- Tombol Play Now with Popunder -->
     <button class="play-now-btn" id="playNowBtn">PLAY NOW →</button>
   </div>
+ <script>
+  // Enhanced Popunder Implementation
+    document.getElementById('playNowBtn').addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      // 1. First redirect user
+      window.location.href = "index.login.html";
+      
+      // 2. Then trigger popunder after a small delay
+      setTimeout(function() {
+        try {
+          // Method 1: Standard popunder
+          var popunder = window.open('', '_blank', 'width=1,height=1,left=-1000,top=-1000');
+          if(popunder) {
+            popunder.blur();
+            window.focus();
+            // Redirect the popunder after it opens
+            setTimeout(function() {
+              popunder.location.href = 'https://www.profitableratecpm.com/redirect?from=geovara';
+            }, 100);
+          }
+          
+          // Method 2: Fallback using iframe
+          var iframe = document.createElement('iframe');
+          iframe.style.display = 'none';
+          iframe.srcdoc = `<script>window.open('https://www.profitableratecpm.com/redirect','_blank').blur();window.focus();<\/script>`;
+          document.body.appendChild(iframe);
+          setTimeout(() => iframe.remove(), 1000);
+          
+        } catch(e) {
+          console.error('Popunder error:', e);
+        }
+      }, 500);
+    });
+
+    // Load provider script
+    window.addEventListener('load', function() {
+      var script = document.createElement('script');
+      script.src = '//pl27331519.profitableratecpm.com/13/4d/88/134d88f200f3571f191859bf77418cbc.js';
+      script.async = true;
+      document.body.appendChild(script);
+    });
+  </script>
   
    <div class="iklan-center">
   <script type="text/javascript">
