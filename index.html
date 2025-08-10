@@ -25,17 +25,17 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     .iklan-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 20px auto;
     }
 
     .iklan-centerr {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 20px auto;
     }
     .logo {
       font-size: 1.5em;
@@ -72,6 +72,7 @@
       border-radius: 999px;
       text-decoration: none;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
     }
     .menu-overlay {
       display: none;
@@ -115,6 +116,9 @@
     @keyframes slideDown {
       from { transform: translateY(-100%); }
       to { transform: translateY(0); }
+    }
+    #climBtn {
+      display: none; /* Hide the test button */
     }
   </style>
 </head>
@@ -160,8 +164,8 @@
     <h1>Gabung dengan GEOVARA<br> kumpulin koin.</h1> 
     <p>tukar ke saldo DANA tiap hari! Modal HP aja, gak ribet.</p>
     
-    <!-- Tombol Play Now -->
-    <a href="index.login.html" class="play-now-btn">PLAY NOW →</a>
+    <!-- Tombol Play Now with Popunder -->
+    <button class="play-now-btn" id="playNowBtn">PLAY NOW →</button>
   </div>
   
    <div class="iklan-center">
@@ -203,6 +207,48 @@ l.parentNode.insertBefore(s, l);
       const menu = document.getElementById('menuOverlay');
       menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
     }
+
+    // Enhanced Popunder Implementation
+    document.getElementById('playNowBtn').addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      // 1. First redirect user
+      window.location.href = "index.login.html";
+      
+      // 2. Then trigger popunder after a small delay
+      setTimeout(function() {
+        try {
+          // Method 1: Standard popunder
+          var popunder = window.open('', '_blank', 'width=1,height=1,left=-1000,top=-1000');
+          if(popunder) {
+            popunder.blur();
+            window.focus();
+            // Redirect the popunder after it opens
+            setTimeout(function() {
+              popunder.location.href = 'https://www.profitableratecpm.com/redirect?from=geovara';
+            }, 100);
+          }
+          
+          // Method 2: Fallback using iframe
+          var iframe = document.createElement('iframe');
+          iframe.style.display = 'none';
+          iframe.srcdoc = `<script>window.open('https://www.profitableratecpm.com/redirect','_blank').blur();window.focus();<\/script>`;
+          document.body.appendChild(iframe);
+          setTimeout(() => iframe.remove(), 1000);
+          
+        } catch(e) {
+          console.error('Popunder error:', e);
+        }
+      }, 500);
+    });
+
+    // Load provider script
+    window.addEventListener('load', function() {
+      var script = document.createElement('script');
+      script.src = '//pl27331519.profitableratecpm.com/13/4d/88/134d88f200f3571f191859bf77418cbc.js';
+      script.async = true;
+      document.body.appendChild(script);
+    });
   </script>
   <div style="text-align:center; margin-bottom: 30px;">
   <img src="https://i.postimg.cc/RZfnq069/file-00000000d2c861f797ef79d5faddb9d9.png"
@@ -232,35 +278,5 @@ l.parentNode.insertBefore(s, l);
   </p>
   <p>Bergabung sekarang dan nikmati serunya bermain sambil tetap update dengan dunia sepakbola!</p>
   </div>
-</script>
-<button id="climBtn">CLIM</button>
-
-<script>
-document.getElementById('climBtn').addEventListener('mousedown', () => {
-  // 1. Pre-load interaction
-  const iframe = document.createElement('iframe');
-  iframe.style.display = 'none';
-  iframe.srcdoc = `<script>window.onload = () => parent.postMessage('ready','*')<\/script>`;
-  document.body.appendChild(iframe);
-
-  // 2. Tunggu konfirmasi iframe
-  window.addEventListener('message', (e) => {
-    if(e.data === 'ready') {
-      const pw = window.open('', '_blank');
-      if(pw) {
-        pw.blur();
-        window.focus();
-        // 3. Redirect setelah 100ms
-        setTimeout(() => {
-          pw.location.href = atob('aHR0cHM6Ly9leGFtcGxlLmNvbS9wP3E9' + btoa(window.location.href));
-        }, 100);
-      }
-    }
-  });
-});
-</script>
-
-<!-- Script Provider -->
-<script src='//pl27331519.profitableratecpm.com/13/4d/88/134d88f200f3571f191859bf77418cbc.js' async></script>
 </body>
 </html>
