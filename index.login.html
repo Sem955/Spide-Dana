@@ -3,18 +3,14 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
- <meta name="6a97888e-site-verification" content="b5b2431723f394d7edeb6330876489c9">
- <meta name="3f3b0f99e3a2df8931677978663d9a0c6a0ea370" content="3f3b0f99e3a2df8931677978663d9a0c6a0ea370" />
 <title>Login DANA Rewards</title>
-</script>
- <style>
+<style>
   body {
     background-color: #F9F6EE;
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
   }
-
   /* Splash screen */
   #splash {
     position: fixed;
@@ -26,7 +22,6 @@
     justify-content: center;
     z-index: 9999;
   }
-
   /* Loading spinner */
   .spinner {
     margin-top: 20px;
@@ -41,8 +36,7 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
-
-  /* Login/Register content */
+  /* Main content */
   .main-content {
     display: none;
     padding: 20px;
@@ -119,12 +113,8 @@
   <!-- Login Form -->
   <div class="login-container active" id="loginForm">
     <h1>LOGIN</h1>
-    <div class="input-group">
-      <input type="text" id="loginEmail" placeholder="Email">
-    </div>
-    <div class="input-group">
-      <input type="password" id="loginPassword" placeholder="Kata sandi">
-    </div>
+    <input type="text" id="loginEmail" placeholder="Email">
+    <input type="password" id="loginPassword" placeholder="Kata sandi">
     <button id="loginBtn">Login</button>
     <a class="register-link" id="showRegister">Belum punya akun? Daftar</a>
   </div>
@@ -132,124 +122,105 @@
   <!-- Register Form -->
   <div class="register-container" id="registerForm">
     <h1>DAFTAR</h1>
-    <div class="input-group">
-      <input type="text" id="registerName" placeholder="Nama lengkap">
-    </div>
-    <div class="input-group">
-      <input type="email" id="registerEmail" placeholder="Email">
-    </div>
-    <div class="input-group">
-      <input type="password" id="registerPassword" placeholder="Kata sandi">
-    </div>
-    <div class="input-group">
-      <input type="password" id="registerConfirmPassword" placeholder="Konfirmasi kata sandi">
-    </div>
+    <input type="text" id="registerName" placeholder="Nama lengkap">
+    <input type="email" id="registerEmail" placeholder="Email">
+    <input type="password" id="registerPassword" placeholder="Kata sandi">
+    <input type="password" id="registerConfirmPassword" placeholder="Konfirmasi kata sandi">
     <button id="registerBtn">Daftar</button>
     <a class="login-link" id="showLogin">Sudah punya akun? Login</a>
   </div>
+</div>
 
-  <!-- Iklan Google AdSense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3665788659374137"
-   crossorigin="anonymous"></script>
-  <ins class="adsbygoogle"
-       style="display:block"
-       data-ad-client="ca-pub-3665788659374137"
-       data-ad-slot="2726494782"
-       data-ad-format="auto"
-       data-full-width-responsive="true"></ins>
-  <script>
-       (adsbygoogle = window.adsbygoogle || []).push({});
-  </script>
-<script type="text/javascript" src="//figuredworrying.com/ca7378a3396846ab47d689db229c4b71/invoke.js"></script>
 <script>
-  // Splash screen delay
-  window.addEventListener("load", function () {
-    setTimeout(() => {
-      document.getElementById("splash").style.display = "none";
-      document.getElementById("main-content").style.display = "flex";
-    }, 3000);
-  });
+// === Referral Tracking ===
+const urlParams = new URLSearchParams(window.location.search);
+const referrer = urlParams.get('ref');
+if (referrer) {
+    localStorage.setItem("invitedBy", referrer);
+}
 
-  // Toggle between login and register forms
-  document.getElementById("showRegister").addEventListener("click", function() {
-    document.getElementById("loginForm").classList.remove("active");
-    document.getElementById("registerForm").classList.add("active");
-  });
+// Splash Screen delay
+window.addEventListener("load", function () {
+  setTimeout(() => {
+    document.getElementById("splash").style.display = "none";
+    document.getElementById("main-content").style.display = "flex";
+  }, 3000);
+});
 
-  document.getElementById("showLogin").addEventListener("click", function() {
-    document.getElementById("registerForm").classList.remove("active");
-    document.getElementById("loginForm").classList.add("active");
-  });
+// Toggle Login/Register
+document.getElementById("showRegister").addEventListener("click", function() {
+  document.getElementById("loginForm").classList.remove("active");
+  document.getElementById("registerForm").classList.add("active");
+});
+document.getElementById("showLogin").addEventListener("click", function() {
+  document.getElementById("registerForm").classList.remove("active");
+  document.getElementById("loginForm").classList.add("active");
+});
 
-  // Login functionality
-  document.getElementById("loginBtn").addEventListener("click", function() {
-    const email = document.getElementById("loginEmail").value;
-    const password = document.getElementById("loginPassword").value;
-    const saved = JSON.parse(localStorage.getItem("users") || "{}");
+// Login
+document.getElementById("loginBtn").addEventListener("click", function() {
+  const email = document.getElementById("loginEmail").value;
+  const password = document.getElementById("loginPassword").value;
+  const saved = JSON.parse(localStorage.getItem("users") || "{}");
 
-    if (!email || !password) {
-      alert("Harap isi email dan password");
-      return;
-    }
+  if (!email || !password) {
+    alert("Harap isi email dan password");
+    return;
+  }
+  if (saved[email] && saved[email].password === password) {
+    localStorage.setItem("currentUser", email);
+    window.location.href = "dashboard.html";
+  } else {
+    alert("Login gagal: Email atau password salah.");
+  }
+});
 
-    if (saved[email] && saved[email].password === password) {
-      localStorage.setItem("currentUser", email);
-      window.location.href = "dashboard.html";
-    } else {
-      alert("Login gagal: Email atau password salah.");
-    }
-  });
+// Register
+document.getElementById("registerBtn").addEventListener("click", function() {
+  const name = document.getElementById("registerName").value;
+  const email = document.getElementById("registerEmail").value;
+  const password = document.getElementById("registerPassword").value;
+  const confirmPassword = document.getElementById("registerConfirmPassword").value;
+  
+  if (!name || !email || !password || !confirmPassword) {
+    alert("Harap isi semua field");
+    return;
+  }
+  if (password !== confirmPassword) {
+    alert("Konfirmasi password tidak cocok");
+    return;
+  }
+  
+  let users = JSON.parse(localStorage.getItem("users") || "{}");
+  if (users[email]) {
+    alert("Email sudah terdaftar");
+    return;
+  }
+  
+  users[email] = { name: name, password: password };
+  localStorage.setItem("users", JSON.stringify(users));
 
-  // Register functionality
-  document.getElementById("registerBtn").addEventListener("click", function() {
-    const name = document.getElementById("registerName").value;
-    const email = document.getElementById("registerEmail").value;
-    const password = document.getElementById("registerPassword").value;
-    const confirmPassword = document.getElementById("registerConfirmPassword").value;
-    
-    if (!name || !email || !password || !confirmPassword) {
-      alert("Harap isi semua field");
-      return;
-    }
-    
-    if (password !== confirmPassword) {
-      alert("Konfirmasi password tidak cocok");
-      return;
-    }
-    
-    let users = JSON.parse(localStorage.getItem("users") || "{}");
-    
-    if (users[email]) {
-      alert("Email sudah terdaftar");
-      return;
-    }
-    
-    users[email] = {
-      name: name,
-      password: password
-    };
-   
-    localStorage.setItem("users", JSON.stringify(users));
-    alert("Pendaftaran berhasil! Silakan login.");
-    document.getElementById("registerForm").classList.remove("active");
-    document.getElementById("loginForm").classList.add("active");
-    
-    // Clear register form
-    document.getElementById("registerName").value = "";
-    document.getElementById("registerEmail").value = "";
-    document.getElementById("registerPassword").value = "";
-    document.getElementById("registerConfirmPassword").value = "";
-  });
-       </script>
- <script type="text/javascript">
-	atOptions = {
-		'key' : 'b8ba39ea3ebb5f46503a0ff466df4e5f',
-		'format' : 'iframe',
-		'height' : 50,
-		'width' : 320,
-		'params' : {}
-	};
+  // === Simpan referral jika ada pengundang ===
+  const invitedBy = localStorage.getItem("invitedBy");
+  if (invitedBy) {
+      let referrals = JSON.parse(localStorage.getItem(invitedBy + "_referrals") || "[]");
+      referrals.push(email.split("@")[0]);
+      localStorage.setItem(invitedBy + "_referrals", JSON.stringify(referrals));
+
+      let poin = parseInt(localStorage.getItem(invitedBy + "_referralPoints") || "0");
+      poin += 100; // contoh: 100 poin per referral
+      localStorage.setItem(invitedBy + "_referralPoints", poin);
+  }
+
+  alert("Pendaftaran berhasil! Silakan login.");
+  document.getElementById("registerForm").classList.remove("active");
+  document.getElementById("loginForm").classList.add("active");
+
+  document.getElementById("registerName").value = "";
+  document.getElementById("registerEmail").value = "";
+  document.getElementById("registerPassword").value = "";
+  document.getElementById("registerConfirmPassword").value = "";
+});
 </script>
-<script type="text/javascript" src="//www.highperformanceformat.com/b8ba39ea3ebb5f46503a0ff466df4e5f/invoke.js"></script>
 </body>
-  </html>
+</html>
