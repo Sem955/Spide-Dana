@@ -69,6 +69,35 @@ if (refParam) {
       font-size: 1em;
       margin-bottom: 20px;
     }
+
+    .event-box {
+  display: inline-block;
+  text-align: center;
+  padding: 14px 20px;
+  border-radius: 8px;
+}
+
+.event-title {
+  margin: 0 0 6px;
+  color: #1e90ff; /* warna biru */
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+}
+
+.event-sub {
+  margin: 0;
+  color: #1e90ff; /* warna biru */
+  font-size: 18px;
+  opacity: 0.95;
+}
+
+/* Responsif di layar kecil */
+@media (max-width: 420px) {
+  .event-title { font-size: 22px; }
+  .event-sub { font-size: 16px; }
+}
+    
     .play-now-btn {
       display: block;
       width: 60%;
