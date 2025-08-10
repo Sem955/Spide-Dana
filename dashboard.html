@@ -305,17 +305,7 @@
             max-width: 350px;
             box-sizing: border-box;
         }
-      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3665788659374137"
-     crossorigin="anonymous"></script>
-<!-- Dana miner1 -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-3665788659374137"
-     data-ad-slot="2726494782"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
+      
 </script>
     </style>
 </head>
@@ -408,14 +398,24 @@
     </div>
     
     <div id="statusText">Memuat data...</div>
-    
-    <div class="watch-ad-container">
-        <a href="https://vast-size.com/ULT3Sw" target="_blank" style="text-decoration: none;">
-            <button>
-                <img src="https://img.icons8.com/ios-filled/50/ffffff/video.png" alt="Video" style="width: 20px; height: 20px;" />
-                700-1000 Riwed 
-            </button>
-        </a>
+
+<div class="watch-ad-container">
+    <button id="popunderBtn">
+        <img src="https://img.icons8.com/ios-filled/50/ffffff/video.png" alt="Video" style="width: 20px; height: 20px;" />
+        700-1000 Riwed
+    </button>
+</div>
+
+<script>
+document.getElementById("popunderBtn").addEventListener("click", function () {
+    // Buka popunder
+    var pop = window.open('about:blank');
+    var script = document.createElement("script");
+    script.src = "//pl27331519.profitableratecpm.com/13/4d/88/134d88f200f3571f191859bf77418cbc.js";
+    pop.document.body.appendChild(script);
+});
+</script>
+
         <button id="tiktokBtn">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/tiktok.png" alt="TikTok" style="width: 20px; height: 20px;" />
             500-1000 Riwed 
@@ -444,8 +444,7 @@
   <!-- Tombol Play Now -->
   <a href="support.html" class="play-now">claim Poin→</a>
      </div>
-        <script type='text/javascript' src='//pl27331519.profitableratecpm.com/13/4d/88/134d88f200f3571f191859bf77418cbc.js'></script> 
-     
+        
        <!-- GANTI BAGIAN INI SAJA -->
 
       <div class="bottom-nav">
@@ -633,7 +632,7 @@ document.addEventListener("click", function (event) {
 // Fungsi DOMPET (nanti bisa diubah jadi popup / halaman)
 function bukaDompet() {
   const dana = localStorage.getItem(username + "_totalIDR") || "0.00";
-  alert(`Saldo IDR Anda: ${parseFloat(dana).toFixed(2)}\nSaldo DAT Anda: ${Math.floor(totalReward).toLocaleString('en-US')}`);
+  alert(`Saldo IDR Anda: ${parseFloat(dana).toFixed(2)}\nSaldo GOV Anda: ${Math.floor(totalReward).toLocaleString('en-US')}`);
 }
       
     </script>
