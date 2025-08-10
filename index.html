@@ -4,19 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GEOVARA</title>
-   <script>
-// Tangkap referral saat pertama kali buka website
-const params = new URLSearchParams(window.location.search);
-const refParam = params.get('ref');
+  <script>
+    // Tangkap referral saat pertama kali buka website
+    const params = new URLSearchParams(window.location.search);
+    const refParam = params.get('ref');
 
-if (refParam) {
-    localStorage.setItem('invitedBy', refParam);
-    console.log('Referral disimpan di localStorage:', refParam);
-}
-   </script>
+    if (refParam) {
+      localStorage.setItem('invitedBy', refParam);
+      console.log('Referral disimpan di localStorage:', refParam);
+    }
+  </script>
   
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3665788659374137"
-     crossorigin="anonymous"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3665788659374137" crossorigin="anonymous"></script>
   <style>
     body {
       margin: 0;
@@ -71,32 +70,32 @@ if (refParam) {
     }
 
     .event-box {
-  display: inline-block;
-  text-align: center;
-  padding: 14px 20px;
-  border-radius: 8px;
-}
+      display: inline-block;
+      text-align: center;
+      padding: 14px 20px;
+      border-radius: 8px;
+    }
 
-.event-title {
-  margin: 0 0 6px;
-  color: #1e90ff; /* warna biru */
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: 0.6px;
-}
+    .event-title {
+      margin: 0 0 6px;
+      color: #1e90ff;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+    }
 
-.event-sub {
-  margin: 0;
-  color: #1e90ff; /* warna biru */
-  font-size: 18px;
-  opacity: 0.95;
-}
+    .event-sub {
+      margin: 0;
+      color: #1e90ff;
+      font-size: 18px;
+      opacity: 0.95;
+    }
 
-/* Responsif di layar kecil */
-@media (max-width: 420px) {
-  .event-title { font-size: 22px; }
-  .event-sub { font-size: 16px; }
-}
+    /* Responsif di layar kecil */
+    @media (max-width: 420px) {
+      .event-title { font-size: 22px; }
+      .event-sub { font-size: 16px; }
+    }
     
     .play-now-btn {
       display: block;
@@ -158,7 +157,7 @@ if (refParam) {
       to { transform: translateY(0); }
     }
     #climBtn {
-      display: none; /* Hide the test button */
+      display: none;
     }
   </style>
 </head>
@@ -169,35 +168,35 @@ if (refParam) {
     <div class="menu-icon" onclick="toggleMenu()">&#9776;</div>
   </header>
 
-<!-- Menu Overlay -->
-<div class="menu-overlay" id="menuOverlay">
-  <div class="menu-header">
-    <div class="logo">GOV</div>
-    <div class="menu-icon" onclick="toggleMenu()">&#9776;</div>
-  </div>
-  <ul style="padding: 20px; margin: 0; list-style: none;">
-    <li><a href="index.login.html">🔜LOGING GOV</a></li>
-    <li><a href="#">🔜BOLA72</a></li>
-    <li><a href="cuplikan.html">🔜VIDIO BOLA72</a></li>
-    <li><a href="jadwalbola.html">🔜JADWAL BOLA72</a></li>
-    <li><a href="bitcoin.html">🔜BITCOIN NEWS</a></li>
-    <li><a href="btc.html">🔜BITCOIN LiVE</a></li>
+  <!-- Menu Overlay -->
+  <div class="menu-overlay" id="menuOverlay">
+    <div class="menu-header">
+      <div class="logo">GOV</div>
+      <div class="menu-icon" onclick="toggleMenu()">&#9776;</div>
+    </div>
+    <ul style="padding: 20px; margin: 0; list-style: none;">
+      <li><a href="index.login.html">🔜LOGING GOV</a></li>
+      <li><a href="#">🔜BOLA72</a></li>
+      <li><a href="cuplikan.html">🔜VIDIO BOLA72</a></li>
+      <li><a href="jadwalbola.html">🔜JADWAL BOLA72</a></li>
+      <li><a href="bitcoin.html">🔜BITCOIN NEWS</a></li>
+      <li><a href="btc.html">🔜BITCOIN LiVE</a></li>
 
-    <!-- ✅ Tombol "Play Game" sejajar -->
-    <li style="margin-top: 30px; text-align: center;">
-      <a href="tugasa.html" style="
-        display: inline-block;
-        background-color: black;
-        color: white;
-        font-weight: bold;
-        padding: 12px 24px;
-        border-radius: 30px;
-        text-decoration: none;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-      ">🎮 Play Game</a>
-    </li>
-  </ul>
-</div>
+      <!-- ✅ Tombol "Play Game" sejajar -->
+      <li style="margin-top: 30px; text-align: center;">
+        <a href="tugasa.html" style="
+          display: inline-block;
+          background-color: black;
+          color: white;
+          font-weight: bold;
+          padding: 12px 24px;
+          border-radius: 30px;
+          text-decoration: none;
+          box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        ">🎮 Play Game</a>
+      </li>
+    </ul>
+  </div>
 
   <div class="hero">
     <p>Dipercaya oleh lebih dari 1 juta pengguna</p>
@@ -207,8 +206,96 @@ if (refParam) {
     <!-- Tombol Play Now with Popunder -->
     <button class="play-now-btn" id="playNowBtn">PLAY NOW →</button>
   </div>
- <script>
-  // Enhanced Popunder Implementation
+
+  <div class="iklan-center">
+    <script type="text/javascript">
+      atOptions = {
+        'key' : '3c59e4d44077a502c4e170cc28072963',
+        'format' : 'iframe',
+        'height' : 250,
+        'width' : 300,
+        'params' : {}
+      };
+    </script>
+    <script type="text/javascript" src="//www.highperformanceformat.com/3c59e4d44077a502c4e170cc28072963/invoke.js"></script>
+  </div>
+
+  <div class="hero">
+    <p>GEOVARA adalah platform game mining koin</p>
+    <h1>yang memberikan reward nyata<br>Setiap koin yang Anda dapatkan.</h1>
+    <p>bisa Anda swap ke USDT atau IDR.</p>
+  </div>
+  
+  <div class="iklan-centerr">
+    <script>
+      (function(cvngk){
+        var d = document,
+            s = d.createElement('script'),
+            l = d.scripts[d.scripts.length - 1];
+        s.settings = cvngk || {};
+        s.src = "\/\/probableregret.com\/bcXKVws.duGKlS0BYlWHcA\/leMmn9TuHZ\/UElpkgPBTKYP1AN-jUITyhMmjjkftzNojhU\/2UM_jQIBzZMYAt";
+        s.async = true;
+        s.referrerPolicy = 'no-referrer-when-downgrade';
+        l.parentNode.insertBefore(s, l);
+      })({})
+    </script>
+  </div>
+
+  <div class="event-box">
+    <h2 class="event-title">Event 100 Referall</h2>
+    <p class="event-sub">Riwed Kos GOV</p>
+  </div>
+  
+  <div style="text-align:center; margin-bottom: 25px;">
+    <img src="https://i.postimg.cc/Cx0XghkK/IMG-20250810-235344.jpg"
+         alt="Gambar"
+         style="width: 310px; pointer-events: none; user-select: none;" />
+  </div>
+
+  <div style="text-align: center; margin-top: 20px;">
+    <button onclick="setLanguage('id')">🇮🇩 Bahasa</button>
+    <button onclick="setLanguage('en')">🇺🇸 English</button>
+  </div>
+
+  <div id="content-id" style="padding: 20px; text-align: center; font-family: Arial, sans-serif;">
+    <h2>Tentang GEOVARA</h2>
+    <p><strong>GEOVARA</strong> adalah platform game mining koin berbasis web yang memungkinkan Anda mendapatkan <strong>GOV Coin</strong> langsung dari HP Anda.</p>
+    <p>Mainkan game-nya tanpa modal, klaim reward setiap jam, dan tukarkan langsung ke <strong>saldo DANA</strong> Anda kapan saja.</p>
+    <ul style="list-style: none; padding-left: 0; line-height: 1.8;">
+      <li>✅ Game mining otomatis </li>
+      <li> Reward bisa Anda SWAP ke IDR atau USDT</li>
+      <li> Klaim hadiah setiap jam & bonus harian</li>
+      <li>Sistem referral undang teman dapat bonus</li>
+      <li> Login cepat & aman</li>
+      <li>Anda Bisa whitdraw saldo IDR ke wallet Dana anda</li>
+      <li>peratian whitdraw Hanya pake no rekning Dana </li>
+      <li>minimal whitdraw 200,000 IDR</li>  
+    </ul>
+    <h2>CARA MENDAPATKAN KOIN GOV</h2>
+    <p>Anda cukup klim 1 Jam sekali</p>
+    <p>menyelsaikan tuga Riwed 500 - 700 poin </p>
+    <p>Anda bisa medapatkan 5000 GOV Setiap undang teman</p>
+    <p>
+      Tidak hanya itu, <strong>GOV</strong> juga menyediakan berbagai informasi dan berita <strong>terkini seputar dunia sepakbola</strong>, 
+      mulai dari bursa transfer pemain, hasil pertandingan, hingga update liga-liga top Eropa seperti Premier League, La Liga, Serie A, dan lainnya.
+    </p>
+    <p>Bergabung sekarang dan nikmati serunya bermain sambil tetap update dengan dunia sepakbola!</p>
+  </div>
+
+  <!-- Bagian logo + slogan di footer -->
+  <div style="display:flex; align-items:center; background:#1a1a1a; padding:15px;">
+    <img src="https://i.postimg.cc/x8XVRwZS/file-00000000f3d06230a63b9cde063aaecc-1.png" alt="Logo RADAR" style="height:40px; margin-right:15px;">
+    <span style="color:white; font-size:20px;">
+      GOVCOIN™<strong style="color:white;">GEOVARA</strong>
+    </span>
+  </div>
+
+  <div class="footer-bottom">
+    © 2025 GEOVARA. All rights reserved.  
+  </div>
+
+  <script>
+    // Enhanced Popunder Implementation
     document.getElementById('playNowBtn').addEventListener('click', function(e) {
       e.preventDefault();
       
@@ -249,99 +336,17 @@ if (refParam) {
       script.async = true;
       document.body.appendChild(script);
     });
-  </script>
-  
-   <div class="iklan-center">
-  <script type="text/javascript">
-    atOptions = {
-      'key' : '3c59e4d44077a502c4e170cc28072963',
-      'format' : 'iframe',
-      'height' : 250,
-      'width' : 300,
-      'params' : {}
-    };
-  </script>
-  <script type="text/javascript" src="//www.highperformanceformat.com/3c59e4d44077a502c4e170cc28072963/invoke.js"></script>
-   </div>
 
-<div class="hero">
-    <p>GEOVARA adalah platform game mining koin</p>
-    <h1>yang memberikan reward nyata<br>Setiap koin yang Anda dapatkan.</h1>
-    <p>bisa Anda swap ke USDT atau IDR.</p>
-  </div>
-  
-
- <div class="iklan-centerr">
-<script>
-  (function(cvngk){
-var d = document,
-    s = d.createElement('script'),
-    l = d.scripts[d.scripts.length - 1];
-s.settings = cvngk || {};
-s.src = "\/\/probableregret.com\/bcXKVws.duGKlS0BYlWHcA\/leMmn9TuHZ\/UElpkgPBTKYP1AN-jUITyhMmjjkftzNojhU\/2UM_jQIBzZMYAt";
-s.async = true;
-s.referrerPolicy = 'no-referrer-when-downgrade';
-l.parentNode.insertBefore(s, l);
-})({})
-</script>
- </div>
-  <script>
     function toggleMenu() {
       const menu = document.getElementById('menuOverlay');
       menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
     }
 
-    
-  <div class="event-box">
-  <h2 class="event-title">Event 100 Referall</h2>
-  <p class="event-sub">Riwed Kos GOV</p>
-  </div>
-  <div style="text-align:center; margin-bottom: 25px;">
-  <img src="https://i.postimg.cc/Cx0XghkK/IMG-20250810-235344.jpg"
-       alt="Gambar"
-       style="width: 310px; pointer-events: none; user-select: none;" />
- </div>
-
-  <div style="text-align: center; margin-top: 20px;">
-  <button onclick="setLanguage('id')">🇮🇩 Bahasa</button>
-  <button onclick="setLanguage('en')">🇺🇸 English</button>
-</div>
-
-  <div id="content-id" style="padding: 20px; text-align: center; font-family: Arial, sans-serif;">
-  <h2>Tentang GEOVARA</h2>
-  <p><strong>GEOVARA</strong> adalah platform game mining koin berbasis web yang memungkinkan Anda mendapatkan <strong>GOV Coin</strong> langsung dari HP Anda.</p>
-  <p>Mainkan game-nya tanpa modal, klaim reward setiap jam, dan tukarkan langsung ke <strong>saldo DANA</strong> Anda kapan saja.</p>
-  <ul style="list-style: none; padding-left: 0; line-height: 1.8;">
-    <li>✅ Game mining otomatis </li>
-    <li> Reward bisa Anda SWAP ke IDR atau USDT</li>
-    <li> Klaim hadiah setiap jam & bonus harian</li>
-    <li>Sistem referral undang teman dapat bonus</li>
-    <li> Login cepat & aman</li>
-     <li>Anda Bisa whitdraw saldo IDR ke wallet Dana anda</li>
-     <li>peratian whitdraw Hanya pake no rekning Dana </li>
-     <li>minimal whitdraw 200,000 IDR</li>  
-  </ul>
-    <h2>CARA MENDAPATKAN KOIN GOV</h2>
-    <p>Anda cukup klim 1 Jam sekali</p>
-    <p>menyelsaikan tuga Riwed 500 - 700 poin </p>
-    <p>Anda bisa medapatkan 5000 GOV Setiap undang teman</p>
-  <p>
-    Tidak hanya itu, <strong>GOV</strong> juga menyediakan berbagai informasi dan berita <strong>terkini seputar dunia sepakbola</strong>, 
-    mulai dari bursa transfer pemain, hasil pertandingan, hingga update liga-liga top Eropa seperti Premier League, La Liga, Serie A, dan lainnya.
-  </p>
-  <p>Bergabung sekarang dan nikmati serunya bermain sambil tetap update dengan dunia sepakbola!</p>
-  </div>
-
-  <!-- Bagian logo + slogan di footer -->
-  <div style="display:flex; align-items:center; background:#1a1a1a; padding:15px;">
-    <img src="https://i.postimg.cc/x8XVRwZS/file-00000000f3d06230a63b9cde063aaecc-1.png" alt="Logo RADAR" style="height:40px; margin-right:15px;">
-    <span style="color:white; font-size:20px;">
-      GOVCOIN™<strong style="color:white;">GEOVARA</strong>
-    </span>
-  </div>
-
-    <div class="footer-bottom">
-      © 2025 GEOVARA. All rights reserved.  
-      <div>
+    function setLanguage(lang) {
+      // Fungsi untuk mengganti bahasa
+      console.log('Bahasa diubah ke: ' + lang);
+      // Implementasi perubahan bahasa bisa ditambahkan di sini
+    }
+  </script>
 </body>
 </html>
