@@ -45,8 +45,7 @@ h2{
 }
 
 .task button:disabled{
-  background:#8ecbff; /* biru muda */
-  color:#fff;
+  background:#ccc;
   cursor:not-allowed;
 }
 </style>
@@ -57,8 +56,11 @@ h2{
 <h2>📋 Tugas Harian</h2>
 
 <!-- TUGAS 1 -->
-<div class="task">
-  <span>1️⃣ Follow TikTok</span>
+<div class="task" id="task-tiktok">
+  <span>
+    <span id="check-tiktok">⬜</span>
+    1️⃣ Follow TikTok
+  </span>
   <button id="btn-tiktok" onclick="followTikTok()">Kerjakan</button>
 </div>
 
@@ -87,10 +89,10 @@ h2{
 </div>
 
 <script>
-/* ===== FOLLOW TIKTOK AUTO SELESAI ===== */
+/* ========= FOLLOW TIKTOK AUTO CEKLIS ========= */
 const TIKTOK_KEY = "task_follow_tiktok_done";
 
-// cek status saat halaman dibuka
+// cek saat halaman dibuka
 window.onload = function () {
   if (localStorage.getItem(TIKTOK_KEY) === "done") {
     setTikTokDone();
@@ -98,24 +100,28 @@ window.onload = function () {
 };
 
 function followTikTok() {
-  // buka akun TikTok kamu
   window.open(
     "https://vm.tiktok.com/ZSHEoHtbLL7xj-3iEYO/",
     "_blank"
   );
 
-  // langsung tandai selesai
-  localStorage.setItem(TIKTOK_KEY, "done");
-  setTikTokDone();
+  // delay 10 detik
+  setTimeout(() => {
+    localStorage.setItem(TIKTOK_KEY, "done");
+    setTikTokDone();
+  }, 10000);
 }
 
 function setTikTokDone() {
+  document.getElementById("check-tiktok").innerHTML = "✅";
+  document.getElementById("check-tiktok").style.color = "#2196f3";
+
   const btn = document.getElementById("btn-tiktok");
   btn.innerText = "Selesai";
   btn.disabled = true;
 }
 
-/* ===== TUGAS LAIN ===== */
+/* ========= TUGAS LAIN ========= */
 function openTask(link){
   window.open(link, "_blank");
   alert("Setelah selesai, kembali ke halaman ini.");
@@ -123,4 +129,4 @@ function openTask(link){
 </script>
 
 </body>
-  </html>
+</html>
