@@ -16,12 +16,13 @@ body{
 h2{
   text-align:center;
   color:#333;
+  margin-bottom:20px;
 }
 
 .task{
   background:white;
   padding:15px;
-  border-radius:12px;
+  border-radius:14px;
   margin-bottom:12px;
   display:flex;
   justify-content:space-between;
@@ -29,13 +30,23 @@ h2{
   box-shadow:0 4px 8px rgba(0,0,0,.1);
 }
 
+.task span{
+  font-size:15px;
+}
+
 .task button{
   background:#7f5af0;
   color:white;
   border:none;
-  padding:8px 14px;
-  border-radius:8px;
+  padding:8px 16px;
+  border-radius:10px;
   cursor:pointer;
+  font-weight:bold;
+}
+
+.task button:disabled{
+  background:#ccc;
+  cursor:not-allowed;
 }
 </style>
 </head>
@@ -44,37 +55,78 @@ h2{
 
 <h2>📋 Tugas Harian</h2>
 
-<div class="task">
-  <span>1️⃣ Follow TikTok</span>
-  <button onclick="openTask('https://vm.tiktok.com/ZSHEoHtbLL7xj-3iEYO/')">Kerjakan</button>
+<!-- TUGAS 1 -->
+<div class="task" id="task-tiktok">
+  <span>
+    <span id="check-tiktok">⬜</span>
+    1️⃣ Follow TikTok
+  </span>
+  <button id="btn-tiktok" onclick="followTikTok()">Kerjakan</button>
 </div>
 
+<!-- TUGAS 2 -->
 <div class="task">
   <span>2️⃣ Follow Twitter</span>
   <button onclick="openTask('https://twitter.com')">Kerjakan</button>
 </div>
 
+<!-- TUGAS 3 -->
 <div class="task">
   <span>3️⃣ Follow YouTube</span>
   <button onclick="openTask('https://youtube.com')">Kerjakan</button>
 </div>
 
+<!-- TUGAS 4 -->
 <div class="task">
   <span>4️⃣ Like Twitter</span>
   <button onclick="openTask('https://x.com/riza_alfa7')">Kerjakan</button>
 </div>
 
+<!-- TUGAS 5 -->
 <div class="task">
   <span>5️⃣ Sukai TikTok</span>
-  <button onclick="openTask('https://vm.tiktok.com/ZSHEo9jpwNyTM-jls02/ Postingan ini dibagikan via TikTok Lite. Unduh TikTok Lite untuk menikmati postingan lainnya: https://www.tiktok.com/tiktoklite')">Kerjakan</button>
+  <button onclick="openTask('https://vm.tiktok.com/ZSHEo9jpwNyTM-jls02/')">Kerjakan</button>
 </div>
 
 <script>
+/* ========= FOLLOW TIKTOK AUTO CEKLIS ========= */
+const TIKTOK_KEY = "task_follow_tiktok_done";
+
+// cek saat halaman dibuka
+window.onload = function () {
+  if (localStorage.getItem(TIKTOK_KEY) === "done") {
+    setTikTokDone();
+  }
+};
+
+function followTikTok() {
+  window.open(
+    "https://vm.tiktok.com/ZSHEoHtbLL7xj-3iEYO/",
+    "_blank"
+  );
+
+  // delay 10 detik
+  setTimeout(() => {
+    localStorage.setItem(TIKTOK_KEY, "done");
+    setTikTokDone();
+  }, 10000);
+}
+
+function setTikTokDone() {
+  document.getElementById("check-tiktok").innerHTML = "✅";
+  document.getElementById("check-tiktok").style.color = "#2196f3";
+
+  const btn = document.getElementById("btn-tiktok");
+  btn.innerText = "Selesai";
+  btn.disabled = true;
+}
+
+/* ========= TUGAS LAIN ========= */
 function openTask(link){
   window.open(link, "_blank");
-  alert("Setelah selesai, poin bisa kamu klaim!");
+  alert("Setelah selesai, kembali ke halaman ini.");
 }
 </script>
 
 </body>
-  </html>
+</html>
