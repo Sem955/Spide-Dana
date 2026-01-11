@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tugas Harian</title>
+
+<style>
+body{
+  background:#f1f8e9;
+  font-family:Arial, sans-serif;
+  margin:0;
+  padding:20px;
+}
+
+h2{
+  text-align:center;
+  color:#333;
+}
+
+.task{
+  background:white;
+  padding:15px;
+  border-radius:12px;
+  margin-bottom:12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  box-shadow:0 4px 8px rgba(0,0,0,.1);
+}
+
+.task button{
+  background:#7f5af0;
+  color:white;
+  border:none;
+  padding:8px 14px;
+  border-radius:8px;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<h2>📋 Tugas Harian</h2>
+
+<div class="task">
+  <span>1️⃣ Follow TikTok</span>
+  <button onclick="openTask('https://tiktok.com')">Kerjakan</button>
+</div>
+
+<div class="task">
+  <span>2️⃣ Follow Twitter</span>
+  <button onclick="openTask('https://twitter.com')">Kerjakan</button>
+</div>
+
+<div class="task">
+  <span>3️⃣ Follow YouTube</span>
+  <button onclick="openTask('https://youtube.com')">Kerjakan</button>
+</div>
+
+<div class="task">
+  <span>4️⃣ Like Twitter</span>
+  <button onclick="openTask('https://twitter.com')">Kerjakan</button>
+</div>
+
+<div class="task">
+  <span>5️⃣ Sukai TikTok</span>
+  <button onclick="openTask('https://tiktok.com')">Kerjakan</button>
+</div>
+
+<script>
+function openTask(link){
+  window.open(link, "_blank");
+  alert("Setelah selesai, poin bisa kamu klaim!");
+}
+</script>
+
+</body>
+  </html>
