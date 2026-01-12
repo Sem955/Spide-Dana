@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tugas Harian</title>
+<title>Tugas & Bonus Harian</title>
 
 <style>
 body{
@@ -15,8 +15,16 @@ body{
 
 h2{
   text-align:center;
-  color:#333;
-  margin-bottom:20px;
+  margin-bottom:10px;
+}
+
+.balance{
+  background:#fff3cd;
+  padding:12px;
+  border-radius:12px;
+  text-align:center;
+  font-weight:bold;
+  margin-bottom:15px;
 }
 
 .task{
@@ -28,10 +36,6 @@ h2{
   justify-content:space-between;
   align-items:center;
   box-shadow:0 4px 8px rgba(0,0,0,.1);
-}
-
-.task span{
-  font-size:15px;
 }
 
 .task button{
@@ -46,7 +50,23 @@ h2{
 
 .task button:disabled{
   background:#ccc;
-  cursor:not-allowed;
+}
+
+#bonusBox{
+  margin-top:20px;
+  display:none;
+}
+
+#bonusBox button{
+  width:100%;
+  padding:14px;
+  font-size:16px;
+  border:none;
+  border-radius:14px;
+  background:#4caf50;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
 }
 </style>
 </head>
@@ -55,96 +75,116 @@ h2{
 
 <h2>📋 Tugas Harian</h2>
 
-<!-- TUGAS 1 -->
-<div class="task">
-  <span>
-    <span id="check-tiktok">⬜</span>
-    1️⃣ Follow TikTok
-  </span>
-  <button id="btn-tiktok" onclick="followTikTok()">Kerjakan</button>
+<div class="balance">
+💰 Saldo GOV: <span id="saldo">0</span>
 </div>
 
-<!-- TUGAS 2 -->
 <div class="task">
-  <span>2️⃣ Follow Twitter</span>
-  <button onclick="openTask('https://twitter.com')">Kerjakan</button>
+  <span><span id="check1">⬜</span> Follow TikTok</span>
+  <button id="btn1" onclick="doTask(1,'https://tiktok.com')">Kerjakan</button>
 </div>
 
-<!-- TUGAS 3 -->
 <div class="task">
-  <span>3️⃣ Follow YouTube</span>
-  <button onclick="openTask('https://youtube.com')">Kerjakan</button>
+  <span><span id="check2">⬜</span> Follow Twitter</span>
+  <button id="btn2" onclick="doTask(2,'https://twitter.com')">Kerjakan</button>
 </div>
 
-<!-- TUGAS 4 -->
 <div class="task">
-  <span>4️⃣ Like Twitter</span>
-  <button onclick="openTask('https://x.com')">Kerjakan</button>
+  <span><span id="check3">⬜</span> Follow YouTube</span>
+  <button id="btn3" onclick="doTask(3,'https://youtube.com')">Kerjakan</button>
 </div>
 
-<!-- TUGAS 5 -->
 <div class="task">
-  <span>5️⃣ Sukai TikTok</span>
-  <button onclick="openTask('https://tiktok.com')">Kerjakan</button>
+  <span><span id="check4">⬜</span> Like Twitter</span>
+  <button id="btn4" onclick="doTask(4,'https://x.com')">Kerjakan</button>
+</div>
+
+<div class="task">
+  <span><span id="check5">⬜</span> Sukai TikTok</span>
+  <button id="btn5" onclick="doTask(5,'https://tiktok.com')">Kerjakan</button>
+</div>
+
+<!-- BONUS -->
+<div id="bonusBox">
+  <button onclick="claimBonus()">🎁 Klaim Bonus Harian 100 GOV</button>
 </div>
 
 <script>
-/* =========================
-   SIMULASI USER LOGIN
-   ========================= */
-// ⛔ GANTI dengan ID user dari login kamu
+/* ================= USER ================= */
 const USER_ID = localStorage.getItem("user_id") || "user_demo";
 
-// contoh jika mau set manual
-// localStorage.setItem("user_id", "user123");
+/* ================= DATE ================= */
+const today = new Date().toLocaleDateString();
 
-/* =========================
-   KEY PER USER
-   ========================= */
-const TIKTOK_KEY = "task_follow_tiktok_done_" + USER_ID;
+/* ================= STORAGE KEYS ================= */
+const saldoKey = "saldo_gov_" + USER_ID;
+const bonusKey = "bonus_claimed_" + USER_ID;
 
-/* =========================
-   CEK SAAT LOAD
-   ========================= */
-window.onload = function () {
-  if (localStorage.getItem(TIKTOK_KEY) === "done") {
-    setTikTokDone();
+/* ================= INIT ================= */
+let saldo = parseInt(localStorage.getItem(saldoKey)) || 0;
+document.getElementById("saldo").innerText = saldo;
+
+/* ================= LOAD TASK ================= */
+window.onload = () => {
+  for(let i=1;i<=5;i++){
+    const key = `task_${i}_${USER_ID}_${today}`;
+    if(localStorage.getItem(key) === "done"){
+      setDone(i);
+    }
   }
+  checkAllDone();
 };
 
-/* =========================
-   TUGAS TIKTOK
-   ========================= */
-function followTikTok() {
-  window.open(
-    "https://vm.tiktok.com/ZSHEoHtbLL7xj-3iEYO/",
-    "_blank"
-  );
+/* ================= TASK ================= */
+function doTask(no, link){
+  window.open(link, "_blank");
 
-  // simulasi delay 10 detik
   setTimeout(() => {
-    localStorage.setItem(TIKTOK_KEY, "done");
-    setTikTokDone();
-  }, 10000);
+    const key = `task_${no}_${USER_ID}_${today}`;
+    localStorage.setItem(key, "done");
+    setDone(no);
+    checkAllDone();
+  }, 5000);
 }
 
-function setTikTokDone() {
-  document.getElementById("check-tiktok").innerHTML = "✅";
-  document.getElementById("check-tiktok").style.color = "#2196f3";
-
-  const btn = document.getElementById("btn-tiktok");
+function setDone(no){
+  document.getElementById("check"+no).innerHTML = "✅";
+  const btn = document.getElementById("btn"+no);
   btn.innerText = "Selesai";
   btn.disabled = true;
 }
 
-/* =========================
-   TUGAS LAIN
-   ========================= */
-function openTask(link){
-  window.open(link, "_blank");
-  alert("Setelah selesai, kembali ke halaman ini.");
+function checkAllDone(){
+  let allDone = true;
+  for(let i=1;i<=5;i++){
+    const key = `task_${i}_${USER_ID}_${today}`;
+    if(localStorage.getItem(key) !== "done"){
+      allDone = false;
+    }
+  }
+
+  if(allDone && localStorage.getItem(bonusKey) !== today){
+    document.getElementById("bonusBox").style.display = "block";
+  }
+}
+
+/* ================= BONUS ================= */
+function claimBonus(){
+  if(localStorage.getItem(bonusKey) === today){
+    alert("Bonus hari ini sudah diklaim!");
+    return;
+  }
+
+  saldo += 100;
+  localStorage.setItem(saldoKey, saldo);
+  localStorage.setItem(bonusKey, today);
+
+  document.getElementById("saldo").innerText = saldo;
+  document.getElementById("bonusBox").style.display = "none";
+
+  alert("🎉 Bonus 100 GOV berhasil diklaim!");
 }
 </script>
 
 </body>
-</html>
+  </html>
