@@ -4,242 +4,99 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Login DANA Rewards</title>
- <script>
-  const params = new URLSearchParams(window.location.search);
-  console.log('ref param:', params.get('ref'));
-  console.log('invitedBy:', localStorage.getItem('invitedBy'));
- </script>
-  
-  <style>
-  body {
-    background-color: #F9F6EE;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-  }
-  /* Splash screen */
-  #splash {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-color: #F9F6EE;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-  }
-  /* Loading spinner */
-  .spinner {
-    margin-top: 20px;
-    border: 6px solid #ddd;
-    border-top: 6px solid #1877f2;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: spin 1s linear infinite;
-  }
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  /* Main content */
-  .main-content {
-    display: none;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .logo {
-    width: 180px;
-    margin: 30px auto 10px auto;
-  }
-  .login-container, .register-container {
-    background-color: white;
-    border-radius: 8px;
-    padding: 20px;
-    width: 280px;
-    box-shadow: 0 3px 5px rgba(0,0,0,0.1);
-    text-align: center;
-    margin-bottom: 20px;
-    display: none;
-  }
-  .login-container.active, .register-container.active {
-    display: block;
-  }
-  h1 {
-    color: #333;
-    margin-bottom: 20px;
-    font-size: 18px;
-  }
-  input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 14px;
-  }
-  button {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 8px;
-  }
-  #loginBtn, #registerBtn {
-    background-color: #1877f2;
-    color: white;
-  }
-  .register-link, .login-link {
-    margin-top: 15px;
-    font-size: 14px;
-    color: #1877f2;
-    cursor: pointer;
-    display: block;
-    text-decoration: none;
-  }
+
+<style>
+/* === TAMPILAN ASLI TIDAK DIUBAH === */
+body { background:#F9F6EE; font-family:Arial; margin:0 }
+#splash{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999}
+.spinner{margin-top:20px;border:6px solid #ddd;border-top:6px solid #1877f2;border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite}
+@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+.main-content{display:none;flex-direction:column;align-items:center;padding:20px}
+.logo{width:180px;margin:30px auto 10px}
+.login-container,.register-container{background:#fff;border-radius:8px;padding:20px;width:280px;box-shadow:0 3px 5px rgba(0,0,0,.1);text-align:center;display:none}
+.login-container.active,.register-container.active{display:block}
+input{width:100%;padding:10px;margin-bottom:10px;border:1px solid #ddd;border-radius:6px}
+button{width:100%;padding:12px;border:none;border-radius:6px;background:#1877f2;color:#fff;font-weight:bold}
+.register-link,.login-link{margin-top:15px;font-size:14px;color:#1877f2;cursor:pointer}
 </style>
 </head>
+
 <body>
 
-<!-- Splash Screen -->
 <div id="splash">
-  <img src="https://i.postimg.cc/x8XVRwZS/file-00000000f3d06230a63b9cde063aaecc-1.png" alt="Logo DANA" style="width: 220px;">
+  <img src="https://i.postimg.cc/x8XVRwZS/file-00000000f3d06230a63b9cde063aaecc-1.png" width="220">
   <div class="spinner"></div>
 </div>
 
-<!-- Main Login Content -->
-<div id="main-content" class="main-content">
-  <img src="https://i.postimg.cc/x8XVRwZS/file-00000000f3d06230a63b9cde063aaecc-1.png" alt="Logo DANA" class="logo">
-  
-  <!-- Login Form -->
+<div class="main-content" id="main-content">
+  <img src="https://i.postimg.cc/x8XVRwZS/file-00000000f3d06230a63b9cde063aaecc-1.png" class="logo">
+
   <div class="login-container active" id="loginForm">
-    <h1>LOGIN</h1>
-    <input type="text" id="loginEmail" placeholder="Email">
-    <input type="password" id="loginPassword" placeholder="Kata sandi">
+    <h3>LOGIN</h3>
+    <input id="loginEmail" placeholder="Email">
+    <input id="loginPassword" type="password" placeholder="Kata sandi">
     <button id="loginBtn">Login</button>
-    <a class="register-link" id="showRegister">Belum punya akun? Daftar</a>
+    <div class="register-link" id="showRegister">Belum punya akun? Daftar</div>
   </div>
 
-  <!-- Register Form -->
   <div class="register-container" id="registerForm">
-    <h1>DAFTAR</h1>
-    <input type="text" id="registerName" placeholder="Nama lengkap">
-    <input type="email" id="registerEmail" placeholder="Email">
-    <input type="password" id="registerPassword" placeholder="Kata sandi">
-    <input type="password" id="registerConfirmPassword" placeholder="Konfirmasi kata sandi">
+    <h3>DAFTAR</h3>
+    <input id="registerName" placeholder="Nama lengkap">
+    <input id="registerEmail" placeholder="Email">
+    <input id="registerPassword" type="password" placeholder="Kata sandi">
+    <input id="registerConfirmPassword" type="password" placeholder="Konfirmasi sandi">
     <button id="registerBtn">Daftar</button>
-    <a class="login-link" id="showLogin">Sudah punya akun? Login</a>
+    <div class="login-link" id="showLogin">Sudah punya akun? Login</div>
   </div>
 </div>
 
-<script>
-// === Referral Tracking ===
-const urlParams = new URLSearchParams(window.location.search);
-const referrer = urlParams.get('ref');
-if (referrer) {
-    localStorage.setItem("invitedBy", referrer);
+<!-- === FIREBASE === -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAlXIQ42acjO8xZH-Ti__YL6h9SGQQKQto",
+  authDomain: "govminer.firebaseapp.com",
+  projectId: "govminer",
+  appId: "1:408110658500:web:3fe7f4bd9a35f3fe726a91"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+/* Splash */
+window.onload = ()=>setTimeout(()=>{
+  splash.style.display="none";
+  document.getElementById("main-content").style.display="flex";
+},2000);
+
+/* Toggle */
+showRegister.onclick=()=>{loginForm.classList.remove("active");registerForm.classList.add("active")}
+showLogin.onclick=()=>{registerForm.classList.remove("active");loginForm.classList.add("active")}
+
+/* Login */
+loginBtn.onclick=()=>{
+  signInWithEmailAndPassword(auth,loginEmail.value,loginPassword.value)
+  .then(()=>location.href="dashboard.html")
+  .catch(e=>alert(e.message))
 }
 
-// Splash Screen delay
-window.addEventListener("load", function () {
-  setTimeout(() => {
-    document.getElementById("splash").style.display = "none";
-    document.getElementById("main-content").style.display = "flex";
-  }, 3000);
+/* Register */
+registerBtn.onclick=()=>{
+  if(registerPassword.value!==registerConfirmPassword.value){
+    alert("Password tidak sama");return;
+  }
+  createUserWithEmailAndPassword(auth,registerEmail.value,registerPassword.value)
+  .then(()=>alert("Daftar berhasil, silakan login"))
+  .catch(e=>alert(e.message))
+}
+
+/* Auto login */
+onAuthStateChanged(auth,user=>{
+  if(user) location.href="dashboard.html";
 });
-
-// Toggle Login/Register
-document.getElementById("showRegister").addEventListener("click", function() {
-  document.getElementById("loginForm").classList.remove("active");
-  document.getElementById("registerForm").classList.add("active");
-});
-document.getElementById("showLogin").addEventListener("click", function() {
-  document.getElementById("registerForm").classList.remove("active");
-  document.getElementById("loginForm").classList.add("active");
-});
-
-// Login
-document.getElementById("loginBtn").addEventListener("click", function() {
-  const email = document.getElementById("loginEmail").value;
-  const password = document.getElementById("loginPassword").value;
-  const saved = JSON.parse(localStorage.getItem("users") || "{}");
-
-  if (!email || !password) {
-    alert("Harap isi email dan password");
-    return;
-  }
-  if (saved[email] && saved[email].password === password) {
-    localStorage.setItem("currentUser", email);
-    window.location.href = "dashboard.html";
-  } else {
-    alert("Login gagal: Email atau password salah.");
-  }
-});
-
-// Register
-document.getElementById("registerBtn").addEventListener("click", function() {
-  const name = document.getElementById("registerName").value;
-  const email = document.getElementById("registerEmail").value;
-  const password = document.getElementById("registerPassword").value;
-  const confirmPassword = document.getElementById("registerConfirmPassword").value;
-  
-  if (!name || !email || !password || !confirmPassword) {
-    alert("Harap isi semua field");
-    return;
-  }
-  if (password !== confirmPassword) {
-    alert("Konfirmasi password tidak cocok");
-    return;
-  }
-  
-  let users = JSON.parse(localStorage.getItem("users") || "{}");
-  if (users[email]) {
-    alert("Email sudah terdaftar");
-    return;
-  }
-  
-  users[email] = { name: name, password: password };
-  localStorage.setItem("users", JSON.stringify(users));
-
-  // === Simpan referral jika ada pengundang ===
-  const invitedBy = localStorage.getItem("invitedBy");
-  if (invitedBy) {
-      let referrals = JSON.parse(localStorage.getItem(invitedBy + "_referrals") || "[]");
-      referrals.push(email.split("@")[0]);
-      localStorage.setItem(invitedBy + "_referrals", JSON.stringify(referrals));
-
-      let poin = parseInt(localStorage.getItem(invitedBy + "_referralPoints") || "0");
-      poin += 5000; // contoh: 5000 poin per referral
-      localStorage.setItem(invitedBy + "_referralPoints", poin);
-  }
-
-  alert("Pendaftaran berhasil! Silakan login.");
-  document.getElementById("registerForm").classList.remove("active");
-  document.getElementById("loginForm").classList.add("active");
-
-  document.getElementById("registerName").value = "";
-  document.getElementById("registerEmail").value = "";
-  document.getElementById("registerPassword").value = "";
-  document.getElementById("registerConfirmPassword").value = "";
-});
-
- </script>
-<script type="text/javascript">
-	atOptions = {
-		'key' : 'b8ba39ea3ebb5f46503a0ff466df4e5f',
-		'format' : 'iframe',
-		'height' : 50,
-		'width' : 320,
-		'params' : {}
-	};
 </script>
-<script type="text/javascript" src="//www.highperformanceformat.com/b8ba39ea3ebb5f46503a0ff466df4e5f/invoke.js"></script>
 
-</div>
 </body>
 </html>
