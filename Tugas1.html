@@ -141,7 +141,7 @@ const USER_ID = localStorage.getItem("user_id") || "guest";
 const today = new Date().toISOString().slice(0,10);
 
 /* ================= STORAGE ================= */
-const saldoKey = `saldo_gov_${USER_ID}`;
+const saldoKey = `saldo_usdt_${USER_ID}`;
 const bonusKey = `bonus_${USER_ID}_${today}`;
 
 /* ================= SALDO ================= */
@@ -197,7 +197,7 @@ function claimBonus(){
     return;
   }
 
-  saldo += 100;
+  saldo += 2;
   localStorage.setItem(saldoKey, saldo);
   localStorage.setItem(bonusKey, "claimed");
 
