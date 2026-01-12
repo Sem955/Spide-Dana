@@ -5,37 +5,62 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login GOV</title>
 
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAlXIQ42acjO8xZH-Ti__YL6h9SGQQKQto",
+  authDomain: "govminer.firebaseapp.com",
+  projectId: "govminer",
+  storageBucket: "govminer.firebasestorage.app",
+  messagingSenderId: "408110658500",
+  appId: "1:408110658500:web:3fe7f4bd9a35f3fe726a91"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// JIKA SUDAH LOGIN → DASHBOARD
+onAuthStateChanged(auth, user => {
+  if(user){
+    location.replace("dashboard.html");
+  }
+});
+
+window.login = async () => {
+  try {
+    await signInWithEmailAndPassword(
+      auth,
+      email.value,
+      password.value
+    );
+  } catch (e) {
+    alert(e.message);
+  }
+};
+
+window.register = async () => {
+  try {
+    await createUserWithEmailAndPassword(
+      auth,
+      regEmail.value,
+      regPassword.value
+    );
+    alert("Daftar berhasil, silakan login");
+    showLogin();
+  } catch (e) {
+    alert(e.message);
+  }
+};
+</script>
+
 <style>
-body {
-  background: #f9f6ee;
-  font-family: Arial, sans-serif;
-  text-align: center;
-}
-.box {
-  background: white;
-  padding: 20px;
-  width: 280px;
-  margin: 80px auto;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,.15);
-}
-input, button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-}
-button {
-  background: #1877f2;
-  color: white;
-  border: none;
-  border-radius: 6px;
-}
-a {
-  display: block;
-  margin-top: 15px;
-  color: #1877f2;
-  cursor: pointer;
-}
+body{background:#f9f6ee;font-family:Arial;text-align:center}
+.box{background:#fff;width:280px;margin:80px auto;padding:20px;border-radius:8px}
+input,button{width:100%;padding:10px;margin-top:10px}
+button{background:#1877f2;color:#fff;border:none}
+a{color:#1877f2;cursor:pointer;display:block;margin-top:10px}
 </style>
 </head>
 
@@ -43,8 +68,8 @@ a {
 
 <div class="box" id="loginBox">
   <h3>LOGIN</h3>
-  <input id="loginEmail" placeholder="Email">
-  <input id="loginPassword" type="password" placeholder="Password">
+  <input id="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
   <button onclick="login()">Login</button>
   <a onclick="showRegister()">Daftar</a>
 </div>
@@ -66,36 +91,7 @@ function showLogin(){
   registerBox.style.display="none";
   loginBox.style.display="block";
 }
-
-function login(){
-  const email = loginEmail.value;
-  const pass = loginPassword.value;
-  const users = JSON.parse(localStorage.getItem("users")||"{}");
-
-  if(users[email] && users[email].password === pass){
-    localStorage.setItem("currentUser", email);
-    location.href="dashboard.html";
-  } else {
-    alert("Login gagal");
-  }
-}
-
-function register(){
-  const email = regEmail.value;
-  const pass = regPassword.value;
-  let users = JSON.parse(localStorage.getItem("users")||"{}");
-
-  if(users[email]){
-    alert("Email sudah terdaftar");
-    return;
-  }
-
-  users[email] = {password: pass};
-  localStorage.setItem("users", JSON.stringify(users));
-  alert("Daftar berhasil, silakan login");
-  showLogin();
-}
 </script>
 
 </body>
-  </html>
+</html>
