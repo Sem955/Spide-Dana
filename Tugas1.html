@@ -110,17 +110,22 @@ h2{
 </div>
 
 <script>
-/* ================= USER ================= */
-const USER_ID = localStorage.getItem("user_id") || "user_demo";
+/* ================= AUTH ================= */
+const USER_ID = localStorage.getItem("user_id");
+
+if (!USER_ID) {
+  alert("Silakan login terlebih dahulu");
+  window.location.href = "login.html";
+}
 
 /* ================= DATE ================= */
-const today = new Date().toLocaleDateString();
+const today = new Date().toISOString().slice(0,10);
 
 /* ================= STORAGE KEYS ================= */
-const saldoKey = "saldo_gov_" + USER_ID;
-const bonusKey = "bonus_claimed_" + USER_ID;
+const saldoKey = `saldo_gov_${USER_ID}`;
+const bonusKey = `bonus_${USER_ID}_${today}`;
 
-/* ================= INIT ================= */
+/* ================= SALDO ================= */
 let saldo = parseInt(localStorage.getItem(saldoKey)) || 0;
 document.getElementById("saldo").innerText = saldo;
 
@@ -155,29 +160,28 @@ function setDone(no){
 }
 
 function checkAllDone(){
-  let allDone = true;
+  let done = true;
   for(let i=1;i<=5;i++){
-    const key = `task_${i}_${USER_ID}_${today}`;
-    if(localStorage.getItem(key) !== "done"){
-      allDone = false;
+    if(localStorage.getItem(`task_${i}_${USER_ID}_${today}`) !== "done"){
+      done = false;
     }
   }
 
-  if(allDone && localStorage.getItem(bonusKey) !== today){
+  if(done && !localStorage.getItem(bonusKey)){
     document.getElementById("bonusBox").style.display = "block";
   }
 }
 
 /* ================= BONUS ================= */
 function claimBonus(){
-  if(localStorage.getItem(bonusKey) === today){
-    alert("Bonus hari ini sudah diklaim!");
+  if(localStorage.getItem(bonusKey)){
+    alert("Bonus hari ini sudah diklaim");
     return;
   }
 
   saldo += 100;
   localStorage.setItem(saldoKey, saldo);
-  localStorage.setItem(bonusKey, today);
+  localStorage.setItem(bonusKey, "claimed");
 
   document.getElementById("saldo").innerText = saldo;
   document.getElementById("bonusBox").style.display = "none";
@@ -187,4 +191,4 @@ function claimBonus(){
 </script>
 
 </body>
-  </html>
+</html>
