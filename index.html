@@ -3,70 +3,47 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GEOVARA</title>
-
-<script>
-  // ==== SIMPAN REFERRAL (JIKA ADA) ====
-  const params = new URLSearchParams(window.location.search);
-  const ref = params.get('ref');
-  if (ref) {
-    localStorage.setItem('invitedBy', ref);
-  }
-
-  // ==== CEK LOGIN ====
-  const currentUser = localStorage.getItem("currentUser");
-  if (currentUser) {
-    // Sudah login → langsung ke dashboard
-    window.location.replace("dashboard.html");
-  }
-</script>
+<title>GOV – Landing</title>
 
 <style>
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #f1f8e9;
+  background: #f2f6e9;
+  text-align: center;
 }
 header {
-  display: flex;
-  justify-content: space-between;
-  padding: 15px 20px;
-  background: #fff;
-}
-.logo {
+  padding: 15px;
   font-weight: bold;
-  font-size: 20px;
+  font-size: 22px;
 }
 .hero {
-  text-align: center;
-  padding: 50px 20px;
+  margin-top: 60px;
 }
-.play-btn {
-  display: inline-block;
-  margin-top: 25px;
-  padding: 14px 30px;
+button {
   background: black;
   color: white;
-  text-decoration: none;
+  padding: 15px 30px;
+  border: none;
   border-radius: 30px;
-  font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-  <div class="logo">GOV</div>
-</header>
+<header>GOV</header>
 
 <div class="hero">
-  <p>Dipercaya lebih dari 1 juta pengguna</p>
-  <h1>Gabung dengan GEOVARA<br>Kumpulin koin</h1>
-  <p>Bisa swap ke USDT atau IDR</p>
+  <h2>Gabung dengan GEOVARA</h2>
+  <p>Kumpulin koin & swap ke USDT / IDR</p>
 
-  <!-- BELUM LOGIN → KE LOGIN -->
-  <a href="index.login.html" class="play-btn">PLAY NOW →</a>
+  <!-- PLAY NOW SELALU KE LOGIN -->
+  <button onclick="location.href='index.login.html'">
+    PLAY NOW →
+  </button>
 </div>
 
 </body>
