@@ -1,165 +1,101 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Login DANA Rewards</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login GOV</title>
 
 <style>
 body {
-  background-color:#F9F6EE;
-  font-family:Arial,sans-serif;
-  margin:0;
+  background: #f9f6ee;
+  font-family: Arial, sans-serif;
+  text-align: center;
 }
-#splash{
-  position:fixed;
-  inset:0;
-  background:#F9F6EE;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  z-index:9999;
+.box {
+  background: white;
+  padding: 20px;
+  width: 280px;
+  margin: 80px auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.15);
 }
-.spinner{
-  margin-top:20px;
-  border:6px solid #ddd;
-  border-top:6px solid #1877f2;
-  border-radius:50%;
-  width:40px;height:40px;
-  animation:spin 1s linear infinite;
+input, button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
 }
-@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
-
-.main-content{
-  display:none;
-  padding:20px;
-  flex-direction:column;
-  align-items:center;
+button {
+  background: #1877f2;
+  color: white;
+  border: none;
+  border-radius: 6px;
 }
-.logo{width:180px;margin:30px auto 10px}
-.login-container,.register-container{
-  background:#fff;
-  border-radius:8px;
-  padding:20px;
-  width:280px;
-  box-shadow:0 3px 5px rgba(0,0,0,.1);
-  text-align:center;
-  display:none;
-}
-.login-container.active,.register-container.active{display:block}
-input{
-  width:100%;
-  padding:10px;
-  margin-bottom:10px;
-  border:1px solid #ddd;
-  border-radius:6px;
-}
-button{
-  width:100%;
-  padding:12px;
-  border:none;
-  border-radius:6px;
-  background:#1877f2;
-  color:#fff;
-  font-weight:bold;
-}
-.register-link,.login-link{
-  margin-top:15px;
-  font-size:14px;
-  color:#1877f2;
-  cursor:pointer;
+a {
+  display: block;
+  margin-top: 15px;
+  color: #1877f2;
+  cursor: pointer;
 }
 </style>
 </head>
 
 <body>
 
-<!-- Splash -->
-<div id="splash">
-  <img src="https://i.postimg.cc/x8XVRwZS/file-00000000f3d06230a63b9cde063aaecc-1.png" width="220">
-  <div class="spinner"></div>
+<div class="box" id="loginBox">
+  <h3>LOGIN</h3>
+  <input id="loginEmail" placeholder="Email">
+  <input id="loginPassword" type="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+  <a onclick="showRegister()">Daftar</a>
 </div>
 
-<!-- Login -->
-<div class="main-content" id="main-content">
-  <img src="https://i.postimg.cc/x8XVRwZS/file-00000000f3d06230a63b9cde063aaecc-1.png" class="logo">
-
-  <div class="login-container active" id="loginForm">
-    <h3>LOGIN</h3>
-    <input id="loginEmail" placeholder="Email">
-    <input id="loginPassword" type="password" placeholder="Kata sandi">
-    <button id="loginBtn">Login</button>
-    <div class="register-link" id="showRegister">Belum punya akun? Daftar</div>
-  </div>
-
-  <div class="register-container" id="registerForm">
-    <h3>DAFTAR</h3>
-    <input id="registerName" placeholder="Nama lengkap">
-    <input id="registerEmail" placeholder="Email">
-    <input id="registerPassword" type="password" placeholder="Kata sandi">
-    <input id="registerConfirmPassword" type="password" placeholder="Konfirmasi sandi">
-    <button id="registerBtn">Daftar</button>
-    <div class="login-link" id="showLogin">Sudah punya akun? Login</div>
-  </div>
+<div class="box" id="registerBox" style="display:none">
+  <h3>DAFTAR</h3>
+  <input id="regEmail" placeholder="Email">
+  <input id="regPassword" type="password" placeholder="Password">
+  <button onclick="register()">Daftar</button>
+  <a onclick="showLogin()">Login</a>
 </div>
 
-<!-- Firebase -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+<script>
+function showRegister(){
+  loginBox.style.display="none";
+  registerBox.style.display="block";
+}
+function showLogin(){
+  registerBox.style.display="none";
+  loginBox.style.display="block";
+}
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAlXIQ42acjO8xZH-Ti__YL6h9SGQQKQto",
-  authDomain: "govminer.firebaseapp.com",
-  projectId: "govminer",
-  appId: "1:408110658500:web:3fe7f4bd9a35f3fe726a91"
-};
+function login(){
+  const email = loginEmail.value;
+  const pass = loginPassword.value;
+  const users = JSON.parse(localStorage.getItem("users")||"{}");
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+  if(users[email] && users[email].password === pass){
+    localStorage.setItem("currentUser", email);
+    location.href="dashboard.html";
+  } else {
+    alert("Login gagal");
+  }
+}
 
-/* Splash */
-window.onload = () => {
-  setTimeout(()=>{
-    splash.style.display="none";
-    document.getElementById("main-content").style.display="flex";
-  },2000);
-};
+function register(){
+  const email = regEmail.value;
+  const pass = regPassword.value;
+  let users = JSON.parse(localStorage.getItem("users")||"{}");
 
-/* Toggle */
-showRegister.onclick=()=>{
-  loginForm.classList.remove("active");
-  registerForm.classList.add("active");
-};
-showLogin.onclick=()=>{
-  registerForm.classList.remove("active");
-  loginForm.classList.add("active");
-};
-
-/* Login */
-loginBtn.onclick=()=>{
-  signInWithEmailAndPassword(auth, loginEmail.value, loginPassword.value)
-    .then(()=>location.href="dashboard.html")
-    .catch(err=>alert(err.message));
-};
-
-/* Register */
-registerBtn.onclick=()=>{
-  if(registerPassword.value !== registerConfirmPassword.value){
-    alert("Konfirmasi password tidak sama");
+  if(users[email]){
+    alert("Email sudah terdaftar");
     return;
   }
-  createUserWithEmailAndPassword(auth, registerEmail.value, registerPassword.value)
-    .then(()=>alert("Daftar berhasil, silakan login"))
-    .catch(err=>alert(err.message));
-};
 
-/* Auto login */
-onAuthStateChanged(auth, user=>{
-  if(user) location.href="dashboard.html";
-});
+  users[email] = {password: pass};
+  localStorage.setItem("users", JSON.stringify(users));
+  alert("Daftar berhasil, silakan login");
+  showLogin();
+}
 </script>
 
 </body>
-</html>
+  </html>
