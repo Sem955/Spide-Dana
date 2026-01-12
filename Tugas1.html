@@ -56,7 +56,7 @@ h2{
 <h2>📋 Tugas Harian</h2>
 
 <!-- TUGAS 1 -->
-<div class="task" id="task-tiktok">
+<div class="task">
   <span>
     <span id="check-tiktok">⬜</span>
     1️⃣ Follow TikTok
@@ -73,39 +73,55 @@ h2{
 <!-- TUGAS 3 -->
 <div class="task">
   <span>3️⃣ Follow YouTube</span>
-  <button onclick="openTask(:https://youtube.com/@esam_arifin?si=mVXRPjWdHduGKlLc')">Kerjakan</button>
+  <button onclick="openTask('https://youtube.com')">Kerjakan</button>
 </div>
 
 <!-- TUGAS 4 -->
 <div class="task">
   <span>4️⃣ Like Twitter</span>
-  <button onclick="openTask('https://x.com/riza_alfa7')">Kerjakan</button>
+  <button onclick="openTask('https://x.com')">Kerjakan</button>
 </div>
 
 <!-- TUGAS 5 -->
 <div class="task">
   <span>5️⃣ Sukai TikTok</span>
-  <button onclick="openTask('https://vm.tiktok.com/ZSHEo9jpwNyTM-jls02/')">Kerjakan</button>
+  <button onclick="openTask('https://tiktok.com')">Kerjakan</button>
 </div>
 
 <script>
-/* ========= FOLLOW TIKTOK AUTO CEKLIS ========= */
-const TIKTOK_KEY = "task_follow_tiktok_done";
+/* =========================
+   SIMULASI USER LOGIN
+   ========================= */
+// ⛔ GANTI dengan ID user dari login kamu
+const USER_ID = localStorage.getItem("user_id") || "user_demo";
 
-// cek saat halaman dibuka
+// contoh jika mau set manual
+// localStorage.setItem("user_id", "user123");
+
+/* =========================
+   KEY PER USER
+   ========================= */
+const TIKTOK_KEY = "task_follow_tiktok_done_" + USER_ID;
+
+/* =========================
+   CEK SAAT LOAD
+   ========================= */
 window.onload = function () {
   if (localStorage.getItem(TIKTOK_KEY) === "done") {
     setTikTokDone();
   }
 };
 
+/* =========================
+   TUGAS TIKTOK
+   ========================= */
 function followTikTok() {
   window.open(
     "https://vm.tiktok.com/ZSHEoHtbLL7xj-3iEYO/",
     "_blank"
   );
 
-  // delay 10 detik
+  // simulasi delay 10 detik
   setTimeout(() => {
     localStorage.setItem(TIKTOK_KEY, "done");
     setTikTokDone();
@@ -121,7 +137,9 @@ function setTikTokDone() {
   btn.disabled = true;
 }
 
-/* ========= TUGAS LAIN ========= */
+/* =========================
+   TUGAS LAIN
+   ========================= */
 function openTask(link){
   window.open(link, "_blank");
   alert("Setelah selesai, kembali ke halaman ini.");
