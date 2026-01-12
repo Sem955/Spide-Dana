@@ -6,28 +6,82 @@
 <title>Login DANA Rewards</title>
 
 <style>
-/* === TAMPILAN ASLI TIDAK DIUBAH === */
-body { background:#F9F6EE; font-family:Arial; margin:0 }
-#splash{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999}
-.spinner{margin-top:20px;border:6px solid #ddd;border-top:6px solid #1877f2;border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite}
+body {
+  background-color:#F9F6EE;
+  font-family:Arial,sans-serif;
+  margin:0;
+}
+#splash{
+  position:fixed;
+  inset:0;
+  background:#F9F6EE;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+.spinner{
+  margin-top:20px;
+  border:6px solid #ddd;
+  border-top:6px solid #1877f2;
+  border-radius:50%;
+  width:40px;height:40px;
+  animation:spin 1s linear infinite;
+}
 @keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
-.main-content{display:none;flex-direction:column;align-items:center;padding:20px}
+
+.main-content{
+  display:none;
+  padding:20px;
+  flex-direction:column;
+  align-items:center;
+}
 .logo{width:180px;margin:30px auto 10px}
-.login-container,.register-container{background:#fff;border-radius:8px;padding:20px;width:280px;box-shadow:0 3px 5px rgba(0,0,0,.1);text-align:center;display:none}
+.login-container,.register-container{
+  background:#fff;
+  border-radius:8px;
+  padding:20px;
+  width:280px;
+  box-shadow:0 3px 5px rgba(0,0,0,.1);
+  text-align:center;
+  display:none;
+}
 .login-container.active,.register-container.active{display:block}
-input{width:100%;padding:10px;margin-bottom:10px;border:1px solid #ddd;border-radius:6px}
-button{width:100%;padding:12px;border:none;border-radius:6px;background:#1877f2;color:#fff;font-weight:bold}
-.register-link,.login-link{margin-top:15px;font-size:14px;color:#1877f2;cursor:pointer}
+input{
+  width:100%;
+  padding:10px;
+  margin-bottom:10px;
+  border:1px solid #ddd;
+  border-radius:6px;
+}
+button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:6px;
+  background:#1877f2;
+  color:#fff;
+  font-weight:bold;
+}
+.register-link,.login-link{
+  margin-top:15px;
+  font-size:14px;
+  color:#1877f2;
+  cursor:pointer;
+}
 </style>
 </head>
 
 <body>
 
+<!-- Splash -->
 <div id="splash">
   <img src="https://i.postimg.cc/x8XVRwZS/file-00000000f3d06230a63b9cde063aaecc-1.png" width="220">
   <div class="spinner"></div>
 </div>
 
+<!-- Login -->
 <div class="main-content" id="main-content">
   <img src="https://i.postimg.cc/x8XVRwZS/file-00000000f3d06230a63b9cde063aaecc-1.png" class="logo">
 
@@ -50,7 +104,7 @@ button{width:100%;padding:12px;border:none;border-radius:6px;background:#1877f2;
   </div>
 </div>
 
-<!-- === FIREBASE === -->
+<!-- Firebase -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
@@ -66,34 +120,43 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 /* Splash */
-window.onload = ()=>setTimeout(()=>{
-  splash.style.display="none";
-  document.getElementById("main-content").style.display="flex";
-},2000);
+window.onload = () => {
+  setTimeout(()=>{
+    splash.style.display="none";
+    document.getElementById("main-content").style.display="flex";
+  },2000);
+};
 
 /* Toggle */
-showRegister.onclick=()=>{loginForm.classList.remove("active");registerForm.classList.add("active")}
-showLogin.onclick=()=>{registerForm.classList.remove("active");loginForm.classList.add("active")}
+showRegister.onclick=()=>{
+  loginForm.classList.remove("active");
+  registerForm.classList.add("active");
+};
+showLogin.onclick=()=>{
+  registerForm.classList.remove("active");
+  loginForm.classList.add("active");
+};
 
 /* Login */
 loginBtn.onclick=()=>{
-  signInWithEmailAndPassword(auth,loginEmail.value,loginPassword.value)
-  .then(()=>location.href="dashboard.html")
-  .catch(e=>alert(e.message))
-}
+  signInWithEmailAndPassword(auth, loginEmail.value, loginPassword.value)
+    .then(()=>location.href="dashboard.html")
+    .catch(err=>alert(err.message));
+};
 
 /* Register */
 registerBtn.onclick=()=>{
-  if(registerPassword.value!==registerConfirmPassword.value){
-    alert("Password tidak sama");return;
+  if(registerPassword.value !== registerConfirmPassword.value){
+    alert("Konfirmasi password tidak sama");
+    return;
   }
-  createUserWithEmailAndPassword(auth,registerEmail.value,registerPassword.value)
-  .then(()=>alert("Daftar berhasil, silakan login"))
-  .catch(e=>alert(e.message))
-}
+  createUserWithEmailAndPassword(auth, registerEmail.value, registerPassword.value)
+    .then(()=>alert("Daftar berhasil, silakan login"))
+    .catch(err=>alert(err.message));
+};
 
 /* Auto login */
-onAuthStateChanged(auth,user=>{
+onAuthStateChanged(auth, user=>{
   if(user) location.href="dashboard.html";
 });
 </script>
