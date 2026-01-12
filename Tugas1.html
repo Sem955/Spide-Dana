@@ -68,6 +68,22 @@ h2{
   font-weight:bold;
   cursor:pointer;
 }
+
+.back-box{
+  margin-top:25px;
+}
+
+.back-box button{
+  width:100%;
+  padding:14px;
+  font-size:16px;
+  border:none;
+  border-radius:14px;
+  background:#2196f3;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+}
 </style>
 </head>
 
@@ -81,7 +97,7 @@ h2{
 
 <div class="task">
   <span><span id="check1">⬜</span> Follow TikTok</span>
-  <button id="btn1" onclick="doTask(1,'https://tiktok.com')">Kerjakan</button>
+  <button id="btn1" onclick="doTask(1,'https://www.tiktok.com')">Kerjakan</button>
 </div>
 
 <div class="task">
@@ -101,7 +117,7 @@ h2{
 
 <div class="task">
   <span><span id="check5">⬜</span> Sukai TikTok</span>
-  <button id="btn5" onclick="doTask(5,'https://tiktok.com')">Kerjakan</button>
+  <button id="btn5" onclick="doTask(5,'https://www.tiktok.com')">Kerjakan</button>
 </div>
 
 <!-- BONUS -->
@@ -109,10 +125,14 @@ h2{
   <button onclick="claimBonus()">🎁 Klaim Bonus Harian 100 GOV</button>
 </div>
 
-<script>
-/* ================= AUTH ================= */
-const USER_ID = localStorage.getItem("user_id");
+<!-- BACK DASHBOARD -->
+<div class="back-box">
+  <button onclick="goDashboard()">⬅️ Kembali ke Dashboard</button>
+</div>
 
+<script>
+/* ================= AUTH (CEK SEKALI SAJA) ================= */
+const USER_ID = localStorage.getItem("user_id");
 if (!USER_ID) {
   alert("Silakan login terlebih dahulu");
   window.location.href = "login.html";
@@ -121,7 +141,7 @@ if (!USER_ID) {
 /* ================= DATE ================= */
 const today = new Date().toISOString().slice(0,10);
 
-/* ================= STORAGE KEYS ================= */
+/* ================= KEYS ================= */
 const saldoKey = `saldo_gov_${USER_ID}`;
 const bonusKey = `bonus_${USER_ID}_${today}`;
 
@@ -140,9 +160,9 @@ window.onload = () => {
   checkAllDone();
 };
 
-/* ================= TASK ================= */
+/* ================= TASK (TIDAK CEK LOGIN LAGI) ================= */
 function doTask(no, link){
-  window.open(link, "_blank");
+  window.open(link, "_blank"); // 🔑 kunci anti login ulang
 
   setTimeout(() => {
     const key = `task_${no}_${USER_ID}_${today}`;
@@ -166,7 +186,6 @@ function checkAllDone(){
       done = false;
     }
   }
-
   if(done && !localStorage.getItem(bonusKey)){
     document.getElementById("bonusBox").style.display = "block";
   }
@@ -174,7 +193,7 @@ function checkAllDone(){
 
 /* ================= BONUS ================= */
 function claimBonus(){
-  if(localStorage.getItem(bonusKey)){
+  if(localStorage.getItem(bonusKey)) {
     alert("Bonus hari ini sudah diklaim");
     return;
   }
@@ -187,6 +206,11 @@ function claimBonus(){
   document.getElementById("bonusBox").style.display = "none";
 
   alert("🎉 Bonus 100 GOV berhasil diklaim!");
+}
+
+/* ================= DASHBOARD ================= */
+function goDashboard(){
+  window.location.href = "dashboard.html";
 }
 </script>
 
