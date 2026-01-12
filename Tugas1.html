@@ -125,23 +125,22 @@ h2{
   <button onclick="claimBonus()">🎁 Klaim Bonus Harian 100 GOV</button>
 </div>
 
-<!-- BACK DASHBOARD -->
+<!-- BACK -->
 <div class="back-box">
   <button onclick="goDashboard()">⬅️ Kembali ke Dashboard</button>
 </div>
 
 <script>
-/* ================= AUTH (CEK SEKALI SAJA) ================= */
-const USER_ID = localStorage.getItem("user_id");
-if (!USER_ID) {
-  alert("Silakan login terlebih dahulu");
-  window.location.href = "login.html";
-}
+/* ================= USER (OPSIONAL) =================
+   Jika ada user_id → dipakai
+   Jika tidak ada → pakai guest
+=================================================== */
+const USER_ID = localStorage.getItem("user_id") || "guest";
 
 /* ================= DATE ================= */
 const today = new Date().toISOString().slice(0,10);
 
-/* ================= KEYS ================= */
+/* ================= STORAGE ================= */
 const saldoKey = `saldo_gov_${USER_ID}`;
 const bonusKey = `bonus_${USER_ID}_${today}`;
 
@@ -160,9 +159,9 @@ window.onload = () => {
   checkAllDone();
 };
 
-/* ================= TASK (TIDAK CEK LOGIN LAGI) ================= */
+/* ================= TASK ================= */
 function doTask(no, link){
-  window.open(link, "_blank"); // 🔑 kunci anti login ulang
+  window.open(link, "_blank");
 
   setTimeout(() => {
     const key = `task_${no}_${USER_ID}_${today}`;
@@ -193,7 +192,7 @@ function checkAllDone(){
 
 /* ================= BONUS ================= */
 function claimBonus(){
-  if(localStorage.getItem(bonusKey)) {
+  if(localStorage.getItem(bonusKey)){
     alert("Bonus hari ini sudah diklaim");
     return;
   }
