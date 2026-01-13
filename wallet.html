@@ -1,502 +1,433 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dompet Saya - DEBUG</title>
-  
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-  
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-    
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f1f8e9;
-      padding: 20px;
-      min-height: 100vh;
-    }
-
-    .container {
-      max-width: 500px;
-      margin: 0 auto;
-      background: white;
-      border-radius: 15px;
-      padding: 20px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
-
-    h1 {
-      color: #333;
-      text-align: center;
-      margin-bottom: 5px;
-    }
-    
-    .subtitle {
-      text-align: center;
-      color: #666;
-      margin-bottom: 20px;
-    }
-
-    .status-box {
-      background: #fff3cd;
-      border: 1px solid #ffeaa7;
-      border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 20px;
-    }
-    
-    .status-box h3 {
-      margin-top: 0;
-      color: #856404;
-    }
-    
-    .status-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 8px 0;
-      border-bottom: 1px solid #eee;
-    }
-    
-    .status-label {
-      font-weight: bold;
-    }
-    
-    .status-value {
-      font-family: monospace;
-    }
-    
-    .good {
-      color: green;
-    }
-    
-    .bad {
-      color: red;
-    }
-    
-    .warning {
-      color: orange;
-    }
-
-    .wallet-card {
-      background: linear-gradient(135deg, #ff6f00, #ff8f00);
-      color: white;
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 20px;
-    }
-
-    .wallet-card h2 {
-      margin-top: 0;
-      font-size: 20px;
-      text-align: center;
-    }
-
-    .balance {
-      display: flex;
-      justify-content: space-between;
-      margin: 10px 0;
-      font-size: 16px;
-      font-weight: bold;
-    }
-
-    .balance span {
-      font-weight: normal;
-      font-size: 14px;
-    }
-
-    button {
-      width: 100%;
-      padding: 14px;
-      margin: 10px 0;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    
-    .withdraw-btn {
-      background: #1976d2;
-      color: white;
-    }
-    
-    .back-btn {
-      background: #333;
-      color: white;
-    }
-    
-    .debug-btn {
-      background: #6c757d;
-      color: white;
-      font-size: 14px;
-    }
-
-    #consoleLog {
-      background: #1e1e1e;
-      color: #00ff00;
-      font-family: monospace;
-      padding: 15px;
-      border-radius: 10px;
-      height: 200px;
-      overflow-y: auto;
-      margin-top: 20px;
-      font-size: 12px;
-    }
-    
-    .log-entry {
-      margin: 5px 0;
-    }
-    
-    .log-time {
-      color: #888;
-    }
-    
-    .log-info {
-      color: #4fc3f7;
-    }
-    
-    .log-success {
-      color: #69f0ae;
-    }
-    
-    .log-error {
-      color: #ff5252;
-    }
-    
-    .log-warning {
-      color: #ffd740;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dompet Digital - Sync Otomatis</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 500px; margin: auto; background: white; border-radius: 20px; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+        h1 { text-align: center; color: #333; margin-bottom: 10px; }
+        .subtitle { text-align: center; color: #666; margin-bottom: 30px; }
+        .status { padding: 10px; border-radius: 10px; margin: 20px 0; text-align: center; font-weight: bold; }
+        .online { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .offline { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .wallet-card { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 25px; border-radius: 15px; margin: 25px 0; }
+        .balance { display: flex; justify-content: space-between; margin: 15px 0; font-size: 18px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.2); }
+        .balance:last-child { border-bottom: none; }
+        button { width: 100%; padding: 16px; margin: 10px 0; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; transition: transform 0.2s; }
+        button:hover { transform: translateY(-2px); }
+        .btn-primary { background: #1890ff; color: white; }
+        .btn-success { background: #52c41a; color: white; }
+        .btn-warning { background: #faad14; color: white; }
+        .sync-indicator { position: fixed; top: 20px; right: 20px; background: #1890ff; color: white; padding: 8px 16px; border-radius: 20px; font-size: 14px; display: none; z-index: 1000; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
+        .user-info { text-align: center; padding: 15px; background: #f8f9fa; border-radius: 10px; margin: 15px 0; }
+    </style>
 </head>
 <body>
 
-  <div class="container">
-    <h1>💰 Dompet Saya</h1>
-    <div class="subtitle" id="subtitle">DEBUG MODE</div>
+<div class="sync-indicator" id="syncIndicator"></div>
+
+<div class="container">
+    <h1>💰 Dompet Digital</h1>
+    <div class="subtitle">Saldo Sync Otomatis Antar HP</div>
     
-    <!-- STATUS BOX -->
-    <div class="status-box">
-      <h3>📊 Status Sistem</h3>
-      <div class="status-item">
-        <span class="status-label">Firebase:</span>
-        <span class="status-value" id="statusFirebase">Checking...</span>
-      </div>
-      <div class="status-item">
-        <span class="status-label">Authentication:</span>
-        <span class="status-value" id="statusAuth">Checking...</span>
-      </div>
-      <div class="status-item">
-        <span class="status-label">Firestore:</span>
-        <span class="status-value" id="statusFirestore">Checking...</span>
-      </div>
-      <div class="status-item">
-        <span class="status-label">User Data:</span>
-        <span class="status-value" id="statusUserData">Checking...</span>
-      </div>
+    <!-- Connection Status -->
+    <div id="connectionStatus" class="status offline">🔴 Menghubungkan...</div>
+    
+    <!-- User Info -->
+    <div class="user-info" id="userInfo">
+        <div id="userEmail">Belum login</div>
+        <div id="userUID" style="font-size: 12px; color: #666; margin-top: 5px;"></div>
     </div>
     
-    <!-- WALLET CARD -->
+    <!-- Wallet Card -->
     <div class="wallet-card">
-      <h2>Saldo Anda</h2>
-      <div class="balance">GOV <span id="saldoGOV">0 GOV</span></div>
-      <div class="balance">IDR <span id="saldoIDR">0 IDR</span></div>
-      <div class="balance">USDT <span id="saldoUSDT">0.00 USDT</span></div>
+        <h2 style="text-align: center; margin-bottom: 20px;">Saldo Anda</h2>
+        <div class="balance">
+            <span>GOV Coin</span>
+            <span id="saldoGOV">0 GOV</span>
+        </div>
+        <div class="balance">
+            <span>Rupiah (IDR)</span>
+            <span id="saldoIDR">Rp 0</span>
+        </div>
+        <div class="balance">
+            <span>USDT</span>
+            <span id="saldoUSDT">0.00 USDT</span>
+        </div>
     </div>
     
-    <!-- BUTTONS -->
-    <button class="withdraw-btn" onclick="tampilkanModal()">Withdraw USDT</button>
-    <button class="back-btn" onclick="window.location.href='dashboard.html'">← Kembali ke Dasbor</button>
-    <button class="debug-btn" onclick="runTests()">🔧 Run Diagnostic Tests</button>
+    <!-- Action Buttons -->
+    <button class="btn-primary" onclick="tambahSaldo('GOV', 100)">➕ Tambah 100 GOV</button>
+    <button class="btn-primary" onclick="tambahSaldo('IDR', 50000)">➕ Tambah 50,000 IDR</button>
+    <button class="btn-primary" onclick="tambahSaldo('USDT', 10)">➕ Tambah 10 USDT</button>
     
-    <!-- DEBUG CONSOLE -->
-    <div id="consoleLog">
-      <div class="log-entry"><span class="log-time">[18:16:48]</span> <span class="log-info">Starting debug session...</span></div>
+    <button class="btn-success" onclick="loginTest()">🔑 Login Test (ddd3@gmail.com)</button>
+    <button class="btn-warning" onclick="logout()">🚪 Logout</button>
+    
+    <!-- Debug Info -->
+    <div style="margin-top: 30px; padding: 15px; background: #f8f9fa; border-radius: 10px; font-size: 13px;">
+        <strong>📊 Status Sistem:</strong>
+        <div id="debugInfo" style="margin-top: 10px;"></div>
     </div>
-  </div>
+</div>
 
-  <script>
-    // ===== LOGGING SYSTEM =====
-    function log(message, type = 'info') {
-      const consoleDiv = document.getElementById('consoleLog');
-      const time = new Date().toLocaleTimeString();
-      const typeClass = 'log-' + type;
-      
-      const entry = document.createElement('div');
-      entry.className = 'log-entry';
-      entry.innerHTML = `<span class="log-time">[${time}]</span> <span class="${typeClass}">${message}</span>`;
-      
-      consoleDiv.appendChild(entry);
-      consoleDiv.scrollTop = consoleDiv.scrollHeight;
-      
-      // Also log to browser console
-      console[type === 'error' ? 'error' : type === 'warning' ? 'warn' : 'log'](message);
-    }
-    
-    function updateStatus(elementId, text, isGood = true) {
-      const element = document.getElementById(elementId);
-      element.textContent = text;
-      element.className = 'status-value ' + (isGood ? 'good' : 'bad');
-    }
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
-    // ===== FIREBASE CONFIG =====
-    const firebaseConfig = {
-      apiKey: "AIzaSyAlXIQ42acjO8xZH-Ti__YL6h9SGQQKQto",
-      authDomain: "govminer.firebaseapp.com",
-      projectId: "govminer",
-      storageBucket: "govminer.firebasestorage.app",
-      messagingSenderId: "408110658500",
-      appId: "1:408110658500:web:3fe7f4bd9a35f3fe726a91"
-    };
+<script>
+// ===== FIREBASE CONFIG =====
+const firebaseConfig = {
+    apiKey: "AIzaSyAlXIQ42acjO8xZH-Ti__YL6h9SGQQKQto",
+    authDomain: "govminer.firebaseapp.com",
+    databaseURL: "https://govminer-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "govminer",
+    storageBucket: "govminer.firebasestorage.app",
+    messagingSenderId: "408110658500",
+    appId: "1:408110658500:web:3fe7f4bd9a35f3fe726a91"
+};
 
-    // ===== GLOBAL VARIABLES =====
-    let firebaseApp = null;
-    let auth = null;
-    let db = null;
-    let currentUser = null;
+// ===== GLOBAL VARIABLES =====
+let auth = null;
+let database = null;
+let currentUser = null;
+let currentBalance = { GOV: 0, IDR: 0, USDT: 0 };
 
-    // ===== INITIALIZATION =====
-    log('🚀 Initializing application...');
-    
+// ===== INITIALIZE =====
+function initializeFirebase() {
     try {
-      // Initialize Firebase
-      firebaseApp = firebase.initializeApp(firebaseConfig);
-      auth = firebase.auth();
-      db = firebase.firestore();
-      
-      updateStatus('statusFirebase', '✅ Initialized', true);
-      log('Firebase initialized successfully', 'success');
-      
-      // Check Firestore connection
-      db.collection("test").doc("test").get()
-        .then(() => {
-          updateStatus('statusFirestore', '✅ Connected', true);
-          log('Firestore connection successful', 'success');
-        })
-        .catch(err => {
-          updateStatus('statusFirestore', '❌ Error: ' + err.code, false);
-          log('Firestore error: ' + err.message, 'error');
-        });
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        auth = firebase.auth();
+        database = firebase.database();
+        
+        updateDebugInfo("✅ Firebase initialized");
+        updateConnectionStatus("🟢 Terhubung ke Server");
+        
+        // Setup auth listener
+        auth.onAuthStateChanged(handleAuthStateChange);
+        
+        // Check if user was logged in before
+        const savedUser = localStorage.getItem('currentUser');
+        if (savedUser) {
+            try {
+                const userData = JSON.parse(savedUser);
+                document.getElementById('userEmail').textContent = `Welcome back: ${userData.email}`;
+            } catch (e) {
+                // Ignore error
+            }
+        }
         
     } catch (error) {
-      updateStatus('statusFirebase', '❌ Failed', false);
-      log('Firebase initialization failed: ' + error.message, 'error');
+        console.error("Firebase init error:", error);
+        updateConnectionStatus("🔴 Error: " + error.message);
     }
+}
 
-    // ===== AUTH STATE LISTENER =====
-    if (auth) {
-      auth.onAuthStateChanged(function(user) {
-        if (user) {
-          // User is signed in
-          currentUser = user;
-          updateStatus('statusAuth', '✅ Logged in: ' + user.email, true);
-          log('User authenticated: ' + user.email + ' (UID: ' + user.uid + ')', 'success');
-          
-          // Load user data
-          loadUserData();
-        } else {
-          // User is signed out
-          updateStatus('statusAuth', '❌ Not logged in', false);
-          log('User not authenticated', 'warning');
-          
-          // Try to get from localStorage first
-          const storedUser = localStorage.getItem('currentUser');
-          if (storedUser) {
-            log('Found user in localStorage: ' + storedUser, 'info');
-            document.getElementById('subtitle').textContent = 'Guest Mode (Local Storage)';
-            loadFromLocalStorage();
-          } else {
-            log('No user found, redirecting to login...', 'warning');
-            setTimeout(() => {
-              window.location.href = 'index.html';
-            }, 2000);
-          }
-        }
-      });
+// ===== AUTH HANDLER =====
+function handleAuthStateChange(user) {
+    if (user) {
+        // User is signed in
+        currentUser = user;
+        
+        document.getElementById('userEmail').textContent = `👤 ${user.email}`;
+        document.getElementById('userUID').textContent = `UID: ${user.uid.substring(0, 12)}...`;
+        
+        updateDebugInfo(`✅ User authenticated: ${user.email}`);
+        
+        // Save user info to localStorage
+        localStorage.setItem('currentUser', JSON.stringify({
+            email: user.email,
+            uid: user.uid,
+            lastLogin: new Date().toISOString()
+        }));
+        
+        // Load user data
+        loadUserData();
+        
+    } else {
+        // User is signed out
+        currentUser = null;
+        document.getElementById('userEmail').textContent = "Belum login";
+        document.getElementById('userUID').textContent = "";
+        
+        // Clear balance display
+        document.getElementById('saldoGOV').textContent = "0 GOV";
+        document.getElementById('saldoIDR').textContent = "Rp 0";
+        document.getElementById('saldoUSDT').textContent = "0.00 USDT";
     }
+}
 
-    // ===== LOAD USER DATA =====
-    async function loadUserData() {
-      if (!currentUser || !db) {
-        log('Cannot load data: No user or database', 'error');
+// ===== LOAD USER DATA =====
+async function loadUserData() {
+    if (!currentUser || !database) {
+        updateDebugInfo("Cannot load data: No user/database");
         return;
-      }
-      
-      log('Loading user data for UID: ' + currentUser.uid, 'info');
-      updateStatus('statusUserData', '⏳ Loading...', false);
-      
-      try {
-        const userRef = db.collection("users").doc(currentUser.uid);
-        const userDoc = await userRef.get();
+    }
+    
+    showSyncIndicator("Memuat data...");
+    
+    try {
+        const userRef = database.ref('users/' + currentUser.uid);
+        const snapshot = await userRef.once('value');
         
-        if (userDoc.exists) {
-          const userData = userDoc.data();
-          log('User data loaded: ' + JSON.stringify(userData), 'success');
-          updateStatus('statusUserData', '✅ Loaded', true);
-          
-          // Display data
-          displayWalletData(userData);
-          
-          // Also save to localStorage as backup
-          localStorage.setItem('userWalletData', JSON.stringify(userData));
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            
+            currentBalance = {
+                GOV: data.saldoGOV || 0,
+                IDR: data.saldoIDR || 0,
+                USDT: data.saldoUSDT || 0
+            };
+            
+            updateDisplay();
+            updateDebugInfo(`✅ Data loaded from server: ${new Date(data.lastUpdated || Date.now()).toLocaleString()}`);
+            
         } else {
-          log('User document does not exist in Firestore', 'warning');
-          updateStatus('statusUserData', '⚠️ No data in Firestore', false);
-          
-          // Try to load from localStorage
-          loadFromLocalStorage();
-          
-          // Create empty user data in Firestore
-          log('Creating initial user data...', 'info');
-          await userRef.set({
-            email: currentUser.email,
-            saldoGOV: 0,
-            saldoIDR: 0,
-            saldoUSDT: 0,
-            createdAt: new Date().toISOString()
-          }, { merge: true });
-          log('Initial user data created', 'success');
+            // Create initial data for new user
+            currentBalance = { GOV: 1000, IDR: 50000, USDT: 5.5 };
+            
+            await saveUserData();
+            updateDebugInfo("✅ Initial data created for new user");
         }
-      } catch (error) {
-        log('Error loading user data: ' + error.message, 'error');
-        updateStatus('statusUserData', '❌ Error: ' + error.code, false);
         
-        // Fallback to localStorage
-        loadFromLocalStorage();
-      }
-    }
-    
-    // ===== LOAD FROM LOCALSTORAGE (FALLBACK) =====
-    function loadFromLocalStorage() {
-      log('Trying to load from localStorage...', 'info');
-      
-      // Try to get from localStorage
-      const storedData = localStorage.getItem('userWalletData');
-      const storedUser = localStorage.getItem('currentUser');
-      
-      if (storedData) {
-        try {
-          const userData = JSON.parse(storedData);
-          log('Loaded from localStorage: ' + storedData, 'success');
-          updateStatus('statusUserData', '📂 From LocalStorage', true);
-          displayWalletData(userData);
-        } catch (e) {
-          log('Error parsing localStorage data: ' + e.message, 'error');
-          displayDefaultData();
+    } catch (error) {
+        console.error("Load error:", error);
+        updateDebugInfo("❌ Load failed: " + error.message);
+        
+        // Try to load from localStorage
+        const savedData = localStorage.getItem('userBalance_' + currentUser.uid);
+        if (savedData) {
+            try {
+                currentBalance = JSON.parse(savedData);
+                updateDisplay();
+                updateDebugInfo("📂 Loaded from localStorage (offline)");
+            } catch (e) {
+                // Ignore
+            }
         }
-      } else if (storedUser) {
-        // Create dummy data from email
-        const dummyData = {
-          saldoGOV: 1000,
-          saldoIDR: 50000,
-          saldoUSDT: 5.50,
-          email: storedUser
-        };
-        log('Created dummy data for: ' + storedUser, 'warning');
-        updateStatus('statusUserData', '⚠️ Using Dummy Data', false);
-        displayWalletData(dummyData);
-      } else {
-        log('No data available anywhere', 'error');
-        displayDefaultData();
-      }
     }
     
-    // ===== DISPLAY DATA =====
-    function displayWalletData(data) {
-      document.getElementById('saldoGOV').textContent = 
-        (data.saldoGOV || 0).toLocaleString('id-ID') + " GOV";
-      document.getElementById('saldoIDR').textContent = 
-        (data.saldoIDR || 0).toLocaleString('id-ID') + " IDR";
-      document.getElementById('saldoUSDT').textContent = 
-        (data.saldoUSDT || 0).toFixed(2) + " USDT";
-      
-      if (data.email) {
-        document.getElementById('subtitle').textContent = 'User: ' + data.email;
-      }
-      
-      log('Wallet data displayed', 'success');
+    hideSyncIndicator();
+}
+
+// ===== SAVE USER DATA =====
+async function saveUserData() {
+    if (!currentUser || !database) {
+        updateDebugInfo("Cannot save: No user/database");
+        return false;
     }
     
-    function displayDefaultData() {
-      document.getElementById('saldoGOV').textContent = "0 GOV";
-      document.getElementById('saldoIDR').textContent = "0 IDR";
-      document.getElementById('saldoUSDT').textContent = "0.00 USDT";
+    showSyncIndicator("Menyimpan ke server...");
+    
+    try {
+        const userRef = database.ref('users/' + currentUser.uid);
+        
+        await userRef.set({
+            email: currentUser.email,
+            saldoGOV: currentBalance.GOV,
+            saldoIDR: currentBalance.IDR,
+            saldoUSDT: currentBalance.USDT,
+            lastUpdated: new Date().toISOString(),
+            lastDevice: navigator.userAgent.substring(0, 100),
+            syncCount: (await userRef.child('syncCount').once('value')).val() || 0 + 1
+        });
+        
+        // Also save to localStorage as backup
+        localStorage.setItem('userBalance_' + currentUser.uid, JSON.stringify(currentBalance));
+        
+        updateDebugInfo(`✅ Data saved to server: ${new Date().toLocaleTimeString()}`);
+        hideSyncIndicator();
+        return true;
+        
+    } catch (error) {
+        console.error("Save error:", error);
+        updateDebugInfo("❌ Save failed: " + error.message);
+        hideSyncIndicator();
+        return false;
+    }
+}
+
+// ===== UPDATE BALANCE =====
+async function tambahSaldo(type, amount) {
+    if (!currentUser) {
+        alert("⚠️ Silakan login terlebih dahulu!\n\nKlik 'Login Test' untuk login otomatis.");
+        return;
     }
     
-    // ===== DIAGNOSTIC TESTS =====
-    async function runTests() {
-      log('=== RUNNING DIAGNOSTIC TESTS ===', 'info');
-      
-      // Test 1: Check localStorage
-      const storedUser = localStorage.getItem('currentUser');
-      log('Test 1 - localStorage currentUser: ' + (storedUser || 'NOT FOUND'), 
-          storedUser ? 'success' : 'warning');
-      
-      // Test 2: Check Firebase auth
-      if (auth) {
-        const user = auth.currentUser;
-        log('Test 2 - Firebase auth.currentUser: ' + (user ? user.email : 'NULL'),
-            user ? 'success' : 'warning');
-      } else {
-        log('Test 2 - Firebase auth not available', 'error');
-      }
-      
-      // Test 3: Check if we can write to localStorage
-      try {
-        localStorage.setItem('test_diagnostic', 'test_value');
-        localStorage.removeItem('test_diagnostic');
-        log('Test 3 - localStorage read/write: OK', 'success');
-      } catch (e) {
-        log('Test 3 - localStorage error: ' + e.message, 'error');
-      }
-      
-      // Test 4: Try to manually get user data
-      if (currentUser && db) {
-        try {
-          const userRef = db.collection("users").doc(currentUser.uid);
-          const doc = await userRef.get();
-          log('Test 4 - Firestore get document: ' + (doc.exists ? 'EXISTS' : 'NOT EXISTS'),
-              doc.exists ? 'success' : 'warning');
-        } catch (e) {
-          log('Test 4 - Firestore error: ' + e.message, 'error');
+    // Update local balance
+    switch(type) {
+        case 'GOV':
+            currentBalance.GOV += amount;
+            break;
+        case 'IDR':
+            currentBalance.IDR += amount;
+            break;
+        case 'USDT':
+            currentBalance.USDT += amount;
+            break;
+    }
+    
+    // Update display immediately
+    updateDisplay();
+    
+    // Save to server
+    const saved = await saveUserData();
+    
+    if (saved) {
+        alert(`✅ ${type} berhasil ditambahkan!\n\n` +
+              `Saldo baru: ${getBalanceText(type)}\n\n` +
+              `🎉 Data sudah disimpan di SERVER dan bisa diakses di HP lain!`);
+    } else {
+        alert(`⚠️ ${type} ditambahkan (hanya lokal)\n\n` +
+              `Saldo baru: ${getBalanceText(type)}\n\n` +
+              `🔴 Gagal sync ke server. Coba lagi nanti.`);
+    }
+}
+
+// ===== HELPER FUNCTIONS =====
+function updateDisplay() {
+    document.getElementById('saldoGOV').textContent = 
+        currentBalance.GOV.toLocaleString('id-ID') + ' GOV';
+    document.getElementById('saldoIDR').textContent = 
+        'Rp ' + currentBalance.IDR.toLocaleString('id-ID');
+    document.getElementById('saldoUSDT').textContent = 
+        currentBalance.USDT.toFixed(2) + ' USDT';
+}
+
+function getBalanceText(type) {
+    switch(type) {
+        case 'GOV': return currentBalance.GOV.toLocaleString('id-ID') + ' GOV';
+        case 'IDR': return 'Rp ' + currentBalance.IDR.toLocaleString('id-ID');
+        case 'USDT': return currentBalance.USDT.toFixed(2) + ' USDT';
+    }
+}
+
+function updateConnectionStatus(text) {
+    const statusEl = document.getElementById('connectionStatus');
+    statusEl.textContent = text;
+    
+    if (text.includes('🟢') || text.includes('Terhubung')) {
+        statusEl.className = 'status online';
+    } else {
+        statusEl.className = 'status offline';
+    }
+}
+
+function updateDebugInfo(text) {
+    document.getElementById('debugInfo').innerHTML = text;
+    console.log('[Wallet]', text);
+}
+
+function showSyncIndicator(text) {
+    const indicator = document.getElementById('syncIndicator');
+    indicator.textContent = text;
+    indicator.style.display = 'block';
+}
+
+function hideSyncIndicator() {
+    const indicator = document.getElementById('syncIndicator');
+    indicator.style.display = 'none';
+}
+
+// ===== AUTH FUNCTIONS =====
+async function loginTest() {
+    showSyncIndicator("Logging in...");
+    
+    try {
+        // Try to login with existing user
+        const userCredential = await auth.signInWithEmailAndPassword(
+            "ddd3@gmail.com",
+            "password123" // Use the password you set
+        );
+        
+        alert(`✅ Login berhasil!\n\nEmail: ${userCredential.user.email}\n\n` +
+              `Sekarang saldo akan sync otomatis ke server!`);
+        
+    } catch (error) {
+        console.error("Login error:", error);
+        
+        if (error.code === 'auth/user-not-found') {
+            // Create new user
+            try {
+                const userCredential = await auth.createUserWithEmailAndPassword(
+                    "ddd3@gmail.com",
+                    "password123"
+                );
+                
+                alert(`✅ Akun baru dibuat!\n\nEmail: ${userCredential.user.email}\n\n` +
+                      `Password: password123\n\nSimpan info login ini!`);
+                
+            } catch (createError) {
+                alert("❌ Gagal membuat akun: " + createError.message);
+            }
+        } else if (error.code === 'auth/wrong-password') {
+            alert("❌ Password salah!\n\nPassword default: password123");
+        } else {
+            alert("❌ Login error: " + error.message);
         }
-      }
-      
-      log('=== TESTS COMPLETE ===', 'info');
     }
     
-    // ===== SIMPLE FUNCTIONS =====
-    function tampilkanModal() {
-      log('Withdraw button clicked', 'info');
-      alert('Withdraw feature - Coming soon!');
+    hideSyncIndicator();
+}
+
+function logout() {
+    if (confirm("Yakin ingin logout?")) {
+        auth.signOut();
+        localStorage.removeItem('currentUser');
+        alert("Logged out. Data tetap aman di server.");
     }
+}
+
+// ===== REAL-TIME SYNC LISTENER =====
+function setupRealtimeListener() {
+    if (!currentUser || !database) return;
     
-    // ===== INIT ON LOAD =====
-    document.addEventListener('DOMContentLoaded', function() {
-      log('DOM fully loaded', 'success');
-      
-      // Check if we have a user in localStorage
-      const storedUser = localStorage.getItem('currentUser');
-      if (storedUser) {
-        log('Found in localStorage: ' + storedUser, 'info');
-      }
-      
-      // If Firebase takes too long, show something
-      setTimeout(function() {
-        if (!currentUser) {
-          log('Timeout: No user detected after 3 seconds', 'warning');
-          loadFromLocalStorage();
+    const userRef = database.ref('users/' + currentUser.uid);
+    
+    userRef.on('value', (snapshot) => {
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            
+            // Update local balance if different
+            if (data.saldoGOV !== currentBalance.GOV || 
+                data.saldoIDR !== currentBalance.IDR || 
+                data.saldoUSDT !== currentBalance.USDT) {
+                
+                currentBalance = {
+                    GOV: data.saldoGOV || 0,
+                    IDR: data.saldoIDR || 0,
+                    USDT: data.saldoUSDT || 0
+                };
+                
+                updateDisplay();
+                updateDebugInfo(`🔄 Real-time update: ${new Date().toLocaleTimeString()}`);
+            }
         }
-      }, 3000);
     });
-    
-  </script>
+}
+
+// ===== INITIALIZE ON LOAD =====
+document.addEventListener('DOMContentLoaded', initializeFirebase);
+
+// Auto-check connection
+setInterval(() => {
+    if (database && currentUser) {
+        database.ref('.info/connected').on('value', (snapshot) => {
+            if (snapshot.val() === true) {
+                updateConnectionStatus("🟢 Terhubung ke Server");
+            } else {
+                updateConnectionStatus("🔴 Offline Mode");
+            }
+        });
+    }
+}, 5000);
+</script>
 
 </body>
 </html>
