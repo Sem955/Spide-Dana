@@ -4,6 +4,38 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Klik 10X</title>
+  
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+    import { getFirestore, doc, updateDoc, increment, getDoc } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAlXIQ42acjO8xZH-Ti__YL6h9SGQQKQto",
+      authDomain: "govminer.firebaseapp.com",
+      projectId: "govminer",
+      storageBucket: "govminer.firebasestorage.app",
+      messagingSenderId: "408110658500",
+      appId: "1:408110658500:web:3fe7f4bd9a35f3fe726a91"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Simpan di window untuk akses global
+    window.firebaseAuth = auth;
+    window.firebaseDb = db;
+    window.firebaseFunctions = {
+      onAuthStateChanged,
+      doc,
+      updateDoc,
+      increment,
+      getDoc
+    };
+  </script>
+  
   <style>
     body {
       margin: 0;
@@ -79,37 +111,137 @@
       background-color: rgba(0, 0, 0, 0.2);
       border-radius: 10px;
     }
+    .notification {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #4caf50;
+      color: white;
+      padding: 14px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      z-index: 2000;
+      display: none;
+      animation: fadeInOut 3s ease-in-out;
+    }
+    @keyframes fadeInOut {
+      0%, 100% { opacity: 0; }
+      10%, 90% { opacity: 1; }
+    }
   </style>
 </head>
 <body>
+
+  <!-- Notifikasi -->
+  <div id="notification" class="notification"></div>
+
   <h1>Tugas Harian</h1>
   <div class="content">
     <div class="container">
-      <div class="watch-ad-container">
-        <a href="https://www.profitableratecpm.com/mt7tws0f?key=28a564b0d68db558b31e19e77850b85e" target="_blank" style="text-decoration: none;">
-            <button>
-        <!-- Iklan banner muncul otomatis -->
-      </div>
-      <!-- ✅ IKLAN BANNER -->
+      <div class="ad-container">
+        <!-- Iklan banner -->
         <script type="text/javascript">
-	atOptions = {
-		'key' : '3c59e4d44077a502c4e170cc28072963',
-		'format' : 'iframe',
-		'height' : 250,
-		'width' : 300,
-		'params' : {}
-	};
-</script>
-<script type="text/javascript" src="//www.highperformanceformat.com/3c59e4d44077a502c4e170cc28072963/invoke.js"></script>
-        
+          atOptions = {
+            'key' : '3c59e4d44077a502c4e170cc28072963',
+            'format' : 'iframe',
+            'height' : 250,
+            'width' : 300,
+            'params' : {}
+          };
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/3c59e4d44077a502c4e170cc28072963/invoke.js"></script>
+      </div>
     </div>
   </div>
+  
   <div class="footer">
-    <button class="btn btn-green" onclick="location.reload()">✅ Klaim Poin</button>
+    <button class="btn btn-green" id="claimBtn">✅ Klaim Poin USDT</button>
     <a href="dashboard.html" class="back-link">← Kembali ke Dasbor</a>
   </div>
 
-  <!-- ✅ POPUNDER ANTI-ADBLOCK -->
-   <script>
+  <script>
+    // Tampilkan notifikasi
+    function showNotification(message, isSuccess = true) {
+      const notification = document.getElementById("notification");
+      notification.textContent = message;
+      notification.style.background = isSuccess ? "#4caf50" : "#f44336";
+      notification.style.display = "block";
+      setTimeout(() => {
+        notification.style.display = "none";
+      }, 3000);
+    }
+
+    // Fungsi untuk menambah USDT ke Firestore
+    async function tambahUSDTKeDompet() {
+      try {
+        const auth = window.firebaseAuth;
+        const db = window.firebaseDb;
+        const { onAuthStateChanged, doc, updateDoc, increment } = window.firebaseFunctions;
+
+        // Tunggu sampai user login terdeteksi
+        return new Promise((resolve, reject) => {
+          onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+              showNotification("Silakan login terlebih dahulu", false);
+              reject("User tidak login");
+              return;
+            }
+
+            try {
+              const userId = user.uid;
+              const userRef = doc(db, "users", userId);
+              
+              // Tambah 0.5 USDT setiap klaim
+              await updateDoc(userRef, {
+                saldoUSDT: increment(0.5),
+                totalKlaimTugas: increment(1),
+                lastClaimTime: new Date().toISOString()
+              });
+
+              showNotification("✅ Berhasil klaim 0.5 USDT!");
+              console.log("USDT berhasil ditambahkan untuk user:", userId);
+              resolve(true);
+            } catch (error) {
+              console.error("Error menambah USDT:", error);
+              showNotification("Gagal menambah USDT", false);
+              reject(error);
+            }
+          });
+        });
+      } catch (error) {
+        console.error("Error:", error);
+        showNotification("Terjadi kesalahan sistem", false);
+        return false;
+      }
+    }
+
+    // Event listener untuk tombol klaim
+    document.getElementById("claimBtn").addEventListener("click", async function() {
+      // Nonaktifkan tombol sementara
+      this.disabled = true;
+      this.textContent = "Memproses...";
+      
+      // Tambah USDT
+      await tambahUSDTKeDompet();
+      
+      // Refresh halaman setelah 2 detik
+      setTimeout(() => {
+        location.reload();
+      }, 2000);
+    });
+
+    // Cek login status saat halaman dimuat
+    window.addEventListener("DOMContentLoaded", function() {
+      const auth = window.firebaseAuth;
+      const { onAuthStateChanged } = window.firebaseFunctions;
+      
+      onAuthStateChanged(auth, (user) => {
+        if (!user) {
+          window.location.href = "index.html";
+        }
+      });
+    });
+  </script>
 </body>
-  </html>
+</html>
