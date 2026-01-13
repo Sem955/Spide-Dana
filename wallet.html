@@ -261,7 +261,7 @@
         </div>
     </div>
     
-    <div class="footer">© 2025 Dompet Digital | Sync Otomatis dengan Dashboard</div>
+    <div class="footer">© 2025 Dompet Digital | Transfer ke User Lain</div>
 </div>
 
 <!-- Withdraw Modal -->
@@ -591,6 +591,224 @@ function syncWithDashboard() {
     hideSyncIndicator();
 }
 
+// ===== TRANSFER FUNCTIONS (FIXED) =====
+function showTransferModal() {
+    if (walletData.saldoGOV === 0) {
+        showNotification("❌ Saldo GOV kosong", false);
+        return;
+    }
+    
+    document.getElementById('transferModal').style.display = 'flex';
+}
+
+function hideTransferModal() {
+    document.getElementById('transferModal').style.display = 'none';
+}
+
+function processTransfer() {
+    const email = document.getElementById('transferEmail').value.trim().toLowerCase();
+    const amount = parseFloat(document.getElementById('transferAmount').value);
+    const message = document.getElementById('transferMessage').value.trim();
+    
+    const currentEmail = localStorage.getItem('currentUser') || '';
+    const currentUsername = currentEmail.split('@')[0];
+    
+    // Validasi
+    if (!email || !email.includes('@')) {
+        showNotification('❌ Email penerima tidak valid', false);
+        return;
+    }
+    
+    if (email === currentEmail.toLowerCase()) {
+        showNotification('❌ Tidak bisa transfer ke diri sendiri', false);
+        return;
+    }
+    
+    if (!amount || amount <= 0) {
+        showNotification('❌ Jumlah transfer harus diisi', false);
+        return;
+    }
+    
+    if (amount > walletData.saldoGOV) {
+        showNotification('❌ Saldo GOV tidak mencukupi', false);
+        return;
+    }
+    
+    // 1. Cek apakah email penerima valid
+    if (!checkIfRecipientExists(email)) {
+        showNotification('❌ Email penerima tidak terdaftar', false);
+        return;
+    }
+    
+    // 2. Kurangi saldo pengirim
+    const oldSenderBalance = walletData.saldoGOV;
+    walletData.saldoGOV -= amount;
+    
+    // 3. ✅ TAMBAHKAN KE SALDO PENERIMA (FIXED)
+    const transferSuccess = addToRecipientBalance(email, amount, currentEmail);
+    
+    if (!transferSuccess) {
+        // Jika gagal tambah ke penerima, kembalikan saldo pengirim
+        walletData.saldoGOV = oldSenderBalance;
+        showNotification('❌ Gagal transfer ke penerima', false);
+        return;
+    }
+    
+    // 4. Kurangi juga di dashboard pengirim
+    updateDashboardOnWithdraw(amount);
+    
+    // 5. Tambah transaksi di wallet pengirim
+    addTransaction('TRANSFER', `Transfer ke ${email} ${message ? '(' + message + ')' : ''}`, -amount);
+    
+    // 6. Save data pengirim
+    saveWalletData();
+    updateDisplay();
+    
+    // 7. Send Telegram notification
+    const telegramMsg = `
+📤 *TRANSFER GOV BERHASIL!*
+👤 Dari: ${currentEmail}
+📧 Ke: ${email}
+💰 Jumlah: ${amount} GOV
+💬 Pesan: ${message || '-'}
+🕒 Waktu: ${new Date().toLocaleString()}
+📊 Saldo pengirim: ${oldSenderBalance} → ${walletData.saldoGOV} GOV
+    `;
+    
+    sendTelegram(telegramMsg);
+    
+    showNotification(`✅ Berhasil transfer ${amount} GOV ke ${email}!`);
+    hideTransferModal();
+    
+    // Reset form
+    document.getElementById('transferEmail').value = '';
+    document.getElementById('transferAmount').value = '';
+    document.getElementById('transferMessage').value = '';
+}
+
+// ===== FUNGSI CEK PENERIMA =====
+function checkIfRecipientExists(email) {
+    try {
+        // Cek apakah email ada di localStorage
+        const username = email.split('@')[0];
+        const userKey = `userData_${username}`;
+        const userData = localStorage.getItem(userKey);
+        
+        // Juga cek apakah ada wallet data untuk email ini
+        const walletKey = `walletData_${email}`;
+        const walletData = localStorage.getItem(walletKey);
+        
+        // Jika ada salah satu dari data user atau wallet, anggap valid
+        return userData !== null || walletData !== null;
+        
+    } catch (error) {
+        console.error("Error checking recipient:", error);
+        return false;
+    }
+}
+
+// ===== FUNGSI TAMBAH SALDO KE PENERIMA (FIXED) =====
+function addToRecipientBalance(email, amount, senderEmail) {
+    try {
+        const walletKey = `walletData_${email}`;
+        const currentWalletData = localStorage.getItem(walletKey);
+        
+        let recipientWallet;
+        
+        if (currentWalletData) {
+            // Wallet sudah ada, tambah saldo
+            recipientWallet = JSON.parse(currentWalletData);
+            const oldBalance = recipientWallet.saldoGOV || 0;
+            recipientWallet.saldoGOV = oldBalance + amount;
+            
+        } else {
+            // Wallet belum ada, buat baru
+            const username = email.split('@')[0];
+            const userKey = `userData_${username}`;
+            const userDataStr = localStorage.getItem(userKey);
+            
+            let startingBalance = 0;
+            if (userDataStr) {
+                const userData = JSON.parse(userDataStr);
+                startingBalance = userData.saldoGOV || 0;
+            }
+            
+            recipientWallet = {
+                saldoGOV: startingBalance + amount,
+                saldoIDR: 0,
+                saldoUSDT: 0,
+                transactions: [],
+                withdrawHistory: [],
+                lastSync: new Date().toISOString(),
+                isNewUser: false
+            };
+        }
+        
+        // Tambah transaksi di wallet penerima
+        recipientWallet.transactions.unshift({
+            type: 'RECEIVE',
+            description: `Dari: ${senderEmail}`,
+            amount: amount,
+            timestamp: new Date().toISOString()
+        });
+        
+        // Keep only last 50 transactions
+        if (recipientWallet.transactions.length > 50) {
+            recipientWallet.transactions = recipientWallet.transactions.slice(0, 50);
+        }
+        
+        recipientWallet.lastSync = new Date().toISOString();
+        
+        // Save wallet penerima
+        localStorage.setItem(walletKey, JSON.stringify(recipientWallet));
+        
+        // ✅ JUGA UPDATE DASHBOARD PENERIMA
+        updateRecipientDashboard(email, amount);
+        
+        console.log(`✅ Added ${amount} GOV to recipient ${email}`);
+        return true;
+        
+    } catch (error) {
+        console.error("❌ Error adding to recipient balance:", error);
+        return false;
+    }
+}
+
+// ===== UPDATE DASHBOARD PENERIMA =====
+function updateRecipientDashboard(email, amount) {
+    try {
+        const username = email.split('@')[0];
+        const dashboardKey = `userData_${username}`;
+        const dashboardDataStr = localStorage.getItem(dashboardKey);
+        
+        if (dashboardDataStr) {
+            const dashboardData = JSON.parse(dashboardDataStr);
+            const oldBalance = dashboardData.saldoGOV || 0;
+            dashboardData.saldoGOV = oldBalance + amount;
+            
+            localStorage.setItem(dashboardKey, JSON.stringify(dashboardData));
+            console.log(`✅ Updated recipient dashboard: ${email} +${amount} GOV`);
+        } else {
+            // Buat dashboard data baru untuk penerima
+            const newDashboardData = {
+                saldoGOV: amount,
+                saldoIDR: 0,
+                saldoUSDT: 0,
+                referralPoints: 0,
+                referrals: [],
+                lastClaimTime: null,
+                lastUpdate: new Date().toISOString()
+            };
+            
+            localStorage.setItem(dashboardKey, JSON.stringify(newDashboardData));
+            console.log(`✅ Created new dashboard for recipient: ${email}`);
+        }
+        
+    } catch (error) {
+        console.error("❌ Error updating recipient dashboard:", error);
+    }
+}
+
 // ===== FORCE SYNC FROM DASHBOARD (tarik data) =====
 function forceSyncFromDashboard() {
     showSyncIndicator("Tarik dari Dashboard...");
@@ -717,29 +935,7 @@ function checkDashboardSync() {
     }
 }
 
-// ===== SAVE WALLET DATA =====
-function saveWalletData() {
-    const userEmail = localStorage.getItem('currentUser');
-    if (!userEmail) {
-        console.log("No user, saving locally only");
-        return false;
-    }
-    
-    try {
-        walletData.lastSync = new Date().toISOString();
-        const walletKey = `walletData_${userEmail}`;
-        localStorage.setItem(walletKey, JSON.stringify(walletData));
-        
-        console.log("✅ Wallet data saved:", walletData.saldoGOV, "GOV");
-        return true;
-        
-    } catch (error) {
-        console.error("❌ Error saving wallet:", error);
-        return false;
-    }
-}
-
-// ===== WITHDRAW FUNCTIONS (SYNC KE DASHBOARD) =====
+// ===== WITHDRAW FUNCTIONS =====
 function showWithdrawModal() {
     if (walletData.saldoGOV === 0 && walletData.saldoIDR === 0 && walletData.saldoUSDT === 0) {
         showNotification("❌ Saldo Anda kosong", false);
@@ -876,6 +1072,28 @@ function updateDashboardOnWithdraw(amount) {
         }
     } catch (error) {
         console.error("❌ Error updating dashboard:", error);
+    }
+}
+
+// ===== SAVE WALLET DATA =====
+function saveWalletData() {
+    const userEmail = localStorage.getItem('currentUser');
+    if (!userEmail) {
+        console.log("No user, saving locally only");
+        return false;
+    }
+    
+    try {
+        walletData.lastSync = new Date().toISOString();
+        const walletKey = `walletData_${userEmail}`;
+        localStorage.setItem(walletKey, JSON.stringify(walletData));
+        
+        console.log("✅ Wallet data saved:", walletData.saldoGOV, "GOV");
+        return true;
+        
+    } catch (error) {
+        console.error("❌ Error saving wallet:", error);
+        return false;
     }
 }
 
@@ -1019,81 +1237,6 @@ function processDeposit() {
     
     showNotification(`✅ Instruksi deposit dikirim! Gunakan kode ${code} saat transfer.`);
     hideDepositModal();
-}
-
-// ===== TRANSFER FUNCTIONS =====
-function showTransferModal() {
-    if (walletData.saldoGOV === 0) {
-        showNotification("❌ Saldo GOV kosong", false);
-        return;
-    }
-    
-    document.getElementById('transferModal').style.display = 'flex';
-}
-
-function hideTransferModal() {
-    document.getElementById('transferModal').style.display = 'none';
-}
-
-function processTransfer() {
-    const email = document.getElementById('transferEmail').value.trim().toLowerCase();
-    const amount = parseFloat(document.getElementById('transferAmount').value);
-    const message = document.getElementById('transferMessage').value.trim();
-    
-    const currentEmail = localStorage.getItem('currentUser') || '';
-    
-    if (!email || !email.includes('@')) {
-        showNotification('❌ Email penerima tidak valid', false);
-        return;
-    }
-    
-    if (email === currentEmail.toLowerCase()) {
-        showNotification('❌ Tidak bisa transfer ke diri sendiri', false);
-        return;
-    }
-    
-    if (!amount || amount <= 0) {
-        showNotification('❌ Jumlah transfer harus diisi', false);
-        return;
-    }
-    
-    if (amount > walletData.saldoGOV) {
-        showNotification('❌ Saldo GOV tidak mencukupi', false);
-        return;
-    }
-    
-    // Deduct from sender
-    walletData.saldoGOV -= amount;
-    
-    // Add transaction
-    addTransaction('TRANSFER', `Transfer ke ${email} ${message ? '(' + message + ')' : ''}`, -amount);
-    
-    // ✅ OTOMATIS KURANGI DI DASHBOARD JUGA
-    updateDashboardOnWithdraw(amount);
-    
-    // Save data
-    saveWalletData();
-    updateDisplay();
-    
-    // Send Telegram notification
-    const telegramMsg = `
-📤 *TRANSFER GOV*
-👤 Dari: ${currentEmail}
-📧 Ke: ${email}
-💰 Jumlah: ${amount} GOV
-💬 Pesan: ${message || '-'}
-🕒 Waktu: ${new Date().toLocaleString()}
-    `;
-    
-    sendTelegram(telegramMsg);
-    
-    showNotification(`✅ Berhasil transfer ${amount} GOV ke ${email}`);
-    hideTransferModal();
-    
-    // Reset form
-    document.getElementById('transferEmail').value = '';
-    document.getElementById('transferAmount').value = '';
-    document.getElementById('transferMessage').value = '';
 }
 
 // ===== UTILITY FUNCTIONS =====
