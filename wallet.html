@@ -43,6 +43,7 @@
         .btn-warning { background: #faad14; color: white; }
         .btn-danger { background: #ff4d4f; color: white; }
         .btn-dark { background: #333; color: white; }
+        .btn-grey { background: #6c757d; color: white; }
         
         /* Modal Styles */
         .modal-overlay {
@@ -156,6 +157,23 @@
         .transfer-section h3 { margin-top: 0; color: #333; margin-bottom: 15px; }
         
         .footer { text-align: center; font-size: 12px; color: #888; margin-top: 30px; }
+        
+        /* Transaction Item */
+        .transaction-item {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .transaction-item:last-child { border-bottom: none; }
+        .tx-header { display: flex; justify-content: space-between; margin-bottom: 5px; }
+        .tx-description { font-weight: bold; color: #333; }
+        .tx-amount { font-weight: bold; }
+        .tx-positive { color: #52c41a; }
+        .tx-negative { color: #ff4d4f; }
+        .tx-footer { display: flex; justify-content: space-between; font-size: 12px; color: #666; margin-top: 5px; }
     </style>
 </head>
 <body>
@@ -165,22 +183,22 @@
 
 <div class="container">
     <h1>💰 Dompet Saya</h1>
-    <div class="subtitle" id="subtitle">Saldo Sync Otomatis Antar HP</div>
+    <div class="subtitle" id="subtitle">Saldo Aman di Semua HP</div>
     
     <!-- Status Box -->
     <div class="status-box">
         <h3 style="margin-top: 0; color: #856404;">📊 Status Sistem</h3>
         <div class="status-item">
-            <span class="status-label">Server:</span>
-            <span class="status-value" id="statusServer">Checking...</span>
+            <span class="status-label">Status:</span>
+            <span class="status-value" id="statusServer">Loading...</span>
         </div>
         <div class="status-item">
             <span class="status-label">User:</span>
-            <span class="status-value" id="statusUser">Checking...</span>
+            <span class="status-value" id="statusUser">Loading...</span>
         </div>
         <div class="status-item">
-            <span class="status-label">Sync Status:</span>
-            <span class="status-value" id="statusSync">Checking...</span>
+            <span class="status-label">Last Update:</span>
+            <span class="status-value" id="statusUpdate">-</span>
         </div>
     </div>
     
@@ -200,7 +218,7 @@
             <span id="saldoUSDT">0.00 USDT</span>
         </div>
         <div style="text-align: center; margin-top: 15px; font-size: 14px; opacity: 0.9;">
-            Terakhir update: <span id="lastUpdate">-</span>
+            <span id="lastUpdate">Data lokal</span>
         </div>
     </div>
     
@@ -208,17 +226,19 @@
     <button class="btn-primary" onclick="showWithdrawModal()">💸 Withdraw Saldo</button>
     <button class="btn-success" onclick="showDepositModal()">💰 Deposit/Topup</button>
     <button class="btn-warning" onclick="showTransferModal()">📤 Transfer GOV</button>
-    <button class="btn-dark" onclick="window.location.href='dashboard.html'">← Kembali ke Dashboard</button>
+    <button class="btn-grey" onclick="syncFromDashboard()">🔄 Sync dari Dashboard</button>
     
     <!-- Sync Buttons -->
-    <div style="display: flex; gap: 10px; margin-top: 10px;">
-        <button class="btn-primary" onclick="syncFromDashboard()" style="flex: 1;">🔄 Sync dari Dashboard</button>
-        <button class="btn-warning" onclick="forceSave()" style="flex: 1;">💾 Simpan ke Server</button>
+    <div style="display: flex; gap: 10px; margin: 10px 0;">
+        <button class="btn-success" onclick="loadWalletData()" style="flex: 1;">🔄 Refresh Saldo</button>
+        <button class="btn-warning" onclick="forceSave()" style="flex: 1;">💾 Simpan Data</button>
     </div>
+    
+    <button class="btn-dark" onclick="window.location.href='dashboard.html'">← Kembali ke Dashboard</button>
     
     <!-- Transaction History -->
     <div class="transfer-section">
-        <h3>📋 Riwayat Transaksi Terakhir</h3>
+        <h3>📋 Riwayat Transaksi</h3>
         <div id="transactionHistory">
             <div style="text-align: center; color: #666; padding: 20px;">
                 Belum ada transaksi
@@ -226,7 +246,7 @@
         </div>
     </div>
     
-    <div class="footer">© 2025 Dompet Digital | Saldo Aman di Semua HP</div>
+    <div class="footer">© 2025 Dompet Digital | User Baru Saldo 0</div>
 </div>
 
 <!-- Withdraw Modal -->
@@ -348,231 +368,170 @@
     </div>
 </div>
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-
 <script>
 // ===== TELEGRAM CONFIG =====
 const telegramToken = '8302323286:AAEM6xferO3kn5Bfx9Gc1tNu2iGeDEhXdr4';
 const telegramChatId = '5788541286';
 
-// ===== FIREBASE CONFIG =====
-const firebaseConfig = {
-    apiKey: "AIzaSyAlXIQ42acjO8xZH-Ti__YL6h9SGQQKQto",
-    authDomain: "govminer.firebasestorage.app",
-    databaseURL: "https://govminer-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "govminer",
-    storageBucket: "govminer.firebasestorage.app",
-    messagingSenderId: "408110658500",
-    appId: "1:408110658500:web:3fe7f4bd9a35f3fe726a91"
-};
-
 // ===== GLOBAL VARIABLES =====
-let auth = null;
-let database = null;
-let currentUser = null;
 let walletData = {
-    saldoGOV: 0,
-    saldoIDR: 0,
-    saldoUSDT: 0,
+    saldoGOV: 0,      // USER BARU SALDO 0
+    saldoIDR: 0,      // USER BARU SALDO 0
+    saldoUSDT: 0,     // USER BARU SALDO 0
     transactions: [],
+    withdrawHistory: [],
     lastSync: null,
-    withdrawHistory: []
+    isNewUser: true
 };
 
 // ===== INITIALIZE =====
-async function initializeApp() {
-    try {
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        auth = firebase.auth();
-        database = firebase.database();
-        
-        updateStatus('statusServer', '✅ Connected', 'good');
-        
-        // Setup auth listener
-        auth.onAuthStateChanged(handleAuthStateChange);
-        
-        // Load from localStorage first
-        loadFromLocalStorage();
-        
-        // Try auto-login
-        const savedUser = localStorage.getItem('currentUser');
-        if (savedUser) {
-            document.getElementById('subtitle').textContent = `User: ${savedUser}`;
-            updateStatus('statusUser', `✅ ${savedUser}`, 'good');
-        } else {
-            updateStatus('statusUser', '❌ Not logged in', 'bad');
-        }
-        
-    } catch (error) {
-        console.error("Initialization error:", error);
-        updateStatus('statusServer', '❌ Offline Mode', 'bad');
-        loadFromLocalStorage();
-    }
-}
-
-// ===== AUTH HANDLER =====
-function handleAuthStateChange(user) {
-    if (user) {
-        currentUser = user;
-        updateStatus('statusUser', `✅ ${user.email}`, 'good');
-        loadWalletFromServer();
+function initializeApp() {
+    console.log("🚀 Initializing Wallet App...");
+    
+    // Load wallet data
+    loadWalletData();
+    
+    // Update status
+    updateStatus('statusServer', '✅ Online', 'good');
+    
+    const userEmail = localStorage.getItem('currentUser');
+    if (userEmail) {
+        updateStatus('statusUser', `✅ ${userEmail}`, 'good');
+        document.getElementById('subtitle').textContent = `User: ${userEmail}`;
+    } else {
+        updateStatus('statusUser', '⚠️ Guest Mode', 'warning');
+        document.getElementById('subtitle').textContent = 'Guest Mode';
     }
 }
 
 // ===== LOAD WALLET DATA =====
-async function loadWalletFromServer() {
-    if (!currentUser || !database) return;
+function loadWalletData() {
+    console.log("📂 Loading wallet data...");
+    showSyncIndicator("Memuat data...");
     
-    showSyncIndicator("Memuat dari server...");
+    const userEmail = localStorage.getItem('currentUser');
+    if (!userEmail) {
+        console.log("No user logged in, using guest mode");
+        updateDisplay();
+        hideSyncIndicator();
+        return;
+    }
     
     try {
-        const walletRef = database.ref(`wallets/${currentUser.uid}`);
-        const snapshot = await walletRef.once('value');
+        // Try to load from localStorage
+        const walletKey = `walletData_${userEmail}`;
+        const savedData = localStorage.getItem(walletKey);
         
-        if (snapshot.exists()) {
-            const serverData = snapshot.val();
-            walletData = serverData;
-            updateStatus('statusSync', '✅ Synced', 'good');
+        if (savedData) {
+            walletData = JSON.parse(savedData);
+            console.log("✅ Wallet data loaded from localStorage:", walletData);
+            updateStatus('statusUpdate', new Date(walletData.lastSync || Date.now()).toLocaleString(), 'good');
+        } else {
+            // ✅ USER BARU: Saldo 0 semua
+            walletData = {
+                saldoGOV: 0,
+                saldoIDR: 0,
+                saldoUSDT: 0,
+                transactions: [],
+                withdrawHistory: [],
+                lastSync: new Date().toISOString(),
+                isNewUser: true
+            };
+            console.log("🆕 New user wallet created with 0 balance");
+            updateStatus('statusUpdate', 'New User', 'warning');
+            
+            // Auto-save new user data
+            saveWalletData();
         }
         
         updateDisplay();
-        saveToLocalStorage();
         
     } catch (error) {
-        console.error("Load from server error:", error);
-        updateStatus('statusSync', '❌ Server Error', 'bad');
-        loadFromLocalStorage();
+        console.error("❌ Error loading wallet data:", error);
+        updateStatus('statusUpdate', 'Error', 'bad');
+    }
+    
+    hideSyncIndicator();
+}
+
+// ===== SYNC FROM DASHBOARD =====
+function syncFromDashboard() {
+    console.log("🔄 Syncing from Dashboard...");
+    showSyncIndicator("Sync dari Dashboard...");
+    
+    const userEmail = localStorage.getItem('currentUser');
+    if (!userEmail) {
+        showNotification("❌ Silakan login dulu", false);
+        hideSyncIndicator();
+        return;
+    }
+    
+    try {
+        // Get dashboard data
+        const username = userEmail.split('@')[0];
+        const dashboardKey = `userData_${username}`;
+        const savedData = localStorage.getItem(dashboardKey);
+        
+        if (savedData) {
+            const dashboardData = JSON.parse(savedData);
+            const oldGOV = walletData.saldoGOV;
+            
+            // Update wallet with dashboard GOV
+            walletData.saldoGOV = dashboardData.saldoGOV || walletData.saldoGOV;
+            
+            // Add transaction if GOV increased
+            if (walletData.saldoGOV > oldGOV) {
+                const increase = walletData.saldoGOV - oldGOV;
+                addTransaction('SYNC', `Sync dari Dashboard (+${increase} GOV)`, increase);
+                showNotification(`✅ +${increase} GOV dari dashboard!`);
+            } else if (walletData.saldoGOV < oldGOV) {
+                // This shouldn't happen, but just in case
+                const decrease = oldGOV - walletData.saldoGOV;
+                showNotification(`ℹ️ Saldo GOV turun ${decrease} dari dashboard`);
+            } else {
+                showNotification("✅ Saldo sudah sync dengan dashboard");
+            }
+            
+            // Save updated data
+            saveWalletData();
+            updateDisplay();
+            
+        } else {
+            showNotification("❌ Tidak ada data dashboard ditemukan", false);
+        }
+        
+    } catch (error) {
+        console.error("❌ Sync error:", error);
+        showNotification("❌ Gagal sync dari dashboard", false);
     }
     
     hideSyncIndicator();
 }
 
 // ===== SAVE WALLET DATA =====
-async function saveWalletToServer() {
-    if (!currentUser || !database) {
-        saveToLocalStorage();
+function saveWalletData() {
+    const userEmail = localStorage.getItem('currentUser');
+    if (!userEmail) {
+        console.log("No user, saving locally only");
         return false;
     }
     
-    showSyncIndicator("Menyimpan ke server...");
-    
     try {
-        const walletRef = database.ref(`wallets/${currentUser.uid}`);
-        await walletRef.set({
-            ...walletData,
-            email: currentUser.email,
-            lastUpdate: new Date().toISOString()
-        });
+        walletData.lastSync = new Date().toISOString();
+        walletData.isNewUser = false;
         
-        updateStatus('statusSync', '✅ Saved', 'good');
-        saveToLocalStorage();
+        const walletKey = `walletData_${userEmail}`;
+        localStorage.setItem(walletKey, JSON.stringify(walletData));
         
-        hideSyncIndicator();
+        console.log("✅ Wallet data saved:", walletData);
+        updateStatus('statusUpdate', new Date().toLocaleTimeString(), 'good');
+        
         return true;
         
     } catch (error) {
-        console.error("Save to server error:", error);
-        updateStatus('statusSync', '❌ Save Failed', 'bad');
-        
-        // Save to localStorage as backup
-        saveToLocalStorage();
-        hideSyncIndicator();
+        console.error("❌ Error saving wallet data:", error);
         return false;
     }
-}
-
-// ===== LOCAL STORAGE FUNCTIONS =====
-function saveToLocalStorage() {
-    try {
-        const username = localStorage.getItem('currentUser') || 'guest';
-        const dataToSave = {
-            ...walletData,
-            savedAt: new Date().toISOString()
-        };
-        
-        localStorage.setItem(`walletData_${username}`, JSON.stringify(dataToSave));
-        
-    } catch (error) {
-        console.error("LocalStorage save error:", error);
-    }
-}
-
-function loadFromLocalStorage() {
-    try {
-        const username = localStorage.getItem('currentUser') || 'guest';
-        const savedData = localStorage.getItem(`walletData_${username}`);
-        
-        if (savedData) {
-            walletData = JSON.parse(savedData);
-            updateStatus('statusSync', '📂 Local Data', 'warning');
-        } else {
-            // Initialize with default data
-            const dashboardData = getDashboardData();
-            walletData = {
-                saldoGOV: dashboardData?.saldoGOV || 1500,
-                saldoIDR: dashboardData?.saldoIDR || 50000,
-                saldoUSDT: dashboardData?.saldoUSDT || 5.5,
-                transactions: [],
-                withdrawHistory: [],
-                lastSync: new Date().toISOString()
-            };
-            updateStatus('statusSync', '🆕 New User', 'warning');
-        }
-        
-        updateDisplay();
-        
-    } catch (error) {
-        console.error("LocalStorage load error:", error);
-    }
-}
-
-function getDashboardData() {
-    try {
-        const username = localStorage.getItem('currentUser');
-        if (!username) return null;
-        
-        const userKey = username.split('@')[0];
-        const savedData = localStorage.getItem(`userData_${userKey}`);
-        
-        if (savedData) {
-            return JSON.parse(savedData);
-        }
-        return null;
-        
-    } catch (error) {
-        console.error("Get dashboard data error:", error);
-        return null;
-    }
-}
-
-// ===== SYNC FROM DASHBOARD =====
-async function syncFromDashboard() {
-    showSyncIndicator("Sync dari Dashboard...");
-    
-    const dashboardData = getDashboardData();
-    if (dashboardData) {
-        const oldGOV = walletData.saldoGOV;
-        walletData.saldoGOV = dashboardData.saldoGOV || walletData.saldoGOV;
-        
-        // Add transaction if GOV increased
-        if (walletData.saldoGOV > oldGOV) {
-            const increase = walletData.saldoGOV - oldGOV;
-            addTransaction('SYNC', `Sync dari Dashboard (+${increase} GOV)`, increase);
-        }
-        
-        updateDisplay();
-        await saveWalletToServer();
-        
-        showNotification(`✅ Sync berhasil! Saldo GOV: ${walletData.saldoGOV.toLocaleString()}`);
-    } else {
-        showNotification("❌ Tidak ada data dashboard ditemukan");
-    }
-    
-    hideSyncIndicator();
 }
 
 // ===== DISPLAY FUNCTIONS =====
@@ -584,8 +543,8 @@ function updateDisplay() {
     document.getElementById('saldoUSDT').textContent = 
         walletData.saldoUSDT.toFixed(2) + " USDT";
     
-    document.getElementById('lastUpdate').textContent = 
-        walletData.lastSync ? new Date(walletData.lastSync).toLocaleString() : 'Belum pernah';
+    const lastUpdate = walletData.lastSync ? new Date(walletData.lastSync).toLocaleString() : 'Belum pernah';
+    document.getElementById('lastUpdate').textContent = `Terakhir update: ${lastUpdate}`;
     
     updateTransactionHistory();
 }
@@ -594,26 +553,41 @@ function updateTransactionHistory() {
     const container = document.getElementById('transactionHistory');
     
     if (!walletData.transactions || walletData.transactions.length === 0) {
-        container.innerHTML = '<div style="text-align: center; color: #666; padding: 20px;">Belum ada transaksi</div>';
+        container.innerHTML = `
+            <div style="text-align: center; color: #666; padding: 20px;">
+                <p>📭 Belum ada transaksi</p>
+                <small>Transaksi mining dari dashboard akan muncul di sini</small>
+            </div>
+        `;
         return;
     }
     
-    // Show last 5 transactions
-    const recentTx = walletData.transactions.slice(0, 5);
+    // Show last 10 transactions
+    const recentTx = walletData.transactions.slice(0, 10);
     
     const transactionsHTML = recentTx.map(tx => {
-        const date = new Date(tx.timestamp).toLocaleDateString();
-        const amount = tx.amount > 0 ? `+${tx.amount}` : tx.amount;
-        const color = tx.amount > 0 ? '#52c41a' : '#ff4d4f';
+        const date = new Date(tx.timestamp).toLocaleDateString('id-ID', {
+            day: '2-digit',
+            month: 'short',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        const amount = tx.amount || 0;
+        const isPositive = amount > 0;
+        const amountClass = isPositive ? 'tx-positive' : 'tx-negative';
+        const amountSign = isPositive ? '+' : '';
+        const amountText = `${amountSign}${amount.toLocaleString('id-ID')} GOV`;
         
         return `
-            <div style="padding: 10px; border-bottom: 1px solid #eee;">
-                <div style="display: flex; justify-content: space-between;">
-                    <div>
-                        <strong>${tx.description}</strong><br>
-                        <small style="color: #666;">${date}</small>
-                    </div>
-                    <span style="color: ${color}; font-weight: bold;">${amount} ${tx.type === 'IDR' ? 'IDR' : 'GOV'}</span>
+            <div class="transaction-item">
+                <div class="tx-header">
+                    <div class="tx-description">${tx.description || 'Transaksi'}</div>
+                    <div class="tx-amount ${amountClass}">${amountText}</div>
+                </div>
+                <div class="tx-footer">
+                    <span>${date}</span>
+                    <span>${tx.type || 'SYSTEM'}</span>
                 </div>
             </div>
         `;
@@ -622,8 +596,33 @@ function updateTransactionHistory() {
     container.innerHTML = transactionsHTML;
 }
 
+// ===== TRANSACTION FUNCTIONS =====
+function addTransaction(type, description, amount) {
+    const transaction = {
+        type: type,
+        description: description,
+        amount: amount,
+        timestamp: new Date().toISOString()
+    };
+    
+    walletData.transactions.unshift(transaction);
+    
+    // Keep only last 50 transactions
+    if (walletData.transactions.length > 50) {
+        walletData.transactions = walletData.transactions.slice(0, 50);
+    }
+    
+    updateTransactionHistory();
+}
+
 // ===== WITHDRAW FUNCTIONS =====
 function showWithdrawModal() {
+    // Check if user has balance
+    if (walletData.saldoGOV === 0 && walletData.saldoIDR === 0 && walletData.saldoUSDT === 0) {
+        showNotification("❌ Saldo Anda kosong", false);
+        return;
+    }
+    
     updateWithdrawInfo();
     document.getElementById('withdrawModal').style.display = 'flex';
 }
@@ -647,7 +646,7 @@ function updateWithdrawInfo() {
     `;
 }
 
-async function processWithdraw() {
+function processWithdraw() {
     const type = document.getElementById('withdrawType').value;
     const amount = parseFloat(document.getElementById('withdrawAmount').value);
     const account = document.getElementById('withdrawAccount').value.trim();
@@ -660,29 +659,33 @@ async function processWithdraw() {
                     walletData.saldoGOV;
     
     if (!amount || amount < minAmount) {
-        showNotification(`❌ Minimal withdraw ${minAmount.toLocaleString()} ${type}`);
+        showNotification(`❌ Minimal withdraw ${minAmount.toLocaleString()} ${type}`, false);
         return;
     }
     
     if (amount > balance) {
-        showNotification(`❌ Saldo ${type} tidak mencukupi`);
+        showNotification(`❌ Saldo ${type} tidak mencukupi`, false);
         return;
     }
     
     if (!account) {
-        showNotification('❌ Nomor rekening/dompet digital harus diisi');
+        showNotification('❌ Nomor rekening/dompet digital harus diisi', false);
         return;
     }
     
     if (!email || !email.includes('@')) {
-        showNotification('❌ Email tidak valid');
+        showNotification('❌ Email tidak valid', false);
         return;
     }
     
     // Process withdraw
-    if (type === 'IDR') walletData.saldoIDR -= amount;
-    else if (type === 'USDT') walletData.saldoUSDT -= amount;
-    else walletData.saldoGOV -= amount;
+    if (type === 'IDR') {
+        walletData.saldoIDR -= amount;
+    } else if (type === 'USDT') {
+        walletData.saldoUSDT -= amount;
+    } else {
+        walletData.saldoGOV -= amount;
+    }
     
     // Add to withdraw history
     walletData.withdrawHistory.push({
@@ -698,8 +701,8 @@ async function processWithdraw() {
     addTransaction('WITHDRAW', `Withdraw ${type} ke ${account}`, -amount);
     
     // Save data
+    saveWalletData();
     updateDisplay();
-    await saveWalletToServer();
     
     // Send Telegram notification
     const telegramMsg = `
@@ -743,7 +746,7 @@ function processDeposit() {
     const code = document.getElementById('depositCode').textContent;
     
     if (!amount || amount <= 0) {
-        showNotification('❌ Jumlah deposit harus diisi');
+        showNotification('❌ Jumlah deposit harus diisi', false);
         return;
     }
     
@@ -751,23 +754,23 @@ function processDeposit() {
     let instruction = '';
     switch(method) {
         case 'DANA':
-            instruction = `Transfer ke: 081234567890 (DANA)\nAtas nama: Admin GovMiner\nKode: ${code}`;
+            instruction = `Transfer ke: 081234567890 (DANA)<br>Atas nama: Admin GovMiner<br>Kode: <strong>${code}</strong>`;
             break;
         case 'OVO':
-            instruction = `Transfer ke: 081234567890 (OVO)\nAtas nama: Admin GovMiner\nKode: ${code}`;
+            instruction = `Transfer ke: 081234567890 (OVO)<br>Atas nama: Admin GovMiner<br>Kode: <strong>${code}</strong>`;
             break;
         case 'GoPay':
-            instruction = `Transfer ke: 081234567890 (GoPay)\nAtas nama: Admin GovMiner\nKode: ${code}`;
+            instruction = `Transfer ke: 081234567890 (GoPay)<br>Atas nama: Admin GovMiner<br>Kode: <strong>${code}</strong>`;
             break;
         case 'Bank':
-            instruction = `Bank: BCA\nRekening: 1234567890\nAtas nama: Admin GovMiner\nKode: ${code}`;
+            instruction = `Bank: BCA<br>Rekening: 1234567890<br>Atas nama: Admin GovMiner<br>Kode: <strong>${code}</strong>`;
             break;
         case 'Crypto':
-            instruction = `Wallet: TRC20\nAddress: Txxxxxxxxxxxxxxxxx\nKode: ${code}`;
+            instruction = `Wallet: TRC20<br>Address: Txxxxxxxxxxxxxxxxx<br>Kode: <strong>${code}</strong>`;
             break;
     }
     
-    document.getElementById('depositInstruction').innerHTML = instruction.replace(/\n/g, '<br>');
+    document.getElementById('depositInstruction').innerHTML = instruction;
     
     // Send Telegram notification
     const telegramMsg = `
@@ -786,6 +789,11 @@ function processDeposit() {
 
 // ===== TRANSFER FUNCTIONS =====
 function showTransferModal() {
+    if (walletData.saldoGOV === 0) {
+        showNotification("❌ Saldo GOV kosong", false);
+        return;
+    }
+    
     document.getElementById('transferModal').style.display = 'flex';
 }
 
@@ -793,7 +801,7 @@ function hideTransferModal() {
     document.getElementById('transferModal').style.display = 'none';
 }
 
-async function processTransfer() {
+function processTransfer() {
     const email = document.getElementById('transferEmail').value.trim().toLowerCase();
     const amount = parseFloat(document.getElementById('transferAmount').value);
     const message = document.getElementById('transferMessage').value.trim();
@@ -801,27 +809,24 @@ async function processTransfer() {
     const currentEmail = localStorage.getItem('currentUser') || '';
     
     if (!email || !email.includes('@')) {
-        showNotification('❌ Email penerima tidak valid');
+        showNotification('❌ Email penerima tidak valid', false);
         return;
     }
     
     if (email === currentEmail.toLowerCase()) {
-        showNotification('❌ Tidak bisa transfer ke diri sendiri');
+        showNotification('❌ Tidak bisa transfer ke diri sendiri', false);
         return;
     }
     
     if (!amount || amount <= 0) {
-        showNotification('❌ Jumlah transfer harus diisi');
+        showNotification('❌ Jumlah transfer harus diisi', false);
         return;
     }
     
     if (amount > walletData.saldoGOV) {
-        showNotification('❌ Saldo GOV tidak mencukupi');
+        showNotification('❌ Saldo GOV tidak mencukupi', false);
         return;
     }
-    
-    // Check if recipient exists (simplified - in real app, check database)
-    // For now, we'll just process it
     
     // Deduct from sender
     walletData.saldoGOV -= amount;
@@ -830,8 +835,8 @@ async function processTransfer() {
     addTransaction('TRANSFER', `Transfer ke ${email} ${message ? '(' + message + ')' : ''}`, -amount);
     
     // Save data
+    saveWalletData();
     updateDisplay();
-    await saveWalletToServer();
     
     // Send Telegram notification
     const telegramMsg = `
@@ -852,25 +857,6 @@ async function processTransfer() {
     document.getElementById('transferEmail').value = '';
     document.getElementById('transferAmount').value = '';
     document.getElementById('transferMessage').value = '';
-}
-
-// ===== TRANSACTION FUNCTIONS =====
-function addTransaction(type, description, amount) {
-    const transaction = {
-        type: type,
-        description: description,
-        amount: amount,
-        timestamp: new Date().toISOString()
-    };
-    
-    walletData.transactions.unshift(transaction);
-    
-    // Keep only last 50 transactions
-    if (walletData.transactions.length > 50) {
-        walletData.transactions = walletData.transactions.slice(0, 50);
-    }
-    
-    updateTransactionHistory();
 }
 
 // ===== UTILITY FUNCTIONS =====
@@ -902,11 +888,11 @@ function hideSyncIndicator() {
     indicator.style.display = 'none';
 }
 
-async function forceSave() {
-    if (await saveWalletToServer()) {
-        showNotification('✅ Data berhasil disimpan ke server');
+function forceSave() {
+    if (saveWalletData()) {
+        showNotification('✅ Data berhasil disimpan');
     } else {
-        showNotification('❌ Gagal menyimpan ke server');
+        showNotification('❌ Gagal menyimpan data', false);
     }
 }
 
@@ -932,18 +918,59 @@ function sendTelegram(text) {
     });
 }
 
-// ===== INITIALIZE =====
-document.addEventListener('DOMContentLoaded', initializeApp);
-
-// Auto-save every 30 seconds if user is logged in
-setInterval(() => {
-    if (currentUser) {
-        saveWalletToServer();
+// ===== AUTO-LOAD TRANSACTIONS FROM MINING =====
+function checkForMiningTransactions() {
+    const userEmail = localStorage.getItem('currentUser');
+    if (!userEmail) return;
+    
+    try {
+        // Check if there are new mining transactions
+        const username = userEmail.split('@')[0];
+        const dashboardKey = `userData_${username}`;
+        const savedData = localStorage.getItem(dashboardKey);
+        
+        if (savedData) {
+            const dashboardData = JSON.parse(savedData);
+            const dashboardGOV = dashboardData.saldoGOV || 0;
+            
+            // If dashboard has more GOV than wallet, add transaction
+            if (dashboardGOV > walletData.saldoGOV) {
+                const difference = dashboardGOV - walletData.saldoGOV;
+                
+                // Only add if significant difference
+                if (difference > 0) {
+                    walletData.saldoGOV = dashboardGOV;
+                    addTransaction('MINING', 'Hasil mining dari dashboard', difference);
+                    saveWalletData();
+                    updateDisplay();
+                    console.log(`✅ Auto-added ${difference} GOV from mining`);
+                }
+            }
+        }
+    } catch (error) {
+        console.error("Auto-check error:", error);
     }
-}, 30000);
+}
+
+// ===== INITIALIZE =====
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("📱 Wallet App Starting...");
+    initializeApp();
+    
+    // Check for mining transactions every 30 seconds
+    setInterval(checkForMiningTransactions, 30000);
+    
+    // Auto-check on load
+    setTimeout(checkForMiningTransactions, 2000);
+});
+
+// Auto-save every 2 minutes
+setInterval(() => {
+    saveWalletData();
+}, 120000);
 </script>
 
-<!-- Ads Script (optional) -->
+<!-- Ads Script -->
 <script type='text/javascript' src='//pl27331380.profitableratecpm.com/8b/a8/2b/8ba82b25b1bd88c46aa90ed2f191719a.js'></script>
 
 </body>
