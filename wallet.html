@@ -174,16 +174,31 @@
         .tx-positive { color: #52c41a; }
         .tx-negative { color: #ff4d4f; }
         .tx-footer { display: flex; justify-content: space-between; font-size: 12px; color: #666; margin-top: 5px; }
+        
+        /* Sync Status */
+        .sync-status {
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            background: #4caf50;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            z-index: 1000;
+            display: none;
+        }
     </style>
 </head>
 <body>
 
 <div id="notification"></div>
 <div class="sync-indicator" id="syncIndicator"></div>
+<div class="sync-status" id="syncStatus"></div>
 
 <div class="container">
     <h1>💰 Dompet Saya</h1>
-    <div class="subtitle" id="subtitle">Saldo Aman di Semua HP</div>
+    <div class="subtitle" id="subtitle">Saldo Sinkron dengan Dashboard</div>
     
     <!-- Status Box -->
     <div class="status-box">
@@ -197,8 +212,8 @@
             <span class="status-value" id="statusUser">Loading...</span>
         </div>
         <div class="status-item">
-            <span class="status-label">Last Update:</span>
-            <span class="status-value" id="statusUpdate">-</span>
+            <span class="status-label">Dashboard Sync:</span>
+            <span class="status-value" id="statusSync">Checking...</span>
         </div>
     </div>
     
@@ -226,12 +241,12 @@
     <button class="btn-primary" onclick="showWithdrawModal()">💸 Withdraw Saldo</button>
     <button class="btn-success" onclick="showDepositModal()">💰 Deposit/Topup</button>
     <button class="btn-warning" onclick="showTransferModal()">📤 Transfer GOV</button>
-    <button class="btn-grey" onclick="syncFromDashboard()">🔄 Sync dari Dashboard</button>
+    <button class="btn-grey" onclick="syncWithDashboard()">🔄 Sync dengan Dashboard</button>
     
     <!-- Sync Buttons -->
     <div style="display: flex; gap: 10px; margin: 10px 0;">
-        <button class="btn-success" onclick="loadWalletData()" style="flex: 1;">🔄 Refresh Saldo</button>
-        <button class="btn-warning" onclick="forceSave()" style="flex: 1;">💾 Simpan Data</button>
+        <button class="btn-success" onclick="forceSyncFromDashboard()" style="flex: 1;">📥 Tarik dari Dashboard</button>
+        <button class="btn-warning" onclick="forceSyncToDashboard()" style="flex: 1;">📤 Push ke Dashboard</button>
     </div>
     
     <button class="btn-dark" onclick="window.location.href='dashboard.html'">← Kembali ke Dashboard</button>
@@ -241,12 +256,12 @@
         <h3>📋 Riwayat Transaksi</h3>
         <div id="transactionHistory">
             <div style="text-align: center; color: #666; padding: 20px;">
-                Belum ada transaksi
+                Memuat transaksi...
             </div>
         </div>
     </div>
     
-    <div class="footer">© 2025 Dompet Digital | User Baru Saldo 0</div>
+    <div class="footer">© 2025 Dompet Digital | Sync Otomatis dengan Dashboard</div>
 </div>
 
 <!-- Withdraw Modal -->
@@ -375,25 +390,20 @@ const telegramChatId = '5788541286';
 
 // ===== GLOBAL VARIABLES =====
 let walletData = {
-    saldoGOV: 0,      // USER BARU SALDO 0
-    saldoIDR: 0,      // USER BARU SALDO 0
-    saldoUSDT: 0,     // USER BARU SALDO 0
+    saldoGOV: 0,
+    saldoIDR: 0,
+    saldoUSDT: 0,
     transactions: [],
     withdrawHistory: [],
     lastSync: null,
-    isNewUser: true
+    dashboardSync: false
 };
 
 // ===== INITIALIZE =====
 function initializeApp() {
     console.log("🚀 Initializing Wallet App...");
     
-    // Load wallet data
-    loadWalletData();
-    
-    // Update status
-    updateStatus('statusServer', '✅ Online', 'good');
-    
+    // Load user info
     const userEmail = localStorage.getItem('currentUser');
     if (userEmail) {
         updateStatus('statusUser', `✅ ${userEmail}`, 'good');
@@ -402,6 +412,14 @@ function initializeApp() {
         updateStatus('statusUser', '⚠️ Guest Mode', 'warning');
         document.getElementById('subtitle').textContent = 'Guest Mode';
     }
+    
+    // Load wallet data
+    loadWalletData();
+    
+    // Check sync with dashboard
+    checkDashboardSync();
+    
+    updateStatus('statusServer', '✅ Online', 'good');
 }
 
 // ===== LOAD WALLET DATA =====
@@ -411,53 +429,98 @@ function loadWalletData() {
     
     const userEmail = localStorage.getItem('currentUser');
     if (!userEmail) {
-        console.log("No user logged in, using guest mode");
+        console.log("No user logged in");
         updateDisplay();
         hideSyncIndicator();
         return;
     }
     
     try {
-        // Try to load from localStorage
         const walletKey = `walletData_${userEmail}`;
         const savedData = localStorage.getItem(walletKey);
         
         if (savedData) {
             walletData = JSON.parse(savedData);
-            console.log("✅ Wallet data loaded from localStorage:", walletData);
-            updateStatus('statusUpdate', new Date(walletData.lastSync || Date.now()).toLocaleString(), 'good');
-        } else {
-            // ✅ USER BARU: Saldo 0 semua
-            walletData = {
-                saldoGOV: 0,
-                saldoIDR: 0,
-                saldoUSDT: 0,
-                transactions: [],
-                withdrawHistory: [],
-                lastSync: new Date().toISOString(),
-                isNewUser: true
-            };
-            console.log("🆕 New user wallet created with 0 balance");
-            updateStatus('statusUpdate', 'New User', 'warning');
+            console.log("✅ Wallet data loaded:", walletData.saldoGOV, "GOV");
             
-            // Auto-save new user data
-            saveWalletData();
+            // Check if this is new user from dashboard
+            checkForNewUserBonus();
+            
+        } else {
+            // Coba load dari dashboard data
+            loadFromDashboard();
         }
         
         updateDisplay();
+        updateStatus('statusSync', '✅ Loaded', 'good');
         
     } catch (error) {
-        console.error("❌ Error loading wallet data:", error);
-        updateStatus('statusUpdate', 'Error', 'bad');
+        console.error("❌ Error loading wallet:", error);
+        updateStatus('statusSync', '❌ Error', 'bad');
     }
     
     hideSyncIndicator();
 }
 
-// ===== SYNC FROM DASHBOARD =====
-function syncFromDashboard() {
-    console.log("🔄 Syncing from Dashboard...");
-    showSyncIndicator("Sync dari Dashboard...");
+// ===== CHECK FOR NEW USER BONUS =====
+function checkForNewUserBonus() {
+    const userEmail = localStorage.getItem('currentUser');
+    if (!userEmail) return;
+    
+    const username = userEmail.split('@')[0];
+    const dashboardKey = `userData_${username}`;
+    const savedData = localStorage.getItem(dashboardKey);
+    
+    if (savedData) {
+        const dashboardData = JSON.parse(savedData);
+        
+        // Jika dashboard punya 100 GOV dan wallet 0, berarti user baru
+        if (dashboardData.saldoGOV === 100 && walletData.saldoGOV === 0) {
+            console.log("🆕 New user detected, syncing 100 GOV from dashboard");
+            walletData.saldoGOV = 100;
+            
+            // Add transaction
+            addTransaction('BONUS', 'Bonus pendaftaran baru', 100);
+            
+            // Save wallet
+            saveWalletData();
+            updateDisplay();
+            
+            showNotification("🎉 Bonus 100 GOV berhasil disinkronkan!");
+        }
+    }
+}
+
+// ===== LOAD FROM DASHBOARD =====
+function loadFromDashboard() {
+    const userEmail = localStorage.getItem('currentUser');
+    if (!userEmail) return;
+    
+    const username = userEmail.split('@')[0];
+    const dashboardKey = `userData_${username}`;
+    const savedData = localStorage.getItem(dashboardKey);
+    
+    if (savedData) {
+        const dashboardData = JSON.parse(savedData);
+        
+        // Sync dengan dashboard
+        walletData.saldoGOV = dashboardData.saldoGOV || 0;
+        walletData.lastSync = new Date().toISOString();
+        walletData.dashboardSync = true;
+        
+        console.log("📥 Loaded from dashboard:", walletData.saldoGOV, "GOV");
+        
+        // Save wallet data
+        saveWalletData();
+        
+        showSyncStatus("📥 Data dari dashboard");
+    }
+}
+
+// ===== SYNC WITH DASHBOARD =====
+function syncWithDashboard() {
+    console.log("🔄 Syncing with Dashboard...");
+    showSyncIndicator("Sync dengan Dashboard...");
     
     const userEmail = localStorage.getItem('currentUser');
     if (!userEmail) {
@@ -467,7 +530,79 @@ function syncFromDashboard() {
     }
     
     try {
-        // Get dashboard data
+        const username = userEmail.split('@')[0];
+        const dashboardKey = `userData_${username}`;
+        const savedData = localStorage.getItem(dashboardKey);
+        
+        if (savedData) {
+            const dashboardData = JSON.parse(savedData);
+            
+            // Ambil yang lebih tinggi antara dashboard dan wallet
+            const dashboardGOV = dashboardData.saldoGOV || 0;
+            const walletGOV = walletData.saldoGOV || 0;
+            
+            if (dashboardGOV > walletGOV) {
+                // Dashboard lebih tinggi (mungkin ada mining baru)
+                const difference = dashboardGOV - walletGOV;
+                walletData.saldoGOV = dashboardGOV;
+                
+                if (difference > 0) {
+                    addTransaction('SYNC', `Update dari dashboard (+${difference} GOV)`, difference);
+                }
+                
+                showNotification(`✅ +${difference} GOV dari dashboard`);
+                
+            } else if (walletGOV > dashboardGOV) {
+                // Wallet lebih tinggi (mungkin ada deposit/transfer)
+                const difference = walletGOV - dashboardGOV;
+                dashboardData.saldoGOV = walletGOV;
+                localStorage.setItem(dashboardKey, JSON.stringify(dashboardData));
+                
+                showNotification(`✅ ${difference} GOV dipush ke dashboard`);
+                
+            } else {
+                showNotification("✅ Saldo sudah sama dengan dashboard");
+            }
+            
+            // Update saldo lainnya
+            walletData.saldoIDR = dashboardData.saldoIDR || walletData.saldoIDR;
+            walletData.saldoUSDT = dashboardData.saldoUSDT || walletData.saldoUSDT;
+            
+            walletData.dashboardSync = true;
+            walletData.lastSync = new Date().toISOString();
+            
+            // Save wallet
+            saveWalletData();
+            updateDisplay();
+            
+            updateStatus('statusSync', '✅ Synced', 'good');
+            
+        } else {
+            showNotification("❌ Tidak ada data dashboard ditemukan", false);
+            updateStatus('statusSync', '❌ No Dashboard', 'bad');
+        }
+        
+    } catch (error) {
+        console.error("❌ Sync error:", error);
+        showNotification("❌ Gagal sync dengan dashboard", false);
+        updateStatus('statusSync', '❌ Error', 'bad');
+    }
+    
+    hideSyncIndicator();
+}
+
+// ===== FORCE SYNC FROM DASHBOARD (tarik data) =====
+function forceSyncFromDashboard() {
+    showSyncIndicator("Tarik dari Dashboard...");
+    
+    const userEmail = localStorage.getItem('currentUser');
+    if (!userEmail) {
+        showNotification("❌ Silakan login dulu", false);
+        hideSyncIndicator();
+        return;
+    }
+    
+    try {
         const username = userEmail.split('@')[0];
         const dashboardKey = `userData_${username}`;
         const savedData = localStorage.getItem(dashboardKey);
@@ -476,36 +611,110 @@ function syncFromDashboard() {
             const dashboardData = JSON.parse(savedData);
             const oldGOV = walletData.saldoGOV;
             
-            // Update wallet with dashboard GOV
-            walletData.saldoGOV = dashboardData.saldoGOV || walletData.saldoGOV;
+            // Ambil semua data dari dashboard
+            walletData.saldoGOV = dashboardData.saldoGOV || 0;
+            walletData.saldoIDR = dashboardData.saldoIDR || 0;
+            walletData.saldoUSDT = dashboardData.saldoUSDT || 0;
             
-            // Add transaction if GOV increased
+            // Add transaction jika ada perubahan
             if (walletData.saldoGOV > oldGOV) {
                 const increase = walletData.saldoGOV - oldGOV;
-                addTransaction('SYNC', `Sync dari Dashboard (+${increase} GOV)`, increase);
-                showNotification(`✅ +${increase} GOV dari dashboard!`);
-            } else if (walletData.saldoGOV < oldGOV) {
-                // This shouldn't happen, but just in case
-                const decrease = oldGOV - walletData.saldoGOV;
-                showNotification(`ℹ️ Saldo GOV turun ${decrease} dari dashboard`);
-            } else {
-                showNotification("✅ Saldo sudah sync dengan dashboard");
+                addTransaction('SYNC', `Tarik dari dashboard (+${increase} GOV)`, increase);
             }
             
-            // Save updated data
+            walletData.dashboardSync = true;
+            walletData.lastSync = new Date().toISOString();
+            
             saveWalletData();
             updateDisplay();
             
+            showNotification("✅ Data berhasil ditarik dari dashboard");
+            showSyncStatus("📥 Data ditarik");
+            
         } else {
-            showNotification("❌ Tidak ada data dashboard ditemukan", false);
+            showNotification("❌ Tidak ada data dashboard", false);
         }
         
     } catch (error) {
-        console.error("❌ Sync error:", error);
-        showNotification("❌ Gagal sync dari dashboard", false);
+        console.error("❌ Force sync error:", error);
+        showNotification("❌ Gagal tarik data", false);
     }
     
     hideSyncIndicator();
+}
+
+// ===== FORCE SYNC TO DASHBOARD (push data) =====
+function forceSyncToDashboard() {
+    showSyncIndicator("Push ke Dashboard...");
+    
+    const userEmail = localStorage.getItem('currentUser');
+    if (!userEmail) {
+        showNotification("❌ Silakan login dulu", false);
+        hideSyncIndicator();
+        return;
+    }
+    
+    try {
+        const username = userEmail.split('@')[0];
+        const dashboardKey = `userData_${username}`;
+        
+        // Load current dashboard data
+        let dashboardData = JSON.parse(localStorage.getItem(dashboardKey)) || {
+            saldoGOV: 0,
+            saldoIDR: 0,
+            saldoUSDT: 0,
+            referralPoints: 0,
+            referrals: []
+        };
+        
+        // Update dashboard dengan data wallet
+        dashboardData.saldoGOV = walletData.saldoGOV;
+        dashboardData.saldoIDR = walletData.saldoIDR;
+        dashboardData.saldoUSDT = walletData.saldoUSDT;
+        
+        // Save dashboard data
+        localStorage.setItem(dashboardKey, JSON.stringify(dashboardData));
+        
+        walletData.dashboardSync = true;
+        walletData.lastSync = new Date().toISOString();
+        
+        saveWalletData();
+        
+        showNotification("✅ Data berhasil dipush ke dashboard");
+        showSyncStatus("📤 Data dipush");
+        
+    } catch (error) {
+        console.error("❌ Push to dashboard error:", error);
+        showNotification("❌ Gagal push data", false);
+    }
+    
+    hideSyncIndicator();
+}
+
+// ===== CHECK DASHBOARD SYNC STATUS =====
+function checkDashboardSync() {
+    const userEmail = localStorage.getItem('currentUser');
+    if (!userEmail) return;
+    
+    const username = userEmail.split('@')[0];
+    const dashboardKey = `userData_${username}`;
+    const savedData = localStorage.getItem(dashboardKey);
+    
+    if (savedData) {
+        const dashboardData = JSON.parse(savedData);
+        const dashboardGOV = dashboardData.saldoGOV || 0;
+        const walletGOV = walletData.saldoGOV || 0;
+        
+        if (Math.abs(dashboardGOV - walletGOV) <= 1) {
+            updateStatus('statusSync', '✅ Synced', 'good');
+        } else if (dashboardGOV > walletGOV) {
+            updateStatus('statusSync', `⚠️ -${dashboardGOV - walletGOV} GOV`, 'warning');
+        } else {
+            updateStatus('statusSync', `⚠️ +${walletGOV - dashboardGOV} GOV`, 'warning');
+        }
+    } else {
+        updateStatus('statusSync', '❌ No Dashboard', 'bad');
+    }
 }
 
 // ===== SAVE WALLET DATA =====
@@ -518,106 +727,20 @@ function saveWalletData() {
     
     try {
         walletData.lastSync = new Date().toISOString();
-        walletData.isNewUser = false;
-        
         const walletKey = `walletData_${userEmail}`;
         localStorage.setItem(walletKey, JSON.stringify(walletData));
         
-        console.log("✅ Wallet data saved:", walletData);
-        updateStatus('statusUpdate', new Date().toLocaleTimeString(), 'good');
-        
+        console.log("✅ Wallet data saved:", walletData.saldoGOV, "GOV");
         return true;
         
     } catch (error) {
-        console.error("❌ Error saving wallet data:", error);
+        console.error("❌ Error saving wallet:", error);
         return false;
     }
 }
 
-// ===== DISPLAY FUNCTIONS =====
-function updateDisplay() {
-    document.getElementById('saldoGOV').textContent = 
-        walletData.saldoGOV.toLocaleString('id-ID') + " GOV";
-    document.getElementById('saldoIDR').textContent = 
-        walletData.saldoIDR.toLocaleString('id-ID') + " IDR";
-    document.getElementById('saldoUSDT').textContent = 
-        walletData.saldoUSDT.toFixed(2) + " USDT";
-    
-    const lastUpdate = walletData.lastSync ? new Date(walletData.lastSync).toLocaleString() : 'Belum pernah';
-    document.getElementById('lastUpdate').textContent = `Terakhir update: ${lastUpdate}`;
-    
-    updateTransactionHistory();
-}
-
-function updateTransactionHistory() {
-    const container = document.getElementById('transactionHistory');
-    
-    if (!walletData.transactions || walletData.transactions.length === 0) {
-        container.innerHTML = `
-            <div style="text-align: center; color: #666; padding: 20px;">
-                <p>📭 Belum ada transaksi</p>
-                <small>Transaksi mining dari dashboard akan muncul di sini</small>
-            </div>
-        `;
-        return;
-    }
-    
-    // Show last 10 transactions
-    const recentTx = walletData.transactions.slice(0, 10);
-    
-    const transactionsHTML = recentTx.map(tx => {
-        const date = new Date(tx.timestamp).toLocaleDateString('id-ID', {
-            day: '2-digit',
-            month: 'short',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-        
-        const amount = tx.amount || 0;
-        const isPositive = amount > 0;
-        const amountClass = isPositive ? 'tx-positive' : 'tx-negative';
-        const amountSign = isPositive ? '+' : '';
-        const amountText = `${amountSign}${amount.toLocaleString('id-ID')} GOV`;
-        
-        return `
-            <div class="transaction-item">
-                <div class="tx-header">
-                    <div class="tx-description">${tx.description || 'Transaksi'}</div>
-                    <div class="tx-amount ${amountClass}">${amountText}</div>
-                </div>
-                <div class="tx-footer">
-                    <span>${date}</span>
-                    <span>${tx.type || 'SYSTEM'}</span>
-                </div>
-            </div>
-        `;
-    }).join('');
-    
-    container.innerHTML = transactionsHTML;
-}
-
-// ===== TRANSACTION FUNCTIONS =====
-function addTransaction(type, description, amount) {
-    const transaction = {
-        type: type,
-        description: description,
-        amount: amount,
-        timestamp: new Date().toISOString()
-    };
-    
-    walletData.transactions.unshift(transaction);
-    
-    // Keep only last 50 transactions
-    if (walletData.transactions.length > 50) {
-        walletData.transactions = walletData.transactions.slice(0, 50);
-    }
-    
-    updateTransactionHistory();
-}
-
-// ===== WITHDRAW FUNCTIONS =====
+// ===== WITHDRAW FUNCTIONS (SYNC KE DASHBOARD) =====
 function showWithdrawModal() {
-    // Check if user has balance
     if (walletData.saldoGOV === 0 && walletData.saldoIDR === 0 && walletData.saldoUSDT === 0) {
         showNotification("❌ Saldo Anda kosong", false);
         return;
@@ -678,13 +801,16 @@ function processWithdraw() {
         return;
     }
     
-    // Process withdraw
+    // Process withdraw di WALLET
     if (type === 'IDR') {
         walletData.saldoIDR -= amount;
     } else if (type === 'USDT') {
         walletData.saldoUSDT -= amount;
     } else {
         walletData.saldoGOV -= amount;
+        
+        // ✅ OTOMATIS KURANGI DI DASHBOARD JUGA
+        updateDashboardOnWithdraw(amount);
     }
     
     // Add to withdraw history
@@ -700,7 +826,7 @@ function processWithdraw() {
     // Add transaction record
     addTransaction('WITHDRAW', `Withdraw ${type} ke ${account}`, -amount);
     
-    // Save data
+    // Save wallet data
     saveWalletData();
     updateDisplay();
     
@@ -711,7 +837,6 @@ function processWithdraw() {
 💰 Jumlah: ${amount.toLocaleString()} ${type}
 📱 Akun: ${account}
 🕒 Waktu: ${new Date().toLocaleString()}
-📊 Saldo: ${balance.toLocaleString()} ${type}
     `;
     
     sendTelegram(telegramMsg);
@@ -724,6 +849,115 @@ function processWithdraw() {
     document.getElementById('withdrawAmount').value = '';
     document.getElementById('withdrawAccount').value = '';
     document.getElementById('withdrawEmail').value = '';
+}
+
+// ===== UPDATE DASHBOARD SAAT WITHDRAW =====
+function updateDashboardOnWithdraw(amount) {
+    const userEmail = localStorage.getItem('currentUser');
+    if (!userEmail) return;
+    
+    const username = userEmail.split('@')[0];
+    const dashboardKey = `userData_${username}`;
+    
+    try {
+        // Load dashboard data
+        const savedData = localStorage.getItem(dashboardKey);
+        if (savedData) {
+            const dashboardData = JSON.parse(savedData);
+            
+            // Kurangi saldo GOV di dashboard
+            dashboardData.saldoGOV = Math.max(0, dashboardData.saldoGOV - amount);
+            
+            // Save updated dashboard data
+            localStorage.setItem(dashboardKey, JSON.stringify(dashboardData));
+            
+            console.log(`✅ Dashboard updated on withdraw: -${amount} GOV`);
+            showSyncStatus("📤 Dashboard diupdate");
+        }
+    } catch (error) {
+        console.error("❌ Error updating dashboard:", error);
+    }
+}
+
+// ===== DISPLAY FUNCTIONS =====
+function updateDisplay() {
+    document.getElementById('saldoGOV').textContent = 
+        walletData.saldoGOV.toLocaleString('id-ID') + " GOV";
+    document.getElementById('saldoIDR').textContent = 
+        walletData.saldoIDR.toLocaleString('id-ID') + " IDR";
+    document.getElementById('saldoUSDT').textContent = 
+        walletData.saldoUSDT.toFixed(2) + " USDT";
+    
+    const lastUpdate = walletData.lastSync ? new Date(walletData.lastSync).toLocaleString() : 'Belum pernah';
+    document.getElementById('lastUpdate').textContent = `Terakhir update: ${lastUpdate}`;
+    
+    updateTransactionHistory();
+}
+
+function updateTransactionHistory() {
+    const container = document.getElementById('transactionHistory');
+    
+    if (!walletData.transactions || walletData.transactions.length === 0) {
+        container.innerHTML = `
+            <div style="text-align: center; color: #666; padding: 20px;">
+                <p>📭 Belum ada transaksi</p>
+                <small>Transaksi dari dashboard akan muncul di sini</small>
+            </div>
+        `;
+        return;
+    }
+    
+    // Show last 10 transactions
+    const recentTx = walletData.transactions.slice(0, 10);
+    
+    const transactionsHTML = recentTx.map(tx => {
+        const date = new Date(tx.timestamp).toLocaleDateString('id-ID', {
+            day: '2-digit',
+            month: 'short',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        const amount = tx.amount || 0;
+        const isPositive = amount > 0;
+        const amountClass = isPositive ? 'tx-positive' : 'tx-negative';
+        const amountSign = isPositive ? '+' : '';
+        const amountText = `${amountSign}${amount.toLocaleString('id-ID')} GOV`;
+        
+        return `
+            <div class="transaction-item">
+                <div class="tx-header">
+                    <div class="tx-description">${tx.description || 'Transaksi'}</div>
+                    <div class="tx-amount ${amountClass}">${amountText}</div>
+                </div>
+                <div class="tx-footer">
+                    <span>${date}</span>
+                    <span>${tx.type || 'SYSTEM'}</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    container.innerHTML = transactionsHTML;
+}
+
+// ===== TRANSACTION FUNCTIONS =====
+function addTransaction(type, description, amount) {
+    const transaction = {
+        type: type,
+        description: description,
+        amount: amount,
+        timestamp: new Date().toISOString()
+    };
+    
+    walletData.transactions.unshift(transaction);
+    
+    // Keep only last 50 transactions
+    if (walletData.transactions.length > 50) {
+        walletData.transactions = walletData.transactions.slice(0, 50);
+    }
+    
+    updateTransactionHistory();
 }
 
 // ===== DEPOSIT FUNCTIONS =====
@@ -834,6 +1068,9 @@ function processTransfer() {
     // Add transaction
     addTransaction('TRANSFER', `Transfer ke ${email} ${message ? '(' + message + ')' : ''}`, -amount);
     
+    // ✅ OTOMATIS KURANGI DI DASHBOARD JUGA
+    updateDashboardOnWithdraw(amount);
+    
     // Save data
     saveWalletData();
     updateDisplay();
@@ -888,12 +1125,13 @@ function hideSyncIndicator() {
     indicator.style.display = 'none';
 }
 
-function forceSave() {
-    if (saveWalletData()) {
-        showNotification('✅ Data berhasil disimpan');
-    } else {
-        showNotification('❌ Gagal menyimpan data', false);
-    }
+function showSyncStatus(text) {
+    const status = document.getElementById('syncStatus');
+    status.textContent = text;
+    status.style.display = 'block';
+    setTimeout(() => {
+        status.style.display = 'none';
+    }, 2000);
 }
 
 // ===== TELEGRAM FUNCTIONS =====
@@ -918,13 +1156,12 @@ function sendTelegram(text) {
     });
 }
 
-// ===== AUTO-LOAD TRANSACTIONS FROM MINING =====
-function checkForMiningTransactions() {
+// ===== AUTO-CHECK FOR MINING UPDATES =====
+function checkForMiningUpdates() {
     const userEmail = localStorage.getItem('currentUser');
     if (!userEmail) return;
     
     try {
-        // Check if there are new mining transactions
         const username = userEmail.split('@')[0];
         const dashboardKey = `userData_${username}`;
         const savedData = localStorage.getItem(dashboardKey);
@@ -933,19 +1170,23 @@ function checkForMiningTransactions() {
             const dashboardData = JSON.parse(savedData);
             const dashboardGOV = dashboardData.saldoGOV || 0;
             
-            // If dashboard has more GOV than wallet, add transaction
+            // Jika dashboard lebih tinggi dari wallet (ada mining baru)
             if (dashboardGOV > walletData.saldoGOV) {
                 const difference = dashboardGOV - walletData.saldoGOV;
                 
-                // Only add if significant difference
                 if (difference > 0) {
                     walletData.saldoGOV = dashboardGOV;
-                    addTransaction('MINING', 'Hasil mining dari dashboard', difference);
+                    addTransaction('MINING', 'Update dari mining dashboard', difference);
                     saveWalletData();
                     updateDisplay();
-                    console.log(`✅ Auto-added ${difference} GOV from mining`);
+                    
+                    console.log(`🔄 Auto-updated: +${difference} GOV from mining`);
+                    showSyncStatus("⛏️ Mining diupdate");
                 }
             }
+            
+            // Update sync status
+            checkDashboardSync();
         }
     } catch (error) {
         console.error("Auto-check error:", error);
@@ -957,11 +1198,11 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log("📱 Wallet App Starting...");
     initializeApp();
     
-    // Check for mining transactions every 30 seconds
-    setInterval(checkForMiningTransactions, 30000);
+    // Check for mining updates every 30 seconds
+    setInterval(checkForMiningUpdates, 30000);
     
-    // Auto-check on load
-    setTimeout(checkForMiningTransactions, 2000);
+    // Auto-sync every 2 minutes
+    setInterval(syncWithDashboard, 120000);
 });
 
 // Auto-save every 2 minutes
