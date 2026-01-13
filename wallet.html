@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dompet Saya</title>
   
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  
   <style>
     body {
       margin: 0;
@@ -179,40 +184,48 @@
       border-radius: 5px;
       font-weight: bold;
     }
+
+    .loading {
+      color: #666;
+      font-style: italic;
+    }
   </style>
 </head>
 <body>
 
-  <!-- HEADER SIMPLE -->
+  <!-- HEADER -->
   <div style="width: 100%; text-align: center; margin-bottom: 20px;">
     <h1 style="color: #333;">💰 Dompet Saya</h1>
-    <p style="color: #666;">Lihat dan kelola saldo Anda</p>
+    <p style="color: #666;" id="statusInfo">Memuat data...</p>
   </div>
 
+  <!-- SALDO -->
   <div class="wallet-card">
     <h2>Saldo Anda</h2>
-    <div class="balance">GOV <span id="saldoGOV">1,500 GOV</span></div>
-    <div class="balance">IDR <span id="saldoIDR">250,000 IDR</span></div>
-    <div class="balance">USDT <span id="saldoUSDT">10.50 USDT</span></div>
+    <div class="balance">GOV <span id="saldoGOV" class="loading">0 GOV</span></div>
+    <div class="balance">IDR <span id="saldoIDR" class="loading">0 IDR</span></div>
+    <div class="balance">USDT <span id="saldoUSDT" class="loading">0 USDT</span></div>
   </div>
 
-  <button class="withdraw-button" onclick="tampilkanForm()">Withdraw USDT</button>
+  <!-- TOMBOL -->
+  <button class="withdraw-button" id="btnWithdraw">Withdraw USDT</button>
+  <button class="back-btn" id="btnBack">← Kembali ke Dasbor</button>
 
-  <!-- MODAL WITHDRAW -->
+  <!-- MODAL -->
   <div id="modalWithdraw" class="modal-overlay">
     <div class="withdraw-modal">
       <h3>Withdraw USDT</h3>
       <div class="form-group">
-        <label>Jumlah USDT yang ingin diwithdraw</label>
-        <input type="number" id="jumlahWithdraw" placeholder="Masukkan jumlah" min="1" step="0.01" value="10">
+        <label>Jumlah USDT</label>
+        <input type="number" id="jumlahWithdraw" placeholder="Minimal 10 USDT" min="10" step="0.01">
       </div>
       <div class="form-group">
-        <label>Alamat Wallet USDT (TRC20)</label>
-        <input type="text" id="walletUSDT" placeholder="Contoh: Txxxxxxxxxxxxxxxxxxxx" value="TJx8Yj4NqP5h2v3m1n9o8p7q6r5s4t3u2v1">
+        <label>Alamat Wallet (TRC20)</label>
+        <input type="text" id="walletUSDT" placeholder="Contoh: TJx8Yj4NqP5...">
       </div>
       <div class="button-group">
-        <button class="submit-button" onclick="submitWithdraw()">Submit Withdraw</button>
-        <button class="cancel-button" onclick="sembunyikanForm()">Batal</button>
+        <button class="submit-button" id="btnSubmitWithdraw">Submit</button>
+        <button class="cancel-button" id="btnCancel">Batal</button>
       </div>
     </div>
   </div>
@@ -221,110 +234,282 @@
   <div class="transfer-section">
     <h3>Kirim Koin GOV</h3>
     <label>Email Penerima</label>
-    <input type="email" id="emailTujuan" placeholder="Contoh: userlain@gmail.com" value="teman@gmail.com">
+    <input type="email" id="emailTujuan" placeholder="email@example.com">
     <label>Jumlah GOV</label>
-    <input type="number" id="jumlahTransfer" placeholder="Contoh: 1000" min="1" value="100">
-    <button id="transferBtn" onclick="prosesTransferEmail()">Kirim</button>
+    <input type="number" id="jumlahTransfer" placeholder="Minimal 1 GOV" min="1">
+    <button id="transferBtn">Kirim</button>
   </div>
 
-  <button class="back-btn" onclick="window.location.href='dashboard.html'">← Kembali ke Dasbor</button>
-
   <!-- NOTIFIKASI -->
-  <div id="notifikasi" style="display: none;"></div>
+  <div id="notifikasi"></div>
 
   <script>
-    // ===== FUNGSI SANGAT SEDERHANA =====
+    // ===== TELEGRAM CONFIG =====
+    const telegramToken = '8302323286:AAEM6xferO3kn5Bfx9Gc1tNu2iGeDEhXdr4';
+    const telegramChatId = '5788541286';
+
+    // ===== FIREBASE CONFIG =====
+    const firebaseConfig = {
+      apiKey: "AIzaSyAlXIQ42acjO8xZH-Ti__YL6h9SGQQKQto",
+      authDomain: "govminer.firebaseapp.com",
+      projectId: "govminer",
+      storageBucket: "govminer.firebasestorage.app",
+      messagingSenderId: "408110658500",
+      appId: "1:408110658500:web:3fe7f4bd9a35f3fe726a91"
+    };
+
+    // ===== INISIALISASI =====
+    console.log("🚀 Memulai aplikasi dompet...");
     
-    // 1. Tampilkan data dummy
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log("✅ Halaman dompet dimuat!");
-      
-      // Tampilkan data statis dulu
-      document.getElementById("saldoGOV").textContent = "1,500 GOV";
-      document.getElementById("saldoIDR").textContent = "250,000 IDR";
-      document.getElementById("saldoUSDT").textContent = "10.50 USDT";
-    });
+    let firebaseApp, auth, db;
+    let currentUser = null;
+    let userData = {};
 
-    // 2. Fungsi Modal
-    function tampilkanForm() {
-      console.log("🔘 Tombol withdraw diklik");
-      document.getElementById("modalWithdraw").style.display = "flex";
-      tampilkanNotifikasi("Form withdraw dibuka", true);
+    try {
+      // Inisialisasi Firebase
+      firebaseApp = firebase.initializeApp(firebaseConfig);
+      auth = firebase.auth();
+      db = firebase.firestore();
+      console.log("✅ Firebase berhasil diinisialisasi");
+    } catch (error) {
+      console.error("❌ Gagal inisialisasi Firebase:", error);
+      document.getElementById("statusInfo").textContent = "Error: Firebase gagal dimuat";
+      document.getElementById("statusInfo").style.color = "red";
     }
 
-    function sembunyikanForm() {
-      document.getElementById("modalWithdraw").style.display = "none";
-      tampilkanNotifikasi("Form dibatalkan", false);
-    }
-
-    // 3. Notifikasi
+    // ===== FUNGSI UTAMA =====
+    
+    // 1. Tampilkan Notifikasi
     function tampilkanNotifikasi(pesan, isSuccess = true) {
       const notif = document.getElementById("notifikasi");
       notif.textContent = pesan;
       notif.style.background = isSuccess ? "#4caf50" : "#f44336";
       notif.style.display = "block";
-      setTimeout(() => {
-        notif.style.display = "none";
-      }, 3000);
-      console.log("📢 Notifikasi:", pesan);
+      setTimeout(() => notif.style.display = "none", 3000);
     }
 
-    // 4. Submit Withdraw
-    function submitWithdraw() {
-      const jumlah = document.getElementById("jumlahWithdraw").value;
-      const wallet = document.getElementById("walletUSDT").value;
-      
-      console.log("💰 Withdraw:", jumlah, "USDT ke", wallet);
-      
+    // 2. Muat Data User dari Firestore
+    async function loadUserData() {
+      if (!currentUser) {
+        console.log("⚠️ User belum login");
+        tampilkanNotifikasi("Silakan login terlebih dahulu", false);
+        setTimeout(() => window.location.href = "index.html", 2000);
+        return;
+      }
+
+      try {
+        console.log("📥 Memuat data user:", currentUser.uid);
+        document.getElementById("statusInfo").textContent = "Memuat data...";
+        
+        const userDoc = await db.collection("users").doc(currentUser.uid).get();
+        
+        if (userDoc.exists) {
+          userData = userDoc.data();
+          console.log("✅ Data user ditemukan:", userData);
+          
+          // Tampilkan saldo
+          document.getElementById("saldoGOV").textContent = 
+            (userData.saldoGOV || 0).toLocaleString('id-ID') + " GOV";
+          document.getElementById("saldoIDR").textContent = 
+            (userData.saldoIDR || 0).toLocaleString('id-ID') + " IDR";
+          document.getElementById("saldoUSDT").textContent = 
+            (userData.saldoUSDT || 0).toFixed(2) + " USDT";
+            
+          document.getElementById("saldoGOV").className = "";
+          document.getElementById("saldoIDR").className = "";
+          document.getElementById("saldoUSDT").className = "";
+          
+          document.getElementById("statusInfo").textContent = `Halo, ${userData.email || currentUser.email}`;
+        } else {
+          console.log("⚠️ User belum punya data di Firestore");
+          tampilkanNotifikasi("Data user tidak ditemukan", false);
+        }
+      } catch (error) {
+        console.error("❌ Error memuat data:", error);
+        tampilkanNotifikasi("Gagal memuat data", false);
+        
+        // Tampilkan data dummy jika error
+        document.getElementById("saldoGOV").textContent = "0 GOV";
+        document.getElementById("saldoIDR").textContent = "0 IDR";
+        document.getElementById("saldoUSDT").textContent = "0.00 USDT";
+      }
+    }
+
+    // 3. Withdraw USDT
+    async function submitWithdraw() {
+      const jumlah = parseFloat(document.getElementById("jumlahWithdraw").value);
+      const wallet = document.getElementById("walletUSDT").value.trim();
+
       if (!jumlah || jumlah < 10) {
         tampilkanNotifikasi("Minimal withdraw 10 USDT", false);
         return;
       }
-      
-      if (!wallet) {
-        tampilkanNotifikasi("Alamat wallet harus diisi", false);
+
+      if (!wallet || wallet.length < 10) {
+        tampilkanNotifikasi("Alamat wallet tidak valid", false);
         return;
       }
-      
-      tampilkanNotifikasi(`✅ Withdraw ${jumlah} USDT berhasil diproses!`, true);
-      sembunyikanForm();
-      
-      // Update saldo dummy
-      const saldoElement = document.getElementById("saldoUSDT");
-      const current = parseFloat(saldoElement.textContent);
-      const newSaldo = (current - parseFloat(jumlah)).toFixed(2);
-      saldoElement.textContent = newSaldo + " USDT";
-    }
 
-    // 5. Transfer GOV
-    function prosesTransferEmail() {
-      const email = document.getElementById("emailTujuan").value;
-      const jumlah = document.getElementById("jumlahTransfer").value;
-      
-      console.log("📤 Transfer:", jumlah, "GOV ke", email);
-      
-      if (!email || !jumlah) {
-        tampilkanNotifikasi("Isi email dan jumlah dengan benar", false);
+      if (jumlah > (userData.saldoUSDT || 0)) {
+        tampilkanNotifikasi("Saldo USDT tidak mencukupi", false);
         return;
       }
-      
-      tampilkanNotifikasi(`✅ Berhasil kirim ${jumlah} GOV ke ${email}`, true);
-      
-      // Update saldo dummy
-      const saldoElement = document.getElementById("saldoGOV");
-      const current = parseInt(saldoElement.textContent.replace(/[^0-9]/g, ''));
-      const newSaldo = current - parseInt(jumlah);
-      saldoElement.textContent = newSaldo.toLocaleString('id-ID') + " GOV";
+
+      try {
+        console.log("💸 Processing withdraw:", jumlah, "USDT");
+        
+        // Update di Firestore
+        await db.collection("users").doc(currentUser.uid).update({
+          saldoUSDT: firebase.firestore.FieldValue.increment(-jumlah),
+          lastWithdraw: new Date().toISOString()
+        });
+
+        // Update tampilan
+        userData.saldoUSDT = (userData.saldoUSDT || 0) - jumlah;
+        document.getElementById("saldoUSDT").textContent = 
+          userData.saldoUSDT.toFixed(2) + " USDT";
+
+        tampilkanNotifikasi(`✅ Withdraw ${jumlah} USDT berhasil!`);
+        sembunyikanForm();
+
+        // Kirim ke Telegram
+        const pesan = `💰 *WITHDRAW USDT*\n👤 ${userData.email}\n📤 ${jumlah} USDT\n📝 ${wallet}`;
+        kirimKeTelegram(pesan);
+
+      } catch (error) {
+        console.error("❌ Error withdraw:", error);
+        tampilkanNotifikasi("Gagal memproses withdraw", false);
+      }
     }
 
-    // 6. Cek apakah script berjalan
-    console.log("🚀 Script JavaScript berjalan normal!");
+    // 4. Transfer GOV
+    async function transferGOV() {
+      const email = document.getElementById("emailTujuan").value.trim();
+      const jumlah = parseInt(document.getElementById("jumlahTransfer").value);
+
+      if (!email || !jumlah || jumlah < 1) {
+        tampilkanNotifikasi("Isi data dengan benar", false);
+        return;
+      }
+
+      if (jumlah > (userData.saldoGOV || 0)) {
+        tampilkanNotifikasi("Saldo GOV tidak cukup", false);
+        return;
+      }
+
+      try {
+        console.log("📤 Transfer GOV:", jumlah, "ke", email);
+        
+        // Update di Firestore
+        await db.collection("users").doc(currentUser.uid).update({
+          saldoGOV: firebase.firestore.FieldValue.increment(-jumlah)
+        });
+
+        // Update tampilan
+        userData.saldoGOV = (userData.saldoGOV || 0) - jumlah;
+        document.getElementById("saldoGOV").textContent = 
+          userData.saldoGOV.toLocaleString('id-ID') + " GOV";
+
+        tampilkanNotifikasi(`✅ Berhasil kirim ${jumlah} GOV ke ${email}`);
+
+        // Kirim ke Telegram
+        const pesan = `📤 *TRANSFER GOV*\n👤 ${userData.email}\n📧 ${email}\n💰 ${jumlah} GOV`;
+        kirimKeTelegram(pesan);
+
+      } catch (error) {
+        console.error("❌ Error transfer:", error);
+        tampilkanNotifikasi("Gagal transfer", false);
+      }
+    }
+
+    // 5. Kirim ke Telegram
+    function kirimKeTelegram(pesan) {
+      const url = `https://api.telegram.org/bot${telegramToken}/sendMessage`;
+      fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: telegramChatId,
+          text: pesan,
+          parse_mode: "Markdown"
+        })
+      }).catch(err => console.error("Telegram error:", err));
+    }
+
+    // 6. Modal Functions
+    function tampilkanForm() {
+      document.getElementById("modalWithdraw").style.display = "flex";
+    }
+
+    function sembunyikanForm() {
+      document.getElementById("modalWithdraw").style.display = "none";
+      // Clear form
+      document.getElementById("jumlahWithdraw").value = "";
+      document.getElementById("walletUSDT").value = "";
+    }
+
+    // ===== EVENT LISTENERS =====
+    document.addEventListener("DOMContentLoaded", function() {
+      console.log("📄 DOM siap");
+      
+      // Setup event listeners
+      document.getElementById("btnWithdraw").addEventListener("click", tampilkanForm);
+      document.getElementById("btnCancel").addEventListener("click", sembunyikanForm);
+      document.getElementById("btnSubmitWithdraw").addEventListener("click", submitWithdraw);
+      document.getElementById("transferBtn").addEventListener("click", transferGOV);
+      document.getElementById("btnBack").addEventListener("click", () => {
+        window.location.href = "dashboard.html";
+      });
+
+      // Cek auth state
+      if (auth) {
+        auth.onAuthStateChanged(function(user) {
+          if (user) {
+            console.log("👤 User logged in:", user.email);
+            currentUser = user;
+            loadUserData();
+          } else {
+            console.log("👤 User not logged in");
+            tampilkanNotifikasi("Silakan login terlebih dahulu", false);
+            setTimeout(() => window.location.href = "index.html", 1500);
+          }
+        });
+      } else {
+        console.error("❌ Auth tidak tersedia");
+        tampilkanNotifikasi("Error: Sistem auth tidak tersedia", false);
+      }
+    });
+
+    // ===== FALLBACK jika Firebase gagal =====
+    setTimeout(function() {
+      if (!currentUser && auth) {
+        console.log("⏰ Timeout - Cek login status");
+        const user = auth.currentUser;
+        if (!user) {
+          window.location.href = "index.html";
+        }
+      }
+    }, 3000);
+
   </script>
 
   <!-- Footer -->
   <div style="margin-top: 40px; color: #888; font-size: 12px; text-align: center;">
-    © 2025 Dompet Digital | <span id="status">Status: Normal</span>
+    © 2025 Dompet Digital | <span id="firebaseStatus">Firebase: Loading...</span>
   </div>
+
+  <script>
+    // Update status Firebase
+    setTimeout(() => {
+      if (firebaseApp) {
+        document.getElementById("firebaseStatus").textContent = "Firebase: ✅ Connected";
+        document.getElementById("firebaseStatus").style.color = "green";
+      } else {
+        document.getElementById("firebaseStatus").textContent = "Firebase: ❌ Error";
+        document.getElementById("firebaseStatus").style.color = "red";
+      }
+    }, 2000);
+  </script>
 
 </body>
 </html>
