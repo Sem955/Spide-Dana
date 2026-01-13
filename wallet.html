@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dompet Saya</title>
+  <title>Dompet Saya - DEBUG</title>
   
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -11,40 +11,98 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
   
   <style>
+    * {
+      box-sizing: border-box;
+    }
+    
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background: #f1f8e9;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
       padding: 20px;
       min-height: 100vh;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 5px;
+    }
+    
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .status-box {
+      background: #fff3cd;
+      border: 1px solid #ffeaa7;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .status-box h3 {
+      margin-top: 0;
+      color: #856404;
+    }
+    
+    .status-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .status-label {
+      font-weight: bold;
+    }
+    
+    .status-value {
+      font-family: monospace;
+    }
+    
+    .good {
+      color: green;
+    }
+    
+    .bad {
+      color: red;
+    }
+    
+    .warning {
+      color: orange;
     }
 
     .wallet-card {
       background: linear-gradient(135deg, #ff6f00, #ff8f00);
       color: white;
-      border-radius: 16px;
-      padding: 24px;
-      width: 90%;
-      max-width: 400px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-      margin-bottom: 30px;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
     }
 
     .wallet-card h2 {
       margin-top: 0;
-      font-size: 22px;
-      margin-bottom: 16px;
+      font-size: 20px;
       text-align: center;
     }
 
     .balance {
       display: flex;
       justify-content: space-between;
-      margin: 12px 0;
-      font-size: 18px;
+      margin: 10px 0;
+      font-size: 16px;
       font-weight: bold;
     }
 
@@ -53,200 +111,139 @@
       font-size: 14px;
     }
 
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .withdraw-modal {
-      background: white;
-      width: 90%;
-      max-width: 400px;
-      border-radius: 16px;
-      padding: 24px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-    }
-
-    .form-group {
-      width: 100%;
-      margin-bottom: 16px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 14px;
-      color: #555;
-    }
-
-    .form-group input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 14px;
-      box-sizing: border-box;
-    }
-
-    .button-group {
-      display: flex;
-      gap: 12px;
-      margin-top: 24px;
-    }
-
     button {
+      width: 100%;
       padding: 14px;
+      margin: 10px 0;
       border: none;
       border-radius: 10px;
       font-size: 16px;
-      cursor: pointer;
       font-weight: bold;
-      margin: 5px 0;
+      cursor: pointer;
     }
-
-    .withdraw-button {
+    
+    .withdraw-btn {
       background: #1976d2;
       color: white;
-      width: 90%;
-      max-width: 400px;
-      margin-top: 20px;
     }
-
-    .submit-button {
-      background: #1976d2;
-      color: white;
-      flex: 1;
-    }
-
-    .cancel-button {
-      background: #f0f0f0;
-      color: #333;
-      flex: 1;
-    }
-
+    
     .back-btn {
       background: #333;
       color: white;
-      width: 90%;
-      max-width: 400px;
-      margin-top: 20px;
     }
-
-    #notifikasi {
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #4caf50;
+    
+    .debug-btn {
+      background: #6c757d;
       color: white;
-      padding: 14px 24px;
-      border-radius: 8px;
-      font-size: 16px;
-      z-index: 2000;
-      display: none;
+      font-size: 14px;
     }
 
-    .transfer-section {
-      max-width: 400px;
-      margin: 30px auto;
-      padding: 20px;
-      border: 1px solid #ccc;
+    #consoleLog {
+      background: #1e1e1e;
+      color: #00ff00;
+      font-family: monospace;
+      padding: 15px;
       border-radius: 10px;
-      background: white;
-      width: 90%;
+      height: 200px;
+      overflow-y: auto;
+      margin-top: 20px;
+      font-size: 12px;
     }
-
-    .transfer-section h3 {
-      margin-top: 0;
-      color: #333;
+    
+    .log-entry {
+      margin: 5px 0;
     }
-
-    .transfer-section input {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      box-sizing: border-box;
+    
+    .log-time {
+      color: #888;
     }
-
-    #transferBtn {
-      width: 100%;
-      padding: 12px;
-      background-color: #1abc9c;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-weight: bold;
+    
+    .log-info {
+      color: #4fc3f7;
     }
-
-    .loading {
-      color: #666;
-      font-style: italic;
+    
+    .log-success {
+      color: #69f0ae;
+    }
+    
+    .log-error {
+      color: #ff5252;
+    }
+    
+    .log-warning {
+      color: #ffd740;
     }
   </style>
 </head>
 <body>
 
-  <!-- HEADER -->
-  <div style="width: 100%; text-align: center; margin-bottom: 20px;">
-    <h1 style="color: #333;">💰 Dompet Saya</h1>
-    <p style="color: #666;" id="statusInfo">Memuat data...</p>
-  </div>
-
-  <!-- SALDO -->
-  <div class="wallet-card">
-    <h2>Saldo Anda</h2>
-    <div class="balance">GOV <span id="saldoGOV" class="loading">0 GOV</span></div>
-    <div class="balance">IDR <span id="saldoIDR" class="loading">0 IDR</span></div>
-    <div class="balance">USDT <span id="saldoUSDT" class="loading">0 USDT</span></div>
-  </div>
-
-  <!-- TOMBOL -->
-  <button class="withdraw-button" id="btnWithdraw">Withdraw USDT</button>
-  <button class="back-btn" id="btnBack">← Kembali ke Dasbor</button>
-
-  <!-- MODAL -->
-  <div id="modalWithdraw" class="modal-overlay">
-    <div class="withdraw-modal">
-      <h3>Withdraw USDT</h3>
-      <div class="form-group">
-        <label>Jumlah USDT</label>
-        <input type="number" id="jumlahWithdraw" placeholder="Minimal 10 USDT" min="10" step="0.01">
+  <div class="container">
+    <h1>💰 Dompet Saya</h1>
+    <div class="subtitle" id="subtitle">DEBUG MODE</div>
+    
+    <!-- STATUS BOX -->
+    <div class="status-box">
+      <h3>📊 Status Sistem</h3>
+      <div class="status-item">
+        <span class="status-label">Firebase:</span>
+        <span class="status-value" id="statusFirebase">Checking...</span>
       </div>
-      <div class="form-group">
-        <label>Alamat Wallet (TRC20)</label>
-        <input type="text" id="walletUSDT" placeholder="Contoh: TJx8Yj4NqP5...">
+      <div class="status-item">
+        <span class="status-label">Authentication:</span>
+        <span class="status-value" id="statusAuth">Checking...</span>
       </div>
-      <div class="button-group">
-        <button class="submit-button" id="btnSubmitWithdraw">Submit</button>
-        <button class="cancel-button" id="btnCancel">Batal</button>
+      <div class="status-item">
+        <span class="status-label">Firestore:</span>
+        <span class="status-value" id="statusFirestore">Checking...</span>
       </div>
+      <div class="status-item">
+        <span class="status-label">User Data:</span>
+        <span class="status-value" id="statusUserData">Checking...</span>
+      </div>
+    </div>
+    
+    <!-- WALLET CARD -->
+    <div class="wallet-card">
+      <h2>Saldo Anda</h2>
+      <div class="balance">GOV <span id="saldoGOV">0 GOV</span></div>
+      <div class="balance">IDR <span id="saldoIDR">0 IDR</span></div>
+      <div class="balance">USDT <span id="saldoUSDT">0.00 USDT</span></div>
+    </div>
+    
+    <!-- BUTTONS -->
+    <button class="withdraw-btn" onclick="tampilkanModal()">Withdraw USDT</button>
+    <button class="back-btn" onclick="window.location.href='dashboard.html'">← Kembali ke Dasbor</button>
+    <button class="debug-btn" onclick="runTests()">🔧 Run Diagnostic Tests</button>
+    
+    <!-- DEBUG CONSOLE -->
+    <div id="consoleLog">
+      <div class="log-entry"><span class="log-time">[18:16:48]</span> <span class="log-info">Starting debug session...</span></div>
     </div>
   </div>
 
-  <!-- FORM TRANSFER -->
-  <div class="transfer-section">
-    <h3>Kirim Koin GOV</h3>
-    <label>Email Penerima</label>
-    <input type="email" id="emailTujuan" placeholder="email@example.com">
-    <label>Jumlah GOV</label>
-    <input type="number" id="jumlahTransfer" placeholder="Minimal 1 GOV" min="1">
-    <button id="transferBtn">Kirim</button>
-  </div>
-
-  <!-- NOTIFIKASI -->
-  <div id="notifikasi"></div>
-
   <script>
-    // ===== TELEGRAM CONFIG =====
-    const telegramToken = '8302323286:AAEM6xferO3kn5Bfx9Gc1tNu2iGeDEhXdr4';
-    const telegramChatId = '5788541286';
+    // ===== LOGGING SYSTEM =====
+    function log(message, type = 'info') {
+      const consoleDiv = document.getElementById('consoleLog');
+      const time = new Date().toLocaleTimeString();
+      const typeClass = 'log-' + type;
+      
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      entry.innerHTML = `<span class="log-time">[${time}]</span> <span class="${typeClass}">${message}</span>`;
+      
+      consoleDiv.appendChild(entry);
+      consoleDiv.scrollTop = consoleDiv.scrollHeight;
+      
+      // Also log to browser console
+      console[type === 'error' ? 'error' : type === 'warning' ? 'warn' : 'log'](message);
+    }
+    
+    function updateStatus(elementId, text, isGood = true) {
+      const element = document.getElementById(elementId);
+      element.textContent = text;
+      element.className = 'status-value ' + (isGood ? 'good' : 'bad');
+    }
 
     // ===== FIREBASE CONFIG =====
     const firebaseConfig = {
@@ -258,257 +255,247 @@
       appId: "1:408110658500:web:3fe7f4bd9a35f3fe726a91"
     };
 
-    // ===== INISIALISASI =====
-    console.log("🚀 Memulai aplikasi dompet...");
-    
-    let firebaseApp, auth, db;
+    // ===== GLOBAL VARIABLES =====
+    let firebaseApp = null;
+    let auth = null;
+    let db = null;
     let currentUser = null;
-    let userData = {};
 
+    // ===== INITIALIZATION =====
+    log('🚀 Initializing application...');
+    
     try {
-      // Inisialisasi Firebase
+      // Initialize Firebase
       firebaseApp = firebase.initializeApp(firebaseConfig);
       auth = firebase.auth();
       db = firebase.firestore();
-      console.log("✅ Firebase berhasil diinisialisasi");
+      
+      updateStatus('statusFirebase', '✅ Initialized', true);
+      log('Firebase initialized successfully', 'success');
+      
+      // Check Firestore connection
+      db.collection("test").doc("test").get()
+        .then(() => {
+          updateStatus('statusFirestore', '✅ Connected', true);
+          log('Firestore connection successful', 'success');
+        })
+        .catch(err => {
+          updateStatus('statusFirestore', '❌ Error: ' + err.code, false);
+          log('Firestore error: ' + err.message, 'error');
+        });
+        
     } catch (error) {
-      console.error("❌ Gagal inisialisasi Firebase:", error);
-      document.getElementById("statusInfo").textContent = "Error: Firebase gagal dimuat";
-      document.getElementById("statusInfo").style.color = "red";
+      updateStatus('statusFirebase', '❌ Failed', false);
+      log('Firebase initialization failed: ' + error.message, 'error');
     }
 
-    // ===== FUNGSI UTAMA =====
-    
-    // 1. Tampilkan Notifikasi
-    function tampilkanNotifikasi(pesan, isSuccess = true) {
-      const notif = document.getElementById("notifikasi");
-      notif.textContent = pesan;
-      notif.style.background = isSuccess ? "#4caf50" : "#f44336";
-      notif.style.display = "block";
-      setTimeout(() => notif.style.display = "none", 3000);
+    // ===== AUTH STATE LISTENER =====
+    if (auth) {
+      auth.onAuthStateChanged(function(user) {
+        if (user) {
+          // User is signed in
+          currentUser = user;
+          updateStatus('statusAuth', '✅ Logged in: ' + user.email, true);
+          log('User authenticated: ' + user.email + ' (UID: ' + user.uid + ')', 'success');
+          
+          // Load user data
+          loadUserData();
+        } else {
+          // User is signed out
+          updateStatus('statusAuth', '❌ Not logged in', false);
+          log('User not authenticated', 'warning');
+          
+          // Try to get from localStorage first
+          const storedUser = localStorage.getItem('currentUser');
+          if (storedUser) {
+            log('Found user in localStorage: ' + storedUser, 'info');
+            document.getElementById('subtitle').textContent = 'Guest Mode (Local Storage)';
+            loadFromLocalStorage();
+          } else {
+            log('No user found, redirecting to login...', 'warning');
+            setTimeout(() => {
+              window.location.href = 'index.html';
+            }, 2000);
+          }
+        }
+      });
     }
 
-    // 2. Muat Data User dari Firestore
+    // ===== LOAD USER DATA =====
     async function loadUserData() {
-      if (!currentUser) {
-        console.log("⚠️ User belum login");
-        tampilkanNotifikasi("Silakan login terlebih dahulu", false);
-        setTimeout(() => window.location.href = "index.html", 2000);
+      if (!currentUser || !db) {
+        log('Cannot load data: No user or database', 'error');
         return;
       }
-
+      
+      log('Loading user data for UID: ' + currentUser.uid, 'info');
+      updateStatus('statusUserData', '⏳ Loading...', false);
+      
       try {
-        console.log("📥 Memuat data user:", currentUser.uid);
-        document.getElementById("statusInfo").textContent = "Memuat data...";
-        
-        const userDoc = await db.collection("users").doc(currentUser.uid).get();
+        const userRef = db.collection("users").doc(currentUser.uid);
+        const userDoc = await userRef.get();
         
         if (userDoc.exists) {
-          userData = userDoc.data();
-          console.log("✅ Data user ditemukan:", userData);
+          const userData = userDoc.data();
+          log('User data loaded: ' + JSON.stringify(userData), 'success');
+          updateStatus('statusUserData', '✅ Loaded', true);
           
-          // Tampilkan saldo
-          document.getElementById("saldoGOV").textContent = 
-            (userData.saldoGOV || 0).toLocaleString('id-ID') + " GOV";
-          document.getElementById("saldoIDR").textContent = 
-            (userData.saldoIDR || 0).toLocaleString('id-ID') + " IDR";
-          document.getElementById("saldoUSDT").textContent = 
-            (userData.saldoUSDT || 0).toFixed(2) + " USDT";
-            
-          document.getElementById("saldoGOV").className = "";
-          document.getElementById("saldoIDR").className = "";
-          document.getElementById("saldoUSDT").className = "";
+          // Display data
+          displayWalletData(userData);
           
-          document.getElementById("statusInfo").textContent = `Halo, ${userData.email || currentUser.email}`;
+          // Also save to localStorage as backup
+          localStorage.setItem('userWalletData', JSON.stringify(userData));
         } else {
-          console.log("⚠️ User belum punya data di Firestore");
-          tampilkanNotifikasi("Data user tidak ditemukan", false);
+          log('User document does not exist in Firestore', 'warning');
+          updateStatus('statusUserData', '⚠️ No data in Firestore', false);
+          
+          // Try to load from localStorage
+          loadFromLocalStorage();
+          
+          // Create empty user data in Firestore
+          log('Creating initial user data...', 'info');
+          await userRef.set({
+            email: currentUser.email,
+            saldoGOV: 0,
+            saldoIDR: 0,
+            saldoUSDT: 0,
+            createdAt: new Date().toISOString()
+          }, { merge: true });
+          log('Initial user data created', 'success');
         }
       } catch (error) {
-        console.error("❌ Error memuat data:", error);
-        tampilkanNotifikasi("Gagal memuat data", false);
+        log('Error loading user data: ' + error.message, 'error');
+        updateStatus('statusUserData', '❌ Error: ' + error.code, false);
         
-        // Tampilkan data dummy jika error
-        document.getElementById("saldoGOV").textContent = "0 GOV";
-        document.getElementById("saldoIDR").textContent = "0 IDR";
-        document.getElementById("saldoUSDT").textContent = "0.00 USDT";
+        // Fallback to localStorage
+        loadFromLocalStorage();
       }
     }
-
-    // 3. Withdraw USDT
-    async function submitWithdraw() {
-      const jumlah = parseFloat(document.getElementById("jumlahWithdraw").value);
-      const wallet = document.getElementById("walletUSDT").value.trim();
-
-      if (!jumlah || jumlah < 10) {
-        tampilkanNotifikasi("Minimal withdraw 10 USDT", false);
-        return;
-      }
-
-      if (!wallet || wallet.length < 10) {
-        tampilkanNotifikasi("Alamat wallet tidak valid", false);
-        return;
-      }
-
-      if (jumlah > (userData.saldoUSDT || 0)) {
-        tampilkanNotifikasi("Saldo USDT tidak mencukupi", false);
-        return;
-      }
-
-      try {
-        console.log("💸 Processing withdraw:", jumlah, "USDT");
-        
-        // Update di Firestore
-        await db.collection("users").doc(currentUser.uid).update({
-          saldoUSDT: firebase.firestore.FieldValue.increment(-jumlah),
-          lastWithdraw: new Date().toISOString()
-        });
-
-        // Update tampilan
-        userData.saldoUSDT = (userData.saldoUSDT || 0) - jumlah;
-        document.getElementById("saldoUSDT").textContent = 
-          userData.saldoUSDT.toFixed(2) + " USDT";
-
-        tampilkanNotifikasi(`✅ Withdraw ${jumlah} USDT berhasil!`);
-        sembunyikanForm();
-
-        // Kirim ke Telegram
-        const pesan = `💰 *WITHDRAW USDT*\n👤 ${userData.email}\n📤 ${jumlah} USDT\n📝 ${wallet}`;
-        kirimKeTelegram(pesan);
-
-      } catch (error) {
-        console.error("❌ Error withdraw:", error);
-        tampilkanNotifikasi("Gagal memproses withdraw", false);
-      }
-    }
-
-    // 4. Transfer GOV
-    async function transferGOV() {
-      const email = document.getElementById("emailTujuan").value.trim();
-      const jumlah = parseInt(document.getElementById("jumlahTransfer").value);
-
-      if (!email || !jumlah || jumlah < 1) {
-        tampilkanNotifikasi("Isi data dengan benar", false);
-        return;
-      }
-
-      if (jumlah > (userData.saldoGOV || 0)) {
-        tampilkanNotifikasi("Saldo GOV tidak cukup", false);
-        return;
-      }
-
-      try {
-        console.log("📤 Transfer GOV:", jumlah, "ke", email);
-        
-        // Update di Firestore
-        await db.collection("users").doc(currentUser.uid).update({
-          saldoGOV: firebase.firestore.FieldValue.increment(-jumlah)
-        });
-
-        // Update tampilan
-        userData.saldoGOV = (userData.saldoGOV || 0) - jumlah;
-        document.getElementById("saldoGOV").textContent = 
-          userData.saldoGOV.toLocaleString('id-ID') + " GOV";
-
-        tampilkanNotifikasi(`✅ Berhasil kirim ${jumlah} GOV ke ${email}`);
-
-        // Kirim ke Telegram
-        const pesan = `📤 *TRANSFER GOV*\n👤 ${userData.email}\n📧 ${email}\n💰 ${jumlah} GOV`;
-        kirimKeTelegram(pesan);
-
-      } catch (error) {
-        console.error("❌ Error transfer:", error);
-        tampilkanNotifikasi("Gagal transfer", false);
-      }
-    }
-
-    // 5. Kirim ke Telegram
-    function kirimKeTelegram(pesan) {
-      const url = `https://api.telegram.org/bot${telegramToken}/sendMessage`;
-      fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: telegramChatId,
-          text: pesan,
-          parse_mode: "Markdown"
-        })
-      }).catch(err => console.error("Telegram error:", err));
-    }
-
-    // 6. Modal Functions
-    function tampilkanForm() {
-      document.getElementById("modalWithdraw").style.display = "flex";
-    }
-
-    function sembunyikanForm() {
-      document.getElementById("modalWithdraw").style.display = "none";
-      // Clear form
-      document.getElementById("jumlahWithdraw").value = "";
-      document.getElementById("walletUSDT").value = "";
-    }
-
-    // ===== EVENT LISTENERS =====
-    document.addEventListener("DOMContentLoaded", function() {
-      console.log("📄 DOM siap");
+    
+    // ===== LOAD FROM LOCALSTORAGE (FALLBACK) =====
+    function loadFromLocalStorage() {
+      log('Trying to load from localStorage...', 'info');
       
-      // Setup event listeners
-      document.getElementById("btnWithdraw").addEventListener("click", tampilkanForm);
-      document.getElementById("btnCancel").addEventListener("click", sembunyikanForm);
-      document.getElementById("btnSubmitWithdraw").addEventListener("click", submitWithdraw);
-      document.getElementById("transferBtn").addEventListener("click", transferGOV);
-      document.getElementById("btnBack").addEventListener("click", () => {
-        window.location.href = "dashboard.html";
-      });
-
-      // Cek auth state
-      if (auth) {
-        auth.onAuthStateChanged(function(user) {
-          if (user) {
-            console.log("👤 User logged in:", user.email);
-            currentUser = user;
-            loadUserData();
-          } else {
-            console.log("👤 User not logged in");
-            tampilkanNotifikasi("Silakan login terlebih dahulu", false);
-            setTimeout(() => window.location.href = "index.html", 1500);
-          }
-        });
+      // Try to get from localStorage
+      const storedData = localStorage.getItem('userWalletData');
+      const storedUser = localStorage.getItem('currentUser');
+      
+      if (storedData) {
+        try {
+          const userData = JSON.parse(storedData);
+          log('Loaded from localStorage: ' + storedData, 'success');
+          updateStatus('statusUserData', '📂 From LocalStorage', true);
+          displayWalletData(userData);
+        } catch (e) {
+          log('Error parsing localStorage data: ' + e.message, 'error');
+          displayDefaultData();
+        }
+      } else if (storedUser) {
+        // Create dummy data from email
+        const dummyData = {
+          saldoGOV: 1000,
+          saldoIDR: 50000,
+          saldoUSDT: 5.50,
+          email: storedUser
+        };
+        log('Created dummy data for: ' + storedUser, 'warning');
+        updateStatus('statusUserData', '⚠️ Using Dummy Data', false);
+        displayWalletData(dummyData);
       } else {
-        console.error("❌ Auth tidak tersedia");
-        tampilkanNotifikasi("Error: Sistem auth tidak tersedia", false);
+        log('No data available anywhere', 'error');
+        displayDefaultData();
       }
-    });
-
-    // ===== FALLBACK jika Firebase gagal =====
-    setTimeout(function() {
-      if (!currentUser && auth) {
-        console.log("⏰ Timeout - Cek login status");
+    }
+    
+    // ===== DISPLAY DATA =====
+    function displayWalletData(data) {
+      document.getElementById('saldoGOV').textContent = 
+        (data.saldoGOV || 0).toLocaleString('id-ID') + " GOV";
+      document.getElementById('saldoIDR').textContent = 
+        (data.saldoIDR || 0).toLocaleString('id-ID') + " IDR";
+      document.getElementById('saldoUSDT').textContent = 
+        (data.saldoUSDT || 0).toFixed(2) + " USDT";
+      
+      if (data.email) {
+        document.getElementById('subtitle').textContent = 'User: ' + data.email;
+      }
+      
+      log('Wallet data displayed', 'success');
+    }
+    
+    function displayDefaultData() {
+      document.getElementById('saldoGOV').textContent = "0 GOV";
+      document.getElementById('saldoIDR').textContent = "0 IDR";
+      document.getElementById('saldoUSDT').textContent = "0.00 USDT";
+    }
+    
+    // ===== DIAGNOSTIC TESTS =====
+    async function runTests() {
+      log('=== RUNNING DIAGNOSTIC TESTS ===', 'info');
+      
+      // Test 1: Check localStorage
+      const storedUser = localStorage.getItem('currentUser');
+      log('Test 1 - localStorage currentUser: ' + (storedUser || 'NOT FOUND'), 
+          storedUser ? 'success' : 'warning');
+      
+      // Test 2: Check Firebase auth
+      if (auth) {
         const user = auth.currentUser;
-        if (!user) {
-          window.location.href = "index.html";
+        log('Test 2 - Firebase auth.currentUser: ' + (user ? user.email : 'NULL'),
+            user ? 'success' : 'warning');
+      } else {
+        log('Test 2 - Firebase auth not available', 'error');
+      }
+      
+      // Test 3: Check if we can write to localStorage
+      try {
+        localStorage.setItem('test_diagnostic', 'test_value');
+        localStorage.removeItem('test_diagnostic');
+        log('Test 3 - localStorage read/write: OK', 'success');
+      } catch (e) {
+        log('Test 3 - localStorage error: ' + e.message, 'error');
+      }
+      
+      // Test 4: Try to manually get user data
+      if (currentUser && db) {
+        try {
+          const userRef = db.collection("users").doc(currentUser.uid);
+          const doc = await userRef.get();
+          log('Test 4 - Firestore get document: ' + (doc.exists ? 'EXISTS' : 'NOT EXISTS'),
+              doc.exists ? 'success' : 'warning');
+        } catch (e) {
+          log('Test 4 - Firestore error: ' + e.message, 'error');
         }
       }
-    }, 3000);
-
-  </script>
-
-  <!-- Footer -->
-  <div style="margin-top: 40px; color: #888; font-size: 12px; text-align: center;">
-    © 2025 Dompet Digital | <span id="firebaseStatus">Firebase: Loading...</span>
-  </div>
-
-  <script>
-    // Update status Firebase
-    setTimeout(() => {
-      if (firebaseApp) {
-        document.getElementById("firebaseStatus").textContent = "Firebase: ✅ Connected";
-        document.getElementById("firebaseStatus").style.color = "green";
-      } else {
-        document.getElementById("firebaseStatus").textContent = "Firebase: ❌ Error";
-        document.getElementById("firebaseStatus").style.color = "red";
+      
+      log('=== TESTS COMPLETE ===', 'info');
+    }
+    
+    // ===== SIMPLE FUNCTIONS =====
+    function tampilkanModal() {
+      log('Withdraw button clicked', 'info');
+      alert('Withdraw feature - Coming soon!');
+    }
+    
+    // ===== INIT ON LOAD =====
+    document.addEventListener('DOMContentLoaded', function() {
+      log('DOM fully loaded', 'success');
+      
+      // Check if we have a user in localStorage
+      const storedUser = localStorage.getItem('currentUser');
+      if (storedUser) {
+        log('Found in localStorage: ' + storedUser, 'info');
       }
-    }, 2000);
+      
+      // If Firebase takes too long, show something
+      setTimeout(function() {
+        if (!currentUser) {
+          log('Timeout: No user detected after 3 seconds', 'warning');
+          loadFromLocalStorage();
+        }
+      }, 3000);
+    });
+    
   </script>
 
 </body>
