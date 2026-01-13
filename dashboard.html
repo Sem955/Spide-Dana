@@ -4,10 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Dashboard</title>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    
     <style>
         body {
             background-color: #f1f8e9;
-            color: #f0f0f0;
+            color: #333;
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
@@ -16,172 +22,175 @@
             position: relative;
         }
 
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: #050505; /* black */
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  padding: 8px 0;
-  border-top: 1px solid #ccc;
-  z-index: 9999;
-}
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #050505;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            padding: 8px 0;
+            border-top: 1px solid #ccc;
+            z-index: 9999;
+        }
 
-.bottom-nav a,
-.bottom-nav button {
-  flex: 1;
-  text-align: center;
-  text-decoration: none;
-  color: #fff; /* teks putih supaya kontras */
-  font-size: 12px;
-  font-weight: bold;
-  background: none;
-  border: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+        .bottom-nav a,
+        .bottom-nav button {
+            flex: 1;
+            text-align: center;
+            text-decoration: none;
+            color: #fff;
+            font-size: 12px;
+            font-weight: bold;
+            background: none;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
 
-.bottom-nav img {
-  width: 24px;
-  height: 24px;
-  margin-bottom: 4px;
-}
-  .game-button {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: linear-gradient(145deg, #2c1a50, #392366);
-    border-radius: 16px;
-    padding: 16px 20px;
-    color: #fff;
-    max-width: 400px;
-    font-family: sans-serif;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    margin: 20px auto;
-  }
+        .bottom-nav img {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 4px;
+        }
 
-.support-button {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: linear-gradient(145deg, #2c1a50, #392366);
-    border-radius: 16px;
-    padding: 16px 20px;
-    color: #fff;
-    max-width: 400px;
-    font-family: sans-serif;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    margin: 20px auto;
-}
+        .game-button {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(145deg, #2c1a50, #392366);
+            border-radius: 16px;
+            padding: 16px 20px;
+            color: #fff;
+            max-width: 400px;
+            font-family: sans-serif;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            margin: 20px auto;
+        }
 
-  .left {
-    display: flex;
-    align-items: center;
-  }
+        .support-button {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(145deg, #2c1a50, #392366);
+            border-radius: 16px;
+            padding: 16px 20px;
+            color: #fff;
+            max-width: 400px;
+            font-family: sans-serif;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            margin: 20px auto;
+        }
 
-  .icon {
-    background-color: #7f5af0;
-    color: white;
-    font-size: 24px;
-    padding: 10px;
-    border-radius: 12px;
-    margin-right: 12px;
-  }
+        .left {
+            display: flex;
+            align-items: center;
+        }
 
-  .text .title {
-    font-size: 18px;
-    font-weight: 600;
-  }
+        .icon {
+            background-color: #7f5af0;
+            color: white;
+            font-size: 24px;
+            padding: 10px;
+            border-radius: 12px;
+            margin-right: 12px;
+        }
 
-  .text .subtitle {
-    font-size: 14px;
-    color: #bbb;
-  }
+        .text .title {
+            font-size: 18px;
+            font-weight: 600;
+        }
 
-  .play-now {
-    background-color: #a78bfa;
-    color: white;
-    padding: 10px 18px;
-    border-radius: 12px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: background 0.3s ease;
-  }
+        .text .subtitle {
+            font-size: 14px;
+            color: #bbb;
+        }
 
-  .play-now:hover {
-    background-color: #c4b5fd;
-  }
+        .play-now {
+            background-color: #a78bfa;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
 
-     .user-profile {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background-color: #1c1c3d;
-  border-radius: 16px;
-  padding: 12px 16px;
-  color: white;
-  margin: 10px 16px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
+        .play-now:hover {
+            background-color: #c4b5fd;
+        }
 
-.user-profile img {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #fff;
-}
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background-color: #1c1c3d;
+            border-radius: 16px;
+            padding: 12px 16px;
+            color: white;
+            margin: 10px 16px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
 
-.user-info p {
-  margin: 0;
-  font-size: 14px;
-  color: #ccc;
-}
+        .user-profile img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #fff;
+        }
 
-.user-info h3 {
-  margin: 0;
-  font-size: 16px;
-  font-weight: bold;
-}
-    
-      .rewards-top {
-    display: flex;
-    justify-content: space-around;
-    gap: 20px;
-    margin-bottom: 20px;
-}
+        .user-info p {
+            margin: 0;
+            font-size: 14px;
+            color: #ccc;
+        }
 
-.reward-card {
-    flex: 1;
-    padding: 16px 24px;
-    text-align: center;
-    background: linear-gradient(145deg, #ff9800, #ff5722);
-    border-radius: 12px;
-    box-shadow: 0 0 10px #00ff0044;
-}
-      
+        .user-info h3 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .rewards-top {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .reward-card {
+            flex: 1;
+            padding: 16px 24px;
+            text-align: center;
+            background: linear-gradient(145deg, #ff9800, #ff5722);
+            border-radius: 12px;
+            box-shadow: 0 0 10px #00ff0044;
+        }
+
         .reward-title {
             font-size: 16px;
             margin-bottom: 10px;
+            color: white;
         }
-        
+
         .reward-value {
             font-size: 20px;
             font-weight: bold;
+            color: white;
         }
-        
-        #statusText {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #00e676; /* hijau muda */
-    font-weight: bold;
 
+        #statusText {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #00e676;
+            font-weight: bold;
         }
-        
+
         .actions {
             position: fixed;
             bottom: 20px;
@@ -194,7 +203,7 @@
             box-sizing: border-box;
             flex-wrap: wrap;
         }
-        
+
         .actions button {
             flex: 1;
             padding: 12px 16px;
@@ -204,7 +213,7 @@
             border-radius: 8px;
             cursor: pointer;
         }
-        
+
         #withdrawForm {
             display: none;
             position: fixed;
@@ -221,7 +230,7 @@
             width: 90%;
             max-width: 350px;
         }
-     
+
         #withdrawForm button {
             margin-top: 10px;
             background-color: #1877f2;
@@ -231,25 +240,23 @@
             border-radius: 8px;
             cursor: pointer;
         }
-      
 
-#referralBtn:hover {
-    background-color: #00c853; /* hijau lebih gelap saat hover */
-       
+        #referralBtn:hover {
+            background-color: #00c853;
         }
-        
+
         .logo-dana {
             display: flex;
             justify-content: center;
             margin: 20px 0;
             animation: float 2s ease-in-out infinite;
         }
-        
+
         .logo-dana img {
             width: 100px;
             height: auto;
         }
-        
+
         @keyframes float {
             0%, 100% {
                 transform: translateY(0px);
@@ -258,7 +265,7 @@
                 transform: translateY(-10px);
             }
         }
-        
+
         .watch-ad-container {
             display: flex;
             justify-content: center;
@@ -268,7 +275,7 @@
             flex-direction: row;
             margin-bottom: 20px;
         }
-        
+
         .watch-ad-container button {
             background: linear-gradient(145deg, #800000, #a52a2a);
             color: white;
@@ -283,12 +290,12 @@
             gap: 8px;
             cursor: pointer;
         }
-        
+
         #tiktokBtn {
             background-color: black;
             color: white;
         }
-        
+
         #referralModal {
             display: none;
             position: fixed;
@@ -305,158 +312,149 @@
             max-width: 350px;
             box-sizing: border-box;
         }
-      
-</script>
+
+        #rewardModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 99999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #menuDropdown {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 16px;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 9999;
+            width: 160px;
+            padding: 10px;
+        }
+
+        #notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #4caf50;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            z-index: 2000;
+            display: none;
+        }
     </style>
 </head>
 <body>
 
+    <!-- Notification -->
+    <div id="notification"></div>
+
+    <!-- User Profile -->
+    <div id="user-profile" style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+        <img id="userPhoto" src="https://via.placeholder.com/40" alt="Foto Profil" style="width: 40px; height: 40px; border-radius: 50%;">
+        <span id="usernameDisplay" style="color: #000000;">@username</span>
+        <button onclick="editProfile()" style="background: none; border: none; cursor: pointer; font-size: 16px;">✏️</button>
     </div>
-    
-     <div id="user-profile" style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
-  <img id="userPhoto" src="https://via.placeholder.com/40" alt="Foto Profil" style="width: 40px; height: 40px; border-radius: 50%;">
-  <span id="usernameDisplay" style="color: #000000;">@username</span> 
-<button onclick="editProfile()">✏️</button>
-</div>
-    
-     <!-- Script Profil -->
-<script>
-  // Ambil email user dari localStorage
-  const currentUserEmail = localStorage.getItem("currentUser");
 
-  // Ambil nama dari email (bagian sebelum @)
-  if (currentUserEmail) {
-    const username = currentUserEmail.split("@")[0];
-    const usernameElement = document.getElementById("usernameDisplay");
-    if (usernameElement) {
-      usernameElement.textContent = "@" + username;
-    }
-  }
+    <!-- Menu -->
+    <div style="position: absolute; top: 10px; right: 16px; z-index: 9999;">
+        <button onclick="toggleMenu()" style="background: none; border: none; font-size: 28px; color: black; cursor: pointer;">☰</button>
+    </div>
 
-  // Load foto profil dari localStorage jika ada
-  const storedPhoto = localStorage.getItem("userPhoto");
-  if (storedPhoto) {
-    document.getElementById("userPhoto").src = storedPhoto;
-  }
+    <div id="menuDropdown">
+        <a href="swap.html" style="display:block; width:100%; background:none; border:none; padding:10px; text-align:left; text-decoration:none; color:black;">🔁 SWAP KOIN</a>
+        <a href="wallet.html" style="display:block; width:100%; background:none; border:none; padding:10px; text-align:left; text-decoration:none; color:black;">💼 DOMPET</a>
+    </div>
 
-  // Fungsi untuk ubah foto
-  function editProfile() {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "image/*";
-    input.onchange = function () {
-      const file = input.files[0];
-      const reader = new FileReader();
-      reader.onloadend = function () {
-        document.getElementById("userPhoto").src = reader.result;
-        localStorage.setItem("userPhoto", reader.result);
-      };
-      reader.readAsDataURL(file);
-    };
-    input.click();
-  }
-</script>
-
-  <!-- Menu Garis Tiga -->
-<div style="position: absolute; top: 10px; right: 16px; z-index: 9999;">
-  <button onclick="toggleMenu()" style="background: none; border: none; font-size: 28px; color: black; cursor: pointer;">☰</button>
-</div>
-
-<!-- Isi Menu -->
-<div id="menuDropdown" style="
-  display: none;
-  position: absolute;
-  top: 50px;
-  right: 16px;
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  z-index: 9999;
-  width: 160px;
-  padding: 10px;
-">
-  <a href="swap.html" style="display:block; width:100%; background:none; border:none; padding:10px; text-align:left; text-decoration:none; color:black;">🔁 SWAP KOIN</a>
-
-   <a href="wallet.html" style="display:block; width:100%; background:none; border:none; padding:10px; text-align:left; text-decoration:none; color:black;">💼 DOMPET</a>
-    
-</div>
-    
+    <!-- Rewards -->
     <div class="rewards-top">
         <div class="reward-card">
-            <div class="reward-title">GEOVARA</div>
+            <div class="reward-title">GOV</div>
             <div class="reward-value" id="totalRewards">0</div>
         </div>
         <div class="reward-card">
             <div class="reward-title">1JAM REWARD</div>
-            <div class="reward-value" id="dailyRewards">0.000</div>
+            <div class="reward-value" id="dailyRewards">0</div>
         </div>
     </div>
-    
+
+    <!-- Logo -->
     <div class="logo-dana">
-    <img src="https://i.postimg.cc/x8XVRwZS/file-00000000f3d06230a63b9cde063aaecc-1.png" alt="Logo Dana" />
+        <img src="https://i.postimg.cc/x8XVRwZS/file-00000000f3d06230a63b9cde063aaecc-1.png" alt="Logo Dana" />
     </div>
+
     <div id="statusText">Memuat data...</div>
 
-<div class="watch-ad-container">
-    <a href="https://vast-size.com/ULT3Sw" target="_blank" style="text-decoration: none;">
-        <button>
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/video.png" alt="Video" style="width: 20px; height: 20px;" />
-            700-1000 Riwed 
+    <!-- Ads -->
+    <div class="watch-ad-container">
+        <a href="https://vast-size.com/ULT3Sw" target="_blank" style="text-decoration: none;">
+            <button>
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/video.png" alt="Video" style="width: 20px; height: 20px;" />
+                700-1000 Riwed 
+            </button>
+        </a>
+        <button id="tiktokBtn">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/tiktok.png" alt="TikTok" style="width: 20px; height: 20px;" />
+            500-1000 Riwed 
         </button>
-    </a>
-    <button id="tiktokBtn">
-        <img src="https://img.icons8.com/ios-filled/50/ffffff/tiktok.png" alt="TikTok" style="width: 20px; height: 20px;" />
-        500-1000 Riwed 
-    </button>
-</div>
-
-     <div class="game-button">
-  <div class="left">
-    <div class="icon">🕹️</div>
-    <div class="text">
-      <div class="title">Play and Earn</div>
-      <div class="subtitle">Earn Rewards</div>
     </div>
-  <!-- Tombol Play Now -->
-  <a href="pilih-game.html" class="play-now">Play Now →</a>
-  </div>
 
-     </div>
- <div class="support-button">
-  <div class="left">
-    <div class="icon">🕹️</div>
-    <div class="text">
-      <div class="title">Poin Riwed</div>
-      <div class="subtitle">Earn Rewards</div>
-     </div>
-  <!-- Tombol Play Now -->
-  <a href="support.html" class="play-now">claim Poin→</a>
-     </div>
-        
-       <!-- GANTI BAGIAN INI SAJA -->
+    <!-- Game Buttons -->
+    <div class="game-button">
+        <div class="left">
+            <div class="icon">🕹️</div>
+            <div class="text">
+                <div class="title">Play and Earn</div>
+                <div class="subtitle">Earn Rewards</div>
+            </div>
+            <a href="pilih-game.html" class="play-now">Play Now →</a>
+        </div>
+    </div>
 
-      <div class="bottom-nav">
-  <button id="claimBtn">
-    <img src="https://img.icons8.com/fluency/48/money.png" alt="Claim" />
-    <span>Claim</span>
-  </button>
-    <a href="tugas1.html" id="dailyTaskBtn">
-  <img src="https://img.icons8.com/fluency/48/task.png" alt="Tugas Harian" />
-  <span>Tugas</span>
-</a>
-          
-  <a href="#" id="logoutBtn">
-    <img src="https://i.postimg.cc/tgs7hXw5/power-off.png" alt="Logout" />
-    <span>Logout</span>
-  </a>
-  <a href="#" id="referralBtn">
-    <img src="https://i.postimg.cc/x1H4qHTy/invitation.png" alt="Invite" />
-    <span>Invite</span>
-  </a>
-      </div>
-    
-        <div id="referralModal">
+    <div class="support-button">
+        <div class="left">
+            <div class="icon">🕹️</div>
+            <div class="text">
+                <div class="title">Poin Riwed</div>
+                <div class="subtitle">Earn Rewards</div>
+            </div>
+            <a href="support.html" class="play-now">claim Poin→</a>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <button id="claimBtn">
+            <img src="https://img.icons8.com/fluency/48/money.png" alt="Claim" />
+            <span>Claim</span>
+        </button>
+        <a href="tugasa.html" id="dailyTaskBtn">
+            <img src="https://img.icons8.com/fluency/48/task.png" alt="Tugas Harian" />
+            <span>Tugas</span>
+        </a>
+        <a href="#" id="logoutBtn">
+            <img src="https://i.postimg.cc/tgs7hXw5/power-off.png" alt="Logout" />
+            <span>Logout</span>
+        </a>
+        <a href="#" id="referralBtn">
+            <img src="https://i.postimg.cc/x1H4qHTy/invitation.png" alt="Invite" />
+            <span>Invite</span>
+        </a>
+    </div>
+
+    <!-- Modals -->
+    <div id="referralModal">
         <h3>Referral Kamu</h3>
         <p>Bagikan link ini ke temanmu:</p>
         <input type="text" id="referralLink" readonly style="width:100%; padding:8px; margin-bottom:10px; border-radius:6px; border:1px solid #ccc;" />
@@ -466,242 +464,11 @@
         <p>Total Poin Referral: <span id="referralTotalPoin">0</span> Poin</p>
         <button onclick="document.getElementById('referralModal').style.display='none'" style="margin-top:10px; background-color:red; color:white; border:none; padding:8px 16px; border-radius:6px;">Tutup</button>
     </div>
-    
-    <script>
-const username = localStorage.getItem('currentUser');
-if (!username) window.location.href = 'index.html';
 
-const CLAIM_REWARD = 500;  
-const COOLDOWN_MS = 1 * 60 * 60 * 1000; // 1 jam dalam milidetik  
-
-const totalEl = document.getElementById('totalRewards');
-const dailyEl = document.getElementById('dailyRewards');
-const claimBtn = document.getElementById('claimBtn');
-const statusText = document.getElementById('statusText');
-const logoutBtn = document.getElementById('logoutBtn');
-logoutBtn.addEventListener("click", () => {
-    localStorage.removeItem("currentUser");
-    window.location.href = "index.html";
-});
-
-// ----- SISTEM TAMBAH POIN REFERRAL -----
-(function () {
-  const urlParams = new URLSearchParams(window.location.search);
-  const ref = urlParams.get("ref");
-  const currentUserEmail = localStorage.getItem("currentUser") || "";
-  const currentUsername = currentUserEmail.split("@")[0];
-
-  // Cek kalau ada referral dan bukan dirinya sendiri
-  if (ref && ref !== currentUsername) {
-    // Ambil daftar referral lama
-    let referrals = JSON.parse(localStorage.getItem(ref + "_referrals") || "[]");
-
-    // Cek supaya tidak dobel
-    if (!referrals.includes(currentUsername)) {
-      referrals.push(currentUsername);
-      localStorage.setItem(ref + "_referrals", JSON.stringify(referrals));
-
-      // Tambah poin referral
-      let poin = parseInt(localStorage.getItem(ref + "_referralPoints") || "0");
-      poin += 1000; // reward referral
-      localStorage.setItem(ref + "_referralPoints", poin);
-    }
-  }
-})();
-
-// ----- SISTEM REWARD UTAMA -----
-let lastClaim = localStorage.getItem(username + "_lastClaim");
-let totalReward = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
-
-function updateUI() {
-    const now = Date.now();
-    let last = lastClaim ? parseInt(lastClaim) : 0;
-    let elapsed = now - last;
-    let canClaim = elapsed >= COOLDOWN_MS;
-
-    if (canClaim) {
-        dailyEl.textContent = CLAIM_REWARD.toLocaleString('en-US');
-        claimBtn.disabled = false;
-        statusText.textContent = "Kamu bisa klaim sekarang!";
-    } else {
-        let progress = elapsed / COOLDOWN_MS;
-        dailyEl.textContent = Math.floor(CLAIM_REWARD * progress).toLocaleString('en-US');
-        claimBtn.disabled = true;
-
-        let remaining = COOLDOWN_MS - elapsed;
-        let minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-        let seconds = Math.floor((remaining % (1000 * 60)) / 1000);
-
-        let mStr = minutes.toString().padStart(2, "0");
-        let sStr = seconds.toString().padStart(2, "0");
-
-        statusText.textContent = `Tunggu ${mStr}m ${sStr}s lagi untuk klaim.`;
-    }
-
-    // Ambil poin referral dan tambahkan ke tampilan total GEOVARA
-    const currentUserEmail = localStorage.getItem("currentUser") || "";
-    const username = currentUserEmail.split("@")[0];
-    let referralPoints = parseInt(localStorage.getItem(username + "_referralPoints") || "0");
-
-    totalEl.textContent = Math.floor(totalReward + referralPoints).toLocaleString('en-US');
-}
-
-updateUI();
-setInterval(updateUI, 1000);
-
-claimBtn.onclick = () => {
-    totalReward += CLAIM_REWARD;
-    localStorage.setItem(username + "_totalReward", totalReward);
-    lastClaim = Date.now();
-    localStorage.setItem(username + "_lastClaim", lastClaim);
-    updateUI();            
-};
-        
- // Tambahkan modal klaim reward ke HTML
-document.body.insertAdjacentHTML("beforeend", `
-<div id="rewardModal" style="
-    display:none;
-    position:fixed;
-    top:0; left:0; width:100%; height:100%;
-    background:rgba(0,0,0,0.5);
-    z-index:99999;
-    justify-content:center;
-    align-items:center;
-">
-  <div style="
-      background:white;
-      border-radius:12px;
-      padding:20px;
-      text-align:center;
-      width:90%;
-      max-width:320px;
-      box-shadow:0 4px 12px rgba(0,0,0,0.3);
-  ">
-    <img src="https://i.postimg.cc/0KZ505rV/file-0000000084f062309e6fd2523e94f3de.png" 
-         alt="Logo Dana" style="width:80px; margin-bottom:15px;">
-    <h3 style="color:black; margin-bottom:15px;">🎉 Dapat 300 Poin Riwed</h3>
-    <button id="claimRewardBtn" style="
-        background:#00e676;
-        color:black;
-        font-weight:bold;
-        padding:10px 20px;
-        border:none;
-        border-radius:8px;
-        cursor:pointer;
-    ">Klaim</button>
-  </div>
-</div>
-`);
-
-// Ambil elemen modal dan tombol klaim
-const rewardModal = document.getElementById("rewardModal");
-const claimRewardBtn = document.getElementById("claimRewardBtn");
-const tiktokBtn = document.getElementById("tiktokBtn");
-
-// Event klik TikTok
-tiktokBtn.addEventListener("click", () => {
-    localStorage.setItem("watchedTikTok", "true");
-    window.open("https://www.profitableratecpm.com/mt7tws0f?key=28a564b0d68db558b31e19e77850b85e","_blank");
-
-    // Setelah 30 detik tampilkan modal klaim
-    setTimeout(() => {
-        rewardModal.style.display = "flex";
-    }, 30000);
-});
-
-// Event klik tombol klaim di modal
-claimRewardBtn.addEventListener("click", () => {
-    totalReward += 300;
-    localStorage.setItem(username + "_totalReward", totalReward);
-    updateUI();
-    rewardModal.style.display = "none";
-});
-
-      // Referral system
-        const referralBtn = document.getElementById("referralBtn");
-        const referralModal = document.getElementById("referralModal");
-        const referralLinkInput = document.getElementById("referralLink");
-        
-        referralBtn.addEventListener("click", () => {
-    const currentUserEmail = localStorage.getItem("currentUser") || "user@example.com";
-    const username = currentUserEmail.split("@")[0];
-    const referralLink = `${window.location.origin}?ref=${username}`;
-    referralLinkInput.value = referralLink;
-
-    // Ambil daftar referral dari localStorage
-    let referrals = JSON.parse(localStorage.getItem(username + "_referrals") || "[]");
-    let poin = parseInt(localStorage.getItem(username + "_referralPoints") || "0");
-
-    // Tampilkan daftar referral
-    const listEl = document.getElementById("referralList");
-    listEl.innerHTML = "";
-    if (referrals.length === 0) {
-        listEl.innerHTML = "<li>Belum ada yang diundang</li>";
-    } else {
-        referrals.forEach(r => {
-            listEl.innerHTML += `<li>@${r}</li>`;
-        });
-    }
-
-    // Tampilkan total poin
-    document.getElementById("referralTotalPoin").textContent = poin;
-
-    referralModal.style.display = "block";
-});
-        
-        function copyReferralLink() {
-            referralLinkInput.select();
-            referralLinkInput.setSelectionRange(0, 99999);
-            document.execCommand("copy");
-            alert("Link referral disalin!");
-        }
-        
-        // Initialize UI
-        updateUI();
-        setInterval(updateUI, 1000);
-   
-      // Tampilkan/Sembunyikan Menu Garis Tiga
-function toggleMenu() {
-  const menu = document.getElementById("menuDropdown");
-  menu.style.display = menu.style.display === "block" ? "none" : "block";
-}
-
-// Tutup menu saat klik di luar
-document.addEventListener("click", function (event) {
-  const menu = document.getElementById("menuDropdown");
-  const button = event.target.closest("button");
-  if (!menu.contains(event.target) && (!button || button.innerText !== "☰")) {
-    menu.style.display = "none";
-  }
-});
-
-// Fungsi DOMPET (nanti bisa diubah jadi popup / halaman)
-  function bukaDompet() {
-  const dana = localStorage.getItem(username + "_totalIDR") || "0.00";
-  const referralPoints = parseInt(localStorage.getItem(username + "_referralPoints") || "0");
-  const totalWithReferral = Math.floor(totalReward + referralPoints);
-
-  alert(
-    `Saldo IDR Anda: ${parseFloat(dana).toFixed(2)}\n` +
-    `Saldo GOV Anda: ${totalWithReferral.toLocaleString('en-US')} (termasuk poin referral)`
-  );
-}
-                
-    </script>
-    
-<!-- Iklan tambahan dari profitableratecpm.com -->  
-<script type='text/javascript' src='//pl27331380.profitableratecpm.com/8b/a8/2b/8ba82b25b1bd88c46aa90ed2f191719a.js'></script>
-     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3665788659374137"
-     crossorigin="anonymous"></script>
-<!-- Gov1 -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-3665788659374137"
-     data-ad-slot="3774844382"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-</body>  
-     </html>
+    <div id="rewardModal">
+        <div style="background:white; border-radius:12px; padding:20px; text-align:center; width:90%; max-width:320px; box-shadow:0 4px 12px rgba(0,0,0,0.3);">
+            <img src="https://i.postimg.cc/0KZ505rV/file-0000000084f062309e6fd2523e94f3de.png" alt="Logo Dana" style="width:80px; margin-bottom:15px;">
+            <h3 style="color:black; margin-bottom:15px;">🎉 Dapat 300 Poin Riwed</h3>
+            <button id="claimRewardBtn" style="background:#00e676; color:black; font-weight:bold; padding:10px 20px; border:none; border-radius:8px; cursor:pointer;">Klaim</button>
+        </div>
+    </div>
