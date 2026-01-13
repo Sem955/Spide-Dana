@@ -422,3 +422,360 @@
             </div>
         </div>
     </div>
+    <script>
+        // ===== FIREBASE CONFIG =====
+        const firebaseConfig = {
+            apiKey: "AIzaSyAlXIQ42acjO8xZH-Ti__YL6h9SGQQKQto",
+            authDomain: "govminer.firebaseapp.com",
+            projectId: "govminer",
+            storageBucket: "govminer.firebasestorage.app",
+            messagingSenderId: "408110658500",
+            appId: "1:408110658500:web:3fe7f4bd9a35f3fe726a91"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // ===== GLOBAL VARIABLES =====
+        let currentUser = null;
+        let userData = {
+            saldoGOV: 0,
+            lastClaimTime: null,
+            referralPoints: 0,
+            referrals: [],
+            saldoIDR: 0,
+            saldoUSDT: 0,
+            tasksCompleted: []
+        };
+
+        const CLAIM_REWARD = 500;
+        const COOLDOWN_MS = 1 * 60 * 60 * 1000; // 1 jam
+
+        // ===== UTILITY FUNCTIONS =====
+        
+        function showNotification(message, isSuccess = true) {
+            const notification = document.getElementById("notification");
+            notification.textContent = message;
+            notification.style.background = isSuccess ? "#4caf50" : "#f44336";
+            notification.style.display = "block";
+            setTimeout(() => {
+                notification.style.display = "none";
+            }, 3000);
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = "flex";
+        }
+
+        function toggleMenu() {
+            const menu = document.getElementById("menuDropdown");
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        }
+
+        // Close menu when clicking outside
+        document.addEventListener("click", function(event) {
+            const menu = document.getElementById("menuDropdown");
+            if (menu && !menu.contains(event.target) && !event.target.classList.contains("menu-btn")) {
+                menu.style.display = "none";
+            }
+        });
+
+        // ===== AUTH FUNCTIONS =====
+        
+        function checkAuth() {
+            auth.onAuthStateChanged(async (user) => {
+                if (!user) {
+                    window.location.href = "index.html";
+                    return;
+                }
+                
+                currentUser = user;
+                console.log("User logged in:", user.email);
+                
+                // Update profile
+                const username = user.email.split("@")[0];
+                document.getElementById("usernameDisplay").textContent = "@" + username;
+                
+                // Load profile picture
+                const storedPhoto = localStorage.getItem("userPhoto");
+                if (storedPhoto) {
+                    document.getElementById("userPhoto").src = storedPhoto;
+                }
+                
+                // Load user data
+                await loadUserData();
+                
+                // Start UI updates
+                updateUI();
+                setInterval(updateUI, 1000);
+            });
+        }
+
+        async function loadUserData() {
+            try {
+                if (!currentUser) return;
+                
+                const userRef = db.collection("users").doc(currentUser.uid);
+                const userDoc = await userRef.get();
+                
+                if (userDoc.exists) {
+                    const data = userDoc.data();
+                    userData = {
+                        saldoGOV: data.saldoGOV || 0,
+                        lastClaimTime: data.lastClaimTime || null,
+                        referralPoints: data.referralPoints || 0,
+                        referrals: data.referrals || [],
+                        saldoIDR: data.saldoIDR || 0,
+                        saldoUSDT: data.saldoUSDT || 0,
+                        tasksCompleted: data.tasksCompleted || [],
+                        email: data.email || currentUser.email
+                    };
+                } else {
+                    // Create new user document
+                    await userRef.set({
+                        email: currentUser.email,
+                        saldoGOV: 0,
+                        saldoIDR: 0,
+                        saldoUSDT: 0,
+                        referralPoints: 0,
+                        referrals: [],
+                        tasksCompleted: [],
+                        createdAt: new Date().toISOString()
+                    });
+                }
+            } catch (error) {
+                console.error("Error loading user data:", error);
+                showNotification("Gagal memuat data", false);
+            }
+        }
+
+        function logout() {
+            auth.signOut().then(() => {
+                localStorage.removeItem("currentUser");
+                window.location.href = "index.html";
+            }).catch(error => {
+                console.error("Logout error:", error);
+            });
+        }
+
+        // ===== MINING SYSTEM =====
+        
+        function updateUI() {
+            if (!currentUser) return;
+            
+            const now = Date.now();
+            const lastClaim = userData.lastClaimTime ? new Date(userData.lastClaimTime).getTime() : 0;
+            const elapsed = now - lastClaim;
+            const canClaim = elapsed >= COOLDOWN_MS;
+            
+            // Update total GOV
+            const totalGOV = userData.saldoGOV + userData.referralPoints;
+            document.getElementById("totalRewards").textContent = 
+                Math.floor(totalGOV).toLocaleString('id-ID');
+            
+            // Update mining progress
+            if (canClaim) {
+                document.getElementById("dailyRewards").textContent = CLAIM_REWARD.toLocaleString('id-ID');
+                document.getElementById("claimBtn").disabled = false;
+                document.getElementById("statusText").textContent = "✅ Siap klaim!";
+                document.getElementById("statusText").style.color = "#00c853";
+            } else {
+                const progress = elapsed / COOLDOWN_MS;
+                const currentReward = Math.floor(CLAIM_REWARD * progress);
+                document.getElementById("dailyRewards").textContent = 
+                    currentReward.toLocaleString('id-ID');
+                document.getElementById("claimBtn").disabled = true;
+                
+                const remaining = COOLDOWN_MS - elapsed;
+                const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+                
+                document.getElementById("statusText").textContent = 
+                    `⏳ Tunggu ${minutes}m ${seconds}s`;
+                document.getElementById("statusText").style.color = "#ff9800";
+            }
+        }
+
+        async function claimMining() {
+            try {
+                const userRef = db.collection("users").doc(currentUser.uid);
+                
+                // Update in Firestore
+                await userRef.update({
+                    saldoGOV: firebase.firestore.FieldValue.increment(CLAIM_REWARD),
+                    lastClaimTime: new Date().toISOString()
+                });
+                
+                // Update local data
+                userData.saldoGOV += CLAIM_REWARD;
+                userData.lastClaimTime = new Date().toISOString();
+                
+                // Update UI
+                updateUI();
+                
+                showNotification(`✅ Berhasil klaim ${CLAIM_REWARD} GOV!`);
+                
+            } catch (error) {
+                console.error("Error claiming:", error);
+                showNotification("Gagal mengklaim", false);
+            }
+        }
+
+        // ===== TASKS SYSTEM (Like Before) =====
+        
+        function openAdLink() {
+            window.open("https://vast-size.com/ULT3Sw", "_blank");
+        }
+
+        // TikTok Ad System
+        document.getElementById("tiktokBtn").addEventListener("click", function() {
+            localStorage.setItem("watchedTikTok", "true");
+            window.open("https://www.profitableratecpm.com/mt7tws0f?key=28a564b0d68db558b31e19e77850b85e", "_blank");
+            
+            // Show reward modal after 30 seconds
+            setTimeout(() => {
+                openModal("rewardModal");
+            }, 30000);
+        });
+
+        async function claimAdReward() {
+            try {
+                const userRef = db.collection("users").doc(currentUser.uid);
+                
+                await userRef.update({
+                    saldoGOV: firebase.firestore.FieldValue.increment(300)
+                });
+                
+                userData.saldoGOV += 300;
+                updateUI();
+                
+                closeModal("rewardModal");
+                showNotification("✅ Berhasil klaim 300 GOV dari iklan!");
+                
+            } catch (error) {
+                console.error("Error claiming ad reward:", error);
+                showNotification("Gagal mengklaim", false);
+            }
+        }
+
+        // ===== REFERRAL SYSTEM =====
+        
+        async function showReferralModal() {
+            const referralLink = `${window.location.origin}/index.html?ref=${currentUser.uid}`;
+            document.getElementById("referralLink").value = referralLink;
+            
+            // Show referral list
+            const listEl = document.getElementById("referralList");
+            if (userData.referrals.length === 0) {
+                listEl.innerHTML = "<li>Belum ada yang diundang</li>";
+            } else {
+                listEl.innerHTML = userData.referrals.map(r => 
+                    `<li>@${r}</li>`
+                ).join("");
+            }
+            
+            // Show total points
+            document.getElementById("referralTotalPoin").textContent = 
+                userData.referralPoints.toLocaleString('id-ID');
+            
+            openModal("referralModal");
+        }
+
+        function copyReferralLink() {
+            const input = document.getElementById("referralLink");
+            input.select();
+            input.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(input.value);
+            showNotification("✅ Link referral disalin!");
+        }
+
+        // ===== PROFILE FUNCTIONS =====
+        
+        function editProfile() {
+            const input = document.createElement("input");
+            input.type = "file";
+            input.accept = "image/*";
+            input.onchange = function() {
+                const file = input.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById("userPhoto").src = e.target.result;
+                    localStorage.setItem("userPhoto", e.target.result);
+                };
+                reader.readAsDataURL(file);
+            };
+            input.click();
+        }
+
+        // ===== INITIALIZATION =====
+        
+        document.addEventListener("DOMContentLoaded", function() {
+            console.log("Dashboard initialized");
+            
+            // Check authentication
+            checkAuth();
+            
+            // Setup event listeners
+            document.getElementById("claimBtn").addEventListener("click", claimMining);
+            document.getElementById("referralBtn").addEventListener("click", showReferralModal);
+            document.getElementById("claimRewardBtn").addEventListener("click", claimAdReward);
+            
+            // Profile picture click
+            document.getElementById("userPhoto").addEventListener("click", editProfile);
+            
+            // Process URL referral
+            processUrlReferral();
+        });
+
+        // Process referral from URL
+        function processUrlReferral() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const refUid = urlParams.get("ref");
+            
+            if (refUid && currentUser && refUid !== currentUser.uid) {
+                console.log("Processing referral for:", refUid);
+                
+                // Add referral to referrer
+                const referrerRef = db.collection("users").doc(refUid);
+                referrerRef.update({
+                    referralPoints: firebase.firestore.FieldValue.increment(1000),
+                    referrals: firebase.firestore.FieldValue.arrayUnion(
+                        currentUser.email.split("@")[0]
+                    )
+                }).then(() => {
+                    console.log("Referral processed");
+                    showNotification("🎉 Selamat! Kamu dapat bonus referral!");
+                }).catch(error => {
+                    console.error("Error processing referral:", error);
+                });
+                
+                // Clean URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        }
+
+    </script>
+    
+    <!-- Ads -->
+    <script type='text/javascript' src='//pl27331380.profitableratecpm.com/8b/a8/2b/8ba82b25b1bd88c46aa90ed2f191719a.js'></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3665788659374137" crossorigin="anonymous"></script>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-3665788659374137"
+         data-ad-slot="3774844382"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+    
+</body>
+</html>
