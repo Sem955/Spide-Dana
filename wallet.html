@@ -6,46 +6,183 @@
     <title>Dompet Saya</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: Arial; background: #f1f8e9; min-height: 100vh; padding: 20px; }
-        .container { max-width: 500px; margin: auto; background: white; border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: #333; margin-bottom: 10px; }
-        .subtitle { text-align: center; color: #666; margin-bottom: 20px; font-size: 14px; }
-        
-        .wallet-card {
-            background: linear-gradient(135deg, #ff6f00, #ff8f00);
-            color: white;
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 25px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
         }
-        .wallet-card h2 {
-            margin-top: 0;
-            font-size: 22px;
-            margin-bottom: 16px;
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header */
+        .header {
+            padding: 20px 0 15px 0;
+            color: white;
             text-align: center;
         }
-        .balance {
-            display: flex;
-            justify-content: space-between;
-            margin: 12px 0;
-            font-size: 18px;
-            font-weight: bold;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
+        
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
         }
-        .balance:last-child { border-bottom: none; }
-        .balance span { font-weight: normal; font-size: 16px; }
         
-        button { width: 100%; padding: 16px; margin: 10px 0; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; }
-        .btn-primary { background: #1976d2; color: white; }
-        .btn-success { background: #52c41a; color: white; }
-        .btn-warning { background: #faad14; color: white; }
-        .btn-danger { background: #ff4d4f; color: white; }
-        .btn-dark { background: #333; color: white; }
-        .btn-grey { background: #6c757d; color: white; }
+        .header .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
         
-        /* Modal Styles */
+        /* Wallet Card */
+        .wallet-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .wallet-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+        
+        .balance-label {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .balance-amount {
+            font-size: 36px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .balance-usd {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        /* Action Grid */
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+        }
+        
+        .action-btn {
+            background: white;
+            border-radius: 12px;
+            padding: 15px 5px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .action-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: #667eea;
+        }
+        
+        .action-text {
+            font-size: 12px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        /* Menu Grid */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+        }
+        
+        .menu-item {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .menu-item:hover {
+            transform: translateY(-2px);
+        }
+        
+        .menu-icon {
+            font-size: 20px;
+            margin-right: 15px;
+            color: #667eea;
+            width: 40px;
+            text-align: center;
+        }
+        
+        .menu-text {
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-around;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .nav-item {
+            text-align: center;
+            cursor: pointer;
+        }
+        
+        .nav-icon {
+            font-size: 20px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .nav-text {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .nav-item.active .nav-icon {
+            color: #667eea;
+        }
+        
+        .nav-item.active .nav-text {
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        /* Modal Styles (tetap sama) */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -111,159 +248,169 @@
             100% { opacity: 0; transform: translate(-50%, -20px); }
         }
         
-        /* Sync Indicator */
-        .sync-indicator {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #1890ff;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
+        /* Additional styles for original content */
+        .hidden-section {
             display: none;
-            z-index: 1000;
         }
         
-        /* Status */
-        .status-box {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-        .status-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #eee;
-        }
-        .status-item:last-child { border-bottom: none; }
-        .status-label { font-weight: bold; }
-        .status-value { font-family: monospace; }
-        .good { color: green; }
-        .bad { color: red; }
-        .warning { color: orange; }
-        
-        /* Transfer Section */
-        .transfer-section {
-            background: #f8f9fa;
-            padding: 20px;
+        .sync-btn {
+            background: #667eea;
+            color: white;
+            border: none;
             border-radius: 12px;
-            margin: 20px 0;
-            border: 1px solid #e9ecef;
-        }
-        .transfer-section h3 { margin-top: 0; color: #333; margin-bottom: 15px; }
-        
-        .footer { text-align: center; font-size: 12px; color: #888; margin-top: 30px; }
-        
-        /* Transaction Item */
-        .transaction-item {
             padding: 12px;
-            border-bottom: 1px solid #eee;
-            background: white;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        .transaction-item:last-child { border-bottom: none; }
-        .tx-header { display: flex; justify-content: space-between; margin-bottom: 5px; }
-        .tx-description { font-weight: bold; color: #333; }
-        .tx-amount { font-weight: bold; }
-        .tx-positive { color: #52c41a; }
-        .tx-negative { color: #ff4d4f; }
-        .tx-footer { display: flex; justify-content: space-between; font-size: 12px; color: #666; margin-top: 5px; }
-        
-        /* Sync Status */
-        .sync-status {
-            position: fixed;
-            top: 60px;
-            right: 20px;
-            background: #4caf50;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 12px;
-            z-index: 1000;
-            display: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            margin: 10px 0;
         }
     </style>
 </head>
 <body>
 
 <div id="notification"></div>
-<div class="sync-indicator" id="syncIndicator"></div>
-<div class="sync-status" id="syncStatus"></div>
 
 <div class="container">
-    <h1>💰 Dompet Saya</h1>
-    <div class="subtitle" id="subtitle">Saldo Sinkron dengan Dashboard</div>
-    
-    <!-- Status Box -->
-    <div class="status-box">
-        <h3 style="margin-top: 0; color: #856404;">📊 Status Sistem</h3>
-        <div class="status-item">
-            <span class="status-label">Status:</span>
-            <span class="status-value" id="statusServer">Loading...</span>
-        </div>
-        <div class="status-item">
-            <span class="status-label">User:</span>
-            <span class="status-value" id="statusUser">Loading...</span>
-        </div>
-        <div class="status-item">
-            <span class="status-label">Dashboard Sync:</span>
-            <span class="status-value" id="statusSync">Checking...</span>
-        </div>
+    <!-- Header -->
+    <div class="header">
+        <h1>Dompet Saya</h1>
+        <div class="subtitle" id="subtitle">Saldo Sinkron dengan Dashboard</div>
     </div>
     
     <!-- Wallet Card -->
     <div class="wallet-card">
-        <h2>Saldo Anda</h2>
-        <div class="balance">
-            <span>GOV</span>
-            <span id="saldoGOV">0 GOV</span>
-        </div>
-        <div class="balance">
-            <span>IDR</span>
-            <span id="saldoIDR">0 IDR</span>
-        </div>
-        <div class="balance">
-            <span>USDT</span>
-            <span id="saldoUSDT">0.00 USDT</span>
-        </div>
-        <div style="text-align: center; margin-top: 15px; font-size: 14px; opacity: 0.9;">
-            <span id="lastUpdate">Data lokal</span>
-        </div>
+        <div class="wallet-icon">💰</div>
+        <div class="balance-label">Saldo IDR</div>
+        <div class="balance-amount" id="saldoIDRDisplay">Rp 0</div>
+        <div class="balance-usd" id="saldoUSDDisplay">≈ $0.00</div>
+        
+        <!-- Sync Button -->
+        <button class="sync-btn" onclick="syncWithDashboard()">
+            🔄 Sync dengan Dashboard
+        </button>
     </div>
     
     <!-- Action Buttons -->
-    <button class="btn-primary" onclick="showWithdrawModal()">💸 Withdraw Saldo</button>
-    <button class="btn-success" onclick="showDepositModal()">💰 Deposit/Topup</button>
-    <button class="btn-warning" onclick="showTransferModal()">📤 Transfer GOV</button>
-    <button class="btn-grey" onclick="syncWithDashboard()">🔄 Sync dengan Dashboard</button>
-    
-    <!-- Sync Buttons -->
-    <div style="display: flex; gap: 10px; margin: 10px 0;">
-        <button class="btn-success" onclick="forceSyncFromDashboard()" style="flex: 1;">📥 Tarik dari Dashboard</button>
-        <button class="btn-warning" onclick="forceSyncToDashboard()" style="flex: 1;">📤 Push ke Dashboard</button>
-    </div>
-    
-    <button class="btn-dark" onclick="window.location.href='dashboard.html'">← Kembali ke Dashboard</button>
-    
-    <!-- Transaction History -->
-    <div class="transfer-section">
-        <h3>📋 Riwayat Transaksi</h3>
-        <div id="transactionHistory">
-            <div style="text-align: center; color: #666; padding: 20px;">
-                Memuat transaksi...
-            </div>
+    <div class="action-grid">
+        <div class="action-btn" onclick="showWithdrawModal()">
+            <div class="action-icon">💸</div>
+            <div class="action-text">Withdraw</div>
+        </div>
+        <div class="action-btn" onclick="showDepositModal()">
+            <div class="action-icon">💰</div>
+            <div class="action-text">Deposit</div>
+        </div>
+        <div class="action-btn" onclick="showTransferModal()">
+            <div class="action-icon">📤</div>
+            <div class="action-text">Transfer</div>
+        </div>
+        <div class="action-btn" onclick="window.location.href='dashboard.html'">
+            <div class="action-icon">📊</div>
+            <div class="action-text">Dashboard</div>
         </div>
     </div>
     
-    <div class="footer">© 2025 Dompet Digital | Transfer ke User Lain</div>
+    <!-- Menu Items -->
+    <div class="menu-grid">
+        <div class="menu-item" onclick="showWithdrawModal()">
+            <div class="menu-icon">💸</div>
+            <div class="menu-text">Withdraw</div>
+        </div>
+        <div class="menu-item" onclick="showTransferModal()">
+            <div class="menu-icon">🔄</div>
+            <div class="menu-text">Konversi</div>
+        </div>
+        <div class="menu-item" onclick="showDetailAccount()">
+            <div class="menu-icon">👤</div>
+            <div class="menu-text">Detail Akun</div>
+        </div>
+        <div class="menu-item" onclick="showWithdrawHistory()">
+            <div class="menu-icon">📋</div>
+            <div class="menu-text">Riwayat Withdraw</div>
+        </div>
+        <div class="menu-item" onclick="showReferral()">
+            <div class="menu-icon">👥</div>
+            <div class="menu-text">Referral Saya</div>
+        </div>
+        <div class="menu-item" onclick="shareApp()">
+            <div class="menu-icon">📢</div>
+            <div class="menu-text">Bagikan Aplikasi</div>
+        </div>
+    </div>
+    
+    <!-- Hidden Original Content -->
+    <div class="hidden-section">
+        <!-- Semua konten asli tetap ada tapi tersembunyi -->
+        <div class="status-box">
+            <h3 style="margin-top: 0; color: #856404;">📊 Status Sistem</h3>
+            <div class="status-item">
+                <span class="status-label">Status:</span>
+                <span class="status-value" id="statusServer">Loading...</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">User:</span>
+                <span class="status-value" id="statusUser">Loading...</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">Dashboard Sync:</span>
+                <span class="status-value" id="statusSync">Checking...</span>
+            </div>
+        </div>
+        
+        <!-- Wallet Balances -->
+        <div class="wallet-card" id="originalWalletCard">
+            <h2>Saldo Anda</h2>
+            <div class="balance">
+                <span>GOV</span>
+                <span id="saldoGOV">0 GOV</span>
+            </div>
+            <div class="balance">
+                <span>IDR</span>
+                <span id="saldoIDR">0 IDR</span>
+            </div>
+            <div class="balance">
+                <span>USDT</span>
+                <span id="saldoUSDT">0.00 USDT</span>
+            </div>
+            <div style="text-align: center; margin-top: 15px; font-size: 14px; opacity: 0.9;">
+                <span id="lastUpdate">Data lokal</span>
+            </div>
+        </div>
+        
+        <!-- Transaction History -->
+        <div class="transfer-section">
+            <h3>📋 Riwayat Transaksi</h3>
+            <div id="transactionHistory">
+                <div style="text-align: center; color: #666; padding: 20px;">
+                    Memuat transaksi...
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+    <div class="nav-item active">
+        <div class="nav-icon">🏠</div>
+        <div class="nav-text">Beranda</div>
+    </div>
+    <div class="nav-item">
+        <div class="nav-icon">✅</div>
+        <div class="nav-text">Tugas</div>
+    </div>
+    <div class="nav-item">
+        <div class="nav-icon">👥</div>
+        <div class="nav-text">Referral</div>
+    </div>
+    <div class="nav-item">
+        <div class="nav-icon">👤</div>
+        <div class="nav-text">Saya</div>
+    </div>
+</div>
+
+<!-- Semua modal tetap sama persis -->
 <!-- Withdraw Modal -->
 <div id="withdrawModal" class="modal-overlay">
     <div class="modal-content">
@@ -383,6 +530,150 @@
     </div>
 </div>
 
+<script>
+// ===== TELEGRAM CONFIG =====
+const telegramToken = '8302323286:AAEM6xferO3kn5Bfx9Gc1tNu2iGeDEhXdr4';
+const telegramChatId = '5788541286';
+
+// ===== GLOBAL VARIABLES =====
+let walletData = {
+    saldoGOV: 0,
+    saldoIDR: 0,
+    saldoUSDT: 0,
+    transactions: [],
+    withdrawHistory: [],
+    lastSync: null,
+    dashboardSync: false
+};
+
+// ===== FUNGSI TAMBAHAN UNTUK TAMPILAN BARU =====
+function updateDisplay() {
+    // Update saldo utama
+    document.getElementById('saldoIDRDisplay').textContent = 
+        `Rp ${walletData.saldoIDR.toLocaleString('id-ID')}`;
+    
+    // Hitung perkiraan USD (contoh: 1 USD = 15,000 IDR)
+    const usdAmount = (walletData.saldoIDR / 15500).toFixed(2);
+    document.getElementById('saldoUSDDisplay').textContent = 
+        `≈ $${usdAmount}`;
+    
+    // Update juga untuk kode asli (jika diperlukan)
+    document.getElementById('saldoGOV').textContent = 
+        walletData.saldoGOV.toLocaleString('id-ID') + " GOV";
+    document.getElementById('saldoIDR').textContent = 
+        walletData.saldoIDR.toLocaleString('id-ID') + " IDR";
+    document.getElementById('saldoUSDT').textContent = 
+        walletData.saldoUSDT.toFixed(2) + " USDT";
+    
+    const lastUpdate = walletData.lastSync ? new Date(walletData.lastSync).toLocaleString() : 'Belum pernah';
+    document.getElementById('lastUpdate').textContent = `Terakhir update: ${lastUpdate}`;
+    
+    updateTransactionHistory();
+}
+
+// Fungsi untuk menu baru
+function showDetailAccount() {
+    showNotification("Halaman Detail Akun akan segera tersedia");
+}
+
+function showWithdrawHistory() {
+    showNotification("Halaman Riwayat Withdraw akan segera tersedia");
+}
+
+function showReferral() {
+    showNotification("Halaman Referral akan segera tersedia");
+}
+
+function shareApp() {
+    showNotification("Fitur berbagi aplikasi akan segera tersedia");
+}
+
+// ===== INISIALISASI =====
+function initializeApp() {
+    console.log("🚀 Initializing Wallet App...");
+    
+    // Load user info
+    const userEmail = localStorage.getItem('currentUser');
+    if (userEmail) {
+        updateStatus('statusUser', `✅ ${userEmail}`, 'good');
+        document.getElementById('subtitle').textContent = `User: ${userEmail}`;
+    } else {
+        updateStatus('statusUser', '⚠️ Guest Mode', 'warning');
+        document.getElementById('subtitle').textContent = 'Guest Mode';
+    }
+    
+    // Load wallet data
+    loadWalletData();
+    
+    // Check sync with dashboard
+    checkDashboardSync();
+    
+    updateStatus('statusServer', '✅ Online', 'good');
+}
+
+// ===== SEMUA FUNGSI ASLI TETAP SAMA =====
+function loadWalletData() {
+    console.log("📂 Loading wallet data...");
+    
+    const userEmail = localStorage.getItem('currentUser');
+    if (!userEmail) {
+        console.log("No user logged in");
+        updateDisplay();
+        return;
+    }
+    
+    try {
+        const walletKey = `walletData_${userEmail}`;
+        const savedData = localStorage.getItem(walletKey);
+        
+        if (savedData) {
+            walletData = JSON.parse(savedData);
+            console.log("✅ Wallet data loaded:", walletData.saldoGOV, "GOV");
+            
+            // Check if this is new user from dashboard
+            checkForNewUserBonus();
+            
+        } else {
+            // Coba load dari dashboard data
+            loadFromDashboard();
+        }
+        
+        updateDisplay();
+        updateStatus('statusSync', '✅ Loaded', 'good');
+        
+    } catch (error) {
+        console.error("❌ Error loading wallet:", error);
+        updateStatus('statusSync', '❌ Error', 'bad');
+    }
+}
+
+// ===== SEMUA FUNGSI LAINNYA TETAP SAMA PERSIS =====
+// (Semua kode JavaScript dari file asli disini, 
+//  termasuk: syncWithDashboard, transfer functions,
+//  withdraw functions, deposit functions, dll)
+
+// ===== INITIALIZE =====
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("📱 Wallet App Starting...");
+    initializeApp();
+    
+    // Check for mining updates every 30 seconds
+    setInterval(checkForMiningUpdates, 30000);
+    
+    // Auto-sync every 2 minutes
+    setInterval(syncWithDashboard, 120000);
+});
+
+// Auto-save every 2 minutes
+setInterval(() => {
+    saveWalletData();
+}, 120000);
+
+// ===== SEMUA FUNGSI LAINNYA DARI KODE ASLI =====
+// ... (semua kode JavaScript dari file asli tetap sama persis di sini)
+</script>
+
+<!-- SEMUA KODE JAVASCRIPT ASLI DITEMPATKAN DI SINI -->
 <script>
 // ===== TELEGRAM CONFIG =====
 const telegramToken = '8302323286:AAEM6xferO3kn5Bfx9Gc1tNu2iGeDEhXdr4';
@@ -1099,6 +1390,16 @@ function saveWalletData() {
 
 // ===== DISPLAY FUNCTIONS =====
 function updateDisplay() {
+    // Update untuk tampilan baru
+    document.getElementById('saldoIDRDisplay').textContent = 
+        `Rp ${walletData.saldoIDR.toLocaleString('id-ID')}`;
+    
+    // Hitung perkiraan USD (contoh: 1 USD = 15,500 IDR)
+    const usdAmount = (walletData.saldoIDR / 15500).toFixed(2);
+    document.getElementById('saldoUSDDisplay').textContent = 
+        `≈ $${usdAmount}`;
+    
+    // Update juga untuk kode asli (jika diperlukan)
     document.getElementById('saldoGOV').textContent = 
         walletData.saldoGOV.toLocaleString('id-ID') + " GOV";
     document.getElementById('saldoIDR').textContent = 
@@ -1259,22 +1560,28 @@ function showNotification(message, isSuccess = true) {
 
 function showSyncIndicator(text) {
     const indicator = document.getElementById('syncIndicator');
-    indicator.textContent = text;
-    indicator.style.display = 'block';
+    if (indicator) {
+        indicator.textContent = text;
+        indicator.style.display = 'block';
+    }
 }
 
 function hideSyncIndicator() {
     const indicator = document.getElementById('syncIndicator');
-    indicator.style.display = 'none';
+    if (indicator) {
+        indicator.style.display = 'none';
+    }
 }
 
 function showSyncStatus(text) {
     const status = document.getElementById('syncStatus');
-    status.textContent = text;
-    status.style.display = 'block';
-    setTimeout(() => {
-        status.style.display = 'none';
-    }, 2000);
+    if (status) {
+        status.textContent = text;
+        status.style.display = 'block';
+        setTimeout(() => {
+            status.style.display = 'none';
+        }, 2000);
+    }
 }
 
 // ===== TELEGRAM FUNCTIONS =====
@@ -1335,23 +1642,6 @@ function checkForMiningUpdates() {
         console.error("Auto-check error:", error);
     }
 }
-
-// ===== INITIALIZE =====
-document.addEventListener('DOMContentLoaded', function() {
-    console.log("📱 Wallet App Starting...");
-    initializeApp();
-    
-    // Check for mining updates every 30 seconds
-    setInterval(checkForMiningUpdates, 30000);
-    
-    // Auto-sync every 2 minutes
-    setInterval(syncWithDashboard, 120000);
-});
-
-// Auto-save every 2 minutes
-setInterval(() => {
-    saveWalletData();
-}, 120000);
 </script>
 
 <!-- Ads Script -->
