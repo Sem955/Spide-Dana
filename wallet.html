@@ -10,222 +10,263 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            padding: 20px;
+            color: white;
         }
         
-        .container {
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 0 15px;
+        .container { 
+            max-width: 500px; 
+            margin: auto; 
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px; 
+            padding: 25px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
         /* Header */
         .header {
-            padding: 20px 0 15px 0;
-            color: white;
             text-align: center;
+            margin-bottom: 25px;
         }
         
-        .header h1 {
-            font-size: 24px;
-            font-weight: 600;
+        .header h1 { 
+            font-size: 28px;
+            font-weight: 700;
             margin-bottom: 5px;
+            color: white;
         }
         
-        .header .subtitle {
-            font-size: 14px;
-            opacity: 0.9;
+        .header .subtitle { 
+            color: rgba(255, 255, 255, 0.8); 
+            font-size: 14px; 
+            margin-bottom: 10px;
         }
         
-        /* Wallet Card */
-        .wallet-card {
-            background: white;
+        /* Modern Wallet Card */
+        .wallet-card-modern {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1));
             border-radius: 20px;
             padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
         }
         
-        .wallet-icon {
-            font-size: 40px;
-            margin-bottom: 15px;
-            color: #667eea;
+        .wallet-card-modern::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        
+        .balance-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .balance-row:last-child {
+            border-bottom: none;
+        }
+        
+        .balance-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .balance-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .balance-text {
+            display: flex;
+            flex-direction: column;
         }
         
         .balance-label {
-            color: #666;
-            font-size: 16px;
-            margin-bottom: 5px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 4px;
         }
         
         .balance-amount {
-            font-size: 36px;
+            font-size: 20px;
             font-weight: 700;
-            color: #333;
-            margin-bottom: 5px;
+            color: white;
         }
         
-        .balance-usd {
-            color: #666;
+        .balance-currency {
             font-size: 14px;
-            margin-bottom: 20px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
         }
         
-        /* Action Grid */
-        .action-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin: 25px 0;
+        /* Action Buttons Horizontal */
+        .action-buttons-horizontal {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
         }
         
-        .action-btn {
-            background: white;
-            border-radius: 12px;
-            padding: 15px 5px;
+        .action-btn-horizontal {
+            flex: 1;
+            min-width: 120px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 15px;
             text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            transition: transform 0.2s;
+            color: white;
             cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
         
-        .action-btn:hover {
+        .action-btn-horizontal:hover {
+            background: rgba(255, 255, 255, 0.25);
             transform: translateY(-2px);
         }
         
-        .action-icon {
+        .action-btn-icon {
             font-size: 24px;
             margin-bottom: 8px;
-            color: #667eea;
         }
         
-        .action-text {
+        .action-btn-text {
             font-size: 12px;
-            color: #333;
-            font-weight: 500;
-        }
-        
-        /* Menu Grid */
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin: 25px 0;
-        }
-        
-        .menu-item {
-            background: white;
-            border-radius: 12px;
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        
-        .menu-item:hover {
-            transform: translateY(-2px);
-        }
-        
-        .menu-icon {
-            font-size: 20px;
-            margin-right: 15px;
-            color: #667eea;
-            width: 40px;
-            text-align: center;
-        }
-        
-        .menu-text {
-            font-size: 14px;
-            color: #333;
-            font-weight: 500;
-        }
-        
-        /* Bottom Navigation */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            padding: 15px 0;
-            display: flex;
-            justify-content: space-around;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            max-width: 500px;
-            margin: 0 auto;
-        }
-        
-        .nav-item {
-            text-align: center;
-            cursor: pointer;
-        }
-        
-        .nav-icon {
-            font-size: 20px;
-            color: #666;
-            margin-bottom: 5px;
-        }
-        
-        .nav-text {
-            font-size: 12px;
-            color: #666;
-        }
-        
-        .nav-item.active .nav-icon {
-            color: #667eea;
-        }
-        
-        .nav-item.active .nav-text {
-            color: #667eea;
             font-weight: 600;
         }
         
-        /* Modal Styles (tetap sama) */
+        /* Sync Button */
+        .sync-btn-container {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        
+        .sync-btn {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 15px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .sync-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+        
+        /* Hidden Sections */
+        .hidden-section {
+            display: none;
+        }
+        
+        /* Modal Styles */
         .modal-overlay {
             display: none;
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.7);
             z-index: 1000;
             justify-content: center;
             align-items: center;
+            backdrop-filter: blur(5px);
         }
+        
         .modal-content {
             background: white;
             width: 90%;
             max-width: 400px;
-            border-radius: 16px;
+            border-radius: 20px;
             padding: 24px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
+        
         .form-group {
             width: 100%;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
+        
         .form-group label {
             display: block;
             margin-bottom: 8px;
             font-size: 14px;
             color: #555;
-            font-weight: bold;
+            font-weight: 600;
         }
+        
         .form-group input, .form-group select {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            padding: 14px;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
             font-size: 14px;
             box-sizing: border-box;
+            transition: border-color 0.3s;
         }
+        
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
         .button-group {
             display: flex;
             gap: 12px;
             margin-top: 24px;
         }
-        .submit-btn { background: #1976d2; color: white; flex: 1; }
-        .cancel-btn { background: #f0f0f0; color: #333; flex: 1; }
+        
+        .submit-btn { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; 
+            flex: 1; 
+            border: none;
+            border-radius: 12px;
+            padding: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .cancel-btn { 
+            background: #f5f5f5; 
+            color: #333; 
+            flex: 1; 
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
         
         /* Notification */
         #notification {
@@ -236,34 +277,27 @@
             background: #4caf50;
             color: white;
             padding: 14px 24px;
-            border-radius: 8px;
-            font-size: 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
             z-index: 2000;
             display: none;
             animation: fadeInOut 4s ease-in-out forwards;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
+        
         @keyframes fadeInOut {
             0% { opacity: 0; transform: translate(-50%, -20px); }
             10%, 90% { opacity: 1; transform: translate(-50%, 0); }
             100% { opacity: 0; transform: translate(-50%, -20px); }
         }
         
-        /* Additional styles for original content */
-        .hidden-section {
-            display: none;
-        }
-        
-        .sync-btn {
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            padding: 12px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            width: 100%;
-            margin: 10px 0;
+        /* Last Update */
+        .last-update {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            margin-top: 15px;
         }
     </style>
 </head>
@@ -274,68 +308,80 @@
 <div class="container">
     <!-- Header -->
     <div class="header">
-        <h1>Dompet Saya</h1>
+        <h1>💰 Dompet Saya</h1>
         <div class="subtitle" id="subtitle">Saldo Sinkron dengan Dashboard</div>
     </div>
     
-    <!-- Wallet Card -->
-    <div class="wallet-card">
-        <div class="wallet-icon">💰</div>
-        <div class="balance-label">Saldo IDR</div>
-        <div class="balance-amount" id="saldoIDRDisplay">Rp 0</div>
-        <div class="balance-usd" id="saldoUSDDisplay">≈ $0.00</div>
+    <!-- Modern Wallet Card -->
+    <div class="wallet-card-modern">
+        <div class="balance-row">
+            <div class="balance-info">
+                <div class="balance-icon">₿</div>
+                <div class="balance-text">
+                    <div class="balance-label">Saldo GOV</div>
+                    <div class="balance-amount" id="saldoGOV">0</div>
+                </div>
+            </div>
+            <div class="balance-currency">GOV</div>
+        </div>
         
-        <!-- Sync Button -->
-        <button class="sync-btn" onclick="syncWithDashboard()">
+        <div class="balance-row">
+            <div class="balance-info">
+                <div class="balance-icon">Rp</div>
+                <div class="balance-text">
+                    <div class="balance-label">Saldo IDR</div>
+                    <div class="balance-amount" id="saldoIDR">0</div>
+                </div>
+            </div>
+            <div class="balance-currency">IDR</div>
+        </div>
+        
+        <div class="balance-row">
+            <div class="balance-info">
+                <div class="balance-icon">$</div>
+                <div class="balance-text">
+                    <div class="balance-label">Saldo USDT</div>
+                    <div class="balance-amount" id="saldoUSDT">0.00</div>
+                </div>
+            </div>
+            <div class="balance-currency">USDT</div>
+        </div>
+        
+        <div class="last-update">
+            <span id="lastUpdate">Data lokal</span>
+        </div>
+    </div>
+    
+    <!-- Action Buttons Horizontal -->
+    <div class="action-buttons-horizontal">
+        <div class="action-btn-horizontal" onclick="showWithdrawModal()">
+            <div class="action-btn-icon">💸</div>
+            <div class="action-btn-text">Withdraw</div>
+        </div>
+        <div class="action-btn-horizontal" onclick="showTransferModal()">
+            <div class="action-btn-icon">📤</div>
+            <div class="action-btn-text">Transfer GOV</div>
+        </div>
+        <div class="action-btn-horizontal" onclick="window.location.href='dashboard.html'">
+            <div class="action-btn-icon">←</div>
+            <div class="action-btn-text">Kembali ke Dashboard</div>
+        </div>
+        <div class="action-btn-horizontal" onclick="showTransactionHistory()">
+            <div class="action-btn-icon">📋</div>
+            <div class="action-btn-text">Riwayat</div>
+        </div>
+    </div>
+    
+    <!-- Sync Buttons -->
+    <div class="sync-btn-container">
+        <div class="sync-btn" onclick="forceSyncFromDashboard()">
+            📥 Tarik dari Dashboard
+        </div>
+        <div class="sync-btn" onclick="syncWithDashboard()">
             🔄 Sync dengan Dashboard
-        </button>
-    </div>
-    
-    <!-- Action Buttons -->
-    <div class="action-grid">
-        <div class="action-btn" onclick="showWithdrawModal()">
-            <div class="action-icon">💸</div>
-            <div class="action-text">Withdraw</div>
         </div>
-        <div class="action-btn" onclick="showDepositModal()">
-            <div class="action-icon">💰</div>
-            <div class="action-text">Deposit</div>
-        </div>
-        <div class="action-btn" onclick="showTransferModal()">
-            <div class="action-icon">📤</div>
-            <div class="action-text">Transfer</div>
-        </div>
-        <div class="action-btn" onclick="window.location.href='dashboard.html'">
-            <div class="action-icon">📊</div>
-            <div class="action-text">Dashboard</div>
-        </div>
-    </div>
-    
-    <!-- Menu Items -->
-    <div class="menu-grid">
-        <div class="menu-item" onclick="showWithdrawModal()">
-            <div class="menu-icon">💸</div>
-            <div class="menu-text">Withdraw</div>
-        </div>
-        <div class="menu-item" onclick="showTransferModal()">
-            <div class="menu-icon">🔄</div>
-            <div class="menu-text">Konversi</div>
-        </div>
-        <div class="menu-item" onclick="showDetailAccount()">
-            <div class="menu-icon">👤</div>
-            <div class="menu-text">Detail Akun</div>
-        </div>
-        <div class="menu-item" onclick="showWithdrawHistory()">
-            <div class="menu-icon">📋</div>
-            <div class="menu-text">Riwayat Withdraw</div>
-        </div>
-        <div class="menu-item" onclick="showReferral()">
-            <div class="menu-icon">👥</div>
-            <div class="menu-text">Referral Saya</div>
-        </div>
-        <div class="menu-item" onclick="shareApp()">
-            <div class="menu-icon">📢</div>
-            <div class="menu-text">Bagikan Aplikasi</div>
+        <div class="sync-btn" onclick="forceSyncToDashboard()">
+            📤 Push ke Dashboard
         </div>
     </div>
     
@@ -358,26 +404,6 @@
             </div>
         </div>
         
-        <!-- Wallet Balances -->
-        <div class="wallet-card" id="originalWalletCard">
-            <h2>Saldo Anda</h2>
-            <div class="balance">
-                <span>GOV</span>
-                <span id="saldoGOV">0 GOV</span>
-            </div>
-            <div class="balance">
-                <span>IDR</span>
-                <span id="saldoIDR">0 IDR</span>
-            </div>
-            <div class="balance">
-                <span>USDT</span>
-                <span id="saldoUSDT">0.00 USDT</span>
-            </div>
-            <div style="text-align: center; margin-top: 15px; font-size: 14px; opacity: 0.9;">
-                <span id="lastUpdate">Data lokal</span>
-            </div>
-        </div>
-        
         <!-- Transaction History -->
         <div class="transfer-section">
             <h3>📋 Riwayat Transaksi</h3>
@@ -388,29 +414,11 @@
             </div>
         </div>
     </div>
+    
+    <div class="footer">© 2025 Dompet Digital</div>
 </div>
 
-<!-- Bottom Navigation -->
-<div class="bottom-nav">
-    <div class="nav-item active">
-        <div class="nav-icon">🏠</div>
-        <div class="nav-text">Beranda</div>
-    </div>
-    <div class="nav-item">
-        <div class="nav-icon">✅</div>
-        <div class="nav-text">Tugas</div>
-    </div>
-    <div class="nav-item">
-        <div class="nav-icon">👥</div>
-        <div class="nav-text">Referral</div>
-    </div>
-    <div class="nav-item">
-        <div class="nav-icon">👤</div>
-        <div class="nav-text">Saya</div>
-    </div>
-</div>
-
-<!-- Semua modal tetap sama persis -->
+<!-- Modals (tetap sama) -->
 <!-- Withdraw Modal -->
 <div id="withdrawModal" class="modal-overlay">
     <div class="modal-content">
@@ -440,9 +448,11 @@
             <input type="email" id="withdrawEmail" placeholder="email@anda.com">
         </div>
         
-        <div style="background: #e3f2fd; padding: 12px; border-radius: 8px; margin: 15px 0;">
-            <strong>Info:</strong>
-            <div id="withdrawInfo">Withdraw diproses 1x24 jam. Minimal penarikan 200,000 IDR.</div>
+        <div style="background: #f0f4ff; padding: 15px; border-radius: 12px; margin: 20px 0; border: 1px solid #e0e0e0;">
+            <strong style="color: #333;">Info:</strong>
+            <div id="withdrawInfo" style="color: #666; margin-top: 8px; font-size: 14px;">
+                Withdraw diproses 1x24 jam. Minimal penarikan 200,000 IDR.
+            </div>
         </div>
         
         <div class="button-group">
@@ -452,7 +462,7 @@
     </div>
 </div>
 
-<!-- Deposit Modal -->
+<!-- Deposit Modal (hidden but functional) -->
 <div id="depositModal" class="modal-overlay">
     <div class="modal-content">
         <h3 style="margin-top: 0; color: #333;">💰 Deposit/Topup</h3>
@@ -482,9 +492,9 @@
             </select>
         </div>
         
-        <div style="background: #f0f4ff; padding: 12px; border-radius: 8px; margin: 15px 0;">
-            <strong>Instruksi:</strong>
-            <div id="depositInstruction">
+        <div style="background: #f0f4ff; padding: 15px; border-radius: 12px; margin: 20px 0; border: 1px solid #e0e0e0;">
+            <strong style="color: #333;">Instruksi:</strong>
+            <div id="depositInstruction" style="color: #666; margin-top: 8px; font-size: 14px;">
                 Transfer ke: 081234567890 (DANA)<br>
                 Atas nama: Admin GovMiner<br>
                 Kode: <strong id="depositCode">GOV-12345</strong>
@@ -518,9 +528,12 @@
             <input type="text" id="transferMessage" placeholder="Ucapan selamat atau catatan">
         </div>
         
-        <div style="background: #f0f4ff; padding: 12px; border-radius: 8px; margin: 15px 0;">
-            <strong>Biaya:</strong> Gratis (0% fee)<br>
-            <strong>Estimasi:</strong> Langsung sampai
+        <div style="background: #f0f4ff; padding: 15px; border-radius: 12px; margin: 20px 0; border: 1px solid #e0e0e0;">
+            <strong style="color: #333;">Info:</strong><br>
+            <span style="color: #666; font-size: 14px;">
+                <strong>Biaya:</strong> Gratis (0% fee)<br>
+                <strong>Estimasi:</strong> Langsung sampai
+            </span>
         </div>
         
         <div class="button-group">
@@ -546,59 +559,15 @@ let walletData = {
     dashboardSync: false
 };
 
-// ===== FUNGSI TAMBAHAN UNTUK TAMPILAN BARU =====
-function updateDisplay() {
-    // Update saldo utama
-    document.getElementById('saldoIDRDisplay').textContent = 
-        `Rp ${walletData.saldoIDR.toLocaleString('id-ID')}`;
-    
-    // Hitung perkiraan USD (contoh: 1 USD = 15,000 IDR)
-    const usdAmount = (walletData.saldoIDR / 15500).toFixed(2);
-    document.getElementById('saldoUSDDisplay').textContent = 
-        `≈ $${usdAmount}`;
-    
-    // Update juga untuk kode asli (jika diperlukan)
-    document.getElementById('saldoGOV').textContent = 
-        walletData.saldoGOV.toLocaleString('id-ID') + " GOV";
-    document.getElementById('saldoIDR').textContent = 
-        walletData.saldoIDR.toLocaleString('id-ID') + " IDR";
-    document.getElementById('saldoUSDT').textContent = 
-        walletData.saldoUSDT.toFixed(2) + " USDT";
-    
-    const lastUpdate = walletData.lastSync ? new Date(walletData.lastSync).toLocaleString() : 'Belum pernah';
-    document.getElementById('lastUpdate').textContent = `Terakhir update: ${lastUpdate}`;
-    
-    updateTransactionHistory();
-}
-
-// Fungsi untuk menu baru
-function showDetailAccount() {
-    showNotification("Halaman Detail Akun akan segera tersedia");
-}
-
-function showWithdrawHistory() {
-    showNotification("Halaman Riwayat Withdraw akan segera tersedia");
-}
-
-function showReferral() {
-    showNotification("Halaman Referral akan segera tersedia");
-}
-
-function shareApp() {
-    showNotification("Fitur berbagi aplikasi akan segera tersedia");
-}
-
-// ===== INISIALISASI =====
+// ===== INITIALIZE =====
 function initializeApp() {
     console.log("🚀 Initializing Wallet App...");
     
     // Load user info
     const userEmail = localStorage.getItem('currentUser');
     if (userEmail) {
-        updateStatus('statusUser', `✅ ${userEmail}`, 'good');
         document.getElementById('subtitle').textContent = `User: ${userEmail}`;
     } else {
-        updateStatus('statusUser', '⚠️ Guest Mode', 'warning');
         document.getElementById('subtitle').textContent = 'Guest Mode';
     }
     
@@ -607,122 +576,16 @@ function initializeApp() {
     
     // Check sync with dashboard
     checkDashboardSync();
-    
-    updateStatus('statusServer', '✅ Online', 'good');
-}
-
-// ===== SEMUA FUNGSI ASLI TETAP SAMA =====
-function loadWalletData() {
-    console.log("📂 Loading wallet data...");
-    
-    const userEmail = localStorage.getItem('currentUser');
-    if (!userEmail) {
-        console.log("No user logged in");
-        updateDisplay();
-        return;
-    }
-    
-    try {
-        const walletKey = `walletData_${userEmail}`;
-        const savedData = localStorage.getItem(walletKey);
-        
-        if (savedData) {
-            walletData = JSON.parse(savedData);
-            console.log("✅ Wallet data loaded:", walletData.saldoGOV, "GOV");
-            
-            // Check if this is new user from dashboard
-            checkForNewUserBonus();
-            
-        } else {
-            // Coba load dari dashboard data
-            loadFromDashboard();
-        }
-        
-        updateDisplay();
-        updateStatus('statusSync', '✅ Loaded', 'good');
-        
-    } catch (error) {
-        console.error("❌ Error loading wallet:", error);
-        updateStatus('statusSync', '❌ Error', 'bad');
-    }
-}
-
-// ===== SEMUA FUNGSI LAINNYA TETAP SAMA PERSIS =====
-// (Semua kode JavaScript dari file asli disini, 
-//  termasuk: syncWithDashboard, transfer functions,
-//  withdraw functions, deposit functions, dll)
-
-// ===== INITIALIZE =====
-document.addEventListener('DOMContentLoaded', function() {
-    console.log("📱 Wallet App Starting...");
-    initializeApp();
-    
-    // Check for mining updates every 30 seconds
-    setInterval(checkForMiningUpdates, 30000);
-    
-    // Auto-sync every 2 minutes
-    setInterval(syncWithDashboard, 120000);
-});
-
-// Auto-save every 2 minutes
-setInterval(() => {
-    saveWalletData();
-}, 120000);
-
-// ===== SEMUA FUNGSI LAINNYA DARI KODE ASLI =====
-// ... (semua kode JavaScript dari file asli tetap sama persis di sini)
-</script>
-
-<!-- SEMUA KODE JAVASCRIPT ASLI DITEMPATKAN DI SINI -->
-<script>
-// ===== TELEGRAM CONFIG =====
-const telegramToken = '8302323286:AAEM6xferO3kn5Bfx9Gc1tNu2iGeDEhXdr4';
-const telegramChatId = '5788541286';
-
-// ===== GLOBAL VARIABLES =====
-let walletData = {
-    saldoGOV: 0,
-    saldoIDR: 0,
-    saldoUSDT: 0,
-    transactions: [],
-    withdrawHistory: [],
-    lastSync: null,
-    dashboardSync: false
-};
-
-// ===== INITIALIZE =====
-function initializeApp() {
-    console.log("🚀 Initializing Wallet App...");
-    
-    // Load user info
-    const userEmail = localStorage.getItem('currentUser');
-    if (userEmail) {
-        updateStatus('statusUser', `✅ ${userEmail}`, 'good');
-        document.getElementById('subtitle').textContent = `User: ${userEmail}`;
-    } else {
-        updateStatus('statusUser', '⚠️ Guest Mode', 'warning');
-        document.getElementById('subtitle').textContent = 'Guest Mode';
-    }
-    
-    // Load wallet data
-    loadWalletData();
-    
-    // Check sync with dashboard
-    checkDashboardSync();
-    
-    updateStatus('statusServer', '✅ Online', 'good');
 }
 
 // ===== LOAD WALLET DATA =====
 function loadWalletData() {
     console.log("📂 Loading wallet data...");
-    showSyncIndicator("Memuat data...");
     
     const userEmail = localStorage.getItem('currentUser');
     if (!userEmail) {
         console.log("No user logged in");
         updateDisplay();
-        hideSyncIndicator();
         return;
     }
     
@@ -743,14 +606,11 @@ function loadWalletData() {
         }
         
         updateDisplay();
-        updateStatus('statusSync', '✅ Loaded', 'good');
         
     } catch (error) {
         console.error("❌ Error loading wallet:", error);
-        updateStatus('statusSync', '❌ Error', 'bad');
+        showNotification("❌ Gagal memuat data wallet", false);
     }
-    
-    hideSyncIndicator();
 }
 
 // ===== CHECK FOR NEW USER BONUS =====
@@ -796,6 +656,8 @@ function loadFromDashboard() {
         
         // Sync dengan dashboard
         walletData.saldoGOV = dashboardData.saldoGOV || 0;
+        walletData.saldoIDR = dashboardData.saldoIDR || 0;
+        walletData.saldoUSDT = dashboardData.saldoUSDT || 0;
         walletData.lastSync = new Date().toISOString();
         walletData.dashboardSync = true;
         
@@ -803,20 +665,17 @@ function loadFromDashboard() {
         
         // Save wallet data
         saveWalletData();
-        
-        showSyncStatus("📥 Data dari dashboard");
     }
 }
 
 // ===== SYNC WITH DASHBOARD =====
 function syncWithDashboard() {
     console.log("🔄 Syncing with Dashboard...");
-    showSyncIndicator("Sync dengan Dashboard...");
+    showNotification("Sync dengan Dashboard...");
     
     const userEmail = localStorage.getItem('currentUser');
     if (!userEmail) {
         showNotification("❌ Silakan login dulu", false);
-        hideSyncIndicator();
         return;
     }
     
@@ -866,23 +725,17 @@ function syncWithDashboard() {
             saveWalletData();
             updateDisplay();
             
-            updateStatus('statusSync', '✅ Synced', 'good');
-            
         } else {
             showNotification("❌ Tidak ada data dashboard ditemukan", false);
-            updateStatus('statusSync', '❌ No Dashboard', 'bad');
         }
         
     } catch (error) {
         console.error("❌ Sync error:", error);
         showNotification("❌ Gagal sync dengan dashboard", false);
-        updateStatus('statusSync', '❌ Error', 'bad');
     }
-    
-    hideSyncIndicator();
 }
 
-// ===== TRANSFER FUNCTIONS (FIXED) =====
+// ===== TRANSFER FUNCTIONS =====
 function showTransferModal() {
     if (walletData.saldoGOV === 0) {
         showNotification("❌ Saldo GOV kosong", false);
@@ -894,6 +747,10 @@ function showTransferModal() {
 
 function hideTransferModal() {
     document.getElementById('transferModal').style.display = 'none';
+    // Reset form
+    document.getElementById('transferEmail').value = '';
+    document.getElementById('transferAmount').value = '';
+    document.getElementById('transferMessage').value = '';
 }
 
 function processTransfer() {
@@ -902,7 +759,6 @@ function processTransfer() {
     const message = document.getElementById('transferMessage').value.trim();
     
     const currentEmail = localStorage.getItem('currentUser') || '';
-    const currentUsername = currentEmail.split('@')[0];
     
     // Validasi
     if (!email || !email.includes('@')) {
@@ -935,7 +791,7 @@ function processTransfer() {
     const oldSenderBalance = walletData.saldoGOV;
     walletData.saldoGOV -= amount;
     
-    // 3. ✅ TAMBAHKAN KE SALDO PENERIMA (FIXED)
+    // 3. Tambahkan ke saldo penerima
     const transferSuccess = addToRecipientBalance(email, amount, currentEmail);
     
     if (!transferSuccess) {
@@ -970,26 +826,18 @@ function processTransfer() {
     
     showNotification(`✅ Berhasil transfer ${amount} GOV ke ${email}!`);
     hideTransferModal();
-    
-    // Reset form
-    document.getElementById('transferEmail').value = '';
-    document.getElementById('transferAmount').value = '';
-    document.getElementById('transferMessage').value = '';
 }
 
 // ===== FUNGSI CEK PENERIMA =====
 function checkIfRecipientExists(email) {
     try {
-        // Cek apakah email ada di localStorage
         const username = email.split('@')[0];
         const userKey = `userData_${username}`;
         const userData = localStorage.getItem(userKey);
         
-        // Juga cek apakah ada wallet data untuk email ini
         const walletKey = `walletData_${email}`;
         const walletData = localStorage.getItem(walletKey);
         
-        // Jika ada salah satu dari data user atau wallet, anggap valid
         return userData !== null || walletData !== null;
         
     } catch (error) {
@@ -998,7 +846,7 @@ function checkIfRecipientExists(email) {
     }
 }
 
-// ===== FUNGSI TAMBAH SALDO KE PENERIMA (FIXED) =====
+// ===== FUNGSI TAMBAH SALDO KE PENERIMA =====
 function addToRecipientBalance(email, amount, senderEmail) {
     try {
         const walletKey = `walletData_${email}`;
@@ -1007,13 +855,11 @@ function addToRecipientBalance(email, amount, senderEmail) {
         let recipientWallet;
         
         if (currentWalletData) {
-            // Wallet sudah ada, tambah saldo
             recipientWallet = JSON.parse(currentWalletData);
             const oldBalance = recipientWallet.saldoGOV || 0;
             recipientWallet.saldoGOV = oldBalance + amount;
             
         } else {
-            // Wallet belum ada, buat baru
             const username = email.split('@')[0];
             const userKey = `userData_${username}`;
             const userDataStr = localStorage.getItem(userKey);
@@ -1035,7 +881,6 @@ function addToRecipientBalance(email, amount, senderEmail) {
             };
         }
         
-        // Tambah transaksi di wallet penerima
         recipientWallet.transactions.unshift({
             type: 'RECEIVE',
             description: `Dari: ${senderEmail}`,
@@ -1043,17 +888,14 @@ function addToRecipientBalance(email, amount, senderEmail) {
             timestamp: new Date().toISOString()
         });
         
-        // Keep only last 50 transactions
         if (recipientWallet.transactions.length > 50) {
             recipientWallet.transactions = recipientWallet.transactions.slice(0, 50);
         }
         
         recipientWallet.lastSync = new Date().toISOString();
         
-        // Save wallet penerima
         localStorage.setItem(walletKey, JSON.stringify(recipientWallet));
         
-        // ✅ JUGA UPDATE DASHBOARD PENERIMA
         updateRecipientDashboard(email, amount);
         
         console.log(`✅ Added ${amount} GOV to recipient ${email}`);
@@ -1080,7 +922,6 @@ function updateRecipientDashboard(email, amount) {
             localStorage.setItem(dashboardKey, JSON.stringify(dashboardData));
             console.log(`✅ Updated recipient dashboard: ${email} +${amount} GOV`);
         } else {
-            // Buat dashboard data baru untuk penerima
             const newDashboardData = {
                 saldoGOV: amount,
                 saldoIDR: 0,
@@ -1100,14 +941,13 @@ function updateRecipientDashboard(email, amount) {
     }
 }
 
-// ===== FORCE SYNC FROM DASHBOARD (tarik data) =====
+// ===== FORCE SYNC FUNCTIONS =====
 function forceSyncFromDashboard() {
-    showSyncIndicator("Tarik dari Dashboard...");
+    showNotification("Tarik dari Dashboard...");
     
     const userEmail = localStorage.getItem('currentUser');
     if (!userEmail) {
         showNotification("❌ Silakan login dulu", false);
-        hideSyncIndicator();
         return;
     }
     
@@ -1120,12 +960,10 @@ function forceSyncFromDashboard() {
             const dashboardData = JSON.parse(savedData);
             const oldGOV = walletData.saldoGOV;
             
-            // Ambil semua data dari dashboard
             walletData.saldoGOV = dashboardData.saldoGOV || 0;
             walletData.saldoIDR = dashboardData.saldoIDR || 0;
             walletData.saldoUSDT = dashboardData.saldoUSDT || 0;
             
-            // Add transaction jika ada perubahan
             if (walletData.saldoGOV > oldGOV) {
                 const increase = walletData.saldoGOV - oldGOV;
                 addTransaction('SYNC', `Tarik dari dashboard (+${increase} GOV)`, increase);
@@ -1138,7 +976,6 @@ function forceSyncFromDashboard() {
             updateDisplay();
             
             showNotification("✅ Data berhasil ditarik dari dashboard");
-            showSyncStatus("📥 Data ditarik");
             
         } else {
             showNotification("❌ Tidak ada data dashboard", false);
@@ -1148,18 +985,14 @@ function forceSyncFromDashboard() {
         console.error("❌ Force sync error:", error);
         showNotification("❌ Gagal tarik data", false);
     }
-    
-    hideSyncIndicator();
 }
 
-// ===== FORCE SYNC TO DASHBOARD (push data) =====
 function forceSyncToDashboard() {
-    showSyncIndicator("Push ke Dashboard...");
+    showNotification("Push ke Dashboard...");
     
     const userEmail = localStorage.getItem('currentUser');
     if (!userEmail) {
         showNotification("❌ Silakan login dulu", false);
-        hideSyncIndicator();
         return;
     }
     
@@ -1167,7 +1000,6 @@ function forceSyncToDashboard() {
         const username = userEmail.split('@')[0];
         const dashboardKey = `userData_${username}`;
         
-        // Load current dashboard data
         let dashboardData = JSON.parse(localStorage.getItem(dashboardKey)) || {
             saldoGOV: 0,
             saldoIDR: 0,
@@ -1176,12 +1008,10 @@ function forceSyncToDashboard() {
             referrals: []
         };
         
-        // Update dashboard dengan data wallet
         dashboardData.saldoGOV = walletData.saldoGOV;
         dashboardData.saldoIDR = walletData.saldoIDR;
         dashboardData.saldoUSDT = walletData.saldoUSDT;
         
-        // Save dashboard data
         localStorage.setItem(dashboardKey, JSON.stringify(dashboardData));
         
         walletData.dashboardSync = true;
@@ -1190,14 +1020,11 @@ function forceSyncToDashboard() {
         saveWalletData();
         
         showNotification("✅ Data berhasil dipush ke dashboard");
-        showSyncStatus("📤 Data dipush");
         
     } catch (error) {
         console.error("❌ Push to dashboard error:", error);
         showNotification("❌ Gagal push data", false);
     }
-    
-    hideSyncIndicator();
 }
 
 // ===== CHECK DASHBOARD SYNC STATUS =====
@@ -1214,15 +1041,9 @@ function checkDashboardSync() {
         const dashboardGOV = dashboardData.saldoGOV || 0;
         const walletGOV = walletData.saldoGOV || 0;
         
-        if (Math.abs(dashboardGOV - walletGOV) <= 1) {
-            updateStatus('statusSync', '✅ Synced', 'good');
-        } else if (dashboardGOV > walletGOV) {
-            updateStatus('statusSync', `⚠️ -${dashboardGOV - walletGOV} GOV`, 'warning');
-        } else {
-            updateStatus('statusSync', `⚠️ +${walletGOV - dashboardGOV} GOV`, 'warning');
+        if (Math.abs(dashboardGOV - walletGOV) > 1) {
+            showNotification(`⚠️ Ada perbedaan saldo ${Math.abs(dashboardGOV - walletGOV)} GOV`);
         }
-    } else {
-        updateStatus('statusSync', '❌ No Dashboard', 'bad');
     }
 }
 
@@ -1239,6 +1060,10 @@ function showWithdrawModal() {
 
 function hideWithdrawModal() {
     document.getElementById('withdrawModal').style.display = 'none';
+    // Reset form
+    document.getElementById('withdrawAmount').value = '';
+    document.getElementById('withdrawAccount').value = '';
+    document.getElementById('withdrawEmail').value = '';
 }
 
 function updateWithdrawInfo() {
@@ -1262,7 +1087,6 @@ function processWithdraw() {
     const account = document.getElementById('withdrawAccount').value.trim();
     const email = document.getElementById('withdrawEmail').value.trim();
     
-    // Validation
     const minAmount = type === 'IDR' ? 200000 : type === 'USDT' ? 10 : 1000;
     const balance = type === 'IDR' ? walletData.saldoIDR : 
                     type === 'USDT' ? walletData.saldoUSDT : 
@@ -1288,19 +1112,16 @@ function processWithdraw() {
         return;
     }
     
-    // Process withdraw di WALLET
+    // Process withdraw
     if (type === 'IDR') {
         walletData.saldoIDR -= amount;
     } else if (type === 'USDT') {
         walletData.saldoUSDT -= amount;
     } else {
         walletData.saldoGOV -= amount;
-        
-        // ✅ OTOMATIS KURANGI DI DASHBOARD JUGA
         updateDashboardOnWithdraw(amount);
     }
     
-    // Add to withdraw history
     walletData.withdrawHistory.push({
         type: type,
         amount: amount,
@@ -1310,14 +1131,11 @@ function processWithdraw() {
         status: 'pending'
     });
     
-    // Add transaction record
     addTransaction('WITHDRAW', `Withdraw ${type} ke ${account}`, -amount);
     
-    // Save wallet data
     saveWalletData();
     updateDisplay();
     
-    // Send Telegram notification
     const telegramMsg = `
 🔔 *WITHDRAW BARU!*
 👤 User: ${email}
@@ -1328,14 +1146,8 @@ function processWithdraw() {
     
     sendTelegram(telegramMsg);
     
-    // Show success message
     showNotification(`✅ Withdraw berhasil diproses! Akan dikirim dalam 24 jam.`);
     hideWithdrawModal();
-    
-    // Reset form
-    document.getElementById('withdrawAmount').value = '';
-    document.getElementById('withdrawAccount').value = '';
-    document.getElementById('withdrawEmail').value = '';
 }
 
 // ===== UPDATE DASHBOARD SAAT WITHDRAW =====
@@ -1347,19 +1159,12 @@ function updateDashboardOnWithdraw(amount) {
     const dashboardKey = `userData_${username}`;
     
     try {
-        // Load dashboard data
         const savedData = localStorage.getItem(dashboardKey);
         if (savedData) {
             const dashboardData = JSON.parse(savedData);
-            
-            // Kurangi saldo GOV di dashboard
             dashboardData.saldoGOV = Math.max(0, dashboardData.saldoGOV - amount);
-            
-            // Save updated dashboard data
             localStorage.setItem(dashboardKey, JSON.stringify(dashboardData));
-            
             console.log(`✅ Dashboard updated on withdraw: -${amount} GOV`);
-            showSyncStatus("📤 Dashboard diupdate");
         }
     } catch (error) {
         console.error("❌ Error updating dashboard:", error);
@@ -1390,74 +1195,16 @@ function saveWalletData() {
 
 // ===== DISPLAY FUNCTIONS =====
 function updateDisplay() {
-    // Update untuk tampilan baru
-    document.getElementById('saldoIDRDisplay').textContent = 
-        `Rp ${walletData.saldoIDR.toLocaleString('id-ID')}`;
-    
-    // Hitung perkiraan USD (contoh: 1 USD = 15,500 IDR)
-    const usdAmount = (walletData.saldoIDR / 15500).toFixed(2);
-    document.getElementById('saldoUSDDisplay').textContent = 
-        `≈ $${usdAmount}`;
-    
-    // Update juga untuk kode asli (jika diperlukan)
+    // Format saldo dengan separator ribuan
     document.getElementById('saldoGOV').textContent = 
-        walletData.saldoGOV.toLocaleString('id-ID') + " GOV";
+        walletData.saldoGOV.toLocaleString('id-ID');
     document.getElementById('saldoIDR').textContent = 
-        walletData.saldoIDR.toLocaleString('id-ID') + " IDR";
+        walletData.saldoIDR.toLocaleString('id-ID');
     document.getElementById('saldoUSDT').textContent = 
-        walletData.saldoUSDT.toFixed(2) + " USDT";
+        walletData.saldoUSDT.toFixed(2);
     
     const lastUpdate = walletData.lastSync ? new Date(walletData.lastSync).toLocaleString() : 'Belum pernah';
     document.getElementById('lastUpdate').textContent = `Terakhir update: ${lastUpdate}`;
-    
-    updateTransactionHistory();
-}
-
-function updateTransactionHistory() {
-    const container = document.getElementById('transactionHistory');
-    
-    if (!walletData.transactions || walletData.transactions.length === 0) {
-        container.innerHTML = `
-            <div style="text-align: center; color: #666; padding: 20px;">
-                <p>📭 Belum ada transaksi</p>
-                <small>Transaksi dari dashboard akan muncul di sini</small>
-            </div>
-        `;
-        return;
-    }
-    
-    // Show last 10 transactions
-    const recentTx = walletData.transactions.slice(0, 10);
-    
-    const transactionsHTML = recentTx.map(tx => {
-        const date = new Date(tx.timestamp).toLocaleDateString('id-ID', {
-            day: '2-digit',
-            month: 'short',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-        
-        const amount = tx.amount || 0;
-        const isPositive = amount > 0;
-        const amountClass = isPositive ? 'tx-positive' : 'tx-negative';
-        const amountSign = isPositive ? '+' : '';
-        const amountText = `${amountSign}${amount.toLocaleString('id-ID')} GOV`;
-        
-        return `
-            <div class="transaction-item">
-                <div class="tx-header">
-                    <div class="tx-description">${tx.description || 'Transaksi'}</div>
-                    <div class="tx-amount ${amountClass}">${amountText}</div>
-                </div>
-                <div class="tx-footer">
-                    <span>${date}</span>
-                    <span>${tx.type || 'SYSTEM'}</span>
-                </div>
-            </div>
-        `;
-    }).join('');
-    
-    container.innerHTML = transactionsHTML;
 }
 
 // ===== TRANSACTION FUNCTIONS =====
@@ -1471,20 +1218,15 @@ function addTransaction(type, description, amount) {
     
     walletData.transactions.unshift(transaction);
     
-    // Keep only last 50 transactions
     if (walletData.transactions.length > 50) {
         walletData.transactions = walletData.transactions.slice(0, 50);
     }
-    
-    updateTransactionHistory();
 }
 
 // ===== DEPOSIT FUNCTIONS =====
 function showDepositModal() {
-    // Generate deposit code
     const code = 'GOV-' + Math.random().toString(36).substr(2, 8).toUpperCase();
     document.getElementById('depositCode').textContent = code;
-    
     document.getElementById('depositModal').style.display = 'flex';
 }
 
@@ -1503,7 +1245,6 @@ function processDeposit() {
         return;
     }
     
-    // Generate payment instruction
     let instruction = '';
     switch(method) {
         case 'DANA':
@@ -1525,7 +1266,6 @@ function processDeposit() {
     
     document.getElementById('depositInstruction').innerHTML = instruction;
     
-    // Send Telegram notification
     const telegramMsg = `
 💳 *DEPOSIT DIMINTA*
 💰 Jumlah: ${amount.toLocaleString()} ${type}
@@ -1541,12 +1281,6 @@ function processDeposit() {
 }
 
 // ===== UTILITY FUNCTIONS =====
-function updateStatus(elementId, text, status = 'good') {
-    const element = document.getElementById(elementId);
-    element.textContent = text;
-    element.className = 'status-value ' + status;
-}
-
 function showNotification(message, isSuccess = true) {
     const notification = document.getElementById("notification");
     notification.textContent = message;
@@ -1556,32 +1290,6 @@ function showNotification(message, isSuccess = true) {
     setTimeout(() => {
         notification.style.display = "none";
     }, 4000);
-}
-
-function showSyncIndicator(text) {
-    const indicator = document.getElementById('syncIndicator');
-    if (indicator) {
-        indicator.textContent = text;
-        indicator.style.display = 'block';
-    }
-}
-
-function hideSyncIndicator() {
-    const indicator = document.getElementById('syncIndicator');
-    if (indicator) {
-        indicator.style.display = 'none';
-    }
-}
-
-function showSyncStatus(text) {
-    const status = document.getElementById('syncStatus');
-    if (status) {
-        status.textContent = text;
-        status.style.display = 'block';
-        setTimeout(() => {
-            status.style.display = 'none';
-        }, 2000);
-    }
 }
 
 // ===== TELEGRAM FUNCTIONS =====
@@ -1620,7 +1328,6 @@ function checkForMiningUpdates() {
             const dashboardData = JSON.parse(savedData);
             const dashboardGOV = dashboardData.saldoGOV || 0;
             
-            // Jika dashboard lebih tinggi dari wallet (ada mining baru)
             if (dashboardGOV > walletData.saldoGOV) {
                 const difference = dashboardGOV - walletData.saldoGOV;
                 
@@ -1631,17 +1338,38 @@ function checkForMiningUpdates() {
                     updateDisplay();
                     
                     console.log(`🔄 Auto-updated: +${difference} GOV from mining`);
-                    showSyncStatus("⛏️ Mining diupdate");
+                    showNotification(`⛏️ +${difference} GOV dari mining`);
                 }
             }
             
-            // Update sync status
             checkDashboardSync();
         }
     } catch (error) {
         console.error("Auto-check error:", error);
     }
 }
+
+// ===== SHOW TRANSACTION HISTORY =====
+function showTransactionHistory() {
+    showNotification("Fitur riwayat transaksi akan segera hadir");
+}
+
+// ===== INITIALIZE =====
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("📱 Wallet App Starting...");
+    initializeApp();
+    
+    // Check for mining updates every 30 seconds
+    setInterval(checkForMiningUpdates, 30000);
+    
+    // Auto-sync every 2 minutes
+    setInterval(syncWithDashboard, 120000);
+});
+
+// Auto-save every 2 minutes
+setInterval(() => {
+    saveWalletData();
+}, 120000);
 </script>
 
 <!-- Ads Script -->
