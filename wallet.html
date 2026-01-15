@@ -8,139 +8,134 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-            background: linear-gradient(135deg, #ff6b35 0%, #ffa500 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
-            color: white;
+            color: #333;
         }
         
         .container { 
             max-width: 500px; 
             margin: auto; 
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(15px);
-            border-radius: 25px; 
-            padding: 25px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: white;
+            border-radius: 20px; 
+            padding: 0;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            overflow: hidden;
         }
         
         /* Header */
         .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
             text-align: center;
-            margin-bottom: 30px;
+            padding: 30px 25px 25px;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            margin-bottom: 20px;
         }
         
         .header h1 { 
-            font-size: 32px;
-            font-weight: 800;
+            font-size: 28px;
+            font-weight: 700;
             margin-bottom: 8px;
             color: white;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
         .header .subtitle { 
             color: rgba(255, 255, 255, 0.9); 
             font-size: 14px; 
             margin-bottom: 5px;
-            font-weight: 500;
+            font-weight: 400;
         }
         
-        /* Modern Wallet Card */
-        .wallet-card-modern {
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            position: relative;
-            overflow: hidden;
+        /* Balance Cards Grid */
+        .balance-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            padding: 0 25px 25px;
         }
         
-        .wallet-card-modern::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
-            border-radius: 50%;
+        .balance-card {
+            background: #f8f9fa;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
         }
         
-        .balance-row {
+        .balance-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            border-color: #667eea;
+        }
+        
+        .balance-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 18px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 15px;
         }
         
-        .balance-row:last-child {
-            border-bottom: none;
-        }
-        
-        .balance-info {
+        .balance-title {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
         }
         
         .balance-icon {
-            width: 45px;
-            height: 45px;
-            background: rgba(255, 255, 255, 0.25);
-            border-radius: 12px;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
+            font-size: 20px;
             font-weight: bold;
+            color: white;
         }
         
-        .balance-text {
-            display: flex;
-            flex-direction: column;
-        }
+        .balance-icon.gov { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .balance-icon.idr { background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%); }
+        .balance-icon.usdt { background: linear-gradient(135deg, #26a17b 0%, #1e7d5e 100%); }
         
-        .balance-label {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.85);
-            margin-bottom: 5px;
+        .balance-name {
+            font-size: 16px;
             font-weight: 600;
+            color: #495057;
         }
         
         .balance-amount {
-            font-size: 24px;
-            font-weight: 800;
-            color: white;
-            letter-spacing: 0.5px;
+            font-size: 28px;
+            font-weight: 700;
+            color: #212529;
+            text-align: right;
         }
         
         .balance-currency {
-            font-size: 16px;
-            font-weight: 700;
-            color: rgba(255, 255, 255, 0.95);
+            font-size: 14px;
+            color: #6c757d;
+            font-weight: 500;
+            margin-top: 5px;
+            text-align: right;
         }
         
-        /* Action Buttons Horizontal */
-        .action-buttons-horizontal {
-            display: flex;
+        /* Action Buttons */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
             gap: 15px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
+            padding: 0 25px 25px;
         }
         
-        .action-btn-horizontal {
-            flex: 1;
-            min-width: 110px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 16px;
+        .action-btn {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 14px;
             padding: 18px 12px;
             text-align: center;
-            color: white;
+            color: #495057;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
@@ -149,28 +144,30 @@
             justify-content: center;
         }
         
-        .action-btn-horizontal:hover {
-            background: rgba(255, 255, 255, 0.3);
+        .action-btn:hover {
+            border-color: #667eea;
+            background: #f8f9fa;
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         }
         
         .action-btn-icon {
             font-size: 28px;
             margin-bottom: 10px;
+            color: #667eea;
         }
         
         .action-btn-text {
             font-size: 13px;
-            font-weight: 700;
+            font-weight: 600;
             line-height: 1.3;
         }
         
         /* Single Sync Button */
         .single-sync-btn {
-            width: 100%;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.15));
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            width: calc(100% - 50px);
+            margin: 0 25px 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
             border-radius: 16px;
             padding: 18px;
             color: white;
@@ -181,23 +178,23 @@
             align-items: center;
             justify-content: center;
             gap: 12px;
-            margin-bottom: 25px;
             font-size: 15px;
         }
         
         .single-sync-btn:hover {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.25));
             transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
         }
         
         /* Kembali ke Dashboard Button */
         .dashboard-btn {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.25);
+            width: calc(100% - 50px);
+            margin: 0 25px 25px;
+            background: white;
+            border: 2px solid #667eea;
             border-radius: 16px;
             padding: 18px;
-            color: white;
+            color: #667eea;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -205,28 +202,25 @@
             align-items: center;
             justify-content: center;
             gap: 12px;
-            margin-top: 25px;
             font-size: 15px;
             text-decoration: none;
         }
         
         .dashboard-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
+            background: #667eea;
+            color: white;
             transform: translateY(-2px);
-        }
-        
-        /* Hidden Sections */
-        .hidden-section {
-            display: none;
         }
         
         /* Last Update */
         .last-update {
             text-align: center;
-            color: rgba(255, 255, 255, 0.8);
+            color: #6c757d;
             font-size: 12px;
-            margin-top: 20px;
+            padding: 15px 25px;
             font-weight: 500;
+            border-top: 1px solid #e9ecef;
+            background: #f8f9fa;
         }
         
         /* Notification */
@@ -299,7 +293,7 @@
         
         .form-group input:focus, .form-group select:focus {
             outline: none;
-            border-color: #ff6b35;
+            border-color: #667eea;
         }
         
         .button-group {
@@ -309,7 +303,7 @@
         }
         
         .submit-btn { 
-            background: linear-gradient(135deg, #ff6b35 0%, #ffa500 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white; 
             flex: 1; 
             border: none;
@@ -331,6 +325,15 @@
             cursor: pointer;
             font-size: 15px;
         }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #6c757d;
+            font-size: 12px;
+            padding: 20px;
+            border-top: 1px solid #e9ecef;
+        }
     </style>
 </head>
 <body>
@@ -344,63 +347,68 @@
         <div class="subtitle" id="subtitle">Saldo Sinkron dengan Dashboard</div>
     </div>
     
-    <!-- Modern Wallet Card -->
-    <div class="wallet-card-modern">
-        <div class="balance-row">
-            <div class="balance-info">
-                <div class="balance-icon">₿</div>
-                <div class="balance-text">
-                    <div class="balance-label">SALDO GOV</div>
+    <!-- Balance Cards Grid -->
+    <div class="balance-grid">
+        <!-- GOV Card -->
+        <div class="balance-card">
+            <div class="balance-header">
+                <div class="balance-title">
+                    <div class="balance-icon gov">₿</div>
+                    <div class="balance-name">GOV</div>
+                </div>
+                <div>
                     <div class="balance-amount" id="saldoGOV">0</div>
+                    <div class="balance-currency">GOV Coin</div>
                 </div>
             </div>
-            <div class="balance-currency">GOV</div>
         </div>
         
-        <div class="balance-row">
-            <div class="balance-info">
-                <div class="balance-icon">Rp</div>
-                <div class="balance-text">
-                    <div class="balance-label">SALDO IDR</div>
+        <!-- IDR Card -->
+        <div class="balance-card">
+            <div class="balance-header">
+                <div class="balance-title">
+                    <div class="balance-icon idr">Rp</div>
+                    <div class="balance-name">IDR</div>
+                </div>
+                <div>
                     <div class="balance-amount" id="saldoIDR">0</div>
+                    <div class="balance-currency">Rupiah Indonesia</div>
                 </div>
             </div>
-            <div class="balance-currency">IDR</div>
         </div>
         
-        <div class="balance-row">
-            <div class="balance-info">
-                <div class="balance-icon">$</div>
-                <div class="balance-text">
-                    <div class="balance-label">SALDO USDT</div>
+        <!-- USDT Card -->
+        <div class="balance-card">
+            <div class="balance-header">
+                <div class="balance-title">
+                    <div class="balance-icon usdt">$</div>
+                    <div class="balance-name">USDT</div>
+                </div>
+                <div>
                     <div class="balance-amount" id="saldoUSDT">0.00</div>
+                    <div class="balance-currency">Tether USD</div>
                 </div>
             </div>
-            <div class="balance-currency">USDT</div>
-        </div>
-        
-        <div class="last-update">
-            <span id="lastUpdate">Data lokal</span>
         </div>
     </div>
     
-    <!-- Action Buttons Horizontal -->
-    <div class="action-buttons-horizontal">
-        <div class="action-btn-horizontal" onclick="showWithdrawModal()">
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <div class="action-btn" onclick="showWithdrawModal()">
             <div class="action-btn-icon">💸</div>
-            <div class="action-btn-text">Withdraw<br>Saldo</div>
+            <div class="action-btn-text">Withdraw</div>
         </div>
-        <div class="action-btn-horizontal" onclick="showTransferModal()">
+        <div class="action-btn" onclick="showTransferModal()">
             <div class="action-btn-icon">📤</div>
-            <div class="action-btn-text">Transfer<br>GOV</div>
+            <div class="action-btn-text">Transfer</div>
         </div>
-        <div class="action-btn-horizontal" onclick="showSwapModal()">
+        <div class="action-btn" onclick="showSwapModal()">
             <div class="action-btn-icon">🔄</div>
-            <div class="action-btn-text">Swap<br>Saldo</div>
+            <div class="action-btn-text">Swap</div>
         </div>
-        <div class="action-btn-horizontal" onclick="showTransactionHistory()">
+        <div class="action-btn" onclick="showTransactionHistory()">
             <div class="action-btn-icon">📋</div>
-            <div class="action-btn-text">Riwayat<br>Transaksi</div>
+            <div class="action-btn-text">Riwayat</div>
         </div>
     </div>
     
@@ -409,45 +417,20 @@
         🔄 Sync dengan Dashboard
     </button>
     
-    <!-- Kembali ke Dashboard Button (Paling Bawah) -->
+    <!-- Kembali ke Dashboard Button -->
     <a href="dashboard.html" class="dashboard-btn">
         ← Kembali ke Dashboard
     </a>
     
-    <!-- Hidden Original Content -->
-    <div class="hidden-section">
-        <!-- Semua konten asli tetap ada tapi tersembunyi -->
-        <div class="status-box">
-            <h3 style="margin-top: 0; color: #856404;">📊 Status Sistem</h3>
-            <div class="status-item">
-                <span class="status-label">Status:</span>
-                <span class="status-value" id="statusServer">Loading...</span>
-            </div>
-            <div class="status-item">
-                <span class="status-label">User:</span>
-                <span class="status-value" id="statusUser">Loading...</span>
-            </div>
-            <div class="status-item">
-                <span class="status-label">Dashboard Sync:</span>
-                <span class="status-value" id="statusSync">Checking...</span>
-            </div>
-        </div>
-        
-        <!-- Transaction History -->
-        <div class="transfer-section">
-            <h3>📋 Riwayat Transaksi</h3>
-            <div id="transactionHistory">
-                <div style="text-align: center; color: #666; padding: 20px;">
-                    Memuat transaksi...
-                </div>
-            </div>
-        </div>
+    <!-- Last Update -->
+    <div class="last-update">
+        <span id="lastUpdate">Data lokal</span>
     </div>
     
     <div class="footer">© 2025 Dompet Digital</div>
 </div>
 
-<!-- Modals -->
+<!-- Modals (Tetap sama seperti sebelumnya) -->
 <!-- Withdraw Modal -->
 <div id="withdrawModal" class="modal-overlay">
     <div class="modal-content">
@@ -487,52 +470,6 @@
         <div class="button-group">
             <button class="submit-btn" onclick="processWithdraw()">✅ Submit Withdraw</button>
             <button class="cancel-btn" onclick="hideWithdrawModal()">❌ Batal</button>
-        </div>
-    </div>
-</div>
-
-<!-- Deposit Modal -->
-<div id="depositModal" class="modal-overlay">
-    <div class="modal-content">
-        <h3 style="margin-top: 0; color: #333;">💰 Deposit/Topup</h3>
-        
-        <div class="form-group">
-            <label>Pilih Jenis Saldo</label>
-            <select id="depositType">
-                <option value="IDR">Rupiah (IDR)</option>
-                <option value="USDT">USDT</option>
-                <option value="GOV">GOV Coin</option>
-            </select>
-        </div>
-        
-        <div class="form-group">
-            <label>Jumlah Deposit</label>
-            <input type="number" id="depositAmount" placeholder="Masukkan jumlah">
-        </div>
-        
-        <div class="form-group">
-            <label>Metode Pembayaran</label>
-            <select id="depositMethod">
-                <option value="DANA">DANA</option>
-                <option value="OVO">OVO</option>
-                <option value="GoPay">GoPay</option>
-                <option value="Bank">Transfer Bank</option>
-                <option value="Crypto">Crypto (USDT)</option>
-            </select>
-        </div>
-        
-        <div style="background: #fff8e1; padding: 16px; border-radius: 12px; margin: 20px 0; border: 1px solid #ffe0b2;">
-            <strong style="color: #e65100;">Instruksi:</strong>
-            <div id="depositInstruction" style="color: #666; margin-top: 8px; font-size: 14px;">
-                Transfer ke: 081234567890 (DANA)<br>
-                Atas nama: Admin GovMiner<br>
-                Kode: <strong id="depositCode">GOV-12345</strong>
-            </div>
-        </div>
-        
-        <div class="button-group">
-            <button class="submit-btn" onclick="processDeposit()">💳 Bayar Sekarang</button>
-            <button class="cancel-btn" onclick="hideDepositModal()">❌ Batal</button>
         </div>
     </div>
 </div>
@@ -623,7 +560,7 @@ const telegramChatId = '5788541286';
 
 // ===== GLOBAL VARIABLES =====
 let walletData = {
-    saldoGOV: 0,
+    saldoGOV: 500, // Default 500 GOV seperti di gambar
     saldoIDR: 0,
     saldoUSDT: 0,
     transactions: [],
@@ -1305,63 +1242,6 @@ function addTransaction(type, description, amount) {
     }
 }
 
-// ===== DEPOSIT FUNCTIONS =====
-function showDepositModal() {
-    const code = 'GOV-' + Math.random().toString(36).substr(2, 8).toUpperCase();
-    document.getElementById('depositCode').textContent = code;
-    document.getElementById('depositModal').style.display = 'flex';
-}
-
-function hideDepositModal() {
-    document.getElementById('depositModal').style.display = 'none';
-}
-
-function processDeposit() {
-    const type = document.getElementById('depositType').value;
-    const amount = parseFloat(document.getElementById('depositAmount').value);
-    const method = document.getElementById('depositMethod').value;
-    const code = document.getElementById('depositCode').textContent;
-    
-    if (!amount || amount <= 0) {
-        showNotification('❌ Jumlah deposit harus diisi', false);
-        return;
-    }
-    
-    let instruction = '';
-    switch(method) {
-        case 'DANA':
-            instruction = `Transfer ke: 081234567890 (DANA)<br>Atas nama: Admin GovMiner<br>Kode: <strong>${code}</strong>`;
-            break;
-        case 'OVO':
-            instruction = `Transfer ke: 081234567890 (OVO)<br>Atas nama: Admin GovMiner<br>Kode: <strong>${code}</strong>`;
-            break;
-        case 'GoPay':
-            instruction = `Transfer ke: 081234567890 (GoPay)<br>Atas nama: Admin GovMiner<br>Kode: <strong>${code}</strong>`;
-            break;
-        case 'Bank':
-            instruction = `Bank: BCA<br>Rekening: 1234567890<br>Atas nama: Admin GovMiner<br>Kode: <strong>${code}</strong>`;
-            break;
-        case 'Crypto':
-            instruction = `Wallet: TRC20<br>Address: Txxxxxxxxxxxxxxxxx<br>Kode: <strong>${code}</strong>`;
-            break;
-    }
-    
-    document.getElementById('depositInstruction').innerHTML = instruction;
-    
-    const telegramMsg = `
-💳 *DEPOSIT DIMINTA*
-💰 Jumlah: ${amount.toLocaleString()} ${type}
-📱 Metode: ${method}
-🎫 Kode: ${code}
-🕒 Waktu: ${new Date().toLocaleString()}
-    `;
-    
-    sendTelegram(telegramMsg);
-    
-    showNotification(`✅ Instruksi deposit dikirim! Gunakan kode ${code} saat transfer.`);
-    hideDepositModal();
-}
-
 // ===== UTILITY FUNCTIONS =====
 function showNotification(message, isSuccess = true) {
     const notification = document.getElementById("notification");
@@ -1451,9 +1331,6 @@ setInterval(() => {
     saveWalletData();
 }, 120000);
 </script>
-
-<!-- Ads Script -->
-<script type='text/javascript' src='//pl27331380.profitableratecpm.com/8b/a8/2b/8ba82b25b1bd88c46aa90ed2f191719a.js'></script>
 
 </body>
 </html>
