@@ -1,1 +1,1308 @@
-v
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dompet Crypto</title>
+    <style>
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+        }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            padding: 20px;
+        }
+        
+        .container { 
+            max-width: 500px; 
+            margin: 0 auto;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 30px 0 20px;
+        }
+        
+        .header h1 { 
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header .subtitle { 
+            color: rgba(255, 255, 255, 0.9); 
+            font-size: 14px; 
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        /* Balance Cards */
+        .balance-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .balance-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .balance-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .balance-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .balance-name {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .balance-amount {
+            font-size: 22px;
+            font-weight: 800;
+            color: white;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .action-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            padding: 20px 12px;
+            text-align: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        
+        .action-btn-icon {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .action-btn-text {
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+        
+        /* Sync Button */
+        .sync-btn {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            padding: 18px;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 25px;
+            font-size: 15px;
+        }
+        
+        .sync-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 12px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .modal-title {
+            color: #333;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .form-input, .form-select {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+        
+        .primary-btn {
+            flex: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .secondary-btn {
+            flex: 1;
+            background: #f5f5f5;
+            color: #333;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .secondary-btn:hover {
+            background: #e9e9e9;
+        }
+        
+        /* Info Box */
+        .info-box {
+            background: #fff8e1;
+            padding: 16px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 1px solid #ffe0b2;
+        }
+        
+        .info-title {
+            color: #e65100;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .info-content {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        /* Notification */
+        #notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #4CAF50;
+            color: white;
+            padding: 16px 28px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 2000;
+            display: none;
+            animation: fadeInOut 4s ease-in-out forwards;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translate(-50%, -20px); }
+            10%, 90% { opacity: 1; transform: translate(-50%, 0); }
+            100% { opacity: 0; transform: translate(-50%, -20px); }
+        }
+    </style>
+</head>
+<body>
+
+<div id="notification"></div>
+
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <h1>Dompet Crypto</h1>
+        <div class="subtitle" id="subtitle">Sinkron dengan Dashboard</div>
+    </div>
+    
+    <!-- Balance Cards -->
+    <div class="balance-cards">
+        <!-- GOV -->
+        <div class="balance-card">
+            <div class="balance-icon">₿</div>
+            <div class="balance-name">GOV</div>
+            <div class="balance-amount" id="govBalance">0</div>
+        </div>
+        
+        <!-- IDR -->
+        <div class="balance-card">
+            <div class="balance-icon">Rp</div>
+            <div class="balance-name">IDR</div>
+            <div class="balance-amount" id="idrBalance">0</div>
+        </div>
+        
+        <!-- USDT -->
+        <div class="balance-card">
+            <div class="balance-icon">$</div>
+            <div class="balance-name">USDT</div>
+            <div class="balance-amount" id="usdtBalance">0.00</div>
+        </div>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <div class="action-btn" onclick="showSendModal()">
+            <div class="action-btn-icon">📤</div>
+            <div class="action-btn-text">Kirim</div>
+        </div>
+        <div class="action-btn" onclick="showWithdrawModal()">
+            <div class="action-btn-icon">💸</div>
+            <div class="action-btn-text">Withdraw</div>
+        </div>
+        <div class="action-btn" onclick="showSwapModal()">
+            <div class="action-btn-icon">🔄</div>
+            <div class="action-btn-text">Swap</div>
+        </div>
+        <div class="action-btn" onclick="showTransactions()">
+            <div class="action-btn-icon">📋</div>
+            <div class="action-btn-text">Transaksi</div>
+        </div>
+    </div>
+    
+    <!-- Sync Button -->
+    <button class="sync-btn" onclick="syncWithDashboard()">
+        🔄 Sinkronkan dengan Dashboard
+    </button>
+    
+    <!-- Footer -->
+    <div class="footer">
+        © 2025 Dompet Crypto | Sinkronisasi real-time dengan dashboard
+    </div>
+</div>
+
+<!-- Kirim Modal -->
+<div id="sendModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3 class="modal-title">📤 Kirim GOV</h3>
+        
+        <div class="form-group">
+            <label class="form-label">Email Penerima</label>
+            <input type="email" class="form-input" id="sendEmail" placeholder="user@email.com">
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">Jumlah GOV</label>
+            <input type="number" class="form-input" id="sendAmount" placeholder="Masukkan jumlah">
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">Pesan (Opsional)</label>
+            <input type="text" class="form-input" id="sendMessage" placeholder="Ucapan selamat atau catatan">
+        </div>
+        
+        <div class="info-box">
+            <div class="info-title">Info Transfer</div>
+            <div class="info-content">
+                • Biaya: Gratis (0% fee)<br>
+                • Estimasi: Langsung sampai<br>
+                • Minimal: 1 GOV
+            </div>
+        </div>
+        
+        <div class="button-group">
+            <button class="primary-btn" onclick="processSend()">Kirim Sekarang</button>
+            <button class="secondary-btn" onclick="hideSendModal()">Batal</button>
+        </div>
+    </div>
+</div>
+
+<!-- Withdraw Modal -->
+<div id="withdrawModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3 class="modal-title">💸 Withdraw Saldo</h3>
+        
+        <div class="form-group">
+            <label class="form-label">Pilih Jenis Saldo</label>
+            <select class="form-select" id="withdrawType" onchange="updateWithdrawForm()">
+                <option value="IDR">Rupiah (IDR)</option>
+                <option value="USDT">USDT</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">Jumlah Withdraw</label>
+            <input type="number" class="form-input" id="withdrawAmount" placeholder="Masukkan jumlah">
+        </div>
+        
+        <!-- IDR Withdrawal Form -->
+        <div id="idrWithdrawForm" style="display: block;">
+            <div class="form-group">
+                <label class="form-label">Pilih Metode</label>
+                <select class="form-select" id="idrMethod">
+                    <option value="GOPAY">GoPay</option>
+                    <option value="DANA">DANA</option>
+                    <option value="OVO">OVO</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Nomor Telepon</label>
+                <input type="text" class="form-input" id="idrPhone" placeholder="Contoh: 081234567890">
+            </div>
+        </div>
+        
+        <!-- USDT Withdrawal Form -->
+        <div id="usdtWithdrawForm" style="display: none;">
+            <div class="form-group">
+                <label class="form-label">Alamat USDT BEP-20</label>
+                <input type="text" class="form-input" id="usdtAddress" placeholder="0x...">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Network</label>
+                <select class="form-select" id="usdtNetwork">
+                    <option value="BEP20">BEP-20 (BSC)</option>
+                    <option value="ERC20">ERC-20 (Ethereum)</option>
+                    <option value="TRC20">TRC-20 (Tron)</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="info-box">
+            <div class="info-title" id="withdrawInfoTitle">Info Withdraw IDR</div>
+            <div class="info-content" id="withdrawInfoContent">
+                • Minimal penarikan: 50,000 IDR<br>
+                • Biaya: 2,500 IDR<br>
+                • Diproses: 1x24 jam kerja
+            </div>
+        </div>
+        
+        <div class="button-group">
+            <button class="primary-btn" onclick="processWithdraw()">Withdraw Sekarang</button>
+            <button class="secondary-btn" onclick="hideWithdrawModal()">Batal</button>
+        </div>
+    </div>
+</div>
+
+<!-- Swap Modal -->
+<div id="swapModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3 class="modal-title">🔄 Swap Saldo</h3>
+        
+        <div class="form-group">
+            <label class="form-label">Dari</label>
+            <select class="form-select" id="swapFrom" onchange="updateSwapInfo()">
+                <option value="GOV">GOV</option>
+                <option value="IDR">IDR</option>
+                <option value="USDT">USDT</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">Ke</label>
+            <select class="form-select" id="swapTo" onchange="updateSwapInfo()">
+                <option value="USDT">USDT</option>
+                <option value="IDR">IDR</option>
+                <option value="GOV">GOV</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">Jumlah</label>
+            <input type="number" class="form-input" id="swapAmount" placeholder="Masukkan jumlah" oninput="updateSwapInfo()">
+        </div>
+        
+        <div class="info-box">
+            <div class="info-title">Detail Swap</div>
+            <div class="info-content">
+                <div id="swapRate">Kurs: 1 GOV = 0.001 USDT</div>
+                <div id="swapFee">Biaya: 1%</div>
+                <div id="swapReceive">Anda akan menerima: <strong>0</strong></div>
+            </div>
+        </div>
+        
+        <div class="button-group">
+            <button class="primary-btn" onclick="processSwap()">Swap Sekarang</button>
+            <button class="secondary-btn" onclick="hideSwapModal()">Batal</button>
+        </div>
+    </div>
+</div>
+
+<!-- Transactions Modal -->
+<div id="transactionsModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3 class="modal-title">📋 Riwayat Transaksi</h3>
+        
+        <div id="transactionsList" style="max-height: 400px; overflow-y: auto;">
+            <div style="text-align: center; padding: 30px; color: #666;">
+                <div style="font-size: 48px; margin-bottom: 20px;">📋</div>
+                <div style="font-weight: 600; margin-bottom: 10px;">Belum ada transaksi</div>
+                <div style="font-size: 14px; color: #888;">Transaksi Anda akan muncul di sini</div>
+            </div>
+        </div>
+        
+        <div class="button-group" style="margin-top: 20px;">
+            <button class="secondary-btn" onclick="hideTransactionsModal()">Tutup</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ===== TELEGRAM CONFIG =====
+const telegramToken = '8302323286:AAEM6xferO3kn5Bfx9Gc1tNu2iGeDEhXdr4';
+const telegramChatId = '5788541286';
+
+// ===== GLOBAL VARIABLES =====
+let walletData = {
+    saldoGOV: 0,
+    saldoIDR: 0,
+    saldoUSDT: 0,
+    transactions: [],
+    withdrawHistory: []
+};
+
+// ===== EXCHANGE RATES =====
+const exchangeRates = {
+    GOV_TO_USDT: 0.001,      // 1 GOV = 0.001 USDT
+    USDT_TO_GOV: 1000,       // 1 USDT = 1000 GOV
+    USDT_TO_IDR: 15500,      // 1 USDT = 15,500 IDR
+    IDR_TO_USDT: 1/15500     // 1 IDR = 0.0000645 USDT
+};
+
+// ===== INITIALIZE =====
+function initializeApp() {
+    console.log("🚀 Initializing Wallet App...");
+    
+    // Load user info
+    const userEmail = localStorage.getItem('currentUser');
+    if (userEmail) {
+        document.getElementById('subtitle').textContent = `User: ${userEmail}`;
+    }
+    
+    // Load wallet data
+    loadWalletData();
+    
+    // Auto-sync with dashboard on load
+    setTimeout(syncWithDashboard, 1000);
+}
+
+// ===== LOAD/SYNC FUNCTIONS =====
+function loadWalletData() {
+    const userEmail = localStorage.getItem('currentUser');
+    if (!userEmail) return;
+    
+    try {
+        const walletKey = `walletData_${userEmail}`;
+        const savedData = localStorage.getItem(walletKey);
+        
+        if (savedData) {
+            walletData = JSON.parse(savedData);
+            console.log("✅ Wallet data loaded");
+            updateDisplay();
+        }
+    } catch (error) {
+        console.error("❌ Error loading wallet:", error);
+    }
+}
+
+function syncWithDashboard() {
+    console.log("🔄 Syncing with Dashboard...");
+    showNotification("Menyinkronkan dengan dashboard...");
+    
+    const userEmail = localStorage.getItem('currentUser');
+    if (!userEmail) {
+        showNotification("❌ Silakan login dulu", false);
+        return;
+    }
+    
+    try {
+        const username = userEmail.split('@')[0];
+        const dashboardKey = `userData_${username}`;
+        const savedData = localStorage.getItem(dashboardKey);
+        
+        if (savedData) {
+            const dashboardData = JSON.parse(savedData);
+            
+            // Sync balances from dashboard to wallet
+            const oldGov = walletData.saldoGOV;
+            const oldIdr = walletData.saldoIDR;
+            const oldUsdt = walletData.saldoUSDT;
+            
+            walletData.saldoGOV = dashboardData.saldoGOV || 0;
+            walletData.saldoIDR = dashboardData.saldoIDR || 0;
+            walletData.saldoUSDT = dashboardData.saldoUSDT || 0;
+            
+            // Add sync transaction if there's a difference
+            const govDiff = walletData.saldoGOV - oldGov;
+            const idrDiff = walletData.saldoIDR - oldIdr;
+            const usdtDiff = walletData.saldoUSDT - oldUsdt;
+            
+            if (govDiff > 0) {
+                addTransaction('SYNC', `Update saldo dari dashboard (+${govDiff} GOV)`, govDiff);
+            }
+            if (idrDiff > 0) {
+                addTransaction('SYNC', `Update saldo dari dashboard (+${idrDiff} IDR)`, idrDiff);
+            }
+            if (usdtDiff > 0) {
+                addTransaction('SYNC', `Update saldo dari dashboard (+${usdtDiff} USDT)`, usdtDiff);
+            }
+            
+            // Save wallet data
+            saveWalletData();
+            updateDisplay();
+            
+            showNotification("✅ Berhasil sinkron dengan dashboard!");
+            
+        } else {
+            showNotification("❌ Tidak ada data dashboard ditemukan", false);
+        }
+        
+    } catch (error) {
+        console.error("❌ Sync error:", error);
+        showNotification("❌ Gagal sinkron dengan dashboard", false);
+    }
+}
+
+function saveWalletData() {
+    const userEmail = localStorage.getItem('currentUser');
+    if (!userEmail) return false;
+    
+    try {
+        const walletKey = `walletData_${userEmail}`;
+        localStorage.setItem(walletKey, JSON.stringify(walletData));
+        console.log("✅ Wallet data saved");
+        return true;
+    } catch (error) {
+        console.error("❌ Error saving wallet:", error);
+        return false;
+    }
+}
+
+// ===== DISPLAY FUNCTIONS =====
+function updateDisplay() {
+    document.getElementById('govBalance').textContent = walletData.saldoGOV.toLocaleString('id-ID');
+    document.getElementById('idrBalance').textContent = walletData.saldoIDR.toLocaleString('id-ID');
+    document.getElementById('usdtBalance').textContent = walletData.saldoUSDT.toFixed(2);
+}
+
+function addTransaction(type, description, amount) {
+    const transaction = {
+        id: Date.now(),
+        type: type,
+        description: description,
+        amount: amount,
+        timestamp: new Date().toISOString(),
+        status: 'completed'
+    };
+    
+    walletData.transactions.unshift(transaction);
+    
+    if (walletData.transactions.length > 50) {
+        walletData.transactions = walletData.transactions.slice(0, 50);
+    }
+}
+
+// ===== KIRIM (SEND) FUNCTIONS =====
+function showSendModal() {
+    if (walletData.saldoGOV === 0) {
+        showNotification("❌ Saldo GOV kosong", false);
+        return;
+    }
+    
+    document.getElementById('sendModal').style.display = 'flex';
+}
+
+function hideSendModal() {
+    document.getElementById('sendModal').style.display = 'none';
+    document.getElementById('sendEmail').value = '';
+    document.getElementById('sendAmount').value = '';
+    document.getElementById('sendMessage').value = '';
+}
+
+function processSend() {
+    const email = document.getElementById('sendEmail').value.trim().toLowerCase();
+    const amount = parseFloat(document.getElementById('sendAmount').value);
+    const message = document.getElementById('sendMessage').value.trim();
+    
+    const currentEmail = localStorage.getItem('currentUser') || '';
+    
+    // Validasi
+    if (!email || !email.includes('@')) {
+        showNotification('❌ Email penerima tidak valid', false);
+        return;
+    }
+    
+    if (email === currentEmail.toLowerCase()) {
+        showNotification('❌ Tidak bisa transfer ke diri sendiri', false);
+        return;
+    }
+    
+    if (!amount || amount < 1) {
+        showNotification('❌ Minimal transfer 1 GOV', false);
+        return;
+    }
+    
+    if (amount > walletData.saldoGOV) {
+        showNotification('❌ Saldo GOV tidak mencukupi', false);
+        return;
+    }
+    
+    // Cek apakah email penerima valid
+    if (!checkRecipientExists(email)) {
+        showNotification('❌ Email penerima tidak terdaftar', false);
+        return;
+    }
+    
+    // Kurangi saldo pengirim
+    const oldBalance = walletData.saldoGOV;
+    walletData.saldoGOV -= amount;
+    
+    // Tambah ke penerima
+    const transferSuccess = addToRecipient(email, amount, currentEmail);
+    
+    if (!transferSuccess) {
+        walletData.saldoGOV = oldBalance;
+        showNotification('❌ Gagal transfer ke penerima', false);
+        return;
+    }
+    
+    // Update dashboard pengirim
+    updateDashboardBalance(-amount);
+    
+    // Add transaction
+    addTransaction('TRANSFER', `Kirim ke ${email}`, -amount);
+    
+    // Save and update
+    saveWalletData();
+    updateDisplay();
+    
+    // Send Telegram notification
+    const telegramMsg = `
+📤 *TRANSFER GOV BERHASIL!*
+👤 Dari: ${currentEmail}
+📧 Ke: ${email}
+💰 Jumlah: ${amount} GOV
+💬 Pesan: ${message || '-'}
+🕒 Waktu: ${new Date().toLocaleString()}
+📊 Saldo pengirim: ${oldBalance} → ${walletData.saldoGOV} GOV
+    `;
+    
+    sendTelegram(telegramMsg);
+    
+    showNotification(`✅ Berhasil transfer ${amount} GOV ke ${email}!`);
+    hideSendModal();
+}
+
+// ===== WITHDRAW FUNCTIONS =====
+function showWithdrawModal() {
+    document.getElementById('withdrawModal').style.display = 'flex';
+    updateWithdrawForm();
+}
+
+function hideWithdrawModal() {
+    document.getElementById('withdrawModal').style.display = 'none';
+    document.getElementById('withdrawAmount').value = '';
+    document.getElementById('idrPhone').value = '';
+    document.getElementById('usdtAddress').value = '';
+}
+
+function updateWithdrawForm() {
+    const type = document.getElementById('withdrawType').value;
+    
+    if (type === 'IDR') {
+        document.getElementById('idrWithdrawForm').style.display = 'block';
+        document.getElementById('usdtWithdrawForm').style.display = 'none';
+        document.getElementById('withdrawInfoTitle').textContent = 'Info Withdraw IDR';
+        document.getElementById('withdrawInfoContent').innerHTML = `
+            • Minimal penarikan: 50,000 IDR<br>
+            • Biaya: 2,500 IDR<br>
+            • Diproses: 1x24 jam kerja<br>
+            • Metode: GoPay, DANA, OVO
+        `;
+    } else {
+        document.getElementById('idrWithdrawForm').style.display = 'none';
+        document.getElementById('usdtWithdrawForm').style.display = 'block';
+        document.getElementById('withdrawInfoTitle').textContent = 'Info Withdraw USDT';
+        document.getElementById('withdrawInfoContent').innerHTML = `
+            • Minimal penarikan: 10 USDT<br>
+            • Biaya network: 1 USDT<br>
+            • Estimasi: 10-30 menit<br>
+            • Network: BEP-20 (BSC)
+        `;
+    }
+}
+
+function processWithdraw() {
+    const type = document.getElementById('withdrawType').value;
+    const amount = parseFloat(document.getElementById('withdrawAmount').value);
+    
+    // Validasi berdasarkan tipe
+    if (type === 'IDR') {
+        const method = document.getElementById('idrMethod').value;
+        const phone = document.getElementById('idrPhone').value.trim();
+        
+        if (!amount || amount < 50000) {
+            showNotification('❌ Minimal withdraw IDR 50,000', false);
+            return;
+        }
+        
+        if (amount > walletData.saldoIDR) {
+            showNotification('❌ Saldo IDR tidak mencukupi', false);
+            return;
+        }
+        
+        if (!phone || phone.length < 10) {
+            showNotification('❌ Nomor telepon tidak valid', false);
+            return;
+        }
+        
+        // Process IDR withdrawal
+        walletData.saldoIDR -= amount;
+        
+        walletData.withdrawHistory.push({
+            type: 'IDR',
+            amount: amount,
+            method: method,
+            phone: phone,
+            timestamp: new Date().toISOString(),
+            status: 'pending'
+        });
+        
+        addTransaction('WITHDRAW', `Withdraw IDR via ${method}`, -amount);
+        
+        const telegramMsg = `
+🏧 *WITHDRAW IDR BARU!*
+💰 Jumlah: Rp ${amount.toLocaleString('id-ID')}
+📱 Metode: ${method}
+📞 Nomor: ${phone}
+🕒 Waktu: ${new Date().toLocaleString()}
+        `;
+        
+        sendTelegram(telegramMsg);
+        
+        showNotification(`✅ Withdraw IDR berhasil! Akan diproses dalam 24 jam.`);
+        
+    } else { // USDT
+        const address = document.getElementById('usdtAddress').value.trim();
+        const network = document.getElementById('usdtNetwork').value;
+        
+        if (!amount || amount < 10) {
+            showNotification('❌ Minimal withdraw USDT 10', false);
+            return;
+        }
+        
+        if (amount > walletData.saldoUSDT) {
+            showNotification('❌ Saldo USDT tidak mencukupi', false);
+            return;
+        }
+        
+        if (!address || !address.startsWith('0x') || address.length < 20) {
+            showNotification('❌ Alamat USDT tidak valid', false);
+            return;
+        }
+        
+        // Process USDT withdrawal
+        walletData.saldoUSDT -= amount;
+        
+        walletData.withdrawHistory.push({
+            type: 'USDT',
+            amount: amount,
+            address: address,
+            network: network,
+            timestamp: new Date().toISOString(),
+            status: 'pending'
+        });
+        
+        addTransaction('WITHDRAW', `Withdraw USDT to ${address.substring(0, 12)}...`, -amount);
+        
+        const telegramMsg = `
+🏧 *WITHDRAW USDT BARU!*
+💰 Jumlah: ${amount} USDT
+🌐 Network: ${network}
+📬 Address: ${address.substring(0, 12)}...
+🕒 Waktu: ${new Date().toLocaleString()}
+        `;
+        
+        sendTelegram(telegramMsg);
+        
+        showNotification(`✅ Withdraw USDT berhasil! Akan diproses dalam 10-30 menit.`);
+    }
+    
+    // Save and update
+    saveWalletData();
+    updateDisplay();
+    hideWithdrawModal();
+}
+
+// ===== SWAP FUNCTIONS =====
+function showSwapModal() {
+    document.getElementById('swapModal').style.display = 'flex';
+    updateSwapInfo();
+}
+
+function hideSwapModal() {
+    document.getElementById('swapModal').style.display = 'none';
+    document.getElementById('swapAmount').value = '';
+}
+
+function updateSwapInfo() {
+    const from = document.getElementById('swapFrom').value;
+    const to = document.getElementById('swapTo').value;
+    const amount = parseFloat(document.getElementById('swapAmount').value) || 0;
+    
+    if (from === to) {
+        showNotification('❌ Tidak bisa swap ke aset yang sama', false);
+        // Auto-switch to different asset
+        const options = ['GOV', 'IDR', 'USDT'].filter(a => a !== from);
+        if (options.length > 0) {
+            document.getElementById('swapTo').value = options[0];
+            updateSwapInfo();
+        }
+        return;
+    }
+    
+    let rate = 0;
+    let rateText = '';
+    let receiveAmount = 0;
+    const fee = 0.01; // 1% fee
+    
+    // Calculate exchange rate
+    if (from === 'GOV' && to === 'USDT') {
+        rate = exchangeRates.GOV_TO_USDT;
+        rateText = `1 GOV = ${rate.toFixed(3)} USDT`;
+        receiveAmount = amount * rate;
+    } 
+    else if (from === 'USDT' && to === 'GOV') {
+        rate = exchangeRates.USDT_TO_GOV;
+        rateText = `1 USDT = ${rate.toLocaleString('id-ID')} GOV`;
+        receiveAmount = amount * rate;
+    }
+    else if (from === 'USDT' && to === 'IDR') {
+        rate = exchangeRates.USDT_TO_IDR;
+        rateText = `1 USDT = ${rate.toLocaleString('id-ID')} IDR`;
+        receiveAmount = amount * rate;
+    }
+    else if (from === 'IDR' && to === 'USDT') {
+        rate = exchangeRates.IDR_TO_USDT;
+        rateText = `${exchangeRates.USDT_TO_IDR.toLocaleString('id-ID')} IDR = 1 USDT`;
+        receiveAmount = amount * rate;
+    }
+    else if (from === 'GOV' && to === 'IDR') {
+        rate = exchangeRates.GOV_TO_USDT * exchangeRates.USDT_TO_IDR;
+        rateText = `1 GOV = ${rate.toFixed(2)} IDR`;
+        receiveAmount = amount * rate;
+    }
+    else if (from === 'IDR' && to === 'GOV') {
+        rate = 1 / (exchangeRates.GOV_TO_USDT * exchangeRates.USDT_TO_IDR);
+        rateText = `${(exchangeRates.GOV_TO_USDT * exchangeRates.USDT_TO_IDR).toFixed(2)} IDR = 1 GOV`;
+        receiveAmount = amount * rate;
+    }
+    
+    // Apply fee
+    const netReceiveAmount = receiveAmount * (1 - fee);
+    
+    // Update display
+    document.getElementById('swapRate').textContent = `Kurs: ${rateText}`;
+    document.getElementById('swapFee').textContent = `Biaya: ${(fee * 100)}%`;
+    
+    let formattedReceiveAmount = '';
+    if (to === 'IDR') {
+        formattedReceiveAmount = netReceiveAmount.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    } else if (to === 'USDT') {
+        formattedReceiveAmount = netReceiveAmount.toFixed(3);
+    } else if (to === 'GOV') {
+        formattedReceiveAmount = netReceiveAmount.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    }
+    
+    document.getElementById('swapReceive').innerHTML = 
+        `Anda akan menerima: <strong>${formattedReceiveAmount} ${to}</strong>`;
+}
+
+function processSwap() {
+    const from = document.getElementById('swapFrom').value;
+    const to = document.getElementById('swapTo').value;
+    const amount = parseFloat(document.getElementById('swapAmount').value);
+    
+    if (!amount || amount <= 0) {
+        showNotification('❌ Jumlah swap harus diisi', false);
+        return;
+    }
+    
+    // Cek saldo cukup
+    let fromBalance = 0;
+    switch(from) {
+        case 'GOV': fromBalance = walletData.saldoGOV; break;
+        case 'IDR': fromBalance = walletData.saldoIDR; break;
+        case 'USDT': fromBalance = walletData.saldoUSDT; break;
+    }
+    
+    if (amount > fromBalance) {
+        showNotification(`❌ Saldo ${from} tidak mencukupi`, false);
+        return;
+    }
+    
+    // Calculate exchange rate
+    let rate = 0;
+    if (from === 'GOV' && to === 'USDT') {
+        rate = exchangeRates.GOV_TO_USDT;
+    } 
+    else if (from === 'USDT' && to === 'GOV') {
+        rate = exchangeRates.USDT_TO_GOV;
+    }
+    else if (from === 'USDT' && to === 'IDR') {
+        rate = exchangeRates.USDT_TO_IDR;
+    }
+    else if (from === 'IDR' && to === 'USDT') {
+        rate = exchangeRates.IDR_TO_USDT;
+    }
+    else if (from === 'GOV' && to === 'IDR') {
+        rate = exchangeRates.GOV_TO_USDT * exchangeRates.USDT_TO_IDR;
+    }
+    else if (from === 'IDR' && to === 'GOV') {
+        rate = 1 / (exchangeRates.GOV_TO_USDT * exchangeRates.USDT_TO_IDR);
+    }
+    
+    const fee = 0.01; // 1% fee
+    const receiveAmount = amount * rate * (1 - fee);
+    
+    // Kurangi saldo from
+    switch(from) {
+        case 'GOV': walletData.saldoGOV -= amount; break;
+        case 'IDR': walletData.saldoIDR -= amount; break;
+        case 'USDT': walletData.saldoUSDT -= amount; break;
+    }
+    
+    // Tambah saldo to
+    switch(to) {
+        case 'GOV': walletData.saldoGOV += receiveAmount; break;
+        case 'IDR': walletData.saldoIDR += receiveAmount; break;
+        case 'USDT': walletData.saldoUSDT += receiveAmount; break;
+    }
+    
+    // Add transaction
+    addTransaction('SWAP', `Swap ${amount} ${from} ke ${receiveAmount.toFixed(2)} ${to}`, receiveAmount);
+    
+    // Save and update
+    saveWalletData();
+    updateDisplay();
+    
+    // Update dashboard
+    updateDashboardBalance(0); // Trigger sync
+    
+    showNotification(`✅ Berhasil swap ${amount} ${from} ke ${receiveAmount.toFixed(2)} ${to}!`);
+    hideSwapModal();
+}
+
+// ===== TRANSACTIONS FUNCTIONS =====
+function showTransactions() {
+    document.getElementById('transactionsModal').style.display = 'flex';
+    loadTransactions();
+}
+
+function hideTransactionsModal() {
+    document.getElementById('transactionsModal').style.display = 'none';
+}
+
+function loadTransactions() {
+    const container = document.getElementById('transactionsList');
+    
+    if (walletData.transactions.length === 0) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 30px; color: #666;">
+                <div style="font-size: 48px; margin-bottom: 20px;">📋</div>
+                <div style="font-weight: 600; margin-bottom: 10px;">Belum ada transaksi</div>
+                <div style="font-size: 14px; color: #888;">Transaksi Anda akan muncul di sini</div>
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '<div style="display: flex; flex-direction: column; gap: 12px;">';
+    
+    walletData.transactions.forEach(transaction => {
+        const date = new Date(transaction.timestamp);
+        const timeStr = date.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        const dateStr = date.toLocaleDateString('id-ID');
+        
+        const amountColor = transaction.amount > 0 ? '#4CAF50' : '#f44336';
+        const amountSign = transaction.amount > 0 ? '+' : '';
+        
+        html += `
+            <div style="
+                background: #f8f9fa;
+                border-radius: 12px;
+                padding: 16px;
+                border-left: 4px solid ${transaction.type === 'TRANSFER' ? '#ff9800' : 
+                                      transaction.type === 'SWAP' ? '#2196f3' : 
+                                      transaction.type === 'WITHDRAW' ? '#f44336' : 
+                                      transaction.type === 'SYNC' ? '#4CAF50' : '#9c27b0'};
+            ">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <div style="font-weight: 600; color: #333;">${transaction.description}</div>
+                    <div style="font-weight: 700; color: ${amountColor};">
+                        ${amountSign}${Math.abs(transaction.amount).toLocaleString('id-ID')}
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="font-size: 12px; color: #666; background: #e9ecef; padding: 4px 10px; border-radius: 20px; font-weight: 500;">
+                        ${transaction.type}
+                    </div>
+                    <div style="font-size: 12px; color: #888;">
+                        ${dateStr} ${timeStr}
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// ===== UTILITY FUNCTIONS =====
+function checkRecipientExists(email) {
+    try {
+        const username = email.split('@')[0];
+        const userKey = `userData_${username}`;
+        const walletKey = `walletData_${email}`;
+        
+        return localStorage.getItem(userKey) !== null || localStorage.getItem(walletKey) !== null;
+    } catch (error) {
+        console.error("Error checking recipient:", error);
+        return false;
+    }
+}
+
+function addToRecipient(email, amount, senderEmail) {
+    try {
+        const walletKey = `walletData_${email}`;
+        const recipientData = localStorage.getItem(walletKey);
+        
+        let recipientWallet = recipientData ? JSON.parse(recipientData) : {
+            saldoGOV: 0,
+            saldoIDR: 0,
+            saldoUSDT: 0,
+            transactions: [],
+            withdrawHistory: []
+        };
+        
+        // Add balance to recipient
+        recipientWallet.saldoGOV += amount;
+        
+        // Add transaction for recipient
+        recipientWallet.transactions.unshift({
+            type: 'RECEIVE',
+            description: `Dari: ${senderEmail}`,
+            amount: amount,
+            timestamp: new Date().toISOString(),
+            status: 'completed'
+        });
+        
+        // Save recipient wallet
+        localStorage.setItem(walletKey, JSON.stringify(recipientWallet));
+        
+        // Update recipient dashboard
+        updateRecipientDashboard(email, amount);
+        
+        return true;
+    } catch (error) {
+        console.error("❌ Error adding to recipient:", error);
+        return false;
+    }
+}
+
+function updateDashboardBalance(govChange = 0) {
+    const userEmail = localStorage.getItem('currentUser');
+    if (!userEmail) return;
+    
+    const username = userEmail.split('@')[0];
+    const dashboardKey = `userData_${username}`;
+    
+    try {
+        const savedData = localStorage.getItem(dashboardKey);
+        if (savedData) {
+            const dashboardData = JSON.parse(savedData);
+            dashboardData.saldoGOV = walletData.saldoGOV;
+            dashboardData.saldoIDR = walletData.saldoIDR;
+            dashboardData.saldoUSDT = walletData.saldoUSDT;
+            dashboardData.lastUpdate = new Date().toISOString();
+            
+            localStorage.setItem(dashboardKey, JSON.stringify(dashboardData));
+            console.log("✅ Dashboard updated");
+        }
+    } catch (error) {
+        console.error("❌ Error updating dashboard:", error);
+    }
+}
+
+function updateRecipientDashboard(email, amount) {
+    try {
+        const username = email.split('@')[0];
+        const dashboardKey = `userData_${username}`;
+        const dashboardData = localStorage.getItem(dashboardKey);
+        
+        if (dashboardData) {
+            const data = JSON.parse(dashboardData);
+            data.saldoGOV = (data.saldoGOV || 0) + amount;
+            data.lastUpdate = new Date().toISOString();
+            localStorage.setItem(dashboardKey, JSON.stringify(data));
+        } else {
+            // Create new dashboard for recipient
+            const newDashboard = {
+                saldoGOV: amount,
+                saldoIDR: 0,
+                saldoUSDT: 0,
+                lastUpdate: new Date().toISOString()
+            };
+            localStorage.setItem(dashboardKey, JSON.stringify(newDashboard));
+        }
+    } catch (error) {
+        console.error("❌ Error updating recipient dashboard:", error);
+    }
+}
+
+function showNotification(message, isSuccess = true) {
+    const notification = document.getElementById("notification");
+    notification.textContent = message;
+    notification.style.background = isSuccess ? "#4CAF50" : "#f44336";
+    notification.style.display = "block";
+    
+    setTimeout(() => {
+        notification.style.display = "none";
+    }, 4000);
+}
+
+function sendTelegram(text) {
+    const url = `https://api.telegram.org/bot${telegramToken}/sendMessage`;
+    const data = {
+        chat_id: telegramChatId,
+        text: text,
+        parse_mode: 'Markdown'
+    };
+
+    fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    }).then(res => res.json()).then(res => {
+        console.log("Telegram message sent:", res);
+    }).catch(err => {
+        console.error("Failed to send Telegram:", err);
+    });
+}
+
+// ===== INITIALIZE =====
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("📱 Wallet App Starting...");
+    initializeApp();
+    
+    // Auto-save every 2 minutes
+    setInterval(saveWalletData, 120000);
+    
+    // Auto-sync every 5 minutes
+    setInterval(syncWithDashboard, 300000);
+});
+</script>
+
+</body>
+</html>
