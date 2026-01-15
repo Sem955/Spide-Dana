@@ -53,9 +53,6 @@
             color: #8e8e93;
             font-size: 14px;
             margin-bottom: 5px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
         
         .total-balance-amount {
@@ -140,41 +137,42 @@
             gap: 5px;
         }
         
-        /* Asset Card */
-        .asset-card {
+        /* Token Cards Container */
+        .token-cards {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        
+        /* Token Card */
+        .token-card {
             background: #1c1c1e;
             border-radius: 16px;
             padding: 20px;
-            margin-bottom: 10px;
             border: 1px solid #3a3a3c;
             transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
         }
         
-        .asset-card:hover {
-            background: #2c2c2e;
-        }
-        
-        .asset-card.active {
+        .token-card.active {
             background: #2c2c2e;
             border-color: #0a84ff;
         }
         
-        .asset-header {
+        .token-header-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
         }
         
-        .asset-info {
+        .token-info {
             display: flex;
             align-items: center;
             gap: 12px;
         }
         
-        .asset-icon {
+        .token-icon {
             width: 40px;
             height: 40px;
             border-radius: 20px;
@@ -186,96 +184,82 @@
             color: white;
         }
         
-        .asset-icon.usdt { background: #26a17b; }
-        .asset-icon.gov { background: linear-gradient(135deg, #ff6b35 0%, #ffa500 100%); }
-        .asset-icon.idr { background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%); }
+        .token-icon.gov { background: linear-gradient(135deg, #ff6b35 0%, #ffa500 100%); }
+        .token-icon.idr { background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%); }
+        .token-icon.usdt { background: #26a17b; }
         
-        .asset-name {
+        .token-name {
             font-size: 17px;
             font-weight: 600;
             color: white;
         }
         
-        .asset-change {
+        .token-change {
             font-size: 14px;
             color: #ff3b30;
             font-weight: 500;
         }
         
-        .asset-balance {
+        .token-balance-row {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-end;
         }
         
-        .balance-amount {
+        .token-balance-amount {
             font-size: 24px;
             font-weight: 700;
             color: white;
         }
         
-        .balance-value {
+        .token-balance-value {
             font-size: 16px;
             color: #8e8e93;
         }
         
-        /* Asset Selector */
-        .asset-selector {
-            position: absolute;
-            top: 70px;
-            left: 0;
-            right: 0;
-            background: #1c1c1e;
-            border-radius: 12px;
+        /* Additional Assets */
+        .additional-asset {
+            background: linear-gradient(145deg, #1c1c1e, #2c2c2e);
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 20px;
             border: 1px solid #3a3a3c;
-            z-index: 100;
-            display: none;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
         
-        .asset-selector.show {
-            display: block;
-        }
-        
-        .asset-option {
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            transition: background 0.2s ease;
-            border-bottom: 1px solid #3a3a3c;
-        }
-        
-        .asset-option:last-child {
-            border-bottom: none;
-        }
-        
-        .asset-option:hover {
-            background: #2c2c2e;
-        }
-        
-        .asset-option.active {
-            background: #2c2c2e;
-        }
-        
-        .option-info {
+        .additional-asset-header {
             display: flex;
             align-items: center;
             gap: 12px;
+            margin-bottom: 15px;
         }
         
-        .option-name {
-            font-size: 16px;
-            font-weight: 500;
+        .additional-asset-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            background: #007aff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
             color: white;
         }
         
-        .option-balance {
-            font-size: 16px;
+        .additional-asset-name {
+            font-size: 17px;
             font-weight: 600;
             color: white;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #8e8e93;
+            font-size: 12px;
+            padding: 30px 0 20px;
+            margin-top: 30px;
+            border-top: 1px solid #3a3a3c;
         }
         
         /* Modal Styles */
@@ -403,25 +387,6 @@
             10%, 90% { opacity: 1; transform: translate(-50%, 0); }
             100% { opacity: 0; transform: translate(-50%, -20px); }
         }
-        
-        /* Footer */
-        .footer {
-            text-align: center;
-            color: #8e8e93;
-            font-size: 12px;
-            padding: 30px 0 20px;
-            margin-top: 20px;
-            border-top: 1px solid #3a3a3c;
-        }
-        
-        /* Chevron for selector */
-        .chevron {
-            transition: transform 0.3s ease;
-        }
-        
-        .chevron.rotated {
-            transform: rotate(180deg);
-        }
     </style>
 </head>
 <body>
@@ -437,10 +402,7 @@
     
     <!-- Total Balance -->
     <div class="total-balance">
-        <div class="total-balance-label">
-            <span>Total Aset</span>
-            <span id="selectedAssetName">USDT</span>
-        </div>
+        <div class="total-balance-label">Total Aset</div>
         <div class="total-balance-amount" id="totalBalance">0.00</div>
         <div class="total-balance-change" id="balanceChange"><0,01 USD ▼</div>
     </div>
@@ -473,62 +435,59 @@
         </div>
     </div>
     
-    <!-- Asset Card (Default: USDT) -->
-    <div class="asset-card active" id="assetCard" onclick="toggleAssetSelector()">
-        <div class="asset-header">
-            <div class="asset-info">
-                <div class="asset-icon usdt" id="assetIcon">$</div>
-                <div class="asset-name" id="assetName">USDT</div>
+    <!-- Token Cards -->
+    <div class="token-cards">
+        <!-- USDT Card (Active) -->
+        <div class="token-card active" onclick="selectToken('USDT')">
+            <div class="token-header-row">
+                <div class="token-info">
+                    <div class="token-icon usdt">$</div>
+                    <div class="token-name">USDT</div>
+                </div>
+                <div class="token-change">▼-0,16%</div>
             </div>
-            <div class="asset-change" id="assetChange">▼-0,16%</div>
-        </div>
-        <div class="asset-balance">
-            <div class="balance-amount" id="assetBalance">0.00</div>
-            <div class="balance-value" id="assetValue">0 USD</div>
+            <div class="token-balance-row">
+                <div class="token-balance-amount" id="usdtBalance">0.00</div>
+                <div class="token-balance-value" id="usdtValue">0 USD</div>
+            </div>
         </div>
         
-        <!-- Asset Selector Dropdown -->
-        <div class="asset-selector" id="assetSelector">
-            <div class="asset-option active" data-asset="USDT">
-                <div class="option-info">
-                    <div class="asset-icon usdt">$</div>
-                    <div class="option-name">USDT</div>
+        <!-- GOV Card -->
+        <div class="token-card" onclick="selectToken('GOV')">
+            <div class="token-header-row">
+                <div class="token-info">
+                    <div class="token-icon gov">₿</div>
+                    <div class="token-name">GOV</div>
                 </div>
-                <div class="option-balance" id="usdtBalance">0.00</div>
+                <div class="token-change">▼-0,16%</div>
             </div>
-            <div class="asset-option" data-asset="GOV">
-                <div class="option-info">
-                    <div class="asset-icon gov">₿</div>
-                    <div class="option-name">GOV</div>
-                </div>
-                <div class="option-balance" id="govBalance">0</div>
+            <div class="token-balance-row">
+                <div class="token-balance-amount" id="govBalance">0</div>
+                <div class="token-balance-value" id="govValue">0 USD</div>
             </div>
-            <div class="asset-option" data-asset="IDR">
-                <div class="option-info">
-                    <div class="asset-icon idr">Rp</div>
-                    <div class="option-name">IDR</div>
+        </div>
+        
+        <!-- IDR Card -->
+        <div class="token-card" onclick="selectToken('IDR')">
+            <div class="token-header-row">
+                <div class="token-info">
+                    <div class="token-icon idr">Rp</div>
+                    <div class="token-name">IDR</div>
                 </div>
-                <div class="option-balance" id="idrBalance">0</div>
+                <div class="token-change">▼-0,16%</div>
+            </div>
+            <div class="token-balance-row">
+                <div class="token-balance-amount" id="idrBalance">0</div>
+                <div class="token-balance-value" id="idrValue">0 USD</div>
             </div>
         </div>
     </div>
     
-    <!-- Additional Tokens Section -->
-    <div class="token-header" style="margin-top: 30px;">
-        <div class="token-title">Aset Lainnya</div>
-    </div>
-    
-    <div class="asset-card" style="background: linear-gradient(145deg, #1c1c1e, #2c2c2e);">
-        <div class="asset-header">
-            <div class="asset-info">
-                <div class="asset-icon usdt" style="background: #007aff;">$</div>
-                <div class="asset-name">USD T financial management yields up</div>
-            </div>
-            <div class="asset-change" style="color: #30d158;">▲</div>
-        </div>
-        <div class="asset-balance">
-            <div class="balance-amount">-</div>
-            <div class="balance-value">Yield management</div>
+    <!-- Additional Assets -->
+    <div class="additional-asset">
+        <div class="additional-asset-header">
+            <div class="additional-asset-icon">$</div>
+            <div class="additional-asset-name">USD T financial management yields up</div>
         </div>
     </div>
     
@@ -621,31 +580,31 @@
         
         <div class="form-group">
             <label>Dari</label>
-            <select id="swapFrom">
-                <option value="USDT">USDT</option>
+            <select id="swapFrom" onchange="updateSwapInfo()">
                 <option value="GOV">GOV Coin</option>
+                <option value="USDT">USDT</option>
                 <option value="IDR">Rupiah (IDR)</option>
             </select>
         </div>
         
         <div class="form-group">
             <label>Ke</label>
-            <select id="swapTo">
+            <select id="swapTo" onchange="updateSwapInfo()">
+                <option value="USDT">USDT</option>
                 <option value="GOV">GOV Coin</option>
                 <option value="IDR">Rupiah (IDR)</option>
-                <option value="USDT">USDT</option>
             </select>
         </div>
         
         <div class="form-group">
             <label>Jumlah</label>
-            <input type="number" id="swapAmount" placeholder="Masukkan jumlah">
+            <input type="number" id="swapAmount" placeholder="Masukkan jumlah" oninput="updateSwapInfo()">
         </div>
         
         <div style="background: #2c2c2e; padding: 16px; border-radius: 12px; margin: 20px 0; border: 1px solid #3a3a3c;">
             <strong style="color: #ff9f0a;">Kurs Tukar:</strong><br>
             <span style="color: #8e8e93; font-size: 14px;">
-                <div id="swapRate">1 USDT = 15,500 IDR</div>
+                <div id="swapRate">1000 GOV = 1 USDT</div>
                 <div id="swapFee">Biaya: 1%</div>
                 <div id="swapReceive">Anda akan menerima: <strong>0</strong></div>
             </span>
@@ -674,103 +633,73 @@ let walletData = {
     dashboardSync: false
 };
 
-let selectedAsset = 'USDT'; // Default selected asset
-let isSelectorOpen = false;
+let selectedToken = 'USDT'; // Default selected token
 
-// ===== ASSET SELECTOR FUNCTIONS =====
-function toggleAssetSelector() {
-    const selector = document.getElementById('assetSelector');
-    const chevron = document.querySelector('.view-all span');
+// ===== EXCHANGE RATES =====
+const exchangeRates = {
+    GOV_TO_USDT: 0.001,      // 1 GOV = 0.001 USDT (1000 GOV = 1 USDT)
+    USDT_TO_GOV: 1000,       // 1 USDT = 1000 GOV
+    USDT_TO_IDR: 15500,      // 1 USDT = 15,500 IDR
+    IDR_TO_USDT: 1/15500,    // 1 IDR = 0.0000645 USDT
+};
+
+// ===== TOKEN SELECTION =====
+function selectToken(token) {
+    selectedToken = token;
     
-    isSelectorOpen = !isSelectorOpen;
+    // Update active state
+    document.querySelectorAll('.token-card').forEach(card => {
+        card.classList.remove('active');
+    });
     
-    if (isSelectorOpen) {
-        selector.classList.add('show');
-        chevron.classList.add('rotated');
-        updateAssetSelectorBalances();
-    } else {
-        selector.classList.remove('show');
-        chevron.classList.remove('rotated');
+    if (token === 'USDT') {
+        document.querySelector('.token-card:nth-child(1)').classList.add('active');
+    } else if (token === 'GOV') {
+        document.querySelector('.token-card:nth-child(2)').classList.add('active');
+    } else if (token === 'IDR') {
+        document.querySelector('.token-card:nth-child(3)').classList.add('active');
     }
+    
+    // Update total balance display
+    updateTotalBalance();
 }
 
-function updateAssetSelectorBalances() {
+// ===== UPDATE DISPLAY =====
+function updateDisplay() {
+    // Update individual token balances
     document.getElementById('usdtBalance').textContent = walletData.saldoUSDT.toFixed(2);
     document.getElementById('govBalance').textContent = walletData.saldoGOV.toLocaleString('id-ID');
     document.getElementById('idrBalance').textContent = walletData.saldoIDR.toLocaleString('id-ID');
-}
-
-function selectAsset(asset) {
-    selectedAsset = asset;
     
-    // Update active state in selector
-    document.querySelectorAll('.asset-option').forEach(option => {
-        option.classList.remove('active');
-        if (option.dataset.asset === asset) {
-            option.classList.add('active');
-        }
-    });
+    // Update token values in USD
+    const usdtValue = walletData.saldoUSDT;
+    const govValue = walletData.saldoGOV * exchangeRates.GOV_TO_USDT;
+    const idrValue = walletData.saldoIDR * exchangeRates.IDR_TO_USDT;
     
-    // Update main card display
-    const assetCard = document.getElementById('assetCard');
-    const assetIcon = document.getElementById('assetIcon');
-    const assetName = document.getElementById('assetName');
-    const selectedAssetName = document.getElementById('selectedAssetName');
-    
-    // Update icon and name
-    assetIcon.className = 'asset-icon';
-    if (asset === 'USDT') {
-        assetIcon.classList.add('usdt');
-        assetIcon.textContent = '$';
-        assetName.textContent = 'USDT';
-        selectedAssetName.textContent = 'USDT';
-    } else if (asset === 'GOV') {
-        assetIcon.classList.add('gov');
-        assetIcon.textContent = '₿';
-        assetName.textContent = 'GOV';
-        selectedAssetName.textContent = 'GOV';
-    } else if (asset === 'IDR') {
-        assetIcon.classList.add('idr');
-        assetIcon.textContent = 'Rp';
-        assetName.textContent = 'IDR';
-        selectedAssetName.textContent = 'IDR';
-    }
-    
-    // Update balances
-    updateAssetDisplay();
-    
-    // Close selector
-    toggleAssetSelector();
-}
-
-function updateAssetDisplay() {
-    let balance, value, change;
-    
-    switch(selectedAsset) {
-        case 'USDT':
-            balance = walletData.saldoUSDT.toFixed(2);
-            value = `${(walletData.saldoUSDT * 1).toFixed(2)} USD`;
-            change = '▼-0,16%';
-            break;
-        case 'GOV':
-            balance = walletData.saldoGOV.toLocaleString('id-ID');
-            value = `${(walletData.saldoGOV * 15500).toLocaleString('id-ID')} IDR`;
-            change = '▼-0,16%';
-            break;
-        case 'IDR':
-            balance = walletData.saldoIDR.toLocaleString('id-ID');
-            value = `${(walletData.saldoIDR / 15500).toFixed(2)} GOV`;
-            change = '▼-0,16%';
-            break;
-    }
-    
-    document.getElementById('assetBalance').textContent = balance;
-    document.getElementById('assetValue').textContent = value;
-    document.getElementById('assetChange').textContent = change;
+    document.getElementById('usdtValue').textContent = `${usdtValue.toFixed(2)} USD`;
+    document.getElementById('govValue').textContent = `${govValue.toFixed(2)} USD`;
+    document.getElementById('idrValue').textContent = `${idrValue.toFixed(2)} USD`;
     
     // Update total balance
-    document.getElementById('totalBalance').textContent = balance;
-    document.getElementById('balanceChange').textContent = change;
+    updateTotalBalance();
+}
+
+function updateTotalBalance() {
+    let totalUSD = 0;
+    
+    switch(selectedToken) {
+        case 'USDT':
+            totalUSD = walletData.saldoUSDT;
+            break;
+        case 'GOV':
+            totalUSD = walletData.saldoGOV * exchangeRates.GOV_TO_USDT;
+            break;
+        case 'IDR':
+            totalUSD = walletData.saldoIDR * exchangeRates.IDR_TO_USDT;
+            break;
+    }
+    
+    document.getElementById('totalBalance').textContent = totalUSD.toFixed(2);
 }
 
 // ===== SWAP FUNCTIONS =====
@@ -789,36 +718,63 @@ function updateSwapInfo() {
     const to = document.getElementById('swapTo').value;
     const amount = parseFloat(document.getElementById('swapAmount').value) || 0;
     
-    // Kurs tukar contoh
-    let rate = 1;
+    let rate = 0;
     let rateText = '';
+    let receiveAmount = 0;
+    const fee = 0.01; // 1% fee
     
-    if (from === 'USDT' && to === 'IDR') {
-        rate = 15500; // 1 USDT = 15,500 IDR
+    // Calculate exchange rate
+    if (from === 'GOV' && to === 'USDT') {
+        rate = exchangeRates.GOV_TO_USDT; // 1 GOV = 0.001 USDT
+        rateText = '1000 GOV = 1 USDT';
+        receiveAmount = amount * rate;
+    } 
+    else if (from === 'USDT' && to === 'GOV') {
+        rate = exchangeRates.USDT_TO_GOV; // 1 USDT = 1000 GOV
+        rateText = '1 USDT = 1000 GOV';
+        receiveAmount = amount * rate;
+    }
+    else if (from === 'USDT' && to === 'IDR') {
+        rate = exchangeRates.USDT_TO_IDR; // 1 USDT = 15,500 IDR
         rateText = '1 USDT = 15,500 IDR';
-    } else if (from === 'USDT' && to === 'GOV') {
-        rate = 0.1; // 1 USDT = 0.1 GOV
-        rateText = '1 USDT = 0.1 GOV';
-    } else if (from === 'GOV' && to === 'IDR') {
-        rate = 15500; // 1 GOV = 15,500 IDR
-        rateText = '1 GOV = 15,500 IDR';
-    } else if (from === 'GOV' && to === 'USDT') {
-        rate = 10; // 1 GOV = 10 USDT
-        rateText = '1 GOV = 10 USDT';
-    } else if (from === 'IDR' && to === 'USDT') {
-        rate = 1/15500; // 1 IDR = 1/15500 USDT
+        receiveAmount = amount * rate;
+    }
+    else if (from === 'IDR' && to === 'USDT') {
+        rate = exchangeRates.IDR_TO_USDT; // 1 IDR = 0.0000645 USDT
         rateText = '15,500 IDR = 1 USDT';
-    } else if (from === 'IDR' && to === 'GOV') {
-        rate = 1/15500; // 1 IDR = 1/15500 GOV
-        rateText = '15,500 IDR = 1 GOV';
+        receiveAmount = amount * rate;
+    }
+    else if (from === 'GOV' && to === 'IDR') {
+        // 1 GOV = 15.5 IDR (karena 1000 GOV = 1 USDT = 15,500 IDR)
+        rate = 15.5;
+        rateText = '1 GOV = 15.5 IDR';
+        receiveAmount = amount * rate;
+    }
+    else if (from === 'IDR' && to === 'GOV') {
+        rate = 1/15.5;
+        rateText = '15.5 IDR = 1 GOV';
+        receiveAmount = amount * rate;
     }
     
-    const fee = 0.01; // 1% fee
-    const receiveAmount = amount * rate * (1 - fee);
+    // Apply fee
+    const netReceiveAmount = receiveAmount * (1 - fee);
     
+    // Update display
     document.getElementById('swapRate').textContent = rateText;
     document.getElementById('swapFee').textContent = `Biaya: ${(fee * 100)}%`;
-    document.getElementById('swapReceive').innerHTML = `Anda akan menerima: <strong>${receiveAmount.toFixed(2)} ${to}</strong>`;
+    
+    // Format receive amount based on asset type
+    let formattedReceiveAmount = '';
+    if (to === 'IDR') {
+        formattedReceiveAmount = netReceiveAmount.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    } else if (to === 'USDT') {
+        formattedReceiveAmount = netReceiveAmount.toFixed(3);
+    } else if (to === 'GOV') {
+        formattedReceiveAmount = netReceiveAmount.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    }
+    
+    document.getElementById('swapReceive').innerHTML = 
+        `Anda akan menerima: <strong>${formattedReceiveAmount} ${to}</strong>`;
 }
 
 function processSwap() {
@@ -844,20 +800,25 @@ function processSwap() {
         return;
     }
     
-    // Kurs tukar contoh
-    let rate = 1;
-    if (from === 'USDT' && to === 'IDR') {
-        rate = 15500;
-    } else if (from === 'USDT' && to === 'GOV') {
-        rate = 0.1;
-    } else if (from === 'GOV' && to === 'IDR') {
-        rate = 15500;
-    } else if (from === 'GOV' && to === 'USDT') {
-        rate = 10;
-    } else if (from === 'IDR' && to === 'USDT') {
-        rate = 1/15500;
-    } else if (from === 'IDR' && to === 'GOV') {
-        rate = 1/15500;
+    // Calculate exchange rate
+    let rate = 0;
+    if (from === 'GOV' && to === 'USDT') {
+        rate = exchangeRates.GOV_TO_USDT;
+    } 
+    else if (from === 'USDT' && to === 'GOV') {
+        rate = exchangeRates.USDT_TO_GOV;
+    }
+    else if (from === 'USDT' && to === 'IDR') {
+        rate = exchangeRates.USDT_TO_IDR;
+    }
+    else if (from === 'IDR' && to === 'USDT') {
+        rate = exchangeRates.IDR_TO_USDT;
+    }
+    else if (from === 'GOV' && to === 'IDR') {
+        rate = 15.5;
+    }
+    else if (from === 'IDR' && to === 'GOV') {
+        rate = 1/15.5;
     }
     
     const fee = 0.01; // 1% fee
@@ -887,11 +848,6 @@ function processSwap() {
     hideSwapModal();
 }
 
-// ===== EVENT LISTENERS FOR SWAP =====
-document.getElementById('swapFrom').addEventListener('change', updateSwapInfo);
-document.getElementById('swapTo').addEventListener('change', updateSwapInfo);
-document.getElementById('swapAmount').addEventListener('input', updateSwapInfo);
-
 // ===== INITIALIZE =====
 function initializeApp() {
     console.log("🚀 Initializing Wallet App...");
@@ -899,30 +855,11 @@ function initializeApp() {
     // Load user info
     const userEmail = localStorage.getItem('currentUser');
     if (userEmail) {
-        document.getElementById('subtitle').textContent = `User: ${userEmail}`;
-    } else {
-        document.getElementById('subtitle').textContent = 'Guest Mode';
+        document.getElementById('subtitle').textContent += ` | ${userEmail}`;
     }
     
     // Load wallet data
     loadWalletData();
-    
-    // Setup asset selector event listeners
-    document.querySelectorAll('.asset-option').forEach(option => {
-        option.addEventListener('click', () => {
-            selectAsset(option.dataset.asset);
-        });
-    });
-    
-    // Close selector when clicking outside
-    document.addEventListener('click', (e) => {
-        const assetCard = document.getElementById('assetCard');
-        const selector = document.getElementById('assetSelector');
-        
-        if (!assetCard.contains(e.target) && isSelectorOpen) {
-            toggleAssetSelector();
-        }
-    });
 }
 
 // ===== LOAD WALLET DATA =====
@@ -1015,73 +952,6 @@ function loadFromDashboard() {
     }
 }
 
-// ===== SYNC WITH DASHBOARD =====
-function syncWithDashboard() {
-    console.log("🔄 Syncing with Dashboard...");
-    showNotification("Sync dengan Dashboard...");
-    
-    const userEmail = localStorage.getItem('currentUser');
-    if (!userEmail) {
-        showNotification("❌ Silakan login dulu", false);
-        return;
-    }
-    
-    try {
-        const username = userEmail.split('@')[0];
-        const dashboardKey = `userData_${username}`;
-        const savedData = localStorage.getItem(dashboardKey);
-        
-        if (savedData) {
-            const dashboardData = JSON.parse(savedData);
-            
-            // Ambil yang lebih tinggi antara dashboard dan wallet
-            const dashboardGOV = dashboardData.saldoGOV || 0;
-            const walletGOV = walletData.saldoGOV || 0;
-            
-            if (dashboardGOV > walletGOV) {
-                // Dashboard lebih tinggi (mungkin ada mining baru)
-                const difference = dashboardGOV - walletGOV;
-                walletData.saldoGOV = dashboardGOV;
-                
-                if (difference > 0) {
-                    addTransaction('SYNC', `Update dari dashboard (+${difference} GOV)`, difference);
-                }
-                
-                showNotification(`✅ +${difference} GOV dari dashboard`);
-                
-            } else if (walletGOV > dashboardGOV) {
-                // Wallet lebih tinggi (mungkin ada deposit/transfer)
-                const difference = walletGOV - dashboardGOV;
-                dashboardData.saldoGOV = walletGOV;
-                localStorage.setItem(dashboardKey, JSON.stringify(dashboardData));
-                
-                showNotification(`✅ ${difference} GOV dipush ke dashboard`);
-                
-            } else {
-                showNotification("✅ Saldo sudah sama dengan dashboard");
-            }
-            
-            // Update saldo lainnya
-            walletData.saldoIDR = dashboardData.saldoIDR || walletData.saldoIDR;
-            walletData.saldoUSDT = dashboardData.saldoUSDT || walletData.saldoUSDT;
-            
-            walletData.dashboardSync = true;
-            walletData.lastSync = new Date().toISOString();
-            
-            // Save wallet
-            saveWalletData();
-            updateDisplay();
-            
-        } else {
-            showNotification("❌ Tidak ada data dashboard ditemukan", false);
-        }
-        
-    } catch (error) {
-        console.error("❌ Sync error:", error);
-        showNotification("❌ Gagal sync dengan dashboard", false);
-    }
-}
-
 // ===== TRANSFER FUNCTIONS =====
 function showTransferModal() {
     if (walletData.saldoGOV === 0) {
@@ -1171,119 +1041,6 @@ function processTransfer() {
     
     showNotification(`✅ Berhasil transfer ${amount} GOV ke ${email}!`);
     hideTransferModal();
-}
-
-// ===== FUNGSI CEK PENERIMA =====
-function checkIfRecipientExists(email) {
-    try {
-        const username = email.split('@')[0];
-        const userKey = `userData_${username}`;
-        const userData = localStorage.getItem(userKey);
-        
-        const walletKey = `walletData_${email}`;
-        const walletData = localStorage.getItem(walletKey);
-        
-        return userData !== null || walletData !== null;
-        
-    } catch (error) {
-        console.error("Error checking recipient:", error);
-        return false;
-    }
-}
-
-// ===== FUNGSI TAMBAH SALDO KE PENERIMA =====
-function addToRecipientBalance(email, amount, senderEmail) {
-    try {
-        const walletKey = `walletData_${email}`;
-        const currentWalletData = localStorage.getItem(walletKey);
-        
-        let recipientWallet;
-        
-        if (currentWalletData) {
-            recipientWallet = JSON.parse(currentWalletData);
-            const oldBalance = recipientWallet.saldoGOV || 0;
-            recipientWallet.saldoGOV = oldBalance + amount;
-            
-        } else {
-            const username = email.split('@')[0];
-            const userKey = `userData_${username}`;
-            const userDataStr = localStorage.getItem(userKey);
-            
-            let startingBalance = 0;
-            if (userDataStr) {
-                const userData = JSON.parse(userDataStr);
-                startingBalance = userData.saldoGOV || 0;
-            }
-            
-            recipientWallet = {
-                saldoGOV: startingBalance + amount,
-                saldoIDR: 0,
-                saldoUSDT: 0,
-                transactions: [],
-                withdrawHistory: [],
-                lastSync: new Date().toISOString(),
-                isNewUser: false
-            };
-        }
-        
-        recipientWallet.transactions.unshift({
-            type: 'RECEIVE',
-            description: `Dari: ${senderEmail}`,
-            amount: amount,
-            timestamp: new Date().toISOString()
-        });
-        
-        if (recipientWallet.transactions.length > 50) {
-            recipientWallet.transactions = recipientWallet.transactions.slice(0, 50);
-        }
-        
-        recipientWallet.lastSync = new Date().toISOString();
-        
-        localStorage.setItem(walletKey, JSON.stringify(recipientWallet));
-        
-        updateRecipientDashboard(email, amount);
-        
-        console.log(`✅ Added ${amount} GOV to recipient ${email}`);
-        return true;
-        
-    } catch (error) {
-        console.error("❌ Error adding to recipient balance:", error);
-        return false;
-    }
-}
-
-// ===== UPDATE DASHBOARD PENERIMA =====
-function updateRecipientDashboard(email, amount) {
-    try {
-        const username = email.split('@')[0];
-        const dashboardKey = `userData_${username}`;
-        const dashboardDataStr = localStorage.getItem(dashboardKey);
-        
-        if (dashboardDataStr) {
-            const dashboardData = JSON.parse(dashboardDataStr);
-            const oldBalance = dashboardData.saldoGOV || 0;
-            dashboardData.saldoGOV = oldBalance + amount;
-            
-            localStorage.setItem(dashboardKey, JSON.stringify(dashboardData));
-            console.log(`✅ Updated recipient dashboard: ${email} +${amount} GOV`);
-        } else {
-            const newDashboardData = {
-                saldoGOV: amount,
-                saldoIDR: 0,
-                saldoUSDT: 0,
-                referralPoints: 0,
-                referrals: [],
-                lastClaimTime: null,
-                lastUpdate: new Date().toISOString()
-            };
-            
-            localStorage.setItem(dashboardKey, JSON.stringify(newDashboardData));
-            console.log(`✅ Created new dashboard for recipient: ${email}`);
-        }
-        
-    } catch (error) {
-        console.error("❌ Error updating recipient dashboard:", error);
-    }
 }
 
 // ===== WITHDRAW FUNCTIONS =====
@@ -1388,27 +1145,6 @@ function processWithdraw() {
     hideWithdrawModal();
 }
 
-// ===== UPDATE DASHBOARD SAAT WITHDRAW =====
-function updateDashboardOnWithdraw(amount) {
-    const userEmail = localStorage.getItem('currentUser');
-    if (!userEmail) return;
-    
-    const username = userEmail.split('@')[0];
-    const dashboardKey = `userData_${username}`;
-    
-    try {
-        const savedData = localStorage.getItem(dashboardKey);
-        if (savedData) {
-            const dashboardData = JSON.parse(savedData);
-            dashboardData.saldoGOV = Math.max(0, dashboardData.saldoGOV - amount);
-            localStorage.setItem(dashboardKey, JSON.stringify(dashboardData));
-            console.log(`✅ Dashboard updated on withdraw: -${amount} GOV`);
-        }
-    } catch (error) {
-        console.error("❌ Error updating dashboard:", error);
-    }
-}
-
 // ===== SAVE WALLET DATA =====
 function saveWalletData() {
     const userEmail = localStorage.getItem('currentUser');
@@ -1429,13 +1165,6 @@ function saveWalletData() {
         console.error("❌ Error saving wallet:", error);
         return false;
     }
-}
-
-// ===== DISPLAY FUNCTIONS =====
-function updateDisplay() {
-    updateAssetDisplay();
-    
-    const lastUpdate = walletData.lastSync ? new Date(walletData.lastSync).toLocaleString() : 'Belum pernah';
 }
 
 // ===== TRANSACTION FUNCTIONS =====
@@ -1466,67 +1195,10 @@ function showNotification(message, isSuccess = true) {
     }, 4000);
 }
 
-// ===== TELEGRAM FUNCTIONS =====
-function sendTelegram(text) {
-    const url = `https://api.telegram.org/bot${telegramToken}/sendMessage`;
-    const data = {
-        chat_id: telegramChatId,
-        text: text,
-        parse_mode: 'Markdown'
-    };
-
-    fetch(url, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    }).then(res => res.json()).then(res => {
-        console.log("Telegram message sent:", res);
-    }).catch(err => {
-        console.error("Failed to send Telegram:", err);
-    });
-}
-
-// ===== AUTO-CHECK FOR MINING UPDATES =====
-function checkForMiningUpdates() {
-    const userEmail = localStorage.getItem('currentUser');
-    if (!userEmail) return;
-    
-    try {
-        const username = userEmail.split('@')[0];
-        const dashboardKey = `userData_${username}`;
-        const savedData = localStorage.getItem(dashboardKey);
-        
-        if (savedData) {
-            const dashboardData = JSON.parse(savedData);
-            const dashboardGOV = dashboardData.saldoGOV || 0;
-            
-            if (dashboardGOV > walletData.saldoGOV) {
-                const difference = dashboardGOV - walletData.saldoGOV;
-                
-                if (difference > 0) {
-                    walletData.saldoGOV = dashboardGOV;
-                    addTransaction('MINING', 'Update dari mining dashboard', difference);
-                    saveWalletData();
-                    updateDisplay();
-                    
-                    console.log(`🔄 Auto-updated: +${difference} GOV from mining`);
-                    showNotification(`⛏️ +${difference} GOV dari mining`);
-                }
-            }
-        }
-    } catch (error) {
-        console.error("Auto-check error:", error);
-    }
-}
-
-// ===== SHOW TRANSACTION HISTORY =====
 function showTransactionHistory() {
     showNotification("Fitur riwayat transaksi akan segera hadir");
 }
 
-// ===== SHOW ALL TOKENS =====
 function showAllTokens() {
     showNotification("Menampilkan semua token...");
 }
@@ -1536,17 +1208,11 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log("📱 Wallet App Starting...");
     initializeApp();
     
-    // Check for mining updates every 30 seconds
-    setInterval(checkForMiningUpdates, 30000);
-    
-    // Auto-sync every 2 minutes
-    setInterval(syncWithDashboard, 120000);
+    // Auto-save every 2 minutes
+    setInterval(() => {
+        saveWalletData();
+    }, 120000);
 });
-
-// Auto-save every 2 minutes
-setInterval(() => {
-    saveWalletData();
-}, 120000);
 </script>
 
 </body>
