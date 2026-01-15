@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crypto Wallet</title>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    
     <style>
         * { 
             box-sizing: border-box; 
@@ -245,7 +250,7 @@
             opacity: 0.8;
         }
         
-        /* Assets List */
+        /* Assets List - HANYA 3 KOIN */
         .assets-list {
             display: flex;
             flex-direction: column;
@@ -308,8 +313,6 @@
         .asset-icon.gov { background: rgba(255, 107, 53, 0.1); color: #ff6b35; }
         .asset-icon.idr { background: rgba(76, 175, 80, 0.1); color: #4CAF50; }
         .asset-icon.usdt { background: rgba(41, 196, 255, 0.1); color: #29c4ff; }
-        .asset-icon.btc { background: rgba(247, 147, 26, 0.1); color: #f7931a; }
-        .asset-icon.eth { background: rgba(98, 126, 234, 0.1); color: #627eea; }
         
         .asset-details {
             flex: 1;
@@ -654,6 +657,29 @@
         ::-webkit-scrollbar-thumb:hover {
             background: rgba(41, 196, 255, 0.8);
         }
+        
+        /* Notification */
+        #notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #34c759;
+            color: white;
+            padding: 16px 28px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 2000;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            display: none;
+        }
+        
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translate(-50%, -20px); }
+            10%, 90% { opacity: 1; transform: translate(-50%, 0); }
+            100% { opacity: 0; transform: translate(-50%, -20px); }
+        }
     </style>
 </head>
 <body>
@@ -665,7 +691,7 @@
     <div class="wallet-header">
         <div>
             <div class="wallet-title">Crypto Wallet</div>
-            <div class="wallet-subtitle">Secure • Multi-chain • Non-custodial</div>
+            <div class="wallet-subtitle">Sync dengan Dashboard • Multi-device</div>
         </div>
         <div class="scan-btn" onclick="scanQR()">
             📷
@@ -676,12 +702,12 @@
     <div class="balance-card">
         <div class="total-balance-label">
             Total Balance
-            <span class="network-badge">ETH • BSC • POLYGON</span>
+            <span class="network-badge" id="networkStatus">🔄 Syncing...</span>
         </div>
         <div class="balance-amount" id="totalBalance">$0.00</div>
         <div class="balance-change">
-            <span>▼</span>
-            <span id="balanceChange">0.00% (24h)</span>
+            <span id="balanceChangeIcon">▲</span>
+            <span id="balanceChange">0.00%</span>
         </div>
     </div>
     
@@ -689,55 +715,40 @@
     <div class="action-buttons">
         <div class="action-btn" onclick="showReceiveModal()">
             <div class="action-btn-icon">📥</div>
-            <div class="action-btn-text">Receive</div>
+            <div class="action-btn-text">Terima</div>
         </div>
         <div class="action-btn" onclick="showSendModal()">
             <div class="action-btn-icon">📤</div>
-            <div class="action-btn-text">Send</div>
+            <div class="action-btn-text">Kirim</div>
         </div>
         <div class="action-btn" onclick="showSwapModal()">
             <div class="action-btn-icon">🔄</div>
-            <div class="action-btn-text">Swap</div>
+            <div class="action-btn-text">Tukar</div>
         </div>
         <div class="action-btn" onclick="showBuyModal()">
             <div class="action-btn-icon">💰</div>
-            <div class="action-btn-text">Buy</div>
+            <div class="action-btn-text">Beli</div>
         </div>
     </div>
     
-    <!-- Assets Section -->
+    <!-- Assets Section - HANYA 3 KOIN -->
     <div class="assets-section">
         <div class="section-header">
-            <div class="section-title">Your Assets</div>
-            <div class="view-all-btn" onclick="showAllAssets()">
-                View All
-                <span>↗</span>
+            <div class="section-title">Aset Anda</div>
+            <div class="view-all-btn" onclick="refreshWallet()">
+                Refresh
+                <span>🔄</span>
             </div>
         </div>
         
         <div class="assets-list">
-            <!-- USDT Asset -->
-            <div class="asset-item" onclick="selectAsset('USDT')">
-                <div class="asset-info">
-                    <div class="asset-icon usdt">$</div>
-                    <div class="asset-details">
-                        <div class="asset-name">USDT</div>
-                        <div class="asset-change">▼ 0.16%</div>
-                    </div>
-                </div>
-                <div class="asset-balance">
-                    <div class="balance-crypto" id="usdtBalance">0.00 USDT</div>
-                    <div class="balance-fiat" id="usdtValue">$0.00</div>
-                </div>
-            </div>
-            
-            <!-- GOV Asset -->
+            <!-- GOV Asset (SYNC DARI DASHBOARD) -->
             <div class="asset-item" onclick="selectAsset('GOV')">
                 <div class="asset-info">
                     <div class="asset-icon gov">G</div>
                     <div class="asset-details">
                         <div class="asset-name">GOV</div>
-                        <div class="asset-change">▲ 2.45%</div>
+                        <div class="asset-change" id="govChange">Loading...</div>
                     </div>
                 </div>
                 <div class="asset-balance">
@@ -746,18 +757,33 @@
                 </div>
             </div>
             
-            <!-- Bitcoin Asset -->
-            <div class="asset-item" onclick="selectAsset('BTC')">
+            <!-- IDR Asset -->
+            <div class="asset-item" onclick="selectAsset('IDR')">
                 <div class="asset-info">
-                    <div class="asset-icon btc">₿</div>
+                    <div class="asset-icon idr">Rp</div>
                     <div class="asset-details">
-                        <div class="asset-name">Bitcoin</div>
-                        <div class="asset-change positive">▲ 1.23%</div>
+                        <div class="asset-name">IDR</div>
+                        <div class="asset-change" id="idrChange">Stable</div>
                     </div>
                 </div>
                 <div class="asset-balance">
-                    <div class="balance-crypto">0 BTC</div>
-                    <div class="balance-fiat">$0.00</div>
+                    <div class="balance-crypto" id="idrBalance">0 IDR</div>
+                    <div class="balance-fiat" id="idrValue">$0.00</div>
+                </div>
+            </div>
+            
+            <!-- USDT Asset -->
+            <div class="asset-item" onclick="selectAsset('USDT')">
+                <div class="asset-info">
+                    <div class="asset-icon usdt">$</div>
+                    <div class="asset-details">
+                        <div class="asset-name">USDT</div>
+                        <div class="asset-change positive" id="usdtChange">Stable</div>
+                    </div>
+                </div>
+                <div class="asset-balance">
+                    <div class="balance-crypto" id="usdtBalance">0 USDT</div>
+                    <div class="balance-fiat" id="usdtValue">$0.00</div>
                 </div>
             </div>
         </div>
@@ -765,32 +791,32 @@
     
     <!-- Quick Actions -->
     <div class="quick-actions">
-        <div class="quick-action" onclick="showStaking()">
-            <div class="quick-action-icon">⭐</div>
-            <div class="quick-action-title">Earn Rewards</div>
-            <div class="quick-action-desc">Stake assets and earn up to 18% APY</div>
+        <div class="quick-action" onclick="syncWithDashboard()">
+            <div class="quick-action-icon">🔄</div>
+            <div class="quick-action-title">Sync Dashboard</div>
+            <div class="quick-action-desc">Ambil GOV terbaru dari dashboard</div>
         </div>
-        <div class="quick-action" onclick="showNFTs()">
-            <div class="quick-action-icon">🖼️</div>
-            <div class="quick-action-title">NFT Gallery</div>
-            <div class="quick-action-desc">View and manage your NFT collection</div>
+        <div class="quick-action" onclick="showWithdraw()">
+            <div class="quick-action-icon">💸</div>
+            <div class="quick-action-title">Tarik Dana</div>
+            <div class="quick-action-desc">Tarik ke bank atau dompet lain</div>
         </div>
     </div>
 </div>
 
 <!-- Bottom Navigation -->
 <div class="bottom-nav">
-    <div class="nav-item active">
-        <div class="nav-icon">🏠</div>
-        <div class="nav-label">Home</div>
+    <div class="nav-item" onclick="window.location.href='dashboard.html'">
+        <div class="nav-icon">📊</div>
+        <div class="nav-label">Dashboard</div>
     </div>
-    <div class="nav-item" onclick="showMarkets()">
-        <div class="nav-icon">📈</div>
-        <div class="nav-label">Markets</div>
+    <div class="nav-item active">
+        <div class="nav-icon">💼</div>
+        <div class="nav-label">Wallet</div>
     </div>
     <div class="nav-item" onclick="showTransactions()">
         <div class="nav-icon">📋</div>
-        <div class="nav-label">Activity</div>
+        <div class="nav-label">Riwayat</div>
     </div>
     <div class="nav-item" onclick="showSettings()">
         <div class="nav-icon">⚙️</div>
@@ -801,30 +827,28 @@
 <!-- Swap Modal -->
 <div id="swapModal" class="modal-overlay">
     <div class="modal-content">
-        <h3 class="modal-title">🔄 Swap Tokens</h3>
+        <h3 class="modal-title">🔄 Tukar Koin</h3>
         
         <div class="form-group">
-            <label class="form-label">From</label>
+            <label class="form-label">Dari</label>
             <select class="form-input" id="swapFrom" onchange="updateSwapInfo()">
                 <option value="GOV">GOV</option>
                 <option value="USDT">USDT</option>
-                <option value="BTC">BTC</option>
-                <option value="ETH">ETH</option>
+                <option value="IDR">IDR</option>
             </select>
         </div>
         
         <div class="form-group">
-            <label class="form-label">To</label>
+            <label class="form-label">Ke</label>
             <select class="form-input" id="swapTo" onchange="updateSwapInfo()">
                 <option value="USDT">USDT</option>
+                <option value="IDR">IDR</option>
                 <option value="GOV">GOV</option>
-                <option value="ETH">ETH</option>
-                <option value="BTC">BTC</option>
             </select>
         </div>
         
         <div class="form-group">
-            <label class="form-label">Amount</label>
+            <label class="form-label">Jumlah</label>
             <div class="swap-amount-group">
                 <input type="number" class="form-input" id="swapAmount" placeholder="0.00" oninput="updateSwapInfo()">
                 <button type="button" class="max-btn" onclick="setMaxSwapAmount()">MAX</button>
@@ -833,11 +857,11 @@
         
         <div class="swap-info">
             <div class="swap-info-row">
-                <span class="swap-info-label">Exchange Rate</span>
+                <span class="swap-info-label">Rate Tukar</span>
                 <span class="swap-info-value" id="swapRate">1 GOV = 0.001 USDT</span>
             </div>
             <div class="swap-info-row">
-                <span class="swap-info-label">Network Fee</span>
+                <span class="swap-info-label">Biaya Jaringan</span>
                 <span class="swap-info-value" id="swapFee">~ $1.50</span>
             </div>
             <div class="swap-info-row">
@@ -847,12 +871,12 @@
         </div>
         
         <div class="swap-receive" id="swapReceive">
-            You Receive: <strong>0.000 USDT</strong>
+            Anda Mendapat: <strong>0.000 USDT</strong>
         </div>
         
         <div class="button-group">
-            <button class="primary-btn" onclick="executeSwap()">Swap Now</button>
-            <button class="secondary-btn" onclick="hideSwapModal()">Cancel</button>
+            <button class="primary-btn" onclick="executeSwap()">Tukar Sekarang</button>
+            <button class="secondary-btn" onclick="hideSwapModal()">Batal</button>
         </div>
     </div>
 </div>
@@ -860,24 +884,24 @@
 <!-- Send Modal -->
 <div id="sendModal" class="modal-overlay">
     <div class="modal-content">
-        <h3 class="modal-title">📤 Send Crypto</h3>
+        <h3 class="modal-title">📤 Kirim Koin</h3>
         
         <div class="form-group">
-            <label class="form-label">Recipient Address</label>
-            <input type="text" class="form-input" id="sendAddress" placeholder="0x... or ENS name">
+            <label class="form-label">Alamat Penerima</label>
+            <input type="text" class="form-input" id="sendAddress" placeholder="0x... atau nama ENS">
         </div>
         
         <div class="form-group">
-            <label class="form-label">Asset</label>
+            <label class="form-label">Aset</label>
             <select class="form-input" id="sendAsset">
                 <option value="GOV">GOV</option>
                 <option value="USDT">USDT</option>
-                <option value="ETH">ETH</option>
+                <option value="IDR">IDR</option>
             </select>
         </div>
         
         <div class="form-group">
-            <label class="form-label">Amount</label>
+            <label class="form-label">Jumlah</label>
             <div class="swap-amount-group">
                 <input type="number" class="form-input" id="sendAmount" placeholder="0.00">
                 <button type="button" class="max-btn" onclick="setMaxSendAmount()">MAX</button>
@@ -886,12 +910,12 @@
         
         <div class="swap-info">
             <div class="swap-info-row">
-                <span class="swap-info-label">Network</span>
-                <span class="swap-info-value">Ethereum</span>
+                <span class="swap-info-label">Jaringan</span>
+                <span class="swap-info-value">BSC</span>
             </div>
             <div class="swap-info-row">
-                <span class="swap-info-label">Gas Fee</span>
-                <span class="swap-info-value">~ $3.20</span>
+                <span class="swap-info-label">Biaya Gas</span>
+                <span class="swap-info-value">~ $0.50</span>
             </div>
             <div class="swap-info-row">
                 <span class="swap-info-label">Total</span>
@@ -900,52 +924,203 @@
         </div>
         
         <div class="button-group">
-            <button class="primary-btn" onclick="executeSend()">Send Now</button>
-            <button class="secondary-btn" onclick="hideSendModal()">Cancel</button>
+            <button class="primary-btn" onclick="executeSend()">Kirim Sekarang</button>
+            <button class="secondary-btn" onclick="hideSendModal()">Batal</button>
         </div>
     </div>
 </div>
 
 <script>
+// ===== FIREBASE CONFIG - GANTI DENGAN CONFIG ANDA =====
+const firebaseConfig = {
+    apiKey: "AIzaSyBY7wHgWh7_0HqRLHzDnwdfQOhv_ziqA3A",
+    authDomain: "govin-28f84.firebaseapp.com",
+    databaseURL: "https://govin-28f84-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "govin-28f84",
+    storageBucket: "govin-28f84.firebasestorage.app",
+    messagingSenderId: "833155210577",
+    appId: "1:833155210577:web:bc3ab48e50732670a77067",
+    measurementId: "G-GX8DEZ3QMV"
+};
+
 // ===== WALLET DATA =====
 let walletData = {
     balances: {
         GOV: 0,
-        USDT: 0,
-        BTC: 0,
-        ETH: 0
+        IDR: 0,
+        USDT: 0
     },
     prices: {
-        GOV: 0.001, // 1 GOV = $0.001
-        USDT: 1,
-        BTC: 45000,
-        ETH: 3000
+        GOV: 0.001,     // 1 GOV = $0.001
+        IDR: 0.000065,  // 1 IDR = $0.000065
+        USDT: 1
     },
-    selectedAsset: 'USDT'
+    userId: null,
+    lastSync: null
 };
 
+let firebaseApp, firebaseDb;
+
 // ===== INITIALIZE =====
-function initializeWallet() {
+async function initializeWallet() {
     console.log("🚀 Initializing Crypto Wallet...");
     
-    // Load user data
-    const userEmail = localStorage.getItem('currentUser');
-    if (userEmail) {
-        console.log(`Welcome ${userEmail}`);
+    try {
+        // Initialize Firebase
+        firebaseApp = firebase.initializeApp(firebaseConfig);
+        firebaseDb = firebase.database();
+        
+        // Get current user
+        const userEmail = localStorage.getItem('currentUser');
+        if (!userEmail) {
+            showNotification("❌ Silakan login terlebih dahulu", false);
+            setTimeout(() => window.location.href = "index.html", 2000);
+            return;
+        }
+        
+        // Generate userId dari email
+        walletData.userId = btoa(userEmail).replace(/[^a-zA-Z0-9]/g, '').substring(0, 20);
+        
+        // Update network status
+        document.getElementById('networkStatus').textContent = "🔄 Loading...";
+        
+        // Load data dari Firebase
+        await loadWalletDataFromFirebase();
+        
+        // Sync dengan dashboard (ambil GOV terbaru)
+        await syncWithDashboard();
+        
+        // Update display
+        updateWalletDisplay();
+        
+        // Update network status
+        document.getElementById('networkStatus').textContent = "✅ Online";
+        document.getElementById('networkStatus').style.color = "#34c759";
+        
+        // Auto-sync setiap 30 detik
+        setInterval(syncWithDashboard, 30000);
+        
+        // Auto-save ke Firebase setiap 60 detik
+        setInterval(saveWalletDataToFirebase, 60000);
+        
+        console.log("✅ Wallet initialized successfully");
+        
+    } catch (error) {
+        console.error("❌ Error initializing wallet:", error);
+        document.getElementById('networkStatus').textContent = "❌ Offline";
+        document.getElementById('networkStatus').style.color = "#ff3b30";
+        
+        // Fallback ke localStorage
+        loadWalletDataFromLocalStorage();
+        showNotification("⚠️ Mode offline - menggunakan data lokal", false);
     }
-    
-    // Load wallet data
-    loadWalletData();
-    
-    // Update display
-    updateWalletDisplay();
-    
-    // Simulate live price updates
-    setInterval(updateLivePrices, 5000);
 }
 
-// ===== WALLET FUNCTIONS =====
-function loadWalletData() {
+// ===== SYNC DENGAN DASHBOARD =====
+async function syncWithDashboard() {
+    try {
+        const userEmail = localStorage.getItem('currentUser');
+        if (!userEmail) return;
+        
+        console.log("🔄 Syncing with dashboard...");
+        
+        // 1. Coba ambil dari dashboard localStorage
+        const username = userEmail.split('@')[0];
+        const dashboardKey = `userData_${username}`;
+        const dashboardData = localStorage.getItem(dashboardKey);
+        
+        if (dashboardData) {
+            const parsed = JSON.parse(dashboardData);
+            const govFromDashboard = parsed.saldoGOV || 0;
+            
+            // Update GOV di wallet
+            if (govFromDashboard > walletData.balances.GOV) {
+                const difference = govFromDashboard - walletData.balances.GOV;
+                walletData.balances.GOV = govFromDashboard;
+                
+                // Jika ada penambahan, buat transaksi
+                if (difference > 0) {
+                    addTransaction('SYNC', `Sync dari dashboard`, difference, 'GOV');
+                }
+                
+                console.log(`✅ GOV synced from dashboard: ${govFromDashboard} GOV`);
+                showNotification(`🔄 GOV diupdate: ${difference.toLocaleString('id-ID')} GOV`);
+                
+                // Save ke Firebase
+                await saveWalletDataToFirebase();
+                updateWalletDisplay();
+            }
+        }
+        
+        // 2. Juga sync wallet localStorage dari dashboard
+        const walletKeyFromDashboard = `walletData_${userEmail}`;
+        const walletDashboardData = localStorage.getItem(walletKeyFromDashboard);
+        
+        if (walletDashboardData) {
+            const parsedWallet = JSON.parse(walletDashboardData);
+            const govFromWallet = parsedWallet.saldoGOV || 0;
+            
+            // Ambil yang tertinggi antara dashboard dan wallet
+            const highestGOV = Math.max(walletData.balances.GOV, govFromWallet);
+            if (highestGOV > walletData.balances.GOV) {
+                walletData.balances.GOV = highestGOV;
+                await saveWalletDataToFirebase();
+                updateWalletDisplay();
+            }
+        }
+        
+        walletData.lastSync = new Date().toISOString();
+        
+    } catch (error) {
+        console.error("❌ Error syncing with dashboard:", error);
+    }
+}
+
+// ===== FIREBASE FUNCTIONS =====
+async function loadWalletDataFromFirebase() {
+    try {
+        const snapshot = await firebaseDb.ref(`wallets/${walletData.userId}`).once('value');
+        
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            walletData.balances = data.balances || walletData.balances;
+            walletData.lastSync = data.lastSync;
+            console.log("✅ Wallet data loaded from Firebase:", walletData.balances);
+            showNotification("✅ Data wallet dimuat dari cloud");
+        } else {
+            // Data tidak ada, buat baru
+            console.log("📝 Creating new wallet in Firebase");
+            
+            // Coba ambil dari localStorage dulu
+            loadWalletDataFromLocalStorage();
+            
+            // Simpan ke Firebase
+            await saveWalletDataToFirebase();
+        }
+    } catch (error) {
+        console.error("❌ Error loading from Firebase:", error);
+        throw error;
+    }
+}
+
+async function saveWalletDataToFirebase() {
+    try {
+        await firebaseDb.ref(`wallets/${walletData.userId}`).set({
+            balances: walletData.balances,
+            lastUpdate: new Date().toISOString(),
+            lastSync: walletData.lastSync,
+            email: localStorage.getItem('currentUser')
+        });
+        console.log("✅ Wallet data saved to Firebase");
+    } catch (error) {
+        console.error("❌ Error saving to Firebase:", error);
+        // Fallback ke localStorage
+        saveWalletDataToLocalStorage();
+    }
+}
+
+// ===== LOCALSTORAGE FUNCTIONS =====
+function loadWalletDataFromLocalStorage() {
     const userEmail = localStorage.getItem('currentUser');
     if (!userEmail) return;
     
@@ -956,14 +1131,19 @@ function loadWalletData() {
         if (savedData) {
             const data = JSON.parse(savedData);
             walletData.balances = data.balances || walletData.balances;
-            console.log("✅ Wallet data loaded");
+            console.log("✅ Wallet data loaded from localStorage");
+        } else {
+            // Buat wallet baru dengan 100 GOV (sama seperti dashboard)
+            walletData.balances.GOV = 100;
+            saveWalletDataToLocalStorage();
+            showNotification("🎉 Wallet baru dibuat dengan 100 GOV bonus!");
         }
     } catch (error) {
-        console.error("❌ Error loading wallet:", error);
+        console.error("❌ Error loading from localStorage:", error);
     }
 }
 
-function saveWalletData() {
+function saveWalletDataToLocalStorage() {
     const userEmail = localStorage.getItem('currentUser');
     if (!userEmail) return;
     
@@ -973,43 +1153,65 @@ function saveWalletData() {
             balances: walletData.balances,
             lastUpdate: new Date().toISOString()
         }));
-        console.log("✅ Wallet data saved");
+        console.log("✅ Wallet data saved to localStorage");
     } catch (error) {
-        console.error("❌ Error saving wallet:", error);
+        console.error("❌ Error saving to localStorage:", error);
     }
 }
 
+// ===== UPDATE WALLET DISPLAY =====
 function updateWalletDisplay() {
-    // Update total balance
+    // Update total balance dalam USD
     let totalUSD = 0;
-    for (const [asset, balance] of Object.entries(walletData.balances)) {
-        totalUSD += balance * (walletData.prices[asset] || 0);
-    }
+    totalUSD += walletData.balances.GOV * walletData.prices.GOV;
+    totalUSD += walletData.balances.IDR * walletData.prices.IDR;
+    totalUSD += walletData.balances.USDT * walletData.prices.USDT;
     
     document.getElementById('totalBalance').textContent = `$${totalUSD.toFixed(2)}`;
     
     // Update individual balances
+    document.getElementById('govBalance').textContent = `${walletData.balances.GOV.toLocaleString('id-ID')} GOV`;
+    document.getElementById('govValue').textContent = `$${(walletData.balances.GOV * walletData.prices.GOV).toFixed(2)}`;
+    
+    document.getElementById('idrBalance').textContent = `${walletData.balances.IDR.toLocaleString('id-ID')} IDR`;
+    document.getElementById('idrValue').textContent = `$${(walletData.balances.IDR * walletData.prices.IDR).toFixed(2)}`;
+    
     document.getElementById('usdtBalance').textContent = `${walletData.balances.USDT.toFixed(2)} USDT`;
     document.getElementById('usdtValue').textContent = `$${(walletData.balances.USDT * walletData.prices.USDT).toFixed(2)}`;
     
-    document.getElementById('govBalance').textContent = `${walletData.balances.GOV.toLocaleString('id-ID')} GOV`;
-    document.getElementById('govValue').textContent = `$${(walletData.balances.GOV * walletData.prices.GOV).toFixed(2)}`;
+    // Simulasi perubahan harga
+    updatePriceChanges();
 }
 
-function updateLivePrices() {
-    // Simulate price fluctuations
-    Object.keys(walletData.prices).forEach(asset => {
-        const change = (Math.random() - 0.5) * 0.02; // ±1%
-        walletData.prices[asset] *= (1 + change);
-    });
+function updatePriceChanges() {
+    // Simulasi perubahan harga GOV
+    const govChange = (Math.random() - 0.5) * 5; // -2.5% sampai +2.5%
+    const govChangeElement = document.getElementById('govChange');
     
-    updateWalletDisplay();
+    if (govChange > 0) {
+        govChangeElement.textContent = `▲ ${govChange.toFixed(2)}%`;
+        govChangeElement.className = 'asset-change positive';
+    } else {
+        govChangeElement.textContent = `▼ ${Math.abs(govChange).toFixed(2)}%`;
+        govChangeElement.className = 'asset-change';
+    }
     
-    // Add animation to balance
-    const balanceElement = document.getElementById('totalBalance');
-    balanceElement.classList.remove('price-update');
-    void balanceElement.offsetWidth; // Trigger reflow
-    balanceElement.classList.add('price-update');
+    // Update total balance change
+    const totalChange = (Math.random() - 0.5) * 3;
+    const changeElement = document.getElementById('balanceChange');
+    const iconElement = document.getElementById('balanceChangeIcon');
+    
+    if (totalChange > 0) {
+        changeElement.textContent = `${totalChange.toFixed(2)}%`;
+        changeElement.style.color = '#34c759';
+        iconElement.textContent = '▲';
+        iconElement.style.color = '#34c759';
+    } else {
+        changeElement.textContent = `${Math.abs(totalChange).toFixed(2)}%`;
+        changeElement.style.color = '#ff3b30';
+        iconElement.textContent = '▼';
+        iconElement.style.color = '#ff3b30';
+    }
 }
 
 // ===== MODAL FUNCTIONS =====
@@ -1034,11 +1236,15 @@ function hideSendModal() {
 }
 
 function showReceiveModal() {
-    showNotification("Receive functionality coming soon!");
+    showNotification("Fitur penerimaan akan segera hadir!");
 }
 
 function showBuyModal() {
-    showNotification("Buy crypto functionality coming soon!");
+    showNotification("Fitur pembelian akan segera hadir!");
+}
+
+function showWithdraw() {
+    showNotification("Fitur penarikan akan segera hadir!");
 }
 
 // ===== SWAP FUNCTIONS =====
@@ -1055,8 +1261,7 @@ function updateSwapInfo() {
     const amount = parseFloat(document.getElementById('swapAmount').value) || 0;
     
     if (fromAsset === toAsset) {
-        // Auto-switch to different asset
-        const options = Object.keys(walletData.balances).filter(a => a !== fromAsset);
+        const options = ['GOV', 'IDR', 'USDT'].filter(a => a !== fromAsset);
         if (options.length > 0) {
             document.getElementById('swapTo').value = options[0];
             updateSwapInfo();
@@ -1074,21 +1279,21 @@ function updateSwapInfo() {
     // Update display
     document.getElementById('swapRate').textContent = `1 ${fromAsset} = ${rate.toFixed(6)} ${toAsset}`;
     document.getElementById('swapReceive').innerHTML = 
-        `You Receive: <strong>${receiveAmount.toFixed(6)} ${toAsset}</strong>`;
+        `Anda Mendapat: <strong>${receiveAmount.toFixed(6)} ${toAsset}</strong>`;
 }
 
-function executeSwap() {
+async function executeSwap() {
     const fromAsset = document.getElementById('swapFrom').value;
     const toAsset = document.getElementById('swapTo').value;
     const amount = parseFloat(document.getElementById('swapAmount').value) || 0;
     
     if (!amount || amount <= 0) {
-        showNotification("❌ Please enter a valid amount", false);
+        showNotification("❌ Masukkan jumlah yang valid", false);
         return;
     }
     
     if (amount > (walletData.balances[fromAsset] || 0)) {
-        showNotification(`❌ Insufficient ${fromAsset} balance`, false);
+        showNotification(`❌ Saldo ${fromAsset} tidak mencukupi`, false);
         return;
     }
     
@@ -1096,17 +1301,21 @@ function executeSwap() {
     const fromPrice = walletData.prices[fromAsset] || 0;
     const toPrice = walletData.prices[toAsset] || 1;
     const rate = fromPrice / toPrice;
-    const receiveAmount = amount * rate * 0.995; // 0.5% slippage
+    const receiveAmount = amount * rate * 0.995;
     
     // Update balances
     walletData.balances[fromAsset] -= amount;
     walletData.balances[toAsset] = (walletData.balances[toAsset] || 0) + receiveAmount;
     
+    // Add transaction
+    addTransaction('SWAP', `Tukar ${amount} ${fromAsset} → ${receiveAmount.toFixed(4)} ${toAsset}`, receiveAmount, toAsset);
+    
     // Save and update
-    saveWalletData();
+    await saveWalletDataToFirebase();
+    saveWalletDataToLocalStorage();
     updateWalletDisplay();
     
-    showNotification(`✅ Successfully swapped ${amount} ${fromAsset} for ${receiveAmount.toFixed(4)} ${toAsset}`);
+    showNotification(`✅ Berhasil menukar ${amount} ${fromAsset} untuk ${receiveAmount.toFixed(4)} ${toAsset}`);
     hideSwapModal();
 }
 
@@ -1117,76 +1326,78 @@ function setMaxSendAmount() {
     document.getElementById('sendAmount').value = maxAmount;
 }
 
-function executeSend() {
+async function executeSend() {
     const address = document.getElementById('sendAddress').value.trim();
     const asset = document.getElementById('sendAsset').value;
     const amount = parseFloat(document.getElementById('sendAmount').value) || 0;
     
-    if (!address || address.length < 20) {
-        showNotification("❌ Please enter a valid wallet address", false);
+    if (!address || address.length < 10) {
+        showNotification("❌ Masukkan alamat wallet yang valid", false);
         return;
     }
     
     if (!amount || amount <= 0) {
-        showNotification("❌ Please enter a valid amount", false);
+        showNotification("❌ Masukkan jumlah yang valid", false);
         return;
     }
     
     if (amount > (walletData.balances[asset] || 0)) {
-        showNotification(`❌ Insufficient ${asset} balance`, false);
+        showNotification(`❌ Saldo ${asset} tidak mencukupi`, false);
         return;
     }
     
     // Deduct amount
     walletData.balances[asset] -= amount;
     
+    // Add transaction
+    addTransaction('SEND', `Kirim ke ${address.substring(0, 12)}...`, -amount, asset);
+    
     // Save and update
-    saveWalletData();
+    await saveWalletDataToFirebase();
+    saveWalletDataToLocalStorage();
     updateWalletDisplay();
     
-    showNotification(`✅ Sent ${amount} ${asset} to ${address.substring(0, 12)}...`);
+    showNotification(`✅ Berhasil mengirim ${amount} ${asset} ke ${address.substring(0, 12)}...`);
     hideSendModal();
+}
+
+// ===== TRANSACTION HISTORY =====
+function addTransaction(type, description, amount, asset) {
+    const userEmail = localStorage.getItem('currentUser');
+    if (!userEmail) return;
+    
+    try {
+        const txKey = `transactions_${userEmail}`;
+        const transactions = JSON.parse(localStorage.getItem(txKey) || '[]');
+        
+        transactions.unshift({
+            type: type,
+            description: description,
+            amount: amount,
+            asset: asset,
+            timestamp: new Date().toISOString(),
+            status: 'completed'
+        });
+        
+        // Keep only last 100 transactions
+        if (transactions.length > 100) {
+            transactions.length = 100;
+        }
+        
+        localStorage.setItem(txKey, JSON.stringify(transactions));
+        console.log("✅ Transaction added:", type, amount, asset);
+    } catch (error) {
+        console.error("❌ Error adding transaction:", error);
+    }
 }
 
 // ===== UTILITY FUNCTIONS =====
 function showNotification(message, isSuccess = true) {
-    // Create notification element if it doesn't exist
-    let notification = document.getElementById('notification');
-    if (!notification) {
-        notification = document.createElement('div');
-        notification.id = 'notification';
-        notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: ${isSuccess ? '#34c759' : '#ff3b30'};
-            color: white;
-            padding: 16px 28px;
-            border-radius: 14px;
-            font-size: 14px;
-            font-weight: 600;
-            z-index: 2000;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
-            animation: fadeInOut 4s ease-in-out forwards;
-        `;
-        document.body.appendChild(notification);
-    }
-    
+    const notification = document.getElementById('notification');
     notification.textContent = message;
     notification.style.background = isSuccess ? '#34c759' : '#ff3b30';
+    notification.style.animation = 'fadeInOut 4s ease-in-out forwards';
     notification.style.display = 'block';
-    
-    // Add CSS for animation
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes fadeInOut {
-            0% { opacity: 0; transform: translate(-50%, -20px); }
-            10%, 90% { opacity: 1; transform: translate(-50%, 0); }
-            100% { opacity: 0; transform: translate(-50%, -20px); }
-        }
-    `;
-    document.head.appendChild(style);
     
     setTimeout(() => {
         notification.style.display = 'none';
@@ -1194,58 +1405,45 @@ function showNotification(message, isSuccess = true) {
 }
 
 function selectAsset(asset) {
-    walletData.selectedAsset = asset;
-    showNotification(`Selected ${asset}`);
+    showNotification(`Selected ${asset} - Saldo: ${walletData.balances[asset].toLocaleString('id-ID')} ${asset}`);
 }
 
 function scanQR() {
-    showNotification("QR Scanner coming soon!");
+    showNotification("Scanner QR akan segera hadir!");
 }
 
-function showAllAssets() {
-    showNotification("View all assets coming soon!");
-}
-
-function showStaking() {
-    showNotification("Staking functionality coming soon!");
-}
-
-function showNFTs() {
-    showNotification("NFT Gallery coming soon!");
-}
-
-function showMarkets() {
-    showNotification("Market view coming soon!");
+function refreshWallet() {
+    showNotification("🔄 Memperbarui data wallet...");
+    syncWithDashboard();
+    updateWalletDisplay();
 }
 
 function showTransactions() {
-    showNotification("Transaction history coming soon!");
+    showNotification("Riwayat transaksi akan segera hadir!");
 }
 
 function showSettings() {
-    showNotification("Settings coming soon!");
+    showNotification("Pengaturan akan segera hadir!");
 }
 
-// ===== INITIALIZE =====
+// ===== INITIALIZE ON LOAD =====
 document.addEventListener('DOMContentLoaded', function() {
     console.log("💎 Crypto Wallet Initializing...");
     initializeWallet();
-    
-    // Auto-save every minute
-    setInterval(saveWalletData, 60000);
 });
 
-// Add some demo data on first load
+// Add initial data for demo
 window.addEventListener('load', function() {
-    if (!localStorage.getItem('demoDataLoaded')) {
+    // Set initial balances jika belum ada
+    if (walletData.balances.GOV === 0 && walletData.balances.IDR === 0 && walletData.balances.USDT === 0) {
         walletData.balances = {
-            GOV: 1500,
-            USDT: 250.50,
-            BTC: 0.005,
-            ETH: 0.1
+            GOV: 100,
+            IDR: 50000,
+            USDT: 10
         };
+        
+        // Update display
         updateWalletDisplay();
-        localStorage.setItem('demoDataLoaded', 'true');
     }
 });
 </script>
