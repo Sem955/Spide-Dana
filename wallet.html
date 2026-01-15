@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crypto Wallet</title>
+    <title>GOV Wallet</title>
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
@@ -18,208 +18,111 @@
         
         body { 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; 
-            background: #0a0a0a;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             color: white;
-            position: relative;
-            overflow-x: hidden;
-        }
-        
-        /* Background gradient effects */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(41, 196, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 80%, rgba(76, 175, 80, 0.1) 0%, transparent 50%);
-            z-index: -1;
         }
         
         .container { 
             max-width: 480px; 
             margin: 0 auto;
             padding: 20px;
-            position: relative;
         }
         
-        /* Wallet Header */
+        /* Header */
         .wallet-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0 30px;
-            position: relative;
+            padding: 30px 0 40px;
+            text-align: center;
         }
         
         .wallet-title {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 800;
-            background: linear-gradient(135deg, #29c4ff, #ff6b35);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
         
         .wallet-subtitle {
-            color: #8e8e93;
+            color: rgba(255,255,255,0.8);
             font-size: 14px;
-            font-weight: 400;
-            margin-top: 4px;
         }
         
-        /* Scan QR Button */
-        .scan-btn {
-            width: 44px;
-            height: 44px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .scan-btn:hover {
-            background: rgba(255, 255, 255, 0.12);
-            transform: translateY(-2px);
-        }
-        
-        /* Total Balance Card */
+        /* Balance Card */
         .balance-card {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 24px;
-            padding: 28px;
-            margin-bottom: 24px;
+            padding: 30px;
+            margin-bottom: 25px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .balance-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
         }
         
         .total-balance-label {
-            color: #8e8e93;
-            font-size: 15px;
-            font-weight: 500;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .network-badge {
-            background: rgba(41, 196, 255, 0.2);
-            color: #29c4ff;
-            font-size: 11px;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-weight: 600;
+            color: rgba(255,255,255,0.8);
+            font-size: 16px;
+            margin-bottom: 10px;
         }
         
         .balance-amount {
             font-size: 48px;
             font-weight: 700;
-            margin-bottom: 8px;
-            background: linear-gradient(135deg, #ffffff, #a5a5a5);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -1px;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
         
-        .balance-change {
-            color: #ff3b30;
-            font-size: 15px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+        .balance-in-idr {
+            color: rgba(255,255,255,0.8);
+            font-size: 16px;
         }
         
         /* Action Buttons */
         .action-buttons {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            margin-bottom: 32px;
+            gap: 15px;
+            margin-bottom: 30px;
         }
         
         .action-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 18px;
-            padding: 20px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 18px 10px;
             text-align: center;
             color: white;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .action-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(41, 196, 255, 0.1), rgba(255, 107, 53, 0.1));
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            gap: 10px;
         }
         
         .action-btn:hover {
-            transform: translateY(-4px);
-            border-color: rgba(41, 196, 255, 0.3);
-            box-shadow: 0 10px 30px rgba(41, 196, 255, 0.15);
-        }
-        
-        .action-btn:hover::before {
-            opacity: 1;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
         }
         
         .action-btn-icon {
-            font-size: 28px;
-            margin-bottom: 12px;
-            position: relative;
-            z-index: 1;
+            font-size: 26px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
         }
         
         .action-btn-text {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
-            line-height: 1.3;
-            position: relative;
-            z-index: 1;
         }
         
         /* Assets Section */
         .assets-section {
-            margin-bottom: 32px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.2);
         }
         
         .section-header {
@@ -230,27 +133,28 @@
         }
         
         .section-title {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 700;
-            color: white;
         }
         
-        .view-all-btn {
-            color: #29c4ff;
-            font-size: 15px;
-            font-weight: 600;
+        .refresh-btn {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            border-radius: 12px;
+            padding: 10px 15px;
+            color: white;
+            font-size: 14px;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 6px;
-            transition: all 0.3s ease;
+            gap: 8px;
         }
         
-        .view-all-btn:hover {
-            opacity: 0.8;
+        .refresh-btn:hover {
+            background: rgba(255,255,255,0.25);
         }
         
-        /* Assets List - HANYA 3 KOIN */
+        /* Assets List */
         .assets-list {
             display: flex;
             flex-direction: column;
@@ -258,81 +162,58 @@
         }
         
         .asset-item {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
             padding: 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            cursor: pointer;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
         }
         
         .asset-item:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(41, 196, 255, 0.2);
-            transform: translateX(4px);
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateX(5px);
         }
         
         .asset-info {
             display: flex;
             align-items: center;
-            gap: 16px;
-            flex: 1;
+            gap: 15px;
         }
         
         .asset-icon {
-            width: 52px;
-            height: 52px;
-            border-radius: 16px;
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 700;
-            position: relative;
+            background: rgba(255,255,255,0.15);
+            border: 2px solid rgba(255,255,255,0.3);
         }
-        
-        .asset-icon::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 16px;
-            padding: 2px;
-            background: linear-gradient(135deg, #29c4ff, #ff6b35);
-            -webkit-mask: 
-                linear-gradient(#fff 0 0) content-box, 
-                linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-        }
-        
-        .asset-icon.gov { background: rgba(255, 107, 53, 0.1); color: #ff6b35; }
-        .asset-icon.idr { background: rgba(76, 175, 80, 0.1); color: #4CAF50; }
-        .asset-icon.usdt { background: rgba(41, 196, 255, 0.1); color: #29c4ff; }
         
         .asset-details {
-            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
         
         .asset-name {
             font-size: 18px;
             font-weight: 600;
-            color: white;
             margin-bottom: 4px;
         }
         
         .asset-change {
             font-size: 14px;
-            color: #ff3b30;
-            font-weight: 500;
+            color: #4cd964;
         }
         
-        .asset-change.positive {
-            color: #34c759;
+        .asset-change.negative {
+            color: #ff3b30;
         }
         
         .asset-balance {
@@ -342,61 +223,12 @@
         .balance-crypto {
             font-size: 18px;
             font-weight: 700;
-            color: white;
             margin-bottom: 4px;
         }
         
         .balance-fiat {
             font-size: 14px;
-            color: #8e8e93;
-            font-weight: 500;
-        }
-        
-        /* Quick Actions */
-        .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-            margin-bottom: 32px;
-        }
-        
-        .quick-action {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 24px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .quick-action:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(41, 196, 255, 0.3);
-            transform: translateY(-2px);
-        }
-        
-        .quick-action-icon {
-            font-size: 32px;
-            margin-bottom: 16px;
-            background: linear-gradient(135deg, #29c4ff, #ff6b35);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .quick-action-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: white;
-            margin-bottom: 8px;
-        }
-        
-        .quick-action-desc {
-            font-size: 14px;
-            color: #8e8e93;
-            line-height: 1.4;
+            color: rgba(255,255,255,0.8);
         }
         
         /* Bottom Navigation */
@@ -407,13 +239,13 @@
             right: 0;
             max-width: 480px;
             margin: 0 auto;
-            background: rgba(10, 10, 10, 0.95);
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 16px 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 15px 20px;
             display: flex;
             justify-content: space-between;
-            z-index: 100;
+            border-radius: 25px 25px 0 0;
         }
         
         .nav-item {
@@ -421,16 +253,16 @@
             flex-direction: column;
             align-items: center;
             gap: 6px;
-            color: #8e8e93;
+            color: rgba(255,255,255,0.7);
             cursor: pointer;
-            transition: all 0.3s ease;
-            padding: 8px;
+            padding: 10px;
             border-radius: 12px;
+            transition: all 0.3s ease;
         }
         
         .nav-item.active {
-            color: #29c4ff;
-            background: rgba(41, 196, 255, 0.1);
+            color: white;
+            background: rgba(255,255,255,0.15);
         }
         
         .nav-item:hover {
@@ -442,7 +274,7 @@
         }
         
         .nav-label {
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 600;
         }
         
@@ -458,147 +290,117 @@
             z-index: 1000;
             justify-content: center;
             align-items: center;
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(10px);
             padding: 20px;
         }
         
         .modal-content {
-            background: rgba(20, 20, 20, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 28px;
+            background: white;
+            border-radius: 25px;
             width: 100%;
-            max-width: 420px;
-            padding: 32px;
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
-            position: relative;
-            overflow: hidden;
+            max-width: 400px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            animation: modalSlideUp 0.3s ease;
         }
         
-        .modal-content::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(41, 196, 255, 0.5), transparent);
+        @keyframes modalSlideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
         
         .modal-title {
             font-size: 24px;
             font-weight: 700;
-            color: white;
-            margin-bottom: 32px;
+            color: #333;
+            margin-bottom: 25px;
             display: flex;
             align-items: center;
             gap: 12px;
         }
         
         .form-group {
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
         
         .form-label {
             display: block;
-            margin-bottom: 12px;
-            font-size: 15px;
-            color: #8e8e93;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #666;
             font-weight: 500;
         }
         
         .form-input {
             width: 100%;
-            padding: 18px 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
+            padding: 16px;
+            background: #f5f5f7;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
             font-size: 16px;
-            color: white;
+            color: #333;
             transition: all 0.3s ease;
         }
         
         .form-input:focus {
             outline: none;
-            border-color: #29c4ff;
-            background: rgba(41, 196, 255, 0.05);
+            border-color: #667eea;
+            background: white;
         }
         
-        .swap-amount-group {
+        .amount-group {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
         
         .max-btn {
-            background: rgba(41, 196, 255, 0.2);
-            color: #29c4ff;
+            background: #667eea;
+            color: white;
             border: none;
             border-radius: 12px;
             padding: 12px 20px;
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            white-space: nowrap;
         }
         
-        .max-btn:hover {
-            background: rgba(41, 196, 255, 0.3);
+        .swap-rate {
+            background: #f8f9fa;
+            border: 2px dashed #e0e0e0;
+            border-radius: 15px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+            color: #333;
         }
         
-        .swap-info {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            padding: 20px;
-            margin: 24px 0;
-        }
-        
-        .swap-info-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-        
-        .swap-info-row:last-child {
-            margin-bottom: 0;
-        }
-        
-        .swap-info-label {
-            color: #8e8e93;
+        .rate-text {
             font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
         }
         
-        .swap-info-value {
-            color: white;
-            font-weight: 500;
-        }
-        
-        .swap-receive {
+        .rate-value {
             font-size: 20px;
             font-weight: 700;
-            color: #34c759;
-            text-align: center;
-            margin: 20px 0;
-            padding: 20px;
-            background: rgba(52, 199, 89, 0.1);
-            border-radius: 16px;
-            border: 1px solid rgba(52, 199, 89, 0.2);
+            color: #667eea;
         }
         
         .button-group {
             display: flex;
-            gap: 16px;
-            margin-top: 32px;
+            gap: 15px;
+            margin-top: 25px;
         }
         
         .primary-btn {
             flex: 1;
-            background: linear-gradient(135deg, #29c4ff, #1a8cd8);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            border-radius: 16px;
-            padding: 20px;
+            border-radius: 15px;
+            padding: 18px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
@@ -607,16 +409,16 @@
         
         .primary-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(41, 196, 255, 0.3);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
         }
         
         .secondary-btn {
             flex: 1;
-            background: rgba(255, 255, 255, 0.05);
-            color: #8e8e93;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 20px;
+            background: #f0f0f0;
+            color: #666;
+            border: none;
+            border-radius: 15px;
+            padding: 18px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
@@ -624,38 +426,7 @@
         }
         
         .secondary-btn:hover {
-            background: rgba(255, 255, 255, 0.08);
-            color: white;
-        }
-        
-        /* Animation for price changes */
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        .price-update {
-            animation: pulse 0.5s ease;
-        }
-        
-        /* Scrollbar Styling */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 3px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: rgba(41, 196, 255, 0.5);
-            border-radius: 3px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(41, 196, 255, 0.8);
+            background: #e0e0e0;
         }
         
         /* Notification */
@@ -664,22 +435,119 @@
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: #34c759;
+            background: #4cd964;
             color: white;
-            padding: 16px 28px;
-            border-radius: 14px;
+            padding: 15px 25px;
+            border-radius: 15px;
             font-size: 14px;
             font-weight: 600;
             z-index: 2000;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             display: none;
+            text-align: center;
+            max-width: 90%;
         }
         
-        @keyframes fadeInOut {
-            0% { opacity: 0; transform: translate(-50%, -20px); }
-            10%, 90% { opacity: 1; transform: translate(-50%, 0); }
-            100% { opacity: 0; transform: translate(-50%, -20px); }
+        /* Payment Methods */
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
         }
+        
+        .payment-method {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .payment-method.selected {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+        
+        .payment-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .payment-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .payment-fee {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        /* Transaction History */
+        .transactions-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .transaction-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .transaction-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+        }
+        
+        .transaction-icon.deposit { background: #4cd964; }
+        .transaction-icon.withdraw { background: #ff3b30; }
+        .transaction-icon.swap { background: #007aff; }
+        .transaction-icon.transfer { background: #ff9500; }
+        
+        .transaction-details {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .transaction-type {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        
+        .transaction-date {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .transaction-amount {
+            font-weight: 700;
+            font-size: 18px;
+        }
+        
+        .transaction-amount.positive { color: #4cd964; }
+        .transaction-amount.negative { color: #ff3b30; }
     </style>
 </head>
 <body>
@@ -689,66 +557,54 @@
 <div class="container">
     <!-- Wallet Header -->
     <div class="wallet-header">
-        <div>
-            <div class="wallet-title">Crypto Wallet</div>
-            <div class="wallet-subtitle">Sync dengan Dashboard • Multi-device</div>
-        </div>
-        <div class="scan-btn" onclick="scanQR()">
-            📷
-        </div>
+        <div class="wallet-title">GOV Wallet</div>
+        <div class="wallet-subtitle" id="userEmail">user@email.com</div>
     </div>
     
     <!-- Total Balance Card -->
     <div class="balance-card">
-        <div class="total-balance-label">
-            Total Balance
-            <span class="network-badge" id="networkStatus">🔄 Syncing...</span>
-        </div>
-        <div class="balance-amount" id="totalBalance">$0.00</div>
-        <div class="balance-change">
-            <span id="balanceChangeIcon">▲</span>
-            <span id="balanceChange">0.00%</span>
-        </div>
+        <div class="total-balance-label">Total Saldo</div>
+        <div class="balance-amount" id="totalBalance">Rp 0</div>
+        <div class="balance-in-idr" id="totalBalanceUSD">$0.00</div>
     </div>
     
     <!-- Action Buttons -->
     <div class="action-buttons">
-        <div class="action-btn" onclick="showReceiveModal()">
-            <div class="action-btn-icon">📥</div>
-            <div class="action-btn-text">Terima</div>
+        <div class="action-btn" onclick="showTransferModal()">
+            <div class="action-btn-icon">💸</div>
+            <div class="action-btn-text">Transfer</div>
         </div>
-        <div class="action-btn" onclick="showSendModal()">
+        <div class="action-btn" onclick="showWithdrawModal()">
             <div class="action-btn-icon">📤</div>
-            <div class="action-btn-text">Kirim</div>
+            <div class="action-btn-text">Withdraw</div>
         </div>
         <div class="action-btn" onclick="showSwapModal()">
             <div class="action-btn-icon">🔄</div>
-            <div class="action-btn-text">Tukar</div>
+            <div class="action-btn-text">Swap</div>
         </div>
-        <div class="action-btn" onclick="showBuyModal()">
-            <div class="action-btn-icon">💰</div>
-            <div class="action-btn-text">Beli</div>
+        <div class="action-btn" onclick="showHistoryModal()">
+            <div class="action-btn-icon">📋</div>
+            <div class="action-btn-text">Riwayat</div>
         </div>
     </div>
     
-    <!-- Assets Section - HANYA 3 KOIN -->
+    <!-- Assets Section -->
     <div class="assets-section">
         <div class="section-header">
             <div class="section-title">Aset Anda</div>
-            <div class="view-all-btn" onclick="refreshWallet()">
-                Refresh
-                <span>🔄</span>
-            </div>
+            <button class="refresh-btn" onclick="syncWithDashboard()">
+                <span>🔄</span> Sync
+            </button>
         </div>
         
         <div class="assets-list">
-            <!-- GOV Asset (SYNC DARI DASHBOARD) -->
-            <div class="asset-item" onclick="selectAsset('GOV')">
+            <!-- GOV Asset -->
+            <div class="asset-item">
                 <div class="asset-info">
-                    <div class="asset-icon gov">G</div>
+                    <div class="asset-icon">G</div>
                     <div class="asset-details">
                         <div class="asset-name">GOV</div>
-                        <div class="asset-change" id="govChange">Loading...</div>
+                        <div class="asset-change" id="govChange">▲ 2.5%</div>
                     </div>
                 </div>
                 <div class="asset-balance">
@@ -758,27 +614,27 @@
             </div>
             
             <!-- IDR Asset -->
-            <div class="asset-item" onclick="selectAsset('IDR')">
+            <div class="asset-item">
                 <div class="asset-info">
-                    <div class="asset-icon idr">Rp</div>
+                    <div class="asset-icon">Rp</div>
                     <div class="asset-details">
                         <div class="asset-name">IDR</div>
-                        <div class="asset-change" id="idrChange">Stable</div>
+                        <div class="asset-change">Stable</div>
                     </div>
                 </div>
                 <div class="asset-balance">
-                    <div class="balance-crypto" id="idrBalance">0 IDR</div>
+                    <div class="balance-crypto" id="idrBalance">Rp 0</div>
                     <div class="balance-fiat" id="idrValue">$0.00</div>
                 </div>
             </div>
             
             <!-- USDT Asset -->
-            <div class="asset-item" onclick="selectAsset('USDT')">
+            <div class="asset-item">
                 <div class="asset-info">
-                    <div class="asset-icon usdt">$</div>
+                    <div class="asset-icon">$</div>
                     <div class="asset-details">
                         <div class="asset-name">USDT</div>
-                        <div class="asset-change positive" id="usdtChange">Stable</div>
+                        <div class="asset-change">Stable</div>
                     </div>
                 </div>
                 <div class="asset-balance">
@@ -786,20 +642,6 @@
                     <div class="balance-fiat" id="usdtValue">$0.00</div>
                 </div>
             </div>
-        </div>
-    </div>
-    
-    <!-- Quick Actions -->
-    <div class="quick-actions">
-        <div class="quick-action" onclick="syncWithDashboard()">
-            <div class="quick-action-icon">🔄</div>
-            <div class="quick-action-title">Sync Dashboard</div>
-            <div class="quick-action-desc">Ambil GOV terbaru dari dashboard</div>
-        </div>
-        <div class="quick-action" onclick="showWithdraw()">
-            <div class="quick-action-icon">💸</div>
-            <div class="quick-action-title">Tarik Dana</div>
-            <div class="quick-action-desc">Tarik ke bank atau dompet lain</div>
         </div>
     </div>
 </div>
@@ -814,33 +656,121 @@
         <div class="nav-icon">💼</div>
         <div class="nav-label">Wallet</div>
     </div>
-    <div class="nav-item" onclick="showTransactions()">
+    <div class="nav-item" onclick="showHistoryModal()">
         <div class="nav-icon">📋</div>
         <div class="nav-label">Riwayat</div>
     </div>
-    <div class="nav-item" onclick="showSettings()">
+    <div class="nav-item" onclick="window.location.href='swap.html'">
         <div class="nav-icon">⚙️</div>
-        <div class="nav-label">Settings</div>
+        <div class="nav-label">Swap</div>
+    </div>
+</div>
+
+<!-- Withdraw Modal -->
+<div id="withdrawModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3 class="modal-title">📤 Withdraw IDR</h3>
+        
+        <div class="form-group">
+            <label class="form-label">Jumlah Penarikan (IDR)</label>
+            <div class="amount-group">
+                <input type="number" class="form-input" id="withdrawAmount" placeholder="50000" min="10000">
+                <button type="button" class="max-btn" onclick="setMaxWithdraw()">MAX</button>
+            </div>
+            <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                Minimal penarikan: Rp 10,000
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">Metode Penarikan</label>
+            <div class="payment-methods">
+                <div class="payment-method" onclick="selectPayment('dana')" id="danaMethod">
+                    <div class="payment-icon">💰</div>
+                    <div class="payment-name">DANA</div>
+                    <div class="payment-fee">Biaya: Rp 2,000</div>
+                </div>
+                <div class="payment-method" onclick="selectPayment('gopay')" id="gopayMethod">
+                    <div class="payment-icon">📱</div>
+                    <div class="payment-name">GoPay</div>
+                    <div class="payment-fee">Biaya: Rp 2,500</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">Nomor Tujuan</label>
+            <input type="tel" class="form-input" id="withdrawPhone" placeholder="0812xxxxxxxx" maxlength="13">
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">Nama Penerima</label>
+            <input type="text" class="form-input" id="withdrawName" placeholder="Nama sesuai akun DANA/GoPay">
+        </div>
+        
+        <div class="swap-rate">
+            <div class="rate-text">Saldo yang akan dikurangi</div>
+            <div class="rate-value" id="withdrawTotal">Rp 0</div>
+        </div>
+        
+        <div class="button-group">
+            <button class="primary-btn" onclick="processWithdraw()">Withdraw Sekarang</button>
+            <button class="secondary-btn" onclick="hideModal('withdrawModal')">Batal</button>
+        </div>
+    </div>
+</div>
+
+<!-- Transfer Modal -->
+<div id="transferModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3 class="modal-title">💸 Transfer GOV</h3>
+        
+        <div class="form-group">
+            <label class="form-label">Username Penerima</label>
+            <input type="text" class="form-input" id="transferUsername" placeholder="@username">
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">Jumlah GOV</label>
+            <div class="amount-group">
+                <input type="number" class="form-input" id="transferAmount" placeholder="100" min="1">
+                <button type="button" class="max-btn" onclick="setMaxTransfer()">MAX</button>
+            </div>
+        </div>
+        
+        <div class="swap-rate">
+            <div class="rate-text">Biaya transfer: 0.5%</div>
+            <div class="rate-value" id="transferFee">0 GOV</div>
+        </div>
+        
+        <div class="button-group">
+            <button class="primary-btn" onclick="processTransfer()">Transfer Sekarang</button>
+            <button class="secondary-btn" onclick="hideModal('transferModal')">Batal</button>
+        </div>
     </div>
 </div>
 
 <!-- Swap Modal -->
 <div id="swapModal" class="modal-overlay">
     <div class="modal-content">
-        <h3 class="modal-title">🔄 Tukar Koin</h3>
+        <h3 class="modal-title">🔄 Swap Koin</h3>
+        
+        <div class="swap-rate" style="margin-bottom: 20px;">
+            <div class="rate-text">Rate saat ini:</div>
+            <div class="rate-value">1 GOV = $0.001 = Rp 16.8</div>
+        </div>
         
         <div class="form-group">
             <label class="form-label">Dari</label>
-            <select class="form-input" id="swapFrom" onchange="updateSwapInfo()">
+            <select class="form-input" id="swapFrom" onchange="updateSwapCalculation()">
                 <option value="GOV">GOV</option>
                 <option value="USDT">USDT</option>
-                <option value="IDR">IDR</option>
             </select>
         </div>
         
         <div class="form-group">
             <label class="form-label">Ke</label>
-            <select class="form-input" id="swapTo" onchange="updateSwapInfo()">
+            <select class="form-input" id="swapTo" onchange="updateSwapCalculation()">
                 <option value="USDT">USDT</option>
                 <option value="IDR">IDR</option>
                 <option value="GOV">GOV</option>
@@ -849,89 +779,44 @@
         
         <div class="form-group">
             <label class="form-label">Jumlah</label>
-            <div class="swap-amount-group">
-                <input type="number" class="form-input" id="swapAmount" placeholder="0.00" oninput="updateSwapInfo()">
-                <button type="button" class="max-btn" onclick="setMaxSwapAmount()">MAX</button>
+            <div class="amount-group">
+                <input type="number" class="form-input" id="swapAmount" placeholder="0" oninput="updateSwapCalculation()">
+                <button type="button" class="max-btn" onclick="setMaxSwap()">MAX</button>
             </div>
         </div>
         
-        <div class="swap-info">
-            <div class="swap-info-row">
-                <span class="swap-info-label">Rate Tukar</span>
-                <span class="swap-info-value" id="swapRate">1 GOV = 0.001 USDT</span>
-            </div>
-            <div class="swap-info-row">
-                <span class="swap-info-label">Biaya Jaringan</span>
-                <span class="swap-info-value" id="swapFee">~ $1.50</span>
-            </div>
-            <div class="swap-info-row">
-                <span class="swap-info-label">Slippage</span>
-                <span class="swap-info-value">0.5%</span>
-            </div>
-        </div>
-        
-        <div class="swap-receive" id="swapReceive">
-            Anda Mendapat: <strong>0.000 USDT</strong>
+        <div class="swap-rate">
+            <div class="rate-text">Anda akan menerima:</div>
+            <div class="rate-value" id="swapReceive">0</div>
         </div>
         
         <div class="button-group">
-            <button class="primary-btn" onclick="executeSwap()">Tukar Sekarang</button>
-            <button class="secondary-btn" onclick="hideSwapModal()">Batal</button>
+            <button class="primary-btn" onclick="processSwap()">Swap Sekarang</button>
+            <button class="secondary-btn" onclick="hideModal('swapModal')">Batal</button>
         </div>
     </div>
 </div>
 
-<!-- Send Modal -->
-<div id="sendModal" class="modal-overlay">
+<!-- History Modal -->
+<div id="historyModal" class="modal-overlay">
     <div class="modal-content">
-        <h3 class="modal-title">📤 Kirim Koin</h3>
+        <h3 class="modal-title">📋 Riwayat Transaksi</h3>
         
-        <div class="form-group">
-            <label class="form-label">Alamat Penerima</label>
-            <input type="text" class="form-input" id="sendAddress" placeholder="0x... atau nama ENS">
-        </div>
-        
-        <div class="form-group">
-            <label class="form-label">Aset</label>
-            <select class="form-input" id="sendAsset">
-                <option value="GOV">GOV</option>
-                <option value="USDT">USDT</option>
-                <option value="IDR">IDR</option>
-            </select>
-        </div>
-        
-        <div class="form-group">
-            <label class="form-label">Jumlah</label>
-            <div class="swap-amount-group">
-                <input type="number" class="form-input" id="sendAmount" placeholder="0.00">
-                <button type="button" class="max-btn" onclick="setMaxSendAmount()">MAX</button>
+        <div class="transactions-list" id="transactionsList">
+            <!-- Transactions will be loaded here -->
+            <div style="text-align: center; padding: 40px; color: #666;">
+                Belum ada transaksi
             </div>
         </div>
         
-        <div class="swap-info">
-            <div class="swap-info-row">
-                <span class="swap-info-label">Jaringan</span>
-                <span class="swap-info-value">BSC</span>
-            </div>
-            <div class="swap-info-row">
-                <span class="swap-info-label">Biaya Gas</span>
-                <span class="swap-info-value">~ $0.50</span>
-            </div>
-            <div class="swap-info-row">
-                <span class="swap-info-label">Total</span>
-                <span class="swap-info-value" id="sendTotal">0.00</span>
-            </div>
-        </div>
-        
-        <div class="button-group">
-            <button class="primary-btn" onclick="executeSend()">Kirim Sekarang</button>
-            <button class="secondary-btn" onclick="hideSendModal()">Batal</button>
+        <div class="button-group" style="margin-top: 20px;">
+            <button class="secondary-btn" onclick="hideModal('historyModal')">Tutup</button>
         </div>
     </div>
 </div>
 
 <script>
-// ===== FIREBASE CONFIG - GANTI DENGAN CONFIG ANDA =====
+// ===== FIREBASE CONFIG =====
 const firebaseConfig = {
     apiKey: "AIzaSyBY7wHgWh7_0HqRLHzDnwdfQOhv_ziqA3A",
     authDomain: "govin-28f84.firebaseapp.com",
@@ -950,24 +835,25 @@ let walletData = {
         IDR: 0,
         USDT: 0
     },
-    prices: {
-        GOV: 0.001,     // 1 GOV = $0.001
-        IDR: 0.000065,  // 1 IDR = $0.000065
-        USDT: 1
-    },
     userId: null,
-    lastSync: null
+    selectedPayment: null,
+    transactions: []
 };
 
-let firebaseApp, firebaseDb;
+// ===== EXCHANGE RATES =====
+const EXCHANGE_RATES = {
+    GOV_TO_USDT: 0.001,     // 1 GOV = 0.001 USDT
+    USDT_TO_IDR: 16800,     // 1 USDT = 16,800 IDR
+    GOV_TO_IDR: 16.8        // 1 GOV = 16.8 IDR
+};
 
 // ===== INITIALIZE =====
 async function initializeWallet() {
-    console.log("🚀 Initializing Crypto Wallet...");
+    console.log("🚀 Initializing GOV Wallet...");
     
     try {
         // Initialize Firebase
-        firebaseApp = firebase.initializeApp(firebaseConfig);
+        firebase.initializeApp(firebaseConfig);
         firebaseDb = firebase.database();
         
         // Get current user
@@ -978,41 +864,78 @@ async function initializeWallet() {
             return;
         }
         
-        // Generate userId dari email
+        // Set user email
+        document.getElementById('userEmail').textContent = userEmail;
         walletData.userId = btoa(userEmail).replace(/[^a-zA-Z0-9]/g, '').substring(0, 20);
         
-        // Update network status
-        document.getElementById('networkStatus').textContent = "🔄 Loading...";
-        
         // Load data dari Firebase
-        await loadWalletDataFromFirebase();
+        await loadWalletData();
         
-        // Sync dengan dashboard (ambil GOV terbaru)
+        // Sync dengan dashboard
         await syncWithDashboard();
         
         // Update display
         updateWalletDisplay();
         
-        // Update network status
-        document.getElementById('networkStatus').textContent = "✅ Online";
-        document.getElementById('networkStatus').style.color = "#34c759";
+        // Load transaction history
+        loadTransactionHistory();
         
         // Auto-sync setiap 30 detik
         setInterval(syncWithDashboard, 30000);
-        
-        // Auto-save ke Firebase setiap 60 detik
-        setInterval(saveWalletDataToFirebase, 60000);
         
         console.log("✅ Wallet initialized successfully");
         
     } catch (error) {
         console.error("❌ Error initializing wallet:", error);
-        document.getElementById('networkStatus').textContent = "❌ Offline";
-        document.getElementById('networkStatus').style.color = "#ff3b30";
         
         // Fallback ke localStorage
         loadWalletDataFromLocalStorage();
         showNotification("⚠️ Mode offline - menggunakan data lokal", false);
+    }
+}
+
+// ===== LOAD WALLET DATA =====
+async function loadWalletData() {
+    try {
+        const snapshot = await firebaseDb.ref(`wallets/${walletData.userId}`).once('value');
+        
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            walletData.balances = data.balances || walletData.balances;
+            walletData.transactions = data.transactions || [];
+            console.log("✅ Wallet data loaded from Firebase");
+        } else {
+            // Data tidak ada, buat baru
+            console.log("📝 Creating new wallet in Firebase");
+            
+            // Coba ambil dari localStorage dulu
+            loadWalletDataFromLocalStorage();
+            
+            // Simpan ke Firebase
+            await saveWalletData();
+        }
+    } catch (error) {
+        console.error("❌ Error loading from Firebase:", error);
+        throw error;
+    }
+}
+
+function loadWalletDataFromLocalStorage() {
+    const userEmail = localStorage.getItem('currentUser');
+    if (!userEmail) return;
+    
+    try {
+        const walletKey = `govWallet_${userEmail}`;
+        const savedData = localStorage.getItem(walletKey);
+        
+        if (savedData) {
+            const data = JSON.parse(savedData);
+            walletData.balances = data.balances || walletData.balances;
+            walletData.transactions = data.transactions || [];
+            console.log("✅ Wallet data loaded from localStorage");
+        }
+    } catch (error) {
+        console.error("❌ Error loading from localStorage:", error);
     }
 }
 
@@ -1022,10 +945,9 @@ async function syncWithDashboard() {
         const userEmail = localStorage.getItem('currentUser');
         if (!userEmail) return;
         
-        console.log("🔄 Syncing with dashboard...");
-        
-        // 1. Coba ambil dari dashboard localStorage
         const username = userEmail.split('@')[0];
+        
+        // 1. Ambil GOV dari dashboard localStorage
         const dashboardKey = `userData_${username}`;
         const dashboardData = localStorage.getItem(dashboardKey);
         
@@ -1033,113 +955,52 @@ async function syncWithDashboard() {
             const parsed = JSON.parse(dashboardData);
             const govFromDashboard = parsed.saldoGOV || 0;
             
-            // Update GOV di wallet
+            // Update GOV jika lebih besar dari yang ada di wallet
             if (govFromDashboard > walletData.balances.GOV) {
-                const difference = govFromDashboard - walletData.balances.GOV;
                 walletData.balances.GOV = govFromDashboard;
-                
-                // Jika ada penambahan, buat transaksi
-                if (difference > 0) {
-                    addTransaction('SYNC', `Sync dari dashboard`, difference, 'GOV');
-                }
-                
-                console.log(`✅ GOV synced from dashboard: ${govFromDashboard} GOV`);
-                showNotification(`🔄 GOV diupdate: ${difference.toLocaleString('id-ID')} GOV`);
-                
-                // Save ke Firebase
-                await saveWalletDataToFirebase();
+                await saveWalletData();
                 updateWalletDisplay();
+                console.log(`✅ GOV synced from dashboard: ${govFromDashboard} GOV`);
             }
         }
         
-        // 2. Juga sync wallet localStorage dari dashboard
-        const walletKeyFromDashboard = `walletData_${userEmail}`;
-        const walletDashboardData = localStorage.getItem(walletKeyFromDashboard);
+        // 2. Juga sync dari wallet localStorage dashboard
+        const walletDashboardKey = `walletData_${userEmail}`;
+        const walletDashboardData = localStorage.getItem(walletDashboardKey);
         
         if (walletDashboardData) {
             const parsedWallet = JSON.parse(walletDashboardData);
             const govFromWallet = parsedWallet.saldoGOV || 0;
             
-            // Ambil yang tertinggi antara dashboard dan wallet
-            const highestGOV = Math.max(walletData.balances.GOV, govFromWallet);
-            if (highestGOV > walletData.balances.GOV) {
-                walletData.balances.GOV = highestGOV;
-                await saveWalletDataToFirebase();
+            if (govFromWallet > walletData.balances.GOV) {
+                walletData.balances.GOV = govFromWallet;
+                await saveWalletData();
                 updateWalletDisplay();
             }
         }
-        
-        walletData.lastSync = new Date().toISOString();
         
     } catch (error) {
         console.error("❌ Error syncing with dashboard:", error);
     }
 }
 
-// ===== FIREBASE FUNCTIONS =====
-async function loadWalletDataFromFirebase() {
-    try {
-        const snapshot = await firebaseDb.ref(`wallets/${walletData.userId}`).once('value');
-        
-        if (snapshot.exists()) {
-            const data = snapshot.val();
-            walletData.balances = data.balances || walletData.balances;
-            walletData.lastSync = data.lastSync;
-            console.log("✅ Wallet data loaded from Firebase:", walletData.balances);
-            showNotification("✅ Data wallet dimuat dari cloud");
-        } else {
-            // Data tidak ada, buat baru
-            console.log("📝 Creating new wallet in Firebase");
-            
-            // Coba ambil dari localStorage dulu
-            loadWalletDataFromLocalStorage();
-            
-            // Simpan ke Firebase
-            await saveWalletDataToFirebase();
-        }
-    } catch (error) {
-        console.error("❌ Error loading from Firebase:", error);
-        throw error;
-    }
-}
-
-async function saveWalletDataToFirebase() {
+// ===== SAVE WALLET DATA =====
+async function saveWalletData() {
     try {
         await firebaseDb.ref(`wallets/${walletData.userId}`).set({
             balances: walletData.balances,
+            transactions: walletData.transactions,
             lastUpdate: new Date().toISOString(),
-            lastSync: walletData.lastSync,
             email: localStorage.getItem('currentUser')
         });
         console.log("✅ Wallet data saved to Firebase");
+        
+        // Juga save ke localStorage
+        saveWalletDataToLocalStorage();
+        
     } catch (error) {
         console.error("❌ Error saving to Firebase:", error);
-        // Fallback ke localStorage
         saveWalletDataToLocalStorage();
-    }
-}
-
-// ===== LOCALSTORAGE FUNCTIONS =====
-function loadWalletDataFromLocalStorage() {
-    const userEmail = localStorage.getItem('currentUser');
-    if (!userEmail) return;
-    
-    try {
-        const walletKey = `cryptoWallet_${userEmail}`;
-        const savedData = localStorage.getItem(walletKey);
-        
-        if (savedData) {
-            const data = JSON.parse(savedData);
-            walletData.balances = data.balances || walletData.balances;
-            console.log("✅ Wallet data loaded from localStorage");
-        } else {
-            // Buat wallet baru dengan 100 GOV (sama seperti dashboard)
-            walletData.balances.GOV = 100;
-            saveWalletDataToLocalStorage();
-            showNotification("🎉 Wallet baru dibuat dengan 100 GOV bonus!");
-        }
-    } catch (error) {
-        console.error("❌ Error loading from localStorage:", error);
     }
 }
 
@@ -1148,9 +1009,10 @@ function saveWalletDataToLocalStorage() {
     if (!userEmail) return;
     
     try {
-        const walletKey = `cryptoWallet_${userEmail}`;
+        const walletKey = `govWallet_${userEmail}`;
         localStorage.setItem(walletKey, JSON.stringify({
             balances: walletData.balances,
+            transactions: walletData.transactions,
             lastUpdate: new Date().toISOString()
         }));
         console.log("✅ Wallet data saved to localStorage");
@@ -1159,292 +1021,483 @@ function saveWalletDataToLocalStorage() {
     }
 }
 
-// ===== UPDATE WALLET DISPLAY =====
+// ===== UPDATE DISPLAY =====
 function updateWalletDisplay() {
-    // Update total balance dalam USD
-    let totalUSD = 0;
-    totalUSD += walletData.balances.GOV * walletData.prices.GOV;
-    totalUSD += walletData.balances.IDR * walletData.prices.IDR;
-    totalUSD += walletData.balances.USDT * walletData.prices.USDT;
+    // Hitung total saldo dalam IDR
+    const totalIDR = 
+        (walletData.balances.GOV * EXCHANGE_RATES.GOV_TO_IDR) +
+        walletData.balances.IDR +
+        (walletData.balances.USDT * EXCHANGE_RATES.USDT_TO_IDR);
     
-    document.getElementById('totalBalance').textContent = `$${totalUSD.toFixed(2)}`;
+    const totalUSD = totalIDR / EXCHANGE_RATES.USDT_TO_IDR;
+    
+    // Update total balance
+    document.getElementById('totalBalance').textContent = `Rp ${totalIDR.toLocaleString('id-ID')}`;
+    document.getElementById('totalBalanceUSD').textContent = `$${totalUSD.toFixed(2)}`;
     
     // Update individual balances
     document.getElementById('govBalance').textContent = `${walletData.balances.GOV.toLocaleString('id-ID')} GOV`;
-    document.getElementById('govValue').textContent = `$${(walletData.balances.GOV * walletData.prices.GOV).toFixed(2)}`;
+    document.getElementById('govValue').textContent = `$${(walletData.balances.GOV * EXCHANGE_RATES.GOV_TO_USDT).toFixed(4)}`;
     
-    document.getElementById('idrBalance').textContent = `${walletData.balances.IDR.toLocaleString('id-ID')} IDR`;
-    document.getElementById('idrValue').textContent = `$${(walletData.balances.IDR * walletData.prices.IDR).toFixed(2)}`;
+    document.getElementById('idrBalance').textContent = `Rp ${walletData.balances.IDR.toLocaleString('id-ID')}`;
+    document.getElementById('idrValue').textContent = `$${(walletData.balances.IDR / EXCHANGE_RATES.USDT_TO_IDR).toFixed(2)}`;
     
     document.getElementById('usdtBalance').textContent = `${walletData.balances.USDT.toFixed(2)} USDT`;
-    document.getElementById('usdtValue').textContent = `$${(walletData.balances.USDT * walletData.prices.USDT).toFixed(2)}`;
-    
-    // Simulasi perubahan harga
-    updatePriceChanges();
-}
-
-function updatePriceChanges() {
-    // Simulasi perubahan harga GOV
-    const govChange = (Math.random() - 0.5) * 5; // -2.5% sampai +2.5%
-    const govChangeElement = document.getElementById('govChange');
-    
-    if (govChange > 0) {
-        govChangeElement.textContent = `▲ ${govChange.toFixed(2)}%`;
-        govChangeElement.className = 'asset-change positive';
-    } else {
-        govChangeElement.textContent = `▼ ${Math.abs(govChange).toFixed(2)}%`;
-        govChangeElement.className = 'asset-change';
-    }
-    
-    // Update total balance change
-    const totalChange = (Math.random() - 0.5) * 3;
-    const changeElement = document.getElementById('balanceChange');
-    const iconElement = document.getElementById('balanceChangeIcon');
-    
-    if (totalChange > 0) {
-        changeElement.textContent = `${totalChange.toFixed(2)}%`;
-        changeElement.style.color = '#34c759';
-        iconElement.textContent = '▲';
-        iconElement.style.color = '#34c759';
-    } else {
-        changeElement.textContent = `${Math.abs(totalChange).toFixed(2)}%`;
-        changeElement.style.color = '#ff3b30';
-        iconElement.textContent = '▼';
-        iconElement.style.color = '#ff3b30';
-    }
+    document.getElementById('usdtValue').textContent = `$${walletData.balances.USDT.toFixed(2)}`;
 }
 
 // ===== MODAL FUNCTIONS =====
+function showModal(modalId) {
+    document.getElementById(modalId).style.display = 'flex';
+}
+
+function hideModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+    walletData.selectedPayment = null;
+    document.querySelectorAll('.payment-method').forEach(el => {
+        el.classList.remove('selected');
+    });
+}
+
+function showWithdrawModal() {
+    showModal('withdrawModal');
+    document.getElementById('withdrawAmount').value = '';
+    document.getElementById('withdrawPhone').value = '';
+    document.getElementById('withdrawName').value = '';
+    updateWithdrawTotal();
+}
+
+function showTransferModal() {
+    showModal('transferModal');
+    document.getElementById('transferUsername').value = '';
+    document.getElementById('transferAmount').value = '';
+    updateTransferFee();
+}
+
 function showSwapModal() {
-    document.getElementById('swapModal').style.display = 'flex';
-    updateSwapInfo();
-}
-
-function hideSwapModal() {
-    document.getElementById('swapModal').style.display = 'none';
+    showModal('swapModal');
     document.getElementById('swapAmount').value = '';
+    updateSwapCalculation();
 }
 
-function showSendModal() {
-    document.getElementById('sendModal').style.display = 'flex';
+function showHistoryModal() {
+    showModal('historyModal');
+    loadTransactionHistory();
 }
 
-function hideSendModal() {
-    document.getElementById('sendModal').style.display = 'none';
-    document.getElementById('sendAddress').value = '';
-    document.getElementById('sendAmount').value = '';
+// ===== WITHDRAW FUNCTIONS =====
+function setMaxWithdraw() {
+    document.getElementById('withdrawAmount').value = walletData.balances.IDR;
+    updateWithdrawTotal();
 }
 
-function showReceiveModal() {
-    showNotification("Fitur penerimaan akan segera hadir!");
+function selectPayment(method) {
+    walletData.selectedPayment = method;
+    document.querySelectorAll('.payment-method').forEach(el => {
+        el.classList.remove('selected');
+    });
+    document.getElementById(method + 'Method').classList.add('selected');
 }
 
-function showBuyModal() {
-    showNotification("Fitur pembelian akan segera hadir!");
+function updateWithdrawTotal() {
+    const amount = parseFloat(document.getElementById('withdrawAmount').value) || 0;
+    const fee = walletData.selectedPayment === 'dana' ? 2000 : 2500;
+    const total = amount + fee;
+    document.getElementById('withdrawTotal').textContent = `Rp ${total.toLocaleString('id-ID')}`;
 }
 
-function showWithdraw() {
-    showNotification("Fitur penarikan akan segera hadir!");
+async function processWithdraw() {
+    const amount = parseFloat(document.getElementById('withdrawAmount').value) || 0;
+    const phone = document.getElementById('withdrawPhone').value.trim();
+    const name = document.getElementById('withdrawName').value.trim();
+    
+    // Validasi
+    if (!walletData.selectedPayment) {
+        showNotification("❌ Pilih metode penarikan terlebih dahulu", false);
+        return;
+    }
+    
+    if (amount < 10000) {
+        showNotification("❌ Minimal penarikan Rp 10,000", false);
+        return;
+    }
+    
+    if (amount > walletData.balances.IDR) {
+        showNotification("❌ Saldo IDR tidak mencukupi", false);
+        return;
+    }
+    
+    if (!phone || phone.length < 10) {
+        showNotification("❌ Masukkan nomor telepon yang valid", false);
+        return;
+    }
+    
+    if (!name) {
+        showNotification("❌ Masukkan nama penerima", false);
+        return;
+    }
+    
+    const fee = walletData.selectedPayment === 'dana' ? 2000 : 2500;
+    const totalAmount = amount + fee;
+    
+    // Kurangi saldo
+    walletData.balances.IDR -= totalAmount;
+    
+    // Tambah transaksi
+    const transaction = {
+        id: Date.now(),
+        type: 'WITHDRAW',
+        method: walletData.selectedPayment.toUpperCase(),
+        amount: -amount,
+        fee: fee,
+        total: -totalAmount,
+        phone: phone,
+        name: name,
+        status: 'PENDING',
+        timestamp: new Date().toISOString()
+    };
+    
+    walletData.transactions.unshift(transaction);
+    
+    // Simpan data
+    await saveWalletData();
+    updateWalletDisplay();
+    
+    // Kirim notifikasi ke Telegram (simulasi)
+    sendTelegramNotification(transaction);
+    
+    // Tampilkan konfirmasi
+    showNotification(`✅ Withdraw Rp ${amount.toLocaleString('id-ID')} ke ${walletData.selectedPayment.toUpperCase()} diproses`);
+    hideModal('withdrawModal');
+}
+
+function sendTelegramNotification(transaction) {
+    // Simulasi pengiriman ke Telegram
+    const message = `📤 WITHDRAW REQUEST\n` +
+                   `User: ${localStorage.getItem('currentUser')}\n` +
+                   `Amount: Rp ${Math.abs(transaction.amount).toLocaleString('id-ID')}\n` +
+                   `Method: ${transaction.method}\n` +
+                   `Phone: ${transaction.phone}\n` +
+                   `Name: ${transaction.name}\n` +
+                   `Fee: Rp ${transaction.fee.toLocaleString('id-ID')}\n` +
+                   `Total: Rp ${Math.abs(transaction.total).toLocaleString('id-ID')}\n` +
+                   `Status: ${transaction.status}\n` +
+                   `Time: ${new Date(transaction.timestamp).toLocaleString('id-ID')}`;
+    
+    console.log("📤 Telegram Notification:", message);
+    // Di sini Anda bisa menambahkan API call ke bot Telegram
+}
+
+// ===== TRANSFER FUNCTIONS =====
+function setMaxTransfer() {
+    document.getElementById('transferAmount').value = walletData.balances.GOV;
+    updateTransferFee();
+}
+
+function updateTransferFee() {
+    const amount = parseFloat(document.getElementById('transferAmount').value) || 0;
+    const fee = amount * 0.005; // 0.5% fee
+    document.getElementById('transferFee').textContent = `${fee.toFixed(2)} GOV`;
+}
+
+async function processTransfer() {
+    const username = document.getElementById('transferUsername').value.trim();
+    const amount = parseFloat(document.getElementById('transferAmount').value) || 0;
+    
+    // Validasi
+    if (!username || !username.startsWith('@')) {
+        showNotification("❌ Masukkan username yang valid (contoh: @username)", false);
+        return;
+    }
+    
+    if (amount < 1) {
+        showNotification("❌ Minimal transfer 1 GOV", false);
+        return;
+    }
+    
+    const fee = amount * 0.005;
+    const total = amount + fee;
+    
+    if (total > walletData.balances.GOV) {
+        showNotification("❌ Saldo GOV tidak mencukupi", false);
+        return;
+    }
+    
+    // Kurangi saldo pengirim
+    walletData.balances.GOV -= total;
+    
+    // Tambah transaksi
+    const transaction = {
+        id: Date.now(),
+        type: 'TRANSFER',
+        to: username,
+        amount: -amount,
+        fee: -fee,
+        total: -total,
+        status: 'SUCCESS',
+        timestamp: new Date().toISOString()
+    };
+    
+    walletData.transactions.unshift(transaction);
+    
+    // Simpan data
+    await saveWalletData();
+    updateWalletDisplay();
+    
+    // Update dashboard GOV juga (simulasi transfer ke user lain)
+    updateDashboardGOV(total);
+    
+    showNotification(`✅ Berhasil transfer ${amount} GOV ke ${username}`);
+    hideModal('transferModal');
+}
+
+function updateDashboardGOV(amount) {
+    // Simulasi pengurangan GOV di dashboard
+    const userEmail = localStorage.getItem('currentUser');
+    const username = userEmail.split('@')[0];
+    const dashboardKey = `userData_${username}`;
+    
+    const dashboardData = localStorage.getItem(dashboardKey);
+    if (dashboardData) {
+        const parsed = JSON.parse(dashboardData);
+        parsed.saldoGOV -= amount;
+        localStorage.setItem(dashboardKey, JSON.stringify(parsed));
+    }
 }
 
 // ===== SWAP FUNCTIONS =====
-function setMaxSwapAmount() {
-    const fromAsset = document.getElementById('swapFrom').value;
-    const maxAmount = walletData.balances[fromAsset] || 0;
-    document.getElementById('swapAmount').value = maxAmount;
-    updateSwapInfo();
+function setMaxSwap() {
+    const from = document.getElementById('swapFrom').value;
+    document.getElementById('swapAmount').value = walletData.balances[from];
+    updateSwapCalculation();
 }
 
-function updateSwapInfo() {
-    const fromAsset = document.getElementById('swapFrom').value;
-    const toAsset = document.getElementById('swapTo').value;
+function updateSwapCalculation() {
+    const from = document.getElementById('swapFrom').value;
+    const to = document.getElementById('swapTo').value;
     const amount = parseFloat(document.getElementById('swapAmount').value) || 0;
     
-    if (fromAsset === toAsset) {
-        const options = ['GOV', 'IDR', 'USDT'].filter(a => a !== fromAsset);
-        if (options.length > 0) {
-            document.getElementById('swapTo').value = options[0];
-            updateSwapInfo();
-        }
+    if (from === to) {
+        document.getElementById('swapReceive').textContent = `0 ${to}`;
         return;
     }
     
-    const fromPrice = walletData.prices[fromAsset] || 0;
-    const toPrice = walletData.prices[toAsset] || 1;
+    let result = 0;
     
-    // Calculate exchange rate
-    const rate = fromPrice / toPrice;
-    const receiveAmount = amount * rate * 0.995; // 0.5% slippage
+    if (from === 'GOV' && to === 'USDT') {
+        result = amount * EXCHANGE_RATES.GOV_TO_USDT;
+    } else if (from === 'GOV' && to === 'IDR') {
+        result = amount * EXCHANGE_RATES.GOV_TO_IDR;
+    } else if (from === 'USDT' && to === 'GOV') {
+        result = amount / EXCHANGE_RATES.GOV_TO_USDT;
+    } else if (from === 'USDT' && to === 'IDR') {
+        result = amount * EXCHANGE_RATES.USDT_TO_IDR;
+    } else if (from === 'IDR' && to === 'GOV') {
+        result = amount / EXCHANGE_RATES.GOV_TO_IDR;
+    } else if (from === 'IDR' && to === 'USDT') {
+        result = amount / EXCHANGE_RATES.USDT_TO_IDR;
+    }
     
-    // Update display
-    document.getElementById('swapRate').textContent = `1 ${fromAsset} = ${rate.toFixed(6)} ${toAsset}`;
-    document.getElementById('swapReceive').innerHTML = 
-        `Anda Mendapat: <strong>${receiveAmount.toFixed(6)} ${toAsset}</strong>`;
+    document.getElementById('swapReceive').textContent = `${result.toFixed(4)} ${to}`;
 }
 
-async function executeSwap() {
-    const fromAsset = document.getElementById('swapFrom').value;
-    const toAsset = document.getElementById('swapTo').value;
+async function processSwap() {
+    const from = document.getElementById('swapFrom').value;
+    const to = document.getElementById('swapTo').value;
     const amount = parseFloat(document.getElementById('swapAmount').value) || 0;
     
-    if (!amount || amount <= 0) {
+    if (from === to) {
+        showNotification("❌ Pilih aset yang berbeda", false);
+        return;
+    }
+    
+    if (amount <= 0) {
         showNotification("❌ Masukkan jumlah yang valid", false);
         return;
     }
     
-    if (amount > (walletData.balances[fromAsset] || 0)) {
-        showNotification(`❌ Saldo ${fromAsset} tidak mencukupi`, false);
+    if (amount > walletData.balances[from]) {
+        showNotification(`❌ Saldo ${from} tidak mencukupi`, false);
         return;
     }
     
-    // Calculate swap
-    const fromPrice = walletData.prices[fromAsset] || 0;
-    const toPrice = walletData.prices[toAsset] || 1;
-    const rate = fromPrice / toPrice;
-    const receiveAmount = amount * rate * 0.995;
+    // Hitung hasil swap
+    let result = 0;
+    let rate = '';
+    
+    if (from === 'GOV' && to === 'USDT') {
+        result = amount * EXCHANGE_RATES.GOV_TO_USDT;
+        rate = `1 GOV = $${EXCHANGE_RATES.GOV_TO_USDT}`;
+    } else if (from === 'GOV' && to === 'IDR') {
+        result = amount * EXCHANGE_RATES.GOV_TO_IDR;
+        rate = `1 GOV = Rp ${EXCHANGE_RATES.GOV_TO_IDR}`;
+    } else if (from === 'USDT' && to === 'GOV') {
+        result = amount / EXCHANGE_RATES.GOV_TO_USDT;
+        rate = `1 USDT = ${(1/EXCHANGE_RATES.GOV_TO_USDT).toFixed(0)} GOV`;
+    } else if (from === 'USDT' && to === 'IDR') {
+        result = amount * EXCHANGE_RATES.USDT_TO_IDR;
+        rate = `1 USDT = Rp ${EXCHANGE_RATES.USDT_TO_IDR.toLocaleString('id-ID')}`;
+    }
     
     // Update balances
-    walletData.balances[fromAsset] -= amount;
-    walletData.balances[toAsset] = (walletData.balances[toAsset] || 0) + receiveAmount;
+    walletData.balances[from] -= amount;
+    walletData.balances[to] += result;
     
-    // Add transaction
-    addTransaction('SWAP', `Tukar ${amount} ${fromAsset} → ${receiveAmount.toFixed(4)} ${toAsset}`, receiveAmount, toAsset);
+    // Tambah transaksi
+    const transaction = {
+        id: Date.now(),
+        type: 'SWAP',
+        from: from,
+        to: to,
+        amount: -amount,
+        received: result,
+        rate: rate,
+        status: 'SUCCESS',
+        timestamp: new Date().toISOString()
+    };
     
-    // Save and update
-    await saveWalletDataToFirebase();
-    saveWalletDataToLocalStorage();
+    walletData.transactions.unshift(transaction);
+    
+    // Simpan data
+    await saveWalletData();
     updateWalletDisplay();
     
-    showNotification(`✅ Berhasil menukar ${amount} ${fromAsset} untuk ${receiveAmount.toFixed(4)} ${toAsset}`);
-    hideSwapModal();
-}
-
-// ===== SEND FUNCTIONS =====
-function setMaxSendAmount() {
-    const asset = document.getElementById('sendAsset').value;
-    const maxAmount = walletData.balances[asset] || 0;
-    document.getElementById('sendAmount').value = maxAmount;
-}
-
-async function executeSend() {
-    const address = document.getElementById('sendAddress').value.trim();
-    const asset = document.getElementById('sendAsset').value;
-    const amount = parseFloat(document.getElementById('sendAmount').value) || 0;
-    
-    if (!address || address.length < 10) {
-        showNotification("❌ Masukkan alamat wallet yang valid", false);
-        return;
-    }
-    
-    if (!amount || amount <= 0) {
-        showNotification("❌ Masukkan jumlah yang valid", false);
-        return;
-    }
-    
-    if (amount > (walletData.balances[asset] || 0)) {
-        showNotification(`❌ Saldo ${asset} tidak mencukupi`, false);
-        return;
-    }
-    
-    // Deduct amount
-    walletData.balances[asset] -= amount;
-    
-    // Add transaction
-    addTransaction('SEND', `Kirim ke ${address.substring(0, 12)}...`, -amount, asset);
-    
-    // Save and update
-    await saveWalletDataToFirebase();
-    saveWalletDataToLocalStorage();
-    updateWalletDisplay();
-    
-    showNotification(`✅ Berhasil mengirim ${amount} ${asset} ke ${address.substring(0, 12)}...`);
-    hideSendModal();
+    showNotification(`✅ Berhasil swap ${amount} ${from} → ${result.toFixed(4)} ${to}`);
+    hideModal('swapModal');
 }
 
 // ===== TRANSACTION HISTORY =====
-function addTransaction(type, description, amount, asset) {
-    const userEmail = localStorage.getItem('currentUser');
-    if (!userEmail) return;
+function loadTransactionHistory() {
+    const transactionsList = document.getElementById('transactionsList');
     
-    try {
-        const txKey = `transactions_${userEmail}`;
-        const transactions = JSON.parse(localStorage.getItem(txKey) || '[]');
+    if (walletData.transactions.length === 0) {
+        transactionsList.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: #666;">
+                Belum ada transaksi
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '';
+    
+    walletData.transactions.forEach(transaction => {
+        let icon = '';
+        let typeText = '';
+        let details = '';
+        let amountClass = '';
+        let amountText = '';
         
-        transactions.unshift({
-            type: type,
-            description: description,
-            amount: amount,
-            asset: asset,
-            timestamp: new Date().toISOString(),
-            status: 'completed'
-        });
-        
-        // Keep only last 100 transactions
-        if (transactions.length > 100) {
-            transactions.length = 100;
+        switch(transaction.type) {
+            case 'WITHDRAW':
+                icon = '📤';
+                typeText = 'Withdraw';
+                details = `${transaction.method} • ${transaction.phone}`;
+                amountClass = 'negative';
+                amountText = `-Rp ${Math.abs(transaction.amount).toLocaleString('id-ID')}`;
+                break;
+                
+            case 'TRANSFER':
+                icon = '💸';
+                typeText = 'Transfer';
+                details = `Ke ${transaction.to}`;
+                amountClass = 'negative';
+                amountText = `-${Math.abs(transaction.amount)} GOV`;
+                break;
+                
+            case 'SWAP':
+                icon = '🔄';
+                typeText = 'Swap';
+                details = `${transaction.from} → ${transaction.to}`;
+                amountClass = 'positive';
+                amountText = `+${transaction.received} ${transaction.to}`;
+                break;
+                
+            case 'DEPOSIT':
+                icon = '📥';
+                typeText = 'Deposit';
+                details = 'Dari dashboard';
+                amountClass = 'positive';
+                amountText = `+${transaction.amount} GOV`;
+                break;
         }
         
-        localStorage.setItem(txKey, JSON.stringify(transactions));
-        console.log("✅ Transaction added:", type, amount, asset);
-    } catch (error) {
-        console.error("❌ Error adding transaction:", error);
-    }
+        const date = new Date(transaction.timestamp).toLocaleDateString('id-ID', {
+            day: 'numeric',
+            month: 'short',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        html += `
+            <div class="transaction-item">
+                <div class="transaction-info">
+                    <div class="transaction-icon">${icon}</div>
+                    <div class="transaction-details">
+                        <div class="transaction-type">${typeText}</div>
+                        <div class="transaction-date">${date} • ${details}</div>
+                    </div>
+                </div>
+                <div class="transaction-amount ${amountClass}">${amountText}</div>
+            </div>
+        `;
+    });
+    
+    transactionsList.innerHTML = html;
 }
 
 // ===== UTILITY FUNCTIONS =====
 function showNotification(message, isSuccess = true) {
     const notification = document.getElementById('notification');
     notification.textContent = message;
-    notification.style.background = isSuccess ? '#34c759' : '#ff3b30';
-    notification.style.animation = 'fadeInOut 4s ease-in-out forwards';
+    notification.style.background = isSuccess ? '#4cd964' : '#ff3b30';
     notification.style.display = 'block';
+    
+    // Animate
+    notification.style.animation = 'none';
+    setTimeout(() => {
+        notification.style.animation = 'fadeInOut 3s ease-in-out forwards';
+    }, 10);
     
     setTimeout(() => {
         notification.style.display = 'none';
-    }, 4000);
+    }, 3000);
 }
 
-function selectAsset(asset) {
-    showNotification(`Selected ${asset} - Saldo: ${walletData.balances[asset].toLocaleString('id-ID')} ${asset}`);
-}
-
-function scanQR() {
-    showNotification("Scanner QR akan segera hadir!");
-}
-
-function refreshWallet() {
-    showNotification("🔄 Memperbarui data wallet...");
-    syncWithDashboard();
-    updateWalletDisplay();
-}
-
-function showTransactions() {
-    showNotification("Riwayat transaksi akan segera hadir!");
-}
-
-function showSettings() {
-    showNotification("Pengaturan akan segera hadir!");
-}
-
-// ===== INITIALIZE ON LOAD =====
+// ===== INITIALIZE =====
 document.addEventListener('DOMContentLoaded', function() {
-    console.log("💎 Crypto Wallet Initializing...");
-    initializeWallet();
-});
-
-// Add initial data for demo
-window.addEventListener('load', function() {
-    // Set initial balances jika belum ada
-    if (walletData.balances.GOV === 0 && walletData.balances.IDR === 0 && walletData.balances.USDT === 0) {
-        walletData.balances = {
-            GOV: 100,
-            IDR: 50000,
-            USDT: 10
-        };
+    console.log("💼 GOV Wallet Initializing...");
+    
+    // Set initial balances untuk user baru
+    const userEmail = localStorage.getItem('currentUser');
+    if (userEmail) {
+        // Cek apakah user baru
+        const walletKey = `govWallet_${userEmail}`;
+        const savedData = localStorage.getItem(walletKey);
         
-        // Update display
-        updateWalletDisplay();
+        if (!savedData) {
+            // User baru, set initial balance
+            walletData.balances = {
+                GOV: 100,      // Sync dengan dashboard
+                IDR: 50000,    // Bonus awal
+                USDT: 10       // Bonus awal
+            };
+            
+            // Tambah transaksi deposit awal
+            walletData.transactions.push({
+                id: Date.now(),
+                type: 'DEPOSIT',
+                amount: 100,
+                description: 'Bonus pendaftaran',
+                status: 'SUCCESS',
+                timestamp: new Date().toISOString()
+            });
+            
+            console.log("🎉 New user wallet created with bonus");
+        }
     }
+    
+    initializeWallet();
 });
 </script>
 
