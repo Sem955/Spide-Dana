@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GOV Wallet</title>
     
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     
@@ -616,20 +615,17 @@
 <div id="notification"></div>
 
 <div class="container">
-    <!-- Wallet Header -->
     <div class="wallet-header">
         <div class="wallet-title">GOV Wallet</div>
         <div class="wallet-subtitle" id="userEmail">user@email.com</div>
     </div>
     
-    <!-- Total Balance Card -->
     <div class="balance-card">
         <div class="total-balance-label">Total Saldo</div>
         <div class="balance-amount" id="totalBalance">Rp 0</div>
         <div class="balance-in-idr" id="totalBalanceUSD">$0.00</div>
     </div>
     
-    <!-- Action Buttons -->
     <div class="action-buttons">
         <div class="action-btn" onclick="showTransferModal()">
             <div class="action-btn-icon">💸</div>
@@ -649,7 +645,6 @@
         </div>
     </div>
     
-    <!-- Assets Section -->
     <div class="assets-section">
         <div class="section-header">
             <div class="section-title">Aset Anda</div>
@@ -659,7 +654,6 @@
         </div>
         
         <div class="assets-list">
-            <!-- GOV Asset -->
             <div class="asset-item">
                 <div class="asset-info">
                     <div class="asset-icon">G</div>
@@ -674,7 +668,6 @@
                 </div>
             </div>
             
-            <!-- IDR Asset -->
             <div class="asset-item">
                 <div class="asset-info">
                     <div class="asset-icon">Rp</div>
@@ -689,7 +682,6 @@
                 </div>
             </div>
             
-            <!-- USDT Asset -->
             <div class="asset-item">
                 <div class="asset-info">
                     <div class="asset-icon">$</div>
@@ -707,7 +699,6 @@
     </div>
 </div>
 
-<!-- Bottom Navigation -->
 <div class="bottom-nav">
     <div class="nav-item" onclick="window.location.href='dashboard.html'">
         <div class="nav-icon">📊</div>
@@ -727,7 +718,6 @@
     </div>
 </div>
 
-<!-- Withdraw Modal -->
 <div id="withdrawModal" class="modal-overlay">
     <div class="modal-content">
         <h3 class="modal-title">📤 Withdraw IDR</h3>
@@ -742,7 +732,7 @@
             <div class="amount-group">
                 <input type="number" class="form-input" id="withdrawAmount" 
                        placeholder="10000" min="10000" 
-                       oninput="validateWithdrawAmount()">
+                       oninput="validateWithdrawForm()">
                 <button type="button" class="max-btn" onclick="setMaxWithdraw()">MAX</button>
             </div>
             <div id="withdrawError" class="error-message"></div>
@@ -773,7 +763,7 @@
             <label class="form-label">Nomor Tujuan</label>
             <input type="tel" class="form-input" id="withdrawPhone" 
                    placeholder="0812xxxxxxxx" maxlength="13"
-                   oninput="validateWithdrawPhone()">
+                   oninput="validateWithdrawForm()">
             <div id="phoneError" class="error-message"></div>
         </div>
         
@@ -781,7 +771,7 @@
             <label class="form-label">Nama Penerima</label>
             <input type="text" class="form-input" id="withdrawName" 
                    placeholder="Nama sesuai akun DANA/GoPay"
-                   oninput="validateWithdrawName()">
+                   oninput="validateWithdrawForm()">
             <div id="nameError" class="error-message"></div>
         </div>
         
@@ -802,7 +792,6 @@
     </div>
 </div>
 
-<!-- Transfer Modal -->
 <div id="transferModal" class="modal-overlay">
     <div class="modal-content">
         <h3 class="modal-title">💸 Transfer GOV</h3>
@@ -847,7 +836,6 @@
     </div>
 </div>
 
-<!-- Swap Modal (FIXED VERSION) -->
 <div id="swapModal" class="modal-overlay">
     <div class="modal-content">
         <h3 class="modal-title">🔄 Swap Koin</h3>
@@ -904,7 +892,7 @@
         </div>
         
         <div class="button-group">
-            <button class="primary-btn" id="swapBtn" onclick="processSwap()">
+            <button class="primary-btn" id="swapBtn" onclick="processSwap()" disabled>
                 Swap Sekarang
             </button>
             <button class="secondary-btn" onclick="hideModal('swapModal')">Batal</button>
@@ -912,13 +900,11 @@
     </div>
 </div>
 
-<!-- History Modal -->
 <div id="historyModal" class="modal-overlay">
     <div class="modal-content">
         <h3 class="modal-title">📋 Riwayat Transaksi</h3>
         
         <div class="transactions-list" id="transactionsList">
-            <!-- Transactions will be loaded here -->
             <div style="text-align: center; padding: 40px; color: #666;">
                 <div style="font-size: 24px; margin-bottom: 10px;">📊</div>
                 Belum ada transaksi
@@ -958,26 +944,22 @@ let walletData = {
 
 // ===== EXCHANGE RATES FIXED =====
 const EXCHANGE_RATES = {
-    GOV_TO_USDT: 0.001,     // 1 GOV = 0.001 USDT (1000 GOV = 1 USDT)
-    USDT_TO_IDR: 16800,     // 1 USDT = 16,800 IDR
-    GOV_TO_IDR: 16.8,       // 1 GOV = 16.8 IDR
-    IDR_TO_USDT: 0.0000595, // 1 IDR = 0.0000595 USDT (1/16800)
-    IDR_TO_GOV: 0.0595,     // 1 IDR = 0.0595 GOV (16.8 IDR = 1 GOV)
-    USDT_TO_GOV: 1000       // 1 USDT = 1000 GOV
+    GOV_TO_USDT: 0.001,
+    USDT_TO_IDR: 16800,
+    GOV_TO_IDR: 16.8,
+    IDR_TO_USDT: 1/16800,
+    IDR_TO_GOV: 1/16.8,
+    USDT_TO_GOV: 1000
 };
 
 let firebaseDb;
 
 // ===== INITIALIZE =====
 async function initializeWallet() {
-    console.log("🚀 Initializing GOV Wallet...");
-    
     try {
-        // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
         firebaseDb = firebase.database();
         
-        // Get current user
         const userEmail = localStorage.getItem('currentUser');
         if (!userEmail) {
             showNotification("❌ Silakan login terlebih dahulu", false);
@@ -985,64 +967,35 @@ async function initializeWallet() {
             return;
         }
         
-        // Set user email
         document.getElementById('userEmail').textContent = userEmail;
         walletData.userId = btoa(userEmail).replace(/[^a-zA-Z0-9]/g, '').substring(0, 20);
         
-        // Load data dari Firebase
         await loadWalletData();
-        
-        // Sync dengan dashboard
         await syncWithDashboard();
-        
-        // Update display
         updateWalletDisplay();
-        
-        // Load transaction history
         loadTransactionHistory();
         
-        // Auto-sync setiap 30 detik
         setInterval(syncWithDashboard, 30000);
-        
-        console.log("✅ Wallet initialized successfully");
-        
     } catch (error) {
-        console.error("❌ Error initializing wallet:", error);
-        
-        // Fallback ke localStorage
+        console.error("Error init:", error);
         loadWalletDataFromLocalStorage();
-        showNotification("⚠️ Mode offline - menggunakan data lokal", false);
     }
 }
 
-// ===== LOAD WALLET DATA =====
 async function loadWalletData() {
     try {
         const snapshot = await firebaseDb.ref(`wallets/${walletData.userId}`).once('value');
-        
         if (snapshot.exists()) {
             const data = snapshot.val();
             walletData.balances = data.balances || walletData.balances;
             walletData.transactions = data.transactions || [];
-            console.log("✅ Wallet data loaded from Firebase");
         } else {
-            // Data tidak ada, buat baru
-            console.log("📝 Creating new wallet in Firebase");
-            
-            // Cek apakah user baru
             const userEmail = localStorage.getItem('currentUser');
             const walletKey = `govWallet_${userEmail}`;
             const savedData = localStorage.getItem(walletKey);
             
             if (!savedData) {
-                // User baru, set initial balance
-                walletData.balances = {
-                    GOV: 100,
-                    IDR: 50000,
-                    USDT: 10
-                };
-                
-                // Tambah transaksi deposit awal
+                walletData.balances = { GOV: 100, IDR: 50000, USDT: 10 };
                 walletData.transactions.push({
                     id: Date.now(),
                     type: 'DEPOSIT',
@@ -1051,90 +1004,40 @@ async function loadWalletData() {
                     status: 'SUCCESS',
                     timestamp: new Date().toISOString()
                 });
-                
-                console.log("🎉 New user wallet created with bonus");
             } else {
                 loadWalletDataFromLocalStorage();
             }
-            
-            // Simpan ke Firebase
             await saveWalletData();
         }
-    } catch (error) {
-        console.error("❌ Error loading from Firebase:", error);
-        throw error;
-    }
+    } catch (e) { loadWalletDataFromLocalStorage(); }
 }
 
 function loadWalletDataFromLocalStorage() {
     const userEmail = localStorage.getItem('currentUser');
     if (!userEmail) return;
-    
-    try {
-        const walletKey = `govWallet_${userEmail}`;
-        const savedData = localStorage.getItem(walletKey);
-        
-        if (savedData) {
-            const data = JSON.parse(savedData);
-            walletData.balances = data.balances || walletData.balances;
-            walletData.transactions = data.transactions || [];
-            console.log("✅ Wallet data loaded from localStorage");
-        }
-    } catch (error) {
-        console.error("❌ Error loading from localStorage:", error);
+    const savedData = localStorage.getItem(`govWallet_${userEmail}`);
+    if (savedData) {
+        const data = JSON.parse(savedData);
+        walletData.balances = data.balances || walletData.balances;
+        walletData.transactions = data.transactions || [];
     }
 }
 
-// ===== SYNC DENGAN DASHBOARD =====
 async function syncWithDashboard() {
-    try {
-        const userEmail = localStorage.getItem('currentUser');
-        if (!userEmail) return;
-        
-        const username = userEmail.split('@')[0];
-        
-        // Ambil GOV dari dashboard localStorage
-        const dashboardKey = `userData_${username}`;
-        const dashboardData = localStorage.getItem(dashboardKey);
-        
-        let govFromDashboard = walletData.balances.GOV;
-        
-        if (dashboardData) {
-            const parsed = JSON.parse(dashboardData);
-            govFromDashboard = parsed.saldoGOV || 0;
-        }
-        
-        // Update GOV jika berbeda
-        if (govFromDashboard !== walletData.balances.GOV) {
-            const difference = govFromDashboard - walletData.balances.GOV;
-            walletData.balances.GOV = govFromDashboard;
-            
-            // Jika ada penambahan, buat transaksi
-            if (difference > 0) {
-                const transaction = {
-                    id: Date.now(),
-                    type: 'DEPOSIT',
-                    amount: difference,
-                    description: 'Sync dari dashboard',
-                    status: 'SUCCESS',
-                    timestamp: new Date().toISOString()
-                };
-                
-                walletData.transactions.unshift(transaction);
-            }
-            
+    const userEmail = localStorage.getItem('currentUser');
+    if (!userEmail) return;
+    const username = userEmail.split('@')[0];
+    const dashboardData = localStorage.getItem(`userData_${username}`);
+    if (dashboardData) {
+        const parsed = JSON.parse(dashboardData);
+        if (parsed.saldoGOV !== walletData.balances.GOV) {
+            walletData.balances.GOV = parsed.saldoGOV || 0;
             await saveWalletData();
             updateWalletDisplay();
-            loadTransactionHistory();
-            console.log(`✅ GOV synced: ${govFromDashboard} GOV`);
         }
-        
-    } catch (error) {
-        console.error("❌ Error syncing with dashboard:", error);
     }
 }
 
-// ===== SAVE WALLET DATA =====
 async function saveWalletData() {
     try {
         await firebaseDb.ref(`wallets/${walletData.userId}`).set({
@@ -1143,84 +1046,40 @@ async function saveWalletData() {
             lastUpdate: new Date().toISOString(),
             email: localStorage.getItem('currentUser')
         });
-        console.log("✅ Wallet data saved to Firebase");
-        
-        // Juga save ke localStorage
-        saveWalletDataToLocalStorage();
-        
-    } catch (error) {
-        console.error("❌ Error saving to Firebase:", error);
-        saveWalletDataToLocalStorage();
-    }
-}
-
-function saveWalletDataToLocalStorage() {
+    } catch (e) {}
     const userEmail = localStorage.getItem('currentUser');
-    if (!userEmail) return;
-    
-    try {
-        const walletKey = `govWallet_${userEmail}`;
-        localStorage.setItem(walletKey, JSON.stringify({
-            balances: walletData.balances,
-            transactions: walletData.transactions,
-            lastUpdate: new Date().toISOString()
-        }));
-        console.log("✅ Wallet data saved to localStorage");
-    } catch (error) {
-        console.error("❌ Error saving to localStorage:", error);
-    }
+    localStorage.setItem(`govWallet_${userEmail}`, JSON.stringify({
+        balances: walletData.balances,
+        transactions: walletData.transactions,
+        lastUpdate: new Date().toISOString()
+    }));
 }
 
-// ===== UPDATE DISPLAY =====
 function updateWalletDisplay() {
-    // Hitung total saldo dalam IDR
-    const totalIDR = 
-        (walletData.balances.GOV * EXCHANGE_RATES.GOV_TO_IDR) +
-        walletData.balances.IDR +
-        (walletData.balances.USDT * EXCHANGE_RATES.USDT_TO_IDR);
-    
+    const totalIDR = (walletData.balances.GOV * EXCHANGE_RATES.GOV_TO_IDR) +
+                     walletData.balances.IDR +
+                     (walletData.balances.USDT * EXCHANGE_RATES.USDT_TO_IDR);
     const totalUSD = totalIDR / EXCHANGE_RATES.USDT_TO_IDR;
-    
-    // Update total balance
-    document.getElementById('totalBalance').textContent = `Rp ${totalIDR.toLocaleString('id-ID')}`;
+
+    document.getElementById('totalBalance').textContent = `Rp ${Math.floor(totalIDR).toLocaleString('id-ID')}`;
     document.getElementById('totalBalanceUSD').textContent = `$${totalUSD.toFixed(2)}`;
-    
-    // Update individual balances
     document.getElementById('govBalance').textContent = `${walletData.balances.GOV.toLocaleString('id-ID')} GOV`;
-    document.getElementById('govValue').textContent = `$${(walletData.balances.GOV * EXCHANGE_RATES.GOV_TO_USDT).toFixed(4)}`;
-    
+    document.getElementById('govValue').textContent = `$${(walletData.balances.GOV * EXCHANGE_RATES.GOV_TO_USDT).toFixed(2)}`;
     document.getElementById('idrBalance').textContent = `Rp ${walletData.balances.IDR.toLocaleString('id-ID')}`;
     document.getElementById('idrValue').textContent = `$${(walletData.balances.IDR / EXCHANGE_RATES.USDT_TO_IDR).toFixed(2)}`;
-    
     document.getElementById('usdtBalance').textContent = `${walletData.balances.USDT.toFixed(2)} USDT`;
     document.getElementById('usdtValue').textContent = `$${walletData.balances.USDT.toFixed(2)}`;
 }
 
-// ===== MODAL FUNCTIONS =====
-function showModal(modalId) {
-    document.getElementById(modalId).style.display = 'flex';
-    
-    // Reset errors
-    document.querySelectorAll('.error-message').forEach(el => {
-        el.style.display = 'none';
-        el.textContent = '';
-    });
-    
-    // Reset success messages
-    document.querySelectorAll('.success-message').forEach(el => {
-        el.style.display = 'none';
-        el.textContent = '';
-    });
-}
-
-function hideModal(modalId) {
-    document.getElementById(modalId).style.display = 'none';
+// ===== MODAL UTILS =====
+function showModal(modalId) { document.getElementById(modalId).style.display = 'flex'; }
+function hideModal(modalId) { 
+    document.getElementById(modalId).style.display = 'none'; 
     walletData.selectedPayment = null;
-    document.querySelectorAll('.payment-method').forEach(el => {
-        el.classList.remove('selected');
-    });
+    document.querySelectorAll('.payment-method').forEach(el => el.classList.remove('selected'));
 }
 
+// ===== WITHDRAW LOGIC (FIXED) =====
 function showWithdrawModal() {
     showModal('withdrawModal');
     document.getElementById('availableIDR').textContent = `Rp ${walletData.balances.IDR.toLocaleString('id-ID')}`;
@@ -1229,23 +1088,177 @@ function showWithdrawModal() {
     document.getElementById('withdrawName').value = '';
     document.getElementById('withdrawTotal').textContent = 'Rp 0';
     document.getElementById('withdrawBtn').disabled = true;
-    updateWithdrawTotal();
 }
 
-function showTransferModal() {
-    showModal('transferModal');
-    document.getElementById('availableGOV').textContent = `${walletData.balances.GOV.toLocaleString('id-ID')} GOV`;
-    document.getElementById('transferUsername').value = '';
-    document.getElementById('transferAmount').value = '';
-    document.getElementById('transferBtn').disabled = true;
-    updateTransferFee();
+function setMaxWithdraw() {
+    let fee = walletData.selectedPayment ? (walletData.selectedPayment === 'dana' ? 2000 : 2500) : 0;
+    let max = Math.max(0, walletData.balances.IDR - fee);
+    document.getElementById('withdrawAmount').value = max;
+    validateWithdrawForm();
 }
 
+function selectPayment(method) {
+    walletData.selectedPayment = method;
+    document.querySelectorAll('.payment-method').forEach(el => el.classList.remove('selected'));
+    document.getElementById(method + 'Method').classList.add('selected');
+    validateWithdrawForm();
+}
+
+function validateWithdrawForm() {
+    const amount = parseFloat(document.getElementById('withdrawAmount').value) || 0;
+    const phone = document.getElementById('withdrawPhone').value.trim();
+    const name = document.getElementById('withdrawName').value.trim();
+    const fee = walletData.selectedPayment ? (walletData.selectedPayment === 'dana' ? 2000 : 2500) : 0;
+    const total = amount + fee;
+
+    let isValid = true;
+
+    if (amount < 10000) isValid = false;
+    if (total > walletData.balances.IDR || amount <= 0) isValid = false;
+    if (!walletData.selectedPayment) isValid = false;
+    if (phone.length < 10) isValid = false;
+    if (name.length < 2) isValid = false;
+
+    document.getElementById('withdrawTotal').textContent = `Rp ${total.toLocaleString('id-ID')}`;
+    document.getElementById('withdrawBtn').disabled = !isValid;
+    return isValid;
+}
+
+async function processWithdraw() {
+    const amount = parseFloat(document.getElementById('withdrawAmount').value);
+    const fee = walletData.selectedPayment === 'dana' ? 2000 : 2500;
+    const total = amount + fee;
+
+    walletData.balances.IDR -= total;
+    walletData.transactions.unshift({
+        id: Date.now(),
+        type: 'WITHDRAW',
+        method: walletData.selectedPayment.toUpperCase(),
+        amount: -amount,
+        fee: fee,
+        total: -total,
+        phone: document.getElementById('withdrawPhone').value,
+        name: document.getElementById('withdrawName').value,
+        status: 'PENDING',
+        timestamp: new Date().toISOString()
+    });
+
+    await saveWalletData();
+    updateWalletDisplay();
+    hideModal('withdrawModal');
+    showNotification("Withdrawal diproses!");
+}
+
+// ===== SWAP LOGIC (FIXED) =====
 function showSwapModal() {
     showModal('swapModal');
-    document.getElementById('swapAmount').value = '';
-    document.getElementById('swapBtn').disabled = false;
     updateSwapCalculation();
+}
+
+function setMaxSwap() {
+    const from = document.getElementById('swapFrom').value;
+    document.getElementById('swapAmount').value = walletData.balances[from];
+    updateSwapCalculation();
+}
+
+function updateSwapCalculation() {
+    const from = document.getElementById('swapFrom').value;
+    const to = document.getElementById('swapTo').value;
+    const amount = parseFloat(document.getElementById('swapAmount').value) || 0;
+    const fromBalance = walletData.balances[from];
+    
+    document.getElementById('swapFromBalance').textContent = from === 'IDR' ? `Rp ${fromBalance.toLocaleString('id-ID')}` : `${fromBalance.toLocaleString()} ${from}`;
+
+    let result = 0;
+    if (from === 'GOV' && to === 'USDT') result = amount * EXCHANGE_RATES.GOV_TO_USDT;
+    else if (from === 'GOV' && to === 'IDR') result = amount * EXCHANGE_RATES.GOV_TO_IDR;
+    else if (from === 'USDT' && to === 'GOV') result = amount * EXCHANGE_RATES.USDT_TO_GOV;
+    else if (from === 'USDT' && to === 'IDR') result = amount * EXCHANGE_RATES.USDT_TO_IDR;
+    else if (from === 'IDR' && to === 'GOV') result = amount * EXCHANGE_RATES.IDR_TO_GOV;
+    else if (from === 'IDR' && to === 'USDT') result = amount * EXCHANGE_RATES.IDR_TO_USDT;
+
+    document.getElementById('swapReceive').textContent = to === 'IDR' ? `Rp ${Math.floor(result).toLocaleString('id-ID')}` : `${result.toFixed(4)} ${to}`;
+    
+    const isValid = amount > 0 && amount <= fromBalance && from !== to;
+    document.getElementById('swapBtn').disabled = !isValid;
+    document.getElementById('swapError').style.display = (amount > fromBalance) ? 'block' : 'none';
+    document.getElementById('swapError').textContent = "Saldo tidak cukup";
+}
+
+async function processSwap() {
+    const from = document.getElementById('swapFrom').value;
+    const to = document.getElementById('swapTo').value;
+    const amount = parseFloat(document.getElementById('swapAmount').value);
+    
+    let result = 0;
+    if (from === 'GOV' && to === 'USDT') result = amount * EXCHANGE_RATES.GOV_TO_USDT;
+    else if (from === 'GOV' && to === 'IDR') result = amount * EXCHANGE_RATES.GOV_TO_IDR;
+    else if (from === 'USDT' && to === 'GOV') result = amount * EXCHANGE_RATES.USDT_TO_GOV;
+    else if (from === 'USDT' && to === 'IDR') result = amount * EXCHANGE_RATES.USDT_TO_IDR;
+    else if (from === 'IDR' && to === 'GOV') result = amount * EXCHANGE_RATES.IDR_TO_GOV;
+    else if (from === 'IDR' && to === 'USDT') result = amount * EXCHANGE_RATES.IDR_TO_USDT;
+
+    walletData.balances[from] -= amount;
+    walletData.balances[to] += result;
+
+    walletData.transactions.unshift({
+        id: Date.now(),
+        type: 'SWAP',
+        from, to,
+        amount: -amount,
+        received: result,
+        status: 'SUCCESS',
+        timestamp: new Date().toISOString()
+    });
+
+    await saveWalletData();
+    updateWalletDisplay();
+    hideModal('swapModal');
+    showNotification("Swap Berhasil!");
+}
+
+// ===== TRANSFER & HISTORY (REMAINING) =====
+function showTransferModal() {
+    showModal('transferModal');
+    document.getElementById('availableGOV').textContent = `${walletData.balances.GOV.toLocaleString()} GOV`;
+}
+
+function setMaxTransfer() {
+    document.getElementById('transferAmount').value = walletData.balances.GOV;
+    validateTransfer();
+}
+
+function validateTransfer() {
+    const user = document.getElementById('transferUsername').value;
+    const amount = parseFloat(document.getElementById('transferAmount').value) || 0;
+    const fee = amount * 0.005;
+    const total = amount + fee;
+
+    document.getElementById('transferFee').textContent = `${fee.toFixed(2)} GOV`;
+    document.getElementById('transferTotal').textContent = `${total.toFixed(2)} GOV`;
+    
+    const isValid = user.startsWith('@') && amount > 0 && total <= walletData.balances.GOV;
+    document.getElementById('transferBtn').disabled = !isValid;
+}
+
+async function processTransfer() {
+    const amount = parseFloat(document.getElementById('transferAmount').value);
+    const fee = amount * 0.005;
+    walletData.balances.GOV -= (amount + fee);
+    
+    walletData.transactions.unshift({
+        id: Date.now(),
+        type: 'TRANSFER',
+        to: document.getElementById('transferUsername').value,
+        amount: -amount,
+        status: 'SUCCESS',
+        timestamp: new Date().toISOString()
+    });
+    
+    await saveWalletData();
+    updateWalletDisplay();
+    hideModal('transferModal');
+    showNotification("Transfer terkirim!");
 }
 
 function showHistoryModal() {
@@ -1253,613 +1266,35 @@ function showHistoryModal() {
     loadTransactionHistory();
 }
 
-// ===== WITHDRAW FUNCTIONS =====
-function setMaxWithdraw() {
-    // Hitung maksimal yang bisa ditarik berdasarkan saldo dan metode yang dipilih
-    let maxAmount = walletData.balances.IDR;
-    
-    if (walletData.selectedPayment) {
-        const fee = walletData.selectedPayment === 'dana' ? 2000 : 2500;
-        maxAmount = Math.max(0, walletData.balances.IDR - fee);
-    }
-    
-    // Pastikan minimal 10000
-    if (maxAmount < 10000) {
-        maxAmount = 0;
-    }
-    
-    document.getElementById('withdrawAmount').value = maxAmount;
-    validateWithdrawAmount();
-}
-
-function selectPayment(method) {
-    walletData.selectedPayment = method;
-    document.querySelectorAll('.payment-method').forEach(el => {
-        el.classList.remove('selected');
-    });
-    document.getElementById(method + 'Method').classList.add('selected');
-    document.getElementById('paymentError').style.display = 'none';
-    
-    // Validasi ulang amount setelah pilih metode
-    validateWithdrawAmount();
-    updateWithdrawTotal();
-}
-
-function updateWithdrawTotal() {
-    const amount = parseFloat(document.getElementById('withdrawAmount').value) || 0;
-    if (!walletData.selectedPayment || amount <= 0) {
-        document.getElementById('withdrawTotal').textContent = 'Rp 0';
-        return;
-    }
-    
-    const fee = walletData.selectedPayment === 'dana' ? 2000 : 2500;
-    const total = amount + fee;
-    document.getElementById('withdrawTotal').textContent = `Rp ${total.toLocaleString('id-ID')}`;
-}
-
-function validateWithdrawAmount() {
-    const amount = parseFloat(document.getElementById('withdrawAmount').value) || 0;
-    const errorElement = document.getElementById('withdrawError');
-    const successElement = document.getElementById('withdrawSuccess');
-    
-    // Reset messages
-    errorElement.style.display = 'none';
-    successElement.style.display = 'none';
-    
-    // Validasi dasar
-    if (amount < 10000) {
-        errorElement.textContent = '❌ Minimal penarikan Rp 10,000';
-        errorElement.style.display = 'block';
-        return false;
-    }
-    
-    if (amount <= 0) {
-        errorElement.textContent = '❌ Masukkan jumlah yang valid';
-        errorElement.style.display = 'block';
-        return false;
-    }
-    
-    // Jika sudah pilih metode, validasi dengan fee
-    if (walletData.selectedPayment) {
-        const fee = walletData.selectedPayment === 'dana' ? 2000 : 2500;
-        const totalAmount = amount + fee;
-        
-        if (totalAmount > walletData.balances.IDR) {
-            errorElement.textContent = `❌ Total (Rp ${totalAmount.toLocaleString('id-ID')}) melebihi saldo IDR`;
-            errorElement.style.display = 'block';
-            return false;
-        }
-        
-        // Tampilkan success message jika valid
-        successElement.textContent = `✅ Dengan biaya Rp ${fee.toLocaleString('id-ID')}, total: Rp ${totalAmount.toLocaleString('id-ID')}`;
-        successElement.style.display = 'block';
-    }
-    
-    updateWithdrawTotal();
-    validateWithdrawForm();
-    return true;
-}
-
-function validateWithdrawPhone() {
-    const phone = document.getElementById('withdrawPhone').value.trim();
-    const errorElement = document.getElementById('phoneError');
-    
-    if (!phone || phone.length < 10) {
-        errorElement.textContent = '❌ Masukkan nomor telepon yang valid (min 10 digit)';
-        errorElement.style.display = 'block';
-        return false;
-    } else {
-        errorElement.style.display = 'none';
-        validateWithdrawForm();
-        return true;
-    }
-}
-
-function validateWithdrawName() {
-    const name = document.getElementById('withdrawName').value.trim();
-    const errorElement = document.getElementById('nameError');
-    
-    if (!name) {
-        errorElement.textContent = '❌ Masukkan nama penerima';
-        errorElement.style.display = 'block';
-        return false;
-    } else {
-        errorElement.style.display = 'none';
-        validateWithdrawForm();
-        return true;
-    }
-}
-
-function validateWithdrawForm() {
-    const amountValid = validateWithdrawAmount();
-    const phoneValid = validateWithdrawPhone();
-    const nameValid = validateWithdrawName();
-    const paymentValid = walletData.selectedPayment !== null;
-    
-    // Tampilkan error payment jika belum dipilih
-    const paymentError = document.getElementById('paymentError');
-    if (!paymentValid) {
-        paymentError.style.display = 'block';
-    } else {
-        paymentError.style.display = 'none';
-    }
-    
-    // Enable/disable button
-    const isValid = amountValid && phoneValid && nameValid && paymentValid;
-    document.getElementById('withdrawBtn').disabled = !isValid;
-    
-    return isValid;
-}
-
-async function processWithdraw() {
-    if (!validateWithdrawForm()) {
-        showNotification("❌ Lengkapi semua data dengan benar", false);
-        return;
-    }
-    
-    const amount = parseFloat(document.getElementById('withdrawAmount').value);
-    const phone = document.getElementById('withdrawPhone').value.trim();
-    const name = document.getElementById('withdrawName').value.trim();
-    const method = walletData.selectedPayment;
-    
-    const fee = method === 'dana' ? 2000 : 2500;
-    const totalAmount = amount + fee;
-    
-    // Kurangi saldo
-    walletData.balances.IDR -= totalAmount;
-    
-    // Tambah transaksi
-    const transaction = {
-        id: Date.now(),
-        type: 'WITHDRAW',
-        method: method.toUpperCase(),
-        amount: -amount,
-        fee: fee,
-        total: -totalAmount,
-        phone: phone,
-        name: name,
-        status: 'PENDING',
-        timestamp: new Date().toISOString()
-    };
-    
-    walletData.transactions.unshift(transaction);
-    
-    // Simpan data
-    await saveWalletData();
-    updateWalletDisplay();
-    loadTransactionHistory();
-    
-    // Kirim notifikasi ke Telegram
-    sendTelegramNotification(transaction);
-    
-    // Tampilkan konfirmasi
-    showNotification(`✅ Withdraw Rp ${amount.toLocaleString('id-ID')} ke ${method.toUpperCase()} diproses`);
-    hideModal('withdrawModal');
-}
-
-// ===== TRANSFER FUNCTIONS =====
-function setMaxTransfer() {
-    document.getElementById('transferAmount').value = walletData.balances.GOV;
-    validateTransfer();
-    updateTransferFee();
-}
-
-function updateTransferFee() {
-    const amount = parseFloat(document.getElementById('transferAmount').value) || 0;
-    const fee = amount * 0.005; // 0.5% fee
-    const total = amount + fee;
-    
-    document.getElementById('transferFee').textContent = `${fee.toFixed(2)} GOV`;
-    document.getElementById('transferTotal').textContent = `${total.toFixed(2)} GOV`;
-}
-
-function validateTransfer() {
-    const username = document.getElementById('transferUsername').value.trim();
-    const amount = parseFloat(document.getElementById('transferAmount').value) || 0;
-    
-    let isValid = true;
-    
-    // Validasi username
-    const usernameError = document.getElementById('usernameError');
-    if (!username || !username.startsWith('@')) {
-        usernameError.textContent = '❌ Masukkan username yang valid (contoh: @username)';
-        usernameError.style.display = 'block';
-        isValid = false;
-    } else {
-        usernameError.style.display = 'none';
-    }
-    
-    // Validasi amount
-    const amountError = document.getElementById('transferAmountError');
-    if (amount < 1) {
-        amountError.textContent = '❌ Minimal transfer 1 GOV';
-        amountError.style.display = 'block';
-        isValid = false;
-    } else {
-        const fee = amount * 0.005;
-        const total = amount + fee;
-        
-        if (total > walletData.balances.GOV) {
-            amountError.textContent = `❌ Saldo GOV tidak mencukupi. Diperlukan: ${total.toFixed(2)} GOV`;
-            amountError.style.display = 'block';
-            isValid = false;
-        } else {
-            amountError.style.display = 'none';
-        }
-    }
-    
-    // Update fee dan total
-    updateTransferFee();
-    
-    // Enable/disable button
-    document.getElementById('transferBtn').disabled = !isValid;
-    
-    return isValid;
-}
-
-async function processTransfer() {
-    if (!validateTransfer()) return;
-    
-    const username = document.getElementById('transferUsername').value.trim();
-    const amount = parseFloat(document.getElementById('transferAmount').value);
-    
-    const fee = amount * 0.005;
-    const total = amount + fee;
-    
-    // Kurangi saldo pengirim
-    walletData.balances.GOV -= total;
-    
-    // Tambah transaksi
-    const transaction = {
-        id: Date.now(),
-        type: 'TRANSFER',
-        to: username,
-        amount: -amount,
-        fee: -fee,
-        total: -total,
-        status: 'SUCCESS',
-        timestamp: new Date().toISOString()
-    };
-    
-    walletData.transactions.unshift(transaction);
-    
-    // Simpan data
-    await saveWalletData();
-    updateWalletDisplay();
-    loadTransactionHistory();
-    
-    // Update dashboard GOV juga
-    updateDashboardGOV(amount);
-    
-    showNotification(`✅ Berhasil transfer ${amount} GOV ke ${username}`);
-    hideModal('transferModal');
-}
-
-function updateDashboardGOV(amount) {
-    const userEmail = localStorage.getItem('currentUser');
-    const username = userEmail.split('@')[0];
-    const dashboardKey = `userData_${username}`;
-    
-    const dashboardData = localStorage.getItem(dashboardKey);
-    if (dashboardData) {
-        const parsed = JSON.parse(dashboardData);
-        parsed.saldoGOV -= amount;
-        localStorage.setItem(dashboardKey, JSON.stringify(parsed));
-    }
-}
-
-// ===== SWAP FUNCTIONS FIXED =====
-function setMaxSwap() {
-    const from = document.getElementById('swapFrom').value;
-    const maxAmount = walletData.balances[from] || 0;
-    document.getElementById('swapAmount').value = maxAmount;
-    updateSwapCalculation();
-}
-
-function updateSwapCalculation() {
-    const from = document.getElementById('swapFrom').value;
-    const to = document.getElementById('swapTo').value;
-    let amount = parseFloat(document.getElementById('swapAmount').value) || 0;
-    
-    // Update saldo tersedia
-    const fromBalance = walletData.balances[from] || 0;
-    document.getElementById('swapFromBalance').textContent = 
-        from === 'IDR' ? `Rp ${fromBalance.toLocaleString('id-ID')}` : 
-        from === 'GOV' ? `${fromBalance.toLocaleString('id-ID')} ${from}` :
-        `${fromBalance.toFixed(2)} ${from}`;
-    
-    // Validasi input
-    const errorElement = document.getElementById('swapError');
-    const swapBtn = document.getElementById('swapBtn');
-    
-    // Reset error
-    errorElement.style.display = 'none';
-    errorElement.textContent = '';
-    swapBtn.disabled = false;
-    
-    // Cek jika from dan to sama
-    if (from === to) {
-        errorElement.textContent = '❌ Tidak bisa swap ke aset yang sama';
-        errorElement.style.display = 'block';
-        swapBtn.disabled = true;
-        document.getElementById('swapReceive').textContent = '0';
-        return;
-    }
-    
-    // Cek jika jumlah kosong atau 0
-    if (!amount || amount <= 0) {
-        document.getElementById('swapReceive').textContent = '0';
-        return;
-    }
-    
-    // Cek saldo cukup
-    if (amount > fromBalance) {
-        errorElement.textContent = `❌ Saldo ${from} tidak cukup. Maksimal: ${fromBalance}`;
-        errorElement.style.display = 'block';
-        swapBtn.disabled = true;
-        document.getElementById('swapReceive').textContent = '0';
-        return;
-    }
-    
-    // Hitung hasil swap
-    let result = 0;
-    
-    // GOV → USDT
-    if (from === 'GOV' && to === 'USDT') {
-        result = amount * EXCHANGE_RATES.GOV_TO_USDT;
-    }
-    // GOV → IDR
-    else if (from === 'GOV' && to === 'IDR') {
-        result = amount * EXCHANGE_RATES.GOV_TO_IDR;
-    }
-    // USDT → GOV
-    else if (from === 'USDT' && to === 'GOV') {
-        result = amount * EXCHANGE_RATES.USDT_TO_GOV;
-    }
-    // USDT → IDR
-    else if (from === 'USDT' && to === 'IDR') {
-        result = amount * EXCHANGE_RATES.USDT_TO_IDR;
-    }
-    // IDR → GOV
-    else if (from === 'IDR' && to === 'GOV') {
-        result = amount / EXCHANGE_RATES.GOV_TO_IDR; // amount / 16.8
-    }
-    // IDR → USDT
-    else if (from === 'IDR' && to === 'USDT') {
-        result = amount / EXCHANGE_RATES.USDT_TO_IDR; // amount / 16800
-    }
-    
-    // Format hasil
-    let formattedResult = '';
-    if (to === 'IDR') {
-        formattedResult = `Rp ${result.toLocaleString('id-ID', {minimumFractionDigits: 0, maximumFractionDigits: 0})}`;
-    } else if (to === 'GOV') {
-        formattedResult = `${result.toLocaleString('id-ID', {minimumFractionDigits: 0, maximumFractionDigits: 2})} ${to}`;
-    } else {
-        formattedResult = `${result.toFixed(4)} ${to}`;
-    }
-    
-    document.getElementById('swapReceive').textContent = formattedResult;
-}
-
-async function processSwap() {
-    const from = document.getElementById('swapFrom').value;
-    const to = document.getElementById('swapTo').value;
-    const amount = parseFloat(document.getElementById('swapAmount').value) || 0;
-    
-    // Validasi
-    if (from === to) {
-        showNotification("❌ Tidak bisa swap ke aset yang sama", false);
-        return;
-    }
-    
-    if (!amount || amount <= 0) {
-        showNotification("❌ Masukkan jumlah yang valid", false);
-        return;
-    }
-    
-    const fromBalance = walletData.balances[from] || 0;
-    if (amount > fromBalance) {
-        showNotification(`❌ Saldo ${from} tidak cukup`, false);
-        return;
-    }
-    
-    // Hitung hasil swap
-    let result = 0;
-    let rateText = '';
-    
-    if (from === 'GOV' && to === 'USDT') {
-        result = amount * EXCHANGE_RATES.GOV_TO_USDT;
-        rateText = '1000 GOV = 1 USDT';
-    } else if (from === 'GOV' && to === 'IDR') {
-        result = amount * EXCHANGE_RATES.GOV_TO_IDR;
-        rateText = '1 GOV = Rp 16.8';
-    } else if (from === 'USDT' && to === 'GOV') {
-        result = amount * EXCHANGE_RATES.USDT_TO_GOV;
-        rateText = '1 USDT = 1000 GOV';
-    } else if (from === 'USDT' && to === 'IDR') {
-        result = amount * EXCHANGE_RATES.USDT_TO_IDR;
-        rateText = '1 USDT = Rp 16,800';
-    } else if (from === 'IDR' && to === 'GOV') {
-        result = amount / EXCHANGE_RATES.GOV_TO_IDR;
-        rateText = 'Rp 16.8 = 1 GOV';
-    } else if (from === 'IDR' && to === 'USDT') {
-        result = amount / EXCHANGE_RATES.USDT_TO_IDR;
-        rateText = 'Rp 16,800 = 1 USDT';
-    }
-    
-    // Update balances
-    walletData.balances[from] -= amount;
-    walletData.balances[to] += result;
-    
-    // Format amount untuk transaksi
-    const formattedAmount = from === 'IDR' ? 
-        `Rp ${amount.toLocaleString('id-ID')}` : 
-        from === 'GOV' ? `${amount} ${from}` : `${amount.toFixed(2)} ${from}`;
-    
-    const formattedResult = to === 'IDR' ? 
-        `Rp ${result.toLocaleString('id-ID', {minimumFractionDigits: 0, maximumFractionDigits: 0})}` : 
-        to === 'GOV' ? `${result.toFixed(2)} ${to}` : `${result.toFixed(4)} ${to}`;
-    
-    // Tambah transaksi
-    const transaction = {
-        id: Date.now(),
-        type: 'SWAP',
-        from: from,
-        to: to,
-        amount: -amount,
-        received: result,
-        rate: rateText,
-        status: 'SUCCESS',
-        timestamp: new Date().toISOString()
-    };
-    
-    walletData.transactions.unshift(transaction);
-    
-    // Simpan data
-    await saveWalletData();
-    updateWalletDisplay();
-    loadTransactionHistory();
-    
-    showNotification(`✅ Berhasil swap ${formattedAmount} → ${formattedResult}`);
-    hideModal('swapModal');
-}
-
-// ===== TRANSACTION HISTORY =====
 function loadTransactionHistory() {
-    const transactionsList = document.getElementById('transactionsList');
+    const list = document.getElementById('transactionsList');
+    if (walletData.transactions.length === 0) return;
     
-    if (walletData.transactions.length === 0) {
-        transactionsList.innerHTML = `
-            <div style="text-align: center; padding: 40px; color: #666;">
-                <div style="font-size: 24px; margin-bottom: 10px;">📊</div>
-                Belum ada transaksi
-            </div>
-        `;
-        return;
-    }
-    
-    let html = '';
-    
-    walletData.transactions.forEach(transaction => {
-        let icon = '';
-        let iconClass = '';
-        let typeText = '';
-        let details = '';
-        let amountClass = '';
-        let amountText = '';
-        
-        switch(transaction.type) {
-            case 'WITHDRAW':
-                icon = '📤';
-                iconClass = 'withdraw';
-                typeText = 'Withdraw';
-                details = `${transaction.method} • ${transaction.phone}`;
-                amountClass = 'negative';
-                amountText = `-Rp ${Math.abs(transaction.amount).toLocaleString('id-ID')}`;
-                break;
-                
-            case 'TRANSFER':
-                icon = '💸';
-                iconClass = 'transfer';
-                typeText = 'Transfer';
-                details = `Ke ${transaction.to}`;
-                amountClass = 'negative';
-                amountText = `-${Math.abs(transaction.amount)} GOV`;
-                break;
-                
-            case 'SWAP':
-                icon = '🔄';
-                iconClass = 'swap';
-                typeText = 'Swap';
-                details = `${transaction.from} → ${transaction.to}`;
-                amountClass = 'positive';
-                amountText = `+${transaction.received.toFixed(4)} ${transaction.to}`;
-                break;
-                
-            case 'DEPOSIT':
-                icon = '📥';
-                iconClass = 'deposit';
-                typeText = 'Deposit';
-                details = transaction.description || 'Dari dashboard';
-                amountClass = 'positive';
-                amountText = `+${transaction.amount} GOV`;
-                break;
-        }
-        
-        const date = new Date(transaction.timestamp).toLocaleDateString('id-ID', {
-            day: 'numeric',
-            month: 'short',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-        
-        html += `
-            <div class="transaction-item">
-                <div class="transaction-info">
-                    <div class="transaction-icon ${iconClass}">${icon}</div>
-                    <div class="transaction-details">
-                        <div class="transaction-type">${typeText}</div>
-                        <div class="transaction-date">${date} • ${details}</div>
-                        ${transaction.status === 'PENDING' ? 
-                          `<div style="color: #ff9500; font-size: 12px; margin-top: 2px;">⏳ ${transaction.status}</div>` : ''}
-                    </div>
+    list.innerHTML = walletData.transactions.map(t => `
+        <div class="transaction-item">
+            <div class="transaction-info">
+                <div class="transaction-icon ${t.type.toLowerCase()}">#</div>
+                <div class="transaction-details">
+                    <div class="transaction-type">${t.type}</div>
+                    <div class="transaction-date">${new Date(t.timestamp).toLocaleDateString()}</div>
                 </div>
-                <div class="transaction-amount ${amountClass}">${amountText}</div>
             </div>
-        `;
-    });
-    
-    transactionsList.innerHTML = html;
+            <div class="transaction-amount ${t.amount < 0 ? 'negative' : 'positive'}">
+                ${t.amount.toLocaleString()}
+            </div>
+        </div>
+    `).join('');
 }
 
-// ===== UTILITY FUNCTIONS =====
-function showNotification(message, isSuccess = true) {
-    const notification = document.getElementById('notification');
-    notification.textContent = message;
-    notification.style.background = isSuccess ? '#4cd964' : '#ff3b30';
-    notification.style.display = 'block';
-    
-    // Reset animation
-    notification.style.animation = 'none';
-    setTimeout(() => {
-        notification.style.animation = 'fadeInOut 3s ease-in-out forwards';
-    }, 10);
-    
-    setTimeout(() => {
-        notification.style.display = 'none';
-    }, 3000);
+function showNotification(msg, success = true) {
+    const n = document.getElementById('notification');
+    n.textContent = msg;
+    n.style.background = success ? '#4cd964' : '#ff3b30';
+    n.style.display = 'block';
+    setTimeout(() => n.style.display = 'none', 3000);
 }
 
-function sendTelegramNotification(transaction) {
-    const userEmail = localStorage.getItem('currentUser');
-    
-    const message = `📤 *WITHDRAW REQUEST*\n\n` +
-                   `👤 *User:* ${userEmail}\n` +
-                   `💰 *Amount:* Rp ${Math.abs(transaction.amount).toLocaleString('id-ID')}\n` +
-                   `🏦 *Method:* ${transaction.method}\n` +
-                   `📱 *Phone:* ${transaction.phone}\n` +
-                   `👤 *Name:* ${transaction.name}\n` +
-                   `💸 *Fee:* Rp ${transaction.fee.toLocaleString('id-ID')}\n` +
-                   `📊 *Total:* Rp ${Math.abs(transaction.total).toLocaleString('id-ID')}\n` +
-                   `⏰ *Time:* ${new Date(transaction.timestamp).toLocaleString('id-ID')}\n\n` +
-                   `📝 *Please process this withdrawal request.*`;
-    
-    console.log("📤 Telegram Notification:", message);
-}
-
-// ===== INITIALIZE =====
-document.addEventListener('DOMContentLoaded', function() {
-    console.log("💼 GOV Wallet Initializing...");
-    
-    // Setup event listeners untuk swap
-    document.getElementById('swapAmount').addEventListener('input', updateSwapCalculation);
-    document.getElementById('swapFrom').addEventListener('change', updateSwapCalculation);
-    document.getElementById('swapTo').addEventListener('change', updateSwapCalculation);
-    
-    initializeWallet();
-});
+document.addEventListener('DOMContentLoaded', initializeWallet);
 </script>
-
 </body>
 </html>
