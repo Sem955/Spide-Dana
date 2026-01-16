@@ -847,15 +847,16 @@
     </div>
 </div>
 
-<!-- Swap Modal -->
+<!-- Swap Modal (FIXED VERSION) -->
 <div id="swapModal" class="modal-overlay">
     <div class="modal-content">
         <h3 class="modal-title">🔄 Swap Koin</h3>
         
         <div class="swap-rate" style="margin-bottom: 20px;">
-            <div class="rate-text">Rate saat ini:</div>
-            <div class="rate-value">1 GOV = $0.001 = Rp 16.8</div>
-            <div class="rate-text">1000 GOV = 1 USDT</div>
+            <div class="rate-text">Rate tetap:</div>
+            <div class="rate-value">1000 GOV = 1 USDT</div>
+            <div class="rate-text">1 USDT = Rp 16,800</div>
+            <div class="rate-text">1 GOV = Rp 16.8</div>
         </div>
         
         <div class="form-group">
@@ -887,8 +888,8 @@
             <label class="form-label">Jumlah</label>
             <div class="amount-group">
                 <input type="number" class="form-input" id="swapAmount" 
-                       placeholder="0" 
-                       oninput="validateSwap()">
+                       placeholder="0" step="any"
+                       oninput="updateSwapCalculation()">
                 <button type="button" class="max-btn" onclick="setMaxSwap()">MAX</button>
             </div>
             <div id="swapError" class="error-message"></div>
@@ -903,7 +904,7 @@
         </div>
         
         <div class="button-group">
-            <button class="primary-btn" id="swapBtn" onclick="processSwap()" disabled>
+            <button class="primary-btn" id="swapBtn" onclick="processSwap()">
                 Swap Sekarang
             </button>
             <button class="secondary-btn" onclick="hideModal('swapModal')">Batal</button>
@@ -955,11 +956,14 @@ let walletData = {
     transactions: []
 };
 
-// ===== EXCHANGE RATES =====
+// ===== EXCHANGE RATES FIXED =====
 const EXCHANGE_RATES = {
     GOV_TO_USDT: 0.001,     // 1 GOV = 0.001 USDT (1000 GOV = 1 USDT)
     USDT_TO_IDR: 16800,     // 1 USDT = 16,800 IDR
-    GOV_TO_IDR: 16.8        // 1 GOV = 16.8 IDR
+    GOV_TO_IDR: 16.8,       // 1 GOV = 16.8 IDR
+    IDR_TO_USDT: 0.0000595, // 1 IDR = 0.0000595 USDT (1/16800)
+    IDR_TO_GOV: 0.0595,     // 1 IDR = 0.0595 GOV (16.8 IDR = 1 GOV)
+    USDT_TO_GOV: 1000       // 1 USDT = 1000 GOV
 };
 
 let firebaseDb;
@@ -1240,7 +1244,7 @@ function showTransferModal() {
 function showSwapModal() {
     showModal('swapModal');
     document.getElementById('swapAmount').value = '';
-    document.getElementById('swapBtn').disabled = true;
+    document.getElementById('swapBtn').disabled = false;
     updateSwapCalculation();
 }
 
@@ -1544,119 +1548,158 @@ function updateDashboardGOV(amount) {
     }
 }
 
-// ===== SWAP FUNCTIONS =====
+// ===== SWAP FUNCTIONS FIXED =====
 function setMaxSwap() {
     const from = document.getElementById('swapFrom').value;
-    document.getElementById('swapAmount').value = walletData.balances[from];
+    const maxAmount = walletData.balances[from] || 0;
+    document.getElementById('swapAmount').value = maxAmount;
     updateSwapCalculation();
-    validateSwap();
 }
 
 function updateSwapCalculation() {
     const from = document.getElementById('swapFrom').value;
     const to = document.getElementById('swapTo').value;
-    const amount = parseFloat(document.getElementById('swapAmount').value) || 0;
+    let amount = parseFloat(document.getElementById('swapAmount').value) || 0;
     
-    // Update balance info
+    // Update saldo tersedia
+    const fromBalance = walletData.balances[from] || 0;
     document.getElementById('swapFromBalance').textContent = 
-        from === 'IDR' ? `Rp ${walletData.balances[from].toLocaleString('id-ID')}` : 
-        from === 'GOV' ? `${walletData.balances[from].toLocaleString('id-ID')} ${from}` :
-        `${walletData.balances[from]} ${from}`;
+        from === 'IDR' ? `Rp ${fromBalance.toLocaleString('id-ID')}` : 
+        from === 'GOV' ? `${fromBalance.toLocaleString('id-ID')} ${from}` :
+        `${fromBalance.toFixed(2)} ${from}`;
     
+    // Validasi input
+    const errorElement = document.getElementById('swapError');
+    const swapBtn = document.getElementById('swapBtn');
+    
+    // Reset error
+    errorElement.style.display = 'none';
+    errorElement.textContent = '';
+    swapBtn.disabled = false;
+    
+    // Cek jika from dan to sama
     if (from === to) {
-        document.getElementById('swapReceive').textContent = `0 ${to}`;
+        errorElement.textContent = '❌ Tidak bisa swap ke aset yang sama';
+        errorElement.style.display = 'block';
+        swapBtn.disabled = true;
+        document.getElementById('swapReceive').textContent = '0';
         return;
     }
     
-    let result = 0;
-    
-    if (from === 'GOV' && to === 'USDT') {
-        result = amount * EXCHANGE_RATES.GOV_TO_USDT;
-    } else if (from === 'GOV' && to === 'IDR') {
-        result = amount * EXCHANGE_RATES.GOV_TO_IDR;
-    } else if (from === 'USDT' && to === 'GOV') {
-        result = amount / EXCHANGE_RATES.GOV_TO_USDT;
-    } else if (from === 'USDT' && to === 'IDR') {
-        result = amount * EXCHANGE_RATES.USDT_TO_IDR;
-    } else if (from === 'IDR' && to === 'GOV') {
-        result = amount / EXCHANGE_RATES.GOV_TO_IDR;
-    } else if (from === 'IDR' && to === 'USDT') {
-        result = amount / EXCHANGE_RATES.USDT_TO_IDR;
+    // Cek jika jumlah kosong atau 0
+    if (!amount || amount <= 0) {
+        document.getElementById('swapReceive').textContent = '0';
+        return;
     }
     
-    document.getElementById('swapReceive').textContent = 
-        to === 'IDR' ? `Rp ${result.toLocaleString('id-ID')}` : 
-        to === 'GOV' ? `${result.toFixed(2)} ${to}` :
-        `${result.toFixed(4)} ${to}`;
+    // Cek saldo cukup
+    if (amount > fromBalance) {
+        errorElement.textContent = `❌ Saldo ${from} tidak cukup. Maksimal: ${fromBalance}`;
+        errorElement.style.display = 'block';
+        swapBtn.disabled = true;
+        document.getElementById('swapReceive').textContent = '0';
+        return;
+    }
+    
+    // Hitung hasil swap
+    let result = 0;
+    
+    // GOV → USDT
+    if (from === 'GOV' && to === 'USDT') {
+        result = amount * EXCHANGE_RATES.GOV_TO_USDT;
+    }
+    // GOV → IDR
+    else if (from === 'GOV' && to === 'IDR') {
+        result = amount * EXCHANGE_RATES.GOV_TO_IDR;
+    }
+    // USDT → GOV
+    else if (from === 'USDT' && to === 'GOV') {
+        result = amount * EXCHANGE_RATES.USDT_TO_GOV;
+    }
+    // USDT → IDR
+    else if (from === 'USDT' && to === 'IDR') {
+        result = amount * EXCHANGE_RATES.USDT_TO_IDR;
+    }
+    // IDR → GOV
+    else if (from === 'IDR' && to === 'GOV') {
+        result = amount / EXCHANGE_RATES.GOV_TO_IDR; // amount / 16.8
+    }
+    // IDR → USDT
+    else if (from === 'IDR' && to === 'USDT') {
+        result = amount / EXCHANGE_RATES.USDT_TO_IDR; // amount / 16800
+    }
+    
+    // Format hasil
+    let formattedResult = '';
+    if (to === 'IDR') {
+        formattedResult = `Rp ${result.toLocaleString('id-ID', {minimumFractionDigits: 0, maximumFractionDigits: 0})}`;
+    } else if (to === 'GOV') {
+        formattedResult = `${result.toLocaleString('id-ID', {minimumFractionDigits: 0, maximumFractionDigits: 2})} ${to}`;
+    } else {
+        formattedResult = `${result.toFixed(4)} ${to}`;
+    }
+    
+    document.getElementById('swapReceive').textContent = formattedResult;
 }
 
-function validateSwap() {
+async function processSwap() {
     const from = document.getElementById('swapFrom').value;
     const to = document.getElementById('swapTo').value;
     const amount = parseFloat(document.getElementById('swapAmount').value) || 0;
     
-    let isValid = true;
-    const errorElement = document.getElementById('swapError');
-    
+    // Validasi
     if (from === to) {
-        errorElement.textContent = '❌ Pilih aset yang berbeda';
-        errorElement.style.display = 'block';
-        isValid = false;
-    } else if (amount <= 0) {
-        errorElement.textContent = '❌ Masukkan jumlah yang valid';
-        errorElement.style.display = 'block';
-        isValid = false;
-    } else if (amount > walletData.balances[from]) {
-        errorElement.textContent = `❌ Saldo ${from} tidak mencukupi`;
-        errorElement.style.display = 'block';
-        isValid = false;
-    } else {
-        errorElement.style.display = 'none';
+        showNotification("❌ Tidak bisa swap ke aset yang sama", false);
+        return;
     }
     
-    // Update calculation
-    updateSwapCalculation();
+    if (!amount || amount <= 0) {
+        showNotification("❌ Masukkan jumlah yang valid", false);
+        return;
+    }
     
-    // Enable/disable button
-    document.getElementById('swapBtn').disabled = !isValid;
-    
-    return isValid;
-}
-
-async function processSwap() {
-    if (!validateSwap()) return;
-    
-    const from = document.getElementById('swapFrom').value;
-    const to = document.getElementById('swapTo').value;
-    const amount = parseFloat(document.getElementById('swapAmount').value);
+    const fromBalance = walletData.balances[from] || 0;
+    if (amount > fromBalance) {
+        showNotification(`❌ Saldo ${from} tidak cukup`, false);
+        return;
+    }
     
     // Hitung hasil swap
     let result = 0;
-    let rate = '';
+    let rateText = '';
     
     if (from === 'GOV' && to === 'USDT') {
         result = amount * EXCHANGE_RATES.GOV_TO_USDT;
-        rate = `1000 GOV = 1 USDT`;
+        rateText = '1000 GOV = 1 USDT';
     } else if (from === 'GOV' && to === 'IDR') {
         result = amount * EXCHANGE_RATES.GOV_TO_IDR;
-        rate = `1 GOV = Rp ${EXCHANGE_RATES.GOV_TO_IDR}`;
+        rateText = '1 GOV = Rp 16.8';
     } else if (from === 'USDT' && to === 'GOV') {
-        result = amount / EXCHANGE_RATES.GOV_TO_USDT;
-        rate = `1 USDT = ${(1/EXCHANGE_RATES.GOV_TO_USDT).toFixed(0)} GOV`;
+        result = amount * EXCHANGE_RATES.USDT_TO_GOV;
+        rateText = '1 USDT = 1000 GOV';
     } else if (from === 'USDT' && to === 'IDR') {
         result = amount * EXCHANGE_RATES.USDT_TO_IDR;
-        rate = `1 USDT = Rp ${EXCHANGE_RATES.USDT_TO_IDR.toLocaleString('id-ID')}`;
+        rateText = '1 USDT = Rp 16,800';
     } else if (from === 'IDR' && to === 'GOV') {
         result = amount / EXCHANGE_RATES.GOV_TO_IDR;
-        rate = `Rp ${EXCHANGE_RATES.GOV_TO_IDR} = 1 GOV`;
+        rateText = 'Rp 16.8 = 1 GOV';
     } else if (from === 'IDR' && to === 'USDT') {
         result = amount / EXCHANGE_RATES.USDT_TO_IDR;
-        rate = `Rp ${EXCHANGE_RATES.USDT_TO_IDR.toLocaleString('id-ID')} = 1 USDT`;
+        rateText = 'Rp 16,800 = 1 USDT';
     }
     
     // Update balances
     walletData.balances[from] -= amount;
     walletData.balances[to] += result;
+    
+    // Format amount untuk transaksi
+    const formattedAmount = from === 'IDR' ? 
+        `Rp ${amount.toLocaleString('id-ID')}` : 
+        from === 'GOV' ? `${amount} ${from}` : `${amount.toFixed(2)} ${from}`;
+    
+    const formattedResult = to === 'IDR' ? 
+        `Rp ${result.toLocaleString('id-ID', {minimumFractionDigits: 0, maximumFractionDigits: 0})}` : 
+        to === 'GOV' ? `${result.toFixed(2)} ${to}` : `${result.toFixed(4)} ${to}`;
     
     // Tambah transaksi
     const transaction = {
@@ -1666,7 +1709,7 @@ async function processSwap() {
         to: to,
         amount: -amount,
         received: result,
-        rate: rate,
+        rate: rateText,
         status: 'SUCCESS',
         timestamp: new Date().toISOString()
     };
@@ -1678,7 +1721,7 @@ async function processSwap() {
     updateWalletDisplay();
     loadTransactionHistory();
     
-    showNotification(`✅ Berhasil swap ${amount} ${from} → ${result.toFixed(4)} ${to}`);
+    showNotification(`✅ Berhasil swap ${formattedAmount} → ${formattedResult}`);
     hideModal('swapModal');
 }
 
@@ -1808,6 +1851,12 @@ function sendTelegramNotification(transaction) {
 // ===== INITIALIZE =====
 document.addEventListener('DOMContentLoaded', function() {
     console.log("💼 GOV Wallet Initializing...");
+    
+    // Setup event listeners untuk swap
+    document.getElementById('swapAmount').addEventListener('input', updateSwapCalculation);
+    document.getElementById('swapFrom').addEventListener('change', updateSwapCalculation);
+    document.getElementById('swapTo').addEventListener('change', updateSwapCalculation);
+    
     initializeWallet();
 });
 </script>
