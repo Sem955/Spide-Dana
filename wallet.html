@@ -302,6 +302,8 @@
             padding: 30px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
             animation: modalSlideUp 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
         }
         
         @keyframes modalSlideUp {
@@ -410,6 +412,12 @@
         .primary-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .primary-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
         }
         
         .secondary-btn {
@@ -548,6 +556,32 @@
         
         .transaction-amount.positive { color: #4cd964; }
         .transaction-amount.negative { color: #ff3b30; }
+        
+        /* Error Message */
+        .error-message {
+            color: #ff3b30;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        /* Balance Info */
+        .balance-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .balance-label {
+            color: #666;
+        }
+        
+        .balance-value {
+            font-weight: 600;
+            color: #333;
+        }
     </style>
 </head>
 <body>
@@ -671,12 +705,21 @@
     <div class="modal-content">
         <h3 class="modal-title">📤 Withdraw IDR</h3>
         
+        <div class="balance-info">
+            <span class="balance-label">Saldo IDR Tersedia:</span>
+            <span class="balance-value" id="availableIDR">Rp 0</span>
+        </div>
+        
         <div class="form-group">
             <label class="form-label">Jumlah Penarikan (IDR)</label>
             <div class="amount-group">
-                <input type="number" class="form-input" id="withdrawAmount" placeholder="50000" min="10000">
+                <input type="number" class="form-input" id="withdrawAmount" 
+                       placeholder="50000" min="10000" 
+                       oninput="validateWithdraw()" 
+                       onblur="validateWithdraw()">
                 <button type="button" class="max-btn" onclick="setMaxWithdraw()">MAX</button>
             </div>
+            <div id="withdrawError" class="error-message"></div>
             <div style="font-size: 12px; color: #666; margin-top: 5px;">
                 Minimal penarikan: Rp 10,000
             </div>
@@ -696,25 +739,37 @@
                     <div class="payment-fee">Biaya: Rp 2,500</div>
                 </div>
             </div>
+            <div id="paymentError" class="error-message">Pilih metode penarikan</div>
         </div>
         
         <div class="form-group">
             <label class="form-label">Nomor Tujuan</label>
-            <input type="tel" class="form-input" id="withdrawPhone" placeholder="0812xxxxxxxx" maxlength="13">
+            <input type="tel" class="form-input" id="withdrawPhone" 
+                   placeholder="0812xxxxxxxx" maxlength="13"
+                   oninput="validatePhone()">
+            <div id="phoneError" class="error-message"></div>
         </div>
         
         <div class="form-group">
             <label class="form-label">Nama Penerima</label>
-            <input type="text" class="form-input" id="withdrawName" placeholder="Nama sesuai akun DANA/GoPay">
+            <input type="text" class="form-input" id="withdrawName" 
+                   placeholder="Nama sesuai akun DANA/GoPay"
+                   oninput="validateName()">
+            <div id="nameError" class="error-message"></div>
         </div>
         
         <div class="swap-rate">
-            <div class="rate-text">Saldo yang akan dikurangi</div>
+            <div class="rate-text">Total yang akan dikurangi dari saldo:</div>
             <div class="rate-value" id="withdrawTotal">Rp 0</div>
+            <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                (Jumlah + Biaya administrasi)
+            </div>
         </div>
         
         <div class="button-group">
-            <button class="primary-btn" onclick="processWithdraw()">Withdraw Sekarang</button>
+            <button class="primary-btn" id="withdrawBtn" onclick="processWithdraw()" disabled>
+                Withdraw Sekarang
+            </button>
             <button class="secondary-btn" onclick="hideModal('withdrawModal')">Batal</button>
         </div>
     </div>
@@ -725,26 +780,41 @@
     <div class="modal-content">
         <h3 class="modal-title">💸 Transfer GOV</h3>
         
+        <div class="balance-info">
+            <span class="balance-label">Saldo GOV Tersedia:</span>
+            <span class="balance-value" id="availableGOV">0 GOV</span>
+        </div>
+        
         <div class="form-group">
             <label class="form-label">Username Penerima</label>
-            <input type="text" class="form-input" id="transferUsername" placeholder="@username">
+            <input type="text" class="form-input" id="transferUsername" 
+                   placeholder="@username"
+                   oninput="validateTransfer()">
+            <div id="usernameError" class="error-message"></div>
         </div>
         
         <div class="form-group">
             <label class="form-label">Jumlah GOV</label>
             <div class="amount-group">
-                <input type="number" class="form-input" id="transferAmount" placeholder="100" min="1">
+                <input type="number" class="form-input" id="transferAmount" 
+                       placeholder="100" min="1" step="1"
+                       oninput="validateTransfer()">
                 <button type="button" class="max-btn" onclick="setMaxTransfer()">MAX</button>
             </div>
+            <div id="transferAmountError" class="error-message"></div>
         </div>
         
         <div class="swap-rate">
             <div class="rate-text">Biaya transfer: 0.5%</div>
             <div class="rate-value" id="transferFee">0 GOV</div>
+            <div class="rate-text" style="margin-top: 10px;">Total yang akan dikirim:</div>
+            <div class="rate-value" id="transferTotal">0 GOV</div>
         </div>
         
         <div class="button-group">
-            <button class="primary-btn" onclick="processTransfer()">Transfer Sekarang</button>
+            <button class="primary-btn" id="transferBtn" onclick="processTransfer()" disabled>
+                Transfer Sekarang
+            </button>
             <button class="secondary-btn" onclick="hideModal('transferModal')">Batal</button>
         </div>
     </div>
@@ -758,14 +828,23 @@
         <div class="swap-rate" style="margin-bottom: 20px;">
             <div class="rate-text">Rate saat ini:</div>
             <div class="rate-value">1 GOV = $0.001 = Rp 16.8</div>
+            <div class="rate-text">1000 GOV = 1 USDT</div>
         </div>
         
         <div class="form-group">
             <label class="form-label">Dari</label>
             <select class="form-input" id="swapFrom" onchange="updateSwapCalculation()">
                 <option value="GOV">GOV</option>
+                <option value="IDR">IDR</option>
                 <option value="USDT">USDT</option>
             </select>
+        </div>
+        
+        <div class="form-group">
+            <div class="balance-info">
+                <span class="balance-label">Saldo tersedia:</span>
+                <span class="balance-value" id="swapFromBalance">0</span>
+            </div>
         </div>
         
         <div class="form-group">
@@ -780,18 +859,27 @@
         <div class="form-group">
             <label class="form-label">Jumlah</label>
             <div class="amount-group">
-                <input type="number" class="form-input" id="swapAmount" placeholder="0" oninput="updateSwapCalculation()">
+                <input type="number" class="form-input" id="swapAmount" 
+                       placeholder="0" 
+                       oninput="validateSwap()"
+                       onblur="validateSwap()">
                 <button type="button" class="max-btn" onclick="setMaxSwap()">MAX</button>
             </div>
+            <div id="swapError" class="error-message"></div>
         </div>
         
         <div class="swap-rate">
             <div class="rate-text">Anda akan menerima:</div>
             <div class="rate-value" id="swapReceive">0</div>
+            <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                Tanpa biaya tambahan
+            </div>
         </div>
         
         <div class="button-group">
-            <button class="primary-btn" onclick="processSwap()">Swap Sekarang</button>
+            <button class="primary-btn" id="swapBtn" onclick="processSwap()" disabled>
+                Swap Sekarang
+            </button>
             <button class="secondary-btn" onclick="hideModal('swapModal')">Batal</button>
         </div>
     </div>
@@ -805,6 +893,7 @@
         <div class="transactions-list" id="transactionsList">
             <!-- Transactions will be loaded here -->
             <div style="text-align: center; padding: 40px; color: #666;">
+                <div style="font-size: 24px; margin-bottom: 10px;">📊</div>
                 Belum ada transaksi
             </div>
         </div>
@@ -842,7 +931,7 @@ let walletData = {
 
 // ===== EXCHANGE RATES =====
 const EXCHANGE_RATES = {
-    GOV_TO_USDT: 0.001,     // 1 GOV = 0.001 USDT
+    GOV_TO_USDT: 0.001,     // 1 GOV = 0.001 USDT (1000 GOV = 1 USDT)
     USDT_TO_IDR: 16800,     // 1 USDT = 16,800 IDR
     GOV_TO_IDR: 16.8        // 1 GOV = 16.8 IDR
 };
@@ -951,17 +1040,11 @@ async function syncWithDashboard() {
         const dashboardKey = `userData_${username}`;
         const dashboardData = localStorage.getItem(dashboardKey);
         
+        let govFromDashboard = walletData.balances.GOV;
+        
         if (dashboardData) {
             const parsed = JSON.parse(dashboardData);
-            const govFromDashboard = parsed.saldoGOV || 0;
-            
-            // Update GOV jika lebih besar dari yang ada di wallet
-            if (govFromDashboard > walletData.balances.GOV) {
-                walletData.balances.GOV = govFromDashboard;
-                await saveWalletData();
-                updateWalletDisplay();
-                console.log(`✅ GOV synced from dashboard: ${govFromDashboard} GOV`);
-            }
+            govFromDashboard = parsed.saldoGOV || 0;
         }
         
         // 2. Juga sync dari wallet localStorage dashboard
@@ -971,12 +1054,32 @@ async function syncWithDashboard() {
         if (walletDashboardData) {
             const parsedWallet = JSON.parse(walletDashboardData);
             const govFromWallet = parsedWallet.saldoGOV || 0;
+            govFromDashboard = Math.max(govFromDashboard, govFromWallet);
+        }
+        
+        // Update GOV jika berbeda
+        if (govFromDashboard !== walletData.balances.GOV) {
+            const difference = govFromDashboard - walletData.balances.GOV;
+            walletData.balances.GOV = govFromDashboard;
             
-            if (govFromWallet > walletData.balances.GOV) {
-                walletData.balances.GOV = govFromWallet;
-                await saveWalletData();
-                updateWalletDisplay();
+            // Jika ada penambahan, buat transaksi
+            if (difference > 0) {
+                const transaction = {
+                    id: Date.now(),
+                    type: 'DEPOSIT',
+                    amount: difference,
+                    description: 'Sync dari dashboard',
+                    status: 'SUCCESS',
+                    timestamp: new Date().toISOString()
+                };
+                
+                walletData.transactions.unshift(transaction);
             }
+            
+            await saveWalletData();
+            updateWalletDisplay();
+            loadTransactionHistory();
+            console.log(`✅ GOV synced: ${govFromDashboard} GOV`);
         }
         
     } catch (error) {
@@ -1049,6 +1152,17 @@ function updateWalletDisplay() {
 // ===== MODAL FUNCTIONS =====
 function showModal(modalId) {
     document.getElementById(modalId).style.display = 'flex';
+    
+    // Reset errors
+    document.querySelectorAll('.error-message').forEach(el => {
+        el.style.display = 'none';
+        el.textContent = '';
+    });
+    
+    // Enable all buttons
+    document.querySelectorAll('.primary-btn').forEach(btn => {
+        btn.disabled = true;
+    });
 }
 
 function hideModal(modalId) {
@@ -1061,22 +1175,28 @@ function hideModal(modalId) {
 
 function showWithdrawModal() {
     showModal('withdrawModal');
+    document.getElementById('availableIDR').textContent = `Rp ${walletData.balances.IDR.toLocaleString('id-ID')}`;
     document.getElementById('withdrawAmount').value = '';
     document.getElementById('withdrawPhone').value = '';
     document.getElementById('withdrawName').value = '';
+    document.getElementById('withdrawTotal').textContent = 'Rp 0';
+    document.getElementById('withdrawBtn').disabled = true;
     updateWithdrawTotal();
 }
 
 function showTransferModal() {
     showModal('transferModal');
+    document.getElementById('availableGOV').textContent = `${walletData.balances.GOV.toLocaleString('id-ID')} GOV`;
     document.getElementById('transferUsername').value = '';
     document.getElementById('transferAmount').value = '';
+    document.getElementById('transferBtn').disabled = true;
     updateTransferFee();
 }
 
 function showSwapModal() {
     showModal('swapModal');
     document.getElementById('swapAmount').value = '';
+    document.getElementById('swapBtn').disabled = true;
     updateSwapCalculation();
 }
 
@@ -1087,7 +1207,9 @@ function showHistoryModal() {
 
 // ===== WITHDRAW FUNCTIONS =====
 function setMaxWithdraw() {
-    document.getElementById('withdrawAmount').value = walletData.balances.IDR;
+    const maxAmount = walletData.balances.IDR;
+    document.getElementById('withdrawAmount').value = maxAmount;
+    validateWithdraw();
     updateWithdrawTotal();
 }
 
@@ -1097,47 +1219,117 @@ function selectPayment(method) {
         el.classList.remove('selected');
     });
     document.getElementById(method + 'Method').classList.add('selected');
+    document.getElementById('paymentError').style.display = 'none';
+    validateWithdraw();
 }
 
 function updateWithdrawTotal() {
     const amount = parseFloat(document.getElementById('withdrawAmount').value) || 0;
+    if (!walletData.selectedPayment || amount <= 0) return;
+    
     const fee = walletData.selectedPayment === 'dana' ? 2000 : 2500;
     const total = amount + fee;
     document.getElementById('withdrawTotal').textContent = `Rp ${total.toLocaleString('id-ID')}`;
 }
 
-async function processWithdraw() {
+function validateWithdraw() {
     const amount = parseFloat(document.getElementById('withdrawAmount').value) || 0;
     const phone = document.getElementById('withdrawPhone').value.trim();
     const name = document.getElementById('withdrawName').value.trim();
     
-    // Validasi
-    if (!walletData.selectedPayment) {
-        showNotification("❌ Pilih metode penarikan terlebih dahulu", false);
-        return;
-    }
+    let isValid = true;
+    const errorElement = document.getElementById('withdrawError');
     
+    // Validasi amount
     if (amount < 10000) {
-        showNotification("❌ Minimal penarikan Rp 10,000", false);
-        return;
+        errorElement.textContent = '❌ Minimal penarikan Rp 10,000';
+        errorElement.style.display = 'block';
+        isValid = false;
+    } else if (amount > walletData.balances.IDR) {
+        errorElement.textContent = '❌ Saldo IDR tidak mencukupi';
+        errorElement.style.display = 'block';
+        isValid = false;
+    } else {
+        errorElement.style.display = 'none';
     }
     
-    if (amount > walletData.balances.IDR) {
-        showNotification("❌ Saldo IDR tidak mencukupi", false);
-        return;
+    // Validasi metode pembayaran
+    if (!walletData.selectedPayment) {
+        document.getElementById('paymentError').style.display = 'block';
+        isValid = false;
+    } else {
+        document.getElementById('paymentError').style.display = 'none';
     }
     
+    // Validasi nomor telepon
+    const phoneError = document.getElementById('phoneError');
     if (!phone || phone.length < 10) {
-        showNotification("❌ Masukkan nomor telepon yang valid", false);
-        return;
+        phoneError.textContent = '❌ Masukkan nomor telepon yang valid';
+        phoneError.style.display = 'block';
+        isValid = false;
+    } else {
+        phoneError.style.display = 'none';
     }
     
+    // Validasi nama
+    const nameError = document.getElementById('nameError');
     if (!name) {
-        showNotification("❌ Masukkan nama penerima", false);
-        return;
+        nameError.textContent = '❌ Masukkan nama penerima';
+        nameError.style.display = 'block';
+        isValid = false;
+    } else {
+        nameError.style.display = 'none';
     }
     
+    // Update total
+    updateWithdrawTotal();
+    
+    // Update fee
     const fee = walletData.selectedPayment === 'dana' ? 2000 : 2500;
+    const totalAmount = amount + fee;
+    
+    // Validasi total dengan saldo
+    if (totalAmount > walletData.balances.IDR) {
+        errorElement.textContent = `❌ Total (Rp ${totalAmount.toLocaleString('id-ID')}) melebihi saldo IDR`;
+        errorElement.style.display = 'block';
+        isValid = false;
+    }
+    
+    // Enable/disable button
+    document.getElementById('withdrawBtn').disabled = !isValid;
+    
+    return isValid;
+}
+
+function validatePhone() {
+    const phone = document.getElementById('withdrawPhone').value.trim();
+    const errorElement = document.getElementById('phoneError');
+    
+    if (phone && phone.length >= 10) {
+        errorElement.style.display = 'none';
+    }
+    validateWithdraw();
+}
+
+function validateName() {
+    const name = document.getElementById('withdrawName').value.trim();
+    const errorElement = document.getElementById('nameError');
+    
+    if (name) {
+        errorElement.style.display = 'none';
+    }
+    validateWithdraw();
+}
+
+async function processWithdraw() {
+    if (!validateWithdraw()) return;
+    
+    const amount = parseFloat(document.getElementById('withdrawAmount').value);
+    const phone = document.getElementById('withdrawPhone').value.trim();
+    const name = document.getElementById('withdrawName').value.trim();
+    const method = walletData.selectedPayment;
+    
+    const fee = method === 'dana' ? 2000 : 2500;
     const totalAmount = amount + fee;
     
     // Kurangi saldo
@@ -1147,7 +1339,7 @@ async function processWithdraw() {
     const transaction = {
         id: Date.now(),
         type: 'WITHDRAW',
-        method: walletData.selectedPayment.toUpperCase(),
+        method: method.toUpperCase(),
         amount: -amount,
         fee: fee,
         total: -totalAmount,
@@ -1162,66 +1354,84 @@ async function processWithdraw() {
     // Simpan data
     await saveWalletData();
     updateWalletDisplay();
+    loadTransactionHistory();
     
-    // Kirim notifikasi ke Telegram (simulasi)
+    // Kirim notifikasi ke Telegram
     sendTelegramNotification(transaction);
     
     // Tampilkan konfirmasi
-    showNotification(`✅ Withdraw Rp ${amount.toLocaleString('id-ID')} ke ${walletData.selectedPayment.toUpperCase()} diproses`);
+    showNotification(`✅ Withdraw Rp ${amount.toLocaleString('id-ID')} ke ${method.toUpperCase()} diproses`);
     hideModal('withdrawModal');
-}
-
-function sendTelegramNotification(transaction) {
-    // Simulasi pengiriman ke Telegram
-    const message = `📤 WITHDRAW REQUEST\n` +
-                   `User: ${localStorage.getItem('currentUser')}\n` +
-                   `Amount: Rp ${Math.abs(transaction.amount).toLocaleString('id-ID')}\n` +
-                   `Method: ${transaction.method}\n` +
-                   `Phone: ${transaction.phone}\n` +
-                   `Name: ${transaction.name}\n` +
-                   `Fee: Rp ${transaction.fee.toLocaleString('id-ID')}\n` +
-                   `Total: Rp ${Math.abs(transaction.total).toLocaleString('id-ID')}\n` +
-                   `Status: ${transaction.status}\n` +
-                   `Time: ${new Date(transaction.timestamp).toLocaleString('id-ID')}`;
-    
-    console.log("📤 Telegram Notification:", message);
-    // Di sini Anda bisa menambahkan API call ke bot Telegram
 }
 
 // ===== TRANSFER FUNCTIONS =====
 function setMaxTransfer() {
     document.getElementById('transferAmount').value = walletData.balances.GOV;
+    validateTransfer();
     updateTransferFee();
 }
 
 function updateTransferFee() {
     const amount = parseFloat(document.getElementById('transferAmount').value) || 0;
     const fee = amount * 0.005; // 0.5% fee
+    const total = amount + fee;
+    
     document.getElementById('transferFee').textContent = `${fee.toFixed(2)} GOV`;
+    document.getElementById('transferTotal').textContent = `${total.toFixed(2)} GOV`;
 }
 
-async function processTransfer() {
+function validateTransfer() {
     const username = document.getElementById('transferUsername').value.trim();
     const amount = parseFloat(document.getElementById('transferAmount').value) || 0;
     
-    // Validasi
+    let isValid = true;
+    
+    // Validasi username
+    const usernameError = document.getElementById('usernameError');
     if (!username || !username.startsWith('@')) {
-        showNotification("❌ Masukkan username yang valid (contoh: @username)", false);
-        return;
+        usernameError.textContent = '❌ Masukkan username yang valid (contoh: @username)';
+        usernameError.style.display = 'block';
+        isValid = false;
+    } else {
+        usernameError.style.display = 'none';
     }
     
+    // Validasi amount
+    const amountError = document.getElementById('transferAmountError');
     if (amount < 1) {
-        showNotification("❌ Minimal transfer 1 GOV", false);
-        return;
+        amountError.textContent = '❌ Minimal transfer 1 GOV';
+        amountError.style.display = 'block';
+        isValid = false;
+    } else {
+        const fee = amount * 0.005;
+        const total = amount + fee;
+        
+        if (total > walletData.balances.GOV) {
+            amountError.textContent = `❌ Saldo GOV tidak mencukupi. Diperlukan: ${total.toFixed(2)} GOV`;
+            amountError.style.display = 'block';
+            isValid = false;
+        } else {
+            amountError.style.display = 'none';
+        }
     }
+    
+    // Update fee dan total
+    updateTransferFee();
+    
+    // Enable/disable button
+    document.getElementById('transferBtn').disabled = !isValid;
+    
+    return isValid;
+}
+
+async function processTransfer() {
+    if (!validateTransfer()) return;
+    
+    const username = document.getElementById('transferUsername').value.trim();
+    const amount = parseFloat(document.getElementById('transferAmount').value);
     
     const fee = amount * 0.005;
     const total = amount + fee;
-    
-    if (total > walletData.balances.GOV) {
-        showNotification("❌ Saldo GOV tidak mencukupi", false);
-        return;
-    }
     
     // Kurangi saldo pengirim
     walletData.balances.GOV -= total;
@@ -1243,9 +1453,10 @@ async function processTransfer() {
     // Simpan data
     await saveWalletData();
     updateWalletDisplay();
+    loadTransactionHistory();
     
-    // Update dashboard GOV juga (simulasi transfer ke user lain)
-    updateDashboardGOV(total);
+    // Update dashboard GOV juga
+    updateDashboardGOV(amount);
     
     showNotification(`✅ Berhasil transfer ${amount} GOV ke ${username}`);
     hideModal('transferModal');
@@ -1270,12 +1481,19 @@ function setMaxSwap() {
     const from = document.getElementById('swapFrom').value;
     document.getElementById('swapAmount').value = walletData.balances[from];
     updateSwapCalculation();
+    validateSwap();
 }
 
 function updateSwapCalculation() {
     const from = document.getElementById('swapFrom').value;
     const to = document.getElementById('swapTo').value;
     const amount = parseFloat(document.getElementById('swapAmount').value) || 0;
+    
+    // Update balance info
+    document.getElementById('swapFromBalance').textContent = 
+        from === 'IDR' ? `Rp ${walletData.balances[from].toLocaleString('id-ID')}` : 
+        from === 'GOV' ? `${walletData.balances[from].toLocaleString('id-ID')} ${from}` :
+        `${walletData.balances[from]} ${from}`;
     
     if (from === to) {
         document.getElementById('swapReceive').textContent = `0 ${to}`;
@@ -1298,28 +1516,51 @@ function updateSwapCalculation() {
         result = amount / EXCHANGE_RATES.USDT_TO_IDR;
     }
     
-    document.getElementById('swapReceive').textContent = `${result.toFixed(4)} ${to}`;
+    document.getElementById('swapReceive').textContent = 
+        to === 'IDR' ? `Rp ${result.toLocaleString('id-ID')}` : 
+        to === 'GOV' ? `${result.toFixed(2)} ${to}` :
+        `${result.toFixed(4)} ${to}`;
 }
 
-async function processSwap() {
+function validateSwap() {
     const from = document.getElementById('swapFrom').value;
     const to = document.getElementById('swapTo').value;
     const amount = parseFloat(document.getElementById('swapAmount').value) || 0;
     
+    let isValid = true;
+    const errorElement = document.getElementById('swapError');
+    
     if (from === to) {
-        showNotification("❌ Pilih aset yang berbeda", false);
-        return;
+        errorElement.textContent = '❌ Pilih aset yang berbeda';
+        errorElement.style.display = 'block';
+        isValid = false;
+    } else if (amount <= 0) {
+        errorElement.textContent = '❌ Masukkan jumlah yang valid';
+        errorElement.style.display = 'block';
+        isValid = false;
+    } else if (amount > walletData.balances[from]) {
+        errorElement.textContent = `❌ Saldo ${from} tidak mencukupi`;
+        errorElement.style.display = 'block';
+        isValid = false;
+    } else {
+        errorElement.style.display = 'none';
     }
     
-    if (amount <= 0) {
-        showNotification("❌ Masukkan jumlah yang valid", false);
-        return;
-    }
+    // Update calculation
+    updateSwapCalculation();
     
-    if (amount > walletData.balances[from]) {
-        showNotification(`❌ Saldo ${from} tidak mencukupi`, false);
-        return;
-    }
+    // Enable/disable button
+    document.getElementById('swapBtn').disabled = !isValid;
+    
+    return isValid;
+}
+
+async function processSwap() {
+    if (!validateSwap()) return;
+    
+    const from = document.getElementById('swapFrom').value;
+    const to = document.getElementById('swapTo').value;
+    const amount = parseFloat(document.getElementById('swapAmount').value);
     
     // Hitung hasil swap
     let result = 0;
@@ -1327,7 +1568,7 @@ async function processSwap() {
     
     if (from === 'GOV' && to === 'USDT') {
         result = amount * EXCHANGE_RATES.GOV_TO_USDT;
-        rate = `1 GOV = $${EXCHANGE_RATES.GOV_TO_USDT}`;
+        rate = `1000 GOV = 1 USDT`;
     } else if (from === 'GOV' && to === 'IDR') {
         result = amount * EXCHANGE_RATES.GOV_TO_IDR;
         rate = `1 GOV = Rp ${EXCHANGE_RATES.GOV_TO_IDR}`;
@@ -1337,6 +1578,12 @@ async function processSwap() {
     } else if (from === 'USDT' && to === 'IDR') {
         result = amount * EXCHANGE_RATES.USDT_TO_IDR;
         rate = `1 USDT = Rp ${EXCHANGE_RATES.USDT_TO_IDR.toLocaleString('id-ID')}`;
+    } else if (from === 'IDR' && to === 'GOV') {
+        result = amount / EXCHANGE_RATES.GOV_TO_IDR;
+        rate = `Rp ${EXCHANGE_RATES.GOV_TO_IDR} = 1 GOV`;
+    } else if (from === 'IDR' && to === 'USDT') {
+        result = amount / EXCHANGE_RATES.USDT_TO_IDR;
+        rate = `Rp ${EXCHANGE_RATES.USDT_TO_IDR.toLocaleString('id-ID')} = 1 USDT`;
     }
     
     // Update balances
@@ -1361,6 +1608,7 @@ async function processSwap() {
     // Simpan data
     await saveWalletData();
     updateWalletDisplay();
+    loadTransactionHistory();
     
     showNotification(`✅ Berhasil swap ${amount} ${from} → ${result.toFixed(4)} ${to}`);
     hideModal('swapModal');
@@ -1373,6 +1621,7 @@ function loadTransactionHistory() {
     if (walletData.transactions.length === 0) {
         transactionsList.innerHTML = `
             <div style="text-align: center; padding: 40px; color: #666;">
+                <div style="font-size: 24px; margin-bottom: 10px;">📊</div>
                 Belum ada transaksi
             </div>
         `;
@@ -1383,6 +1632,7 @@ function loadTransactionHistory() {
     
     walletData.transactions.forEach(transaction => {
         let icon = '';
+        let iconClass = '';
         let typeText = '';
         let details = '';
         let amountClass = '';
@@ -1391,6 +1641,7 @@ function loadTransactionHistory() {
         switch(transaction.type) {
             case 'WITHDRAW':
                 icon = '📤';
+                iconClass = 'withdraw';
                 typeText = 'Withdraw';
                 details = `${transaction.method} • ${transaction.phone}`;
                 amountClass = 'negative';
@@ -1399,6 +1650,7 @@ function loadTransactionHistory() {
                 
             case 'TRANSFER':
                 icon = '💸';
+                iconClass = 'transfer';
                 typeText = 'Transfer';
                 details = `Ke ${transaction.to}`;
                 amountClass = 'negative';
@@ -1407,16 +1659,18 @@ function loadTransactionHistory() {
                 
             case 'SWAP':
                 icon = '🔄';
+                iconClass = 'swap';
                 typeText = 'Swap';
                 details = `${transaction.from} → ${transaction.to}`;
                 amountClass = 'positive';
-                amountText = `+${transaction.received} ${transaction.to}`;
+                amountText = `+${transaction.received.toFixed(4)} ${transaction.to}`;
                 break;
                 
             case 'DEPOSIT':
                 icon = '📥';
+                iconClass = 'deposit';
                 typeText = 'Deposit';
-                details = 'Dari dashboard';
+                details = transaction.description || 'Dari dashboard';
                 amountClass = 'positive';
                 amountText = `+${transaction.amount} GOV`;
                 break;
@@ -1432,10 +1686,12 @@ function loadTransactionHistory() {
         html += `
             <div class="transaction-item">
                 <div class="transaction-info">
-                    <div class="transaction-icon">${icon}</div>
+                    <div class="transaction-icon ${iconClass}">${icon}</div>
                     <div class="transaction-details">
                         <div class="transaction-type">${typeText}</div>
                         <div class="transaction-date">${date} • ${details}</div>
+                        ${transaction.status === 'PENDING' ? 
+                          `<div style="color: #ff9500; font-size: 12px; margin-top: 2px;">⏳ ${transaction.status}</div>` : ''}
                     </div>
                 </div>
                 <div class="transaction-amount ${amountClass}">${amountText}</div>
@@ -1462,6 +1718,49 @@ function showNotification(message, isSuccess = true) {
     setTimeout(() => {
         notification.style.display = 'none';
     }, 3000);
+}
+
+function sendTelegramNotification(transaction) {
+    const userEmail = localStorage.getItem('currentUser');
+    
+    const message = `📤 *WITHDRAW REQUEST*\n\n` +
+                   `👤 *User:* ${userEmail}\n` +
+                   `💰 *Amount:* Rp ${Math.abs(transaction.amount).toLocaleString('id-ID')}\n` +
+                   `🏦 *Method:* ${transaction.method}\n` +
+                   `📱 *Phone:* ${transaction.phone}\n` +
+                   `👤 *Name:* ${transaction.name}\n` +
+                   `💸 *Fee:* Rp ${transaction.fee.toLocaleString('id-ID')}\n` +
+                   `📊 *Total:* Rp ${Math.abs(transaction.total).toLocaleString('id-ID')}\n` +
+                   `⏰ *Time:* ${new Date(transaction.timestamp).toLocaleString('id-ID')}\n\n` +
+                   `📝 *Please process this withdrawal request.*`;
+    
+    console.log("📤 Telegram Notification:", message);
+    
+    // Untuk implementasi real, Anda perlu:
+    // 1. Buat bot di Telegram via @BotFather
+    // 2. Dapatkan token bot
+    // 3. Dapatkan chat_id
+    // 4. Kirim request ke API Telegram:
+    
+    /*
+    const botToken = 'YOUR_BOT_TOKEN';
+    const chatId = 'YOUR_CHAT_ID';
+    
+    fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            chat_id: chatId,
+            text: message,
+            parse_mode: 'Markdown'
+        })
+    })
+    .then(response => response.json())
+    .then(data => console.log('Telegram notification sent:', data))
+    .catch(error => console.error('Error sending Telegram notification:', error));
+    */
 }
 
 // ===== INITIALIZE =====
@@ -1498,6 +1797,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     initializeWallet();
+    
+    // Event listeners untuk input validation
+    document.getElementById('withdrawAmount').addEventListener('input', validateWithdraw);
+    document.getElementById('withdrawPhone').addEventListener('input', validatePhone);
+    document.getElementById('withdrawName').addEventListener('input', validateName);
+    
+    document.getElementById('transferUsername').addEventListener('input', validateTransfer);
+    document.getElementById('transferAmount').addEventListener('input', validateTransfer);
+    
+    document.getElementById('swapAmount').addEventListener('input', validateSwap);
+    document.getElementById('swapFrom').addEventListener('change', function() {
+        updateSwapCalculation();
+        validateSwap();
+    });
+    document.getElementById('swapTo').addEventListener('change', function() {
+        updateSwapCalculation();
+        validateSwap();
+    });
 });
 </script>
 
