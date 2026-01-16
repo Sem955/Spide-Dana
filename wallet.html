@@ -3,44 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GOV Wallet</title>
+    <title>GOV Wallet - Final Version</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     
     <style>
+        /* CSS Tetap Sesuai Desain Asli */
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; color: white; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; color: white; overflow-x: hidden; }
         .container { max-width: 480px; margin: 0 auto; padding: 20px; padding-bottom: 80px; }
         .wallet-header { padding: 30px 0 40px; text-align: center; }
         .wallet-title { font-size: 36px; font-weight: 800; margin-bottom: 8px; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
         .wallet-subtitle { color: rgba(255,255,255,0.8); font-size: 14px; }
         .balance-card { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(20px); border-radius: 24px; padding: 30px; margin-bottom: 25px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); text-align: center; border: 1px solid rgba(255,255,255,0.2); }
         .total-balance-label { color: rgba(255,255,255,0.8); font-size: 16px; margin-bottom: 10px; }
-        .balance-amount { font-size: 48px; font-weight: 700; margin-bottom: 10px; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        .balance-amount { font-size: 32px; font-weight: 700; margin-bottom: 10px; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
         .balance-in-idr { color: rgba(255,255,255,0.8); font-size: 16px; }
-        .action-buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px; }
-        .action-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 15px; padding: 18px 10px; text-align: center; color: white; cursor: pointer; transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-        .action-btn-icon { font-size: 26px; }
-        .action-btn-text { font-size: 12px; font-weight: 600; }
+        .action-buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 30px; }
+        .action-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 15px; padding: 15px 5px; text-align: center; color: white; cursor: pointer; transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .action-btn:hover { background: rgba(255, 255, 255, 0.2); transform: translateY(-3px); }
+        .action-btn-icon { font-size: 24px; }
+        .action-btn-text { font-size: 11px; font-weight: 600; }
         .assets-section { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); border-radius: 20px; padding: 25px; margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.2); }
         .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .section-title { font-size: 20px; font-weight: 700; }
+        .refresh-btn { background: rgba(255,255,255,0.15); border: none; border-radius: 12px; padding: 8px 12px; color: white; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
         .assets-list { display: flex; flex-direction: column; gap: 12px; }
-        .asset-item { background: rgba(255, 255, 255, 0.08); border-radius: 18px; padding: 20px; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(255,255,255,0.1); }
-        .asset-info { display: flex; align-items: center; gap: 15px; }
-        .asset-icon { width: 50px; height: 50px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700; background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.3); }
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; max-width: 480px; margin: 0 auto; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); border-top: 1px solid rgba(255, 255, 255, 0.2); padding: 15px 20px; display: flex; justify-content: space-between; border-radius: 25px 25px 0 0; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 6px; color: rgba(255,255,255,0.7); cursor: pointer; }
+        .asset-item { background: rgba(255, 255, 255, 0.08); border-radius: 18px; padding: 15px; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(255,255,255,0.1); }
+        .asset-info { display: flex; align-items: center; gap: 12px; }
+        .asset-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; background: rgba(255,255,255,0.15); }
+        .asset-details { display: flex; flex-direction: column; }
+        .asset-name { font-size: 16px; font-weight: 600; }
+        .asset-balance { text-align: right; }
+        .balance-crypto { font-size: 16px; font-weight: 700; }
+        
+        /* Modal Styles */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.8); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(10px); padding: 20px; }
-        .modal-content { background: white; border-radius: 25px; width: 100%; max-width: 400px; padding: 30px; max-height: 90vh; overflow-y: auto; color: #333; }
+        .modal-content { background: white; border-radius: 25px; width: 100%; max-width: 400px; padding: 25px; animation: modalSlideUp 0.3s ease; color: #333; }
+        @keyframes modalSlideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .form-group { margin-bottom: 15px; }
-        .form-input { width: 100%; padding: 14px; background: #f5f5f7; border: 2px solid #e0e0e0; border-radius: 12px; font-size: 16px; }
+        .form-label { display: block; margin-bottom: 5px; font-size: 13px; color: #666; font-weight: 600; }
+        .form-input { width: 100%; padding: 12px; background: #f5f5f7; border: 2px solid #eee; border-radius: 12px; font-size: 16px; outline: none; }
+        .form-input:focus { border-color: #667eea; }
         .payment-methods { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; }
-        .payment-method { border: 2px solid #eee; border-radius: 12px; padding: 12px; text-align: center; cursor: pointer; }
-        .payment-method.selected { border-color: #667eea; background: #f0f4ff; }
-        .primary-btn { width: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 12px; padding: 16px; font-weight: 600; cursor: pointer; }
+        .payment-method { border: 2px solid #eee; border-radius: 12px; padding: 12px; text-align: center; cursor: pointer; font-size: 13px; }
+        .payment-method.selected { border-color: #667eea; background: #f0f4ff; color: #667eea; font-weight: bold; }
+        .primary-btn { width: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 12px; padding: 14px; font-weight: 600; cursor: pointer; transition: opacity 0.3s; }
         .primary-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        #notification { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 15px 25px; border-radius: 12px; color: white; z-index: 2000; display: none; }
+        .secondary-btn { width: 100%; background: #f0f0f0; border: none; border-radius: 12px; padding: 14px; margin-top: 8px; cursor: pointer; color: #666; }
+        #notification { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 12px 25px; border-radius: 30px; color: white; z-index: 2000; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
     </style>
 </head>
 <body>
@@ -50,11 +62,11 @@
 <div class="container">
     <div class="wallet-header">
         <div class="wallet-title">GOV Wallet</div>
-        <div class="wallet-subtitle" id="userEmail">Loading...</div>
+        <div class="wallet-subtitle" id="userEmail">Memuat...</div>
     </div>
     
     <div class="balance-card">
-        <div class="total-balance-label">Total Saldo</div>
+        <div class="total-balance-label">Total Saldo Est.</div>
         <div class="balance-amount" id="totalBalance">Rp 0</div>
         <div class="balance-in-idr" id="totalBalanceUSD">$0.00</div>
     </div>
@@ -72,26 +84,29 @@
             <div class="action-btn-icon">🔄</div>
             <div class="action-btn-text">Swap</div>
         </div>
-        <div class="action-btn" onclick="showHistory()">
+        <div class="action-btn" onclick="showModal('historyModal')">
             <div class="action-btn-icon">📋</div>
             <div class="action-btn-text">Riwayat</div>
         </div>
     </div>
     
     <div class="assets-section">
-        <div class="section-header"><b>Aset Anda</b></div>
+        <div class="section-header">
+            <div class="section-title">Aset Anda</div>
+            <button class="refresh-btn" onclick="location.reload()">🔄 Refresh</button>
+        </div>
         <div class="assets-list">
             <div class="asset-item">
-                <div class="asset-info"><div class="asset-icon">G</div><div><b>GOV</b></div></div>
-                <div id="govBalance">0 GOV</div>
+                <div class="asset-info"><div class="asset-icon" style="background:#f3ba2f; color:white">G</div><div class="asset-details"><b class="asset-name">GOV</b></div></div>
+                <div class="asset-balance"><div class="balance-crypto" id="govBalance">0 GOV</div></div>
             </div>
             <div class="asset-item">
-                <div class="asset-info"><div class="asset-icon">Rp</div><div><b>IDR</b></div></div>
-                <div id="idrBalance">Rp 0</div>
+                <div class="asset-info"><div class="asset-icon" style="background:#26a17b; color:white">$</div><div class="asset-details"><b class="asset-name">USDT</b></div></div>
+                <div class="asset-balance"><div class="balance-crypto" id="usdtBalance">0 USDT</div></div>
             </div>
             <div class="asset-item">
-                <div class="asset-info"><div class="asset-icon">$</div><div><b>USDT</b></div></div>
-                <div id="usdtBalance">0 USDT</div>
+                <div class="asset-info"><div class="asset-icon" style="background:#0052ff; color:white">Rp</div><div class="asset-details"><b class="asset-name">IDR</b></div></div>
+                <div class="asset-balance"><div class="balance-crypto" id="idrBalance">Rp 0</div></div>
             </div>
         </div>
     </div>
@@ -99,60 +114,65 @@
 
 <div id="withdrawModal" class="modal-overlay">
     <div class="modal-content">
-        <h3>📤 Withdraw IDR</h3>
-        <p style="font-size: 12px; margin-bottom: 10px;">Saldo: <span id="availIDR">0</span></p>
+        <h3 style="margin-bottom:10px">📤 Withdraw IDR</h3>
+        <p style="font-size: 12px; margin-bottom: 15px; background: #fdf6e3; padding: 8px; border-radius: 8px;">Tersedia: <span id="availIDR" style="font-weight:bold">0</span></p>
         
         <div class="form-group">
-            <input type="number" id="withdrawAmount" class="form-input" placeholder="Jumlah (Min 10000)" oninput="validateWithdraw()">
+            <label class="form-label">Nominal (Min 10.000)</label>
+            <input type="number" id="wdAmount" class="form-input" placeholder="0" oninput="validateWD()">
         </div>
         
         <div class="payment-methods">
-            <div class="payment-method" id="danaBtn" onclick="selectPay('dana')">DANA<br><small>Fee 2rb</small></div>
-            <div class="payment-method" id="gopayBtn" onclick="selectPay('gopay')">GoPay<br><small>Fee 2.5rb</small></div>
+            <div class="payment-method" id="m_dana" onclick="selPay('dana')">DANA<br><small>Fee 2rb</small></div>
+            <div class="payment-method" id="m_gopay" onclick="selPay('gopay')">GoPay<br><small>Fee 2.5rb</small></div>
         </div>
 
         <div class="form-group">
-            <input type="tel" id="withdrawPhone" class="form-input" placeholder="Nomor HP" oninput="validateWithdraw()">
+            <input type="tel" id="wdPhone" class="form-input" placeholder="Nomor HP (08...)" oninput="validateWD()">
         </div>
         <div class="form-group">
-            <input type="text" id="withdrawName" class="form-input" placeholder="Nama Akun" oninput="validateWithdraw()">
+            <input type="text" id="wdName" class="form-input" placeholder="Nama Akun Penerima" oninput="validateWD()">
         </div>
 
-        <button id="withdrawBtn" class="primary-btn" onclick="processWithdraw()" disabled>Withdraw Sekarang</button>
-        <button class="secondary-btn" style="width:100%; margin-top:10px; padding:10px; border:none;" onclick="hideModal('withdrawModal')">Batal</button>
+        <button id="wdBtn" class="primary-btn" onclick="doWithdraw()" disabled>Proses Withdraw</button>
+        <button class="secondary-btn" onclick="hideModal('withdrawModal')">Batal</button>
     </div>
 </div>
 
 <div id="swapModal" class="modal-overlay">
     <div class="modal-content">
-        <h3>🔄 Swap Aset</h3>
+        <h3 style="margin-bottom:15px">🔄 Swap Assets</h3>
         <div class="form-group">
-            <label style="font-size:12px">Dari</label>
-            <select id="swapFrom" class="form-input" onchange="updateSwapCalc()">
+            <label class="form-label">Dari</label>
+            <select id="sFrom" class="form-input" onchange="updateSwap()">
                 <option value="GOV">GOV</option>
-                <option value="IDR">IDR</option>
                 <option value="USDT">USDT</option>
+                <option value="IDR">IDR</option>
             </select>
         </div>
         <div class="form-group">
-            <label style="font-size:12px">Ke</label>
-            <select id="swapTo" class="form-input" onchange="updateSwapCalc()">
+            <label class="form-label">Ke</label>
+            <select id="sTo" class="form-input" onchange="updateSwap()">
                 <option value="USDT">USDT</option>
                 <option value="IDR">IDR</option>
                 <option value="GOV">GOV</option>
             </select>
         </div>
         <div class="form-group">
-            <input type="number" id="swapAmount" class="form-input" placeholder="Jumlah" oninput="updateSwapCalc()">
+            <label class="form-label">Jumlah</label>
+            <input type="number" id="sAmt" class="form-input" placeholder="0.00" oninput="updateSwap()">
         </div>
-        <div id="swapResult" style="margin-bottom:15px; font-weight:bold; color:#667eea">Estimasi: 0</div>
-        <button id="swapBtn" class="primary-btn" onclick="processSwap()" disabled>Konfirmasi Swap</button>
-        <button class="secondary-btn" style="width:100%; margin-top:10px; padding:10px; border:none;" onclick="hideModal('swapModal')">Tutup</button>
+        <div id="sResBox" style="margin-bottom: 20px; padding: 12px; background: #f0f4ff; border-radius: 12px; border-left: 4px solid #667eea;">
+            <p style="font-size: 12px; color: #666;">Estimasi yang diterima:</p>
+            <p id="sRes" style="font-size: 18px; font-weight: bold; color: #333;">0</p>
+        </div>
+        <button id="sBtn" class="primary-btn" onclick="doSwap()" disabled>Konfirmasi Swap</button>
+        <button class="secondary-btn" onclick="hideModal('swapModal')">Tutup</button>
     </div>
 </div>
 
 <script>
-// --- CONFIG & DATA ---
+// KONFIGURASI FIREBASE
 const firebaseConfig = {
     apiKey: "AIzaSyBY7wHgWh7_0HqRLHzDnwdfQOhv_ziqA3A",
     authDomain: "govin-28f84.firebaseapp.com",
@@ -165,152 +185,174 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
+
 let wallet = { GOV: 0, IDR: 0, USDT: 0 };
-let method = null;
-let uid = "";
+let selectedMethod = null;
+const rates = { G_U: 0.001, U_I: 16800, G_I: 16.8 };
 
-// --- INIT ---
-window.onload = function() {
-    const user = localStorage.getItem('currentUser');
-    if(!user) return window.location.href="index.html";
+function showModal(id) { document.getElementById(id).style.display = 'flex'; }
+function hideModal(id) { document.getElementById(id).style.display = 'none'; }
+
+// INISIALISASI DATA
+async function init() {
+    const user = localStorage.getItem('currentUser') || "user@example.com";
     document.getElementById('userEmail').textContent = user;
-    uid = btoa(user).replace(/[^a-zA-Z0-9]/g, '');
-
-    db.ref('wallets/' + uid).on('value', snap => {
+    const uid = btoa(user).replace(/=/g,'');
+    
+    // Listen data dari firebase secara realtime
+    db.ref('wallets/' + uid + '/balances').on('value', snap => {
         if(snap.exists()) {
-            wallet = snap.val().balances;
-            updateUI();
+            wallet = snap.val();
+        } else {
+            // Jika user baru, buatkan saldo awal 0
+            db.ref('wallets/' + uid + '/balances').set({GOV: 0, IDR: 0, USDT: 0});
         }
+        updateUI();
     });
-};
+}
 
 function updateUI() {
-    document.getElementById('govBalance').textContent = wallet.GOV.toLocaleString() + " GOV";
-    document.getElementById('idrBalance').textContent = "Rp " + wallet.IDR.toLocaleString();
-    document.getElementById('usdtBalance').textContent = wallet.USDT.toLocaleString() + " USDT";
+    // Tampilan saldo masing-masing
+    document.getElementById('govBalance').textContent = (wallet.GOV || 0).toLocaleString() + " GOV";
+    document.getElementById('idrBalance').textContent = "Rp " + (wallet.IDR || 0).toLocaleString();
+    document.getElementById('usdtBalance').textContent = (wallet.USDT || 0).toFixed(2) + " USDT";
     
-    const total = (wallet.GOV * 16.8) + wallet.IDR + (wallet.USDT * 16800);
-    document.getElementById('totalBalance').textContent = "Rp " + Math.floor(total).toLocaleString();
-    document.getElementById('totalBalanceUSD').textContent = "$" + (total/16800).toFixed(2);
+    // Hitung Total (Konversi ke IDR)
+    const totalIDR = (wallet.GOV * rates.G_I) + wallet.IDR + (wallet.USDT * rates.U_I);
+    document.getElementById('totalBalance').textContent = "Rp " + Math.floor(totalIDR).toLocaleString();
+    document.getElementById('totalBalanceUSD').textContent = "$ " + (totalIDR / rates.U_I).toFixed(2);
 }
 
-// --- WITHDRAW LOGIC ---
+// LOGIKA SWAP
+function showSwapModal() {
+    document.getElementById('sAmt').value = "";
+    updateSwap();
+    showModal('swapModal');
+}
+
+function updateSwap() {
+    const from = document.getElementById('sFrom').value;
+    const to = document.getElementById('sTo').value;
+    const amt = parseFloat(document.getElementById('sAmt').value) || 0;
+    let res = 0;
+
+    if(from === to) { res = amt; }
+    else if(from === 'GOV' && to === 'USDT') res = amt * rates.G_U;
+    else if(from === 'GOV' && to === 'IDR') res = amt * rates.G_I;
+    else if(from === 'USDT' && to === 'GOV') res = amt * 1000;
+    else if(from === 'USDT' && to === 'IDR') res = amt * rates.U_I;
+    else if(from === 'IDR' && to === 'GOV') res = amt / rates.G_I;
+    else if(from === 'IDR' && to === 'USDT') res = amt / rates.U_I;
+
+    document.getElementById('sRes').textContent = res.toLocaleString(undefined, {maximumFractionDigits: 5}) + " " + to;
+    
+    // Validasi tombol: Saldo cukup & nominal > 0 & mata uang beda
+    const canSwap = amt > 0 && amt <= wallet[from] && from !== to;
+    document.getElementById('sBtn').disabled = !canSwap;
+}
+
+async function doSwap() {
+    const from = document.getElementById('sFrom').value;
+    const to = document.getElementById('sTo').value;
+    const amt = parseFloat(document.getElementById('sAmt').value);
+    const user = localStorage.getItem('currentUser') || "user@example.com";
+    const uid = btoa(user).replace(/=/g,'');
+
+    // Hitung hasil
+    let res = 0;
+    if(from === 'GOV' && to === 'USDT') res = amt * rates.G_U;
+    else if(from === 'GOV' && to === 'IDR') res = amt * rates.G_I;
+    else if(from === 'USDT' && to === 'GOV') res = amt * 1000;
+    else if(from === 'USDT' && to === 'IDR') res = amt * rates.U_I;
+    else if(from === 'IDR' && to === 'GOV') res = amt / rates.G_I;
+    else if(from === 'IDR' && to === 'USDT') res = amt / rates.U_I;
+
+    // Update Object Lokal
+    wallet[from] -= amt;
+    wallet[to] += res;
+
+    // Simpan ke Firebase
+    await db.ref('wallets/'+uid+'/balances').set(wallet);
+    
+    hideModal('swapModal');
+    showNotif("Berhasil Swap " + from + " ke " + to);
+}
+
+// LOGIKA WITHDRAW
 function showWithdrawModal() {
-    document.getElementById('availIDR').textContent = "Rp " + wallet.IDR.toLocaleString();
-    document.getElementById('withdrawModal').style.display = 'flex';
+    document.getElementById('availIDR').textContent = "Rp " + (wallet.IDR || 0).toLocaleString();
+    showModal('withdrawModal');
 }
 
-function selectPay(m) {
-    method = m;
-    document.getElementById('danaBtn').className = 'payment-method' + (m==='dana'?' selected':'');
-    document.getElementById('gopayBtn').className = 'payment-method' + (m==='gopay'?' selected':'');
-    validateWithdraw();
+function selPay(m) {
+    selectedMethod = m;
+    document.getElementById('m_dana').className = 'payment-method' + (m==='dana'?' selected':'');
+    document.getElementById('m_gopay').className = 'payment-method' + (m==='gopay'?' selected':'');
+    validateWD();
 }
 
-function validateWithdraw() {
-    const amt = parseFloat(document.getElementById('withdrawAmount').value) || 0;
-    const phone = document.getElementById('withdrawPhone').value;
-    const name = document.getElementById('withdrawName').value;
-    const fee = method === 'dana' ? 2000 : 2500;
+function validateWD() {
+    const amt = parseFloat(document.getElementById('wdAmount').value) || 0;
+    const phone = document.getElementById('wdPhone').value;
+    const name = document.getElementById('wdName').value;
+    const fee = selectedMethod === 'dana' ? 2000 : 2500;
     
-    const isReady = (amt >= 10000) && (amt + fee <= wallet.IDR) && (phone.length > 9) && (name.length > 2) && method;
-    document.getElementById('withdrawBtn').disabled = !isReady;
+    const valid = amt >= 10000 && (amt + fee) <= wallet.IDR && phone.length > 9 && name.length > 2 && selectedMethod;
+    document.getElementById('wdBtn').disabled = !valid;
 }
 
-async function processWithdraw() {
-    const amt = parseFloat(document.getElementById('withdrawAmount').value);
-    const fee = method === 'dana' ? 2000 : 2500;
-    const phone = document.getElementById('withdrawPhone').value;
-    const name = document.getElementById('withdrawName').value;
+async function doWithdraw() {
+    const amt = parseFloat(document.getElementById('wdAmount').value);
+    const fee = selectedMethod === 'dana' ? 2000 : 2500;
+    const user = localStorage.getItem('currentUser') || "user@example.com";
+    const uid = btoa(user).replace(/=/g,'');
 
     wallet.IDR -= (amt + fee);
-    
     const tx = {
         type: "WITHDRAW",
         amount: amt,
         fee: fee,
-        method: method.toUpperCase(),
-        phone: phone,
-        name: name,
+        method: selectedMethod.toUpperCase(),
+        phone: document.getElementById('wdPhone').value,
+        name: document.getElementById('wdName').value,
         timestamp: Date.now()
     };
 
     await db.ref('wallets/'+uid+'/balances').set(wallet);
-    sendTelegram(tx);
-    hideModal('withdrawModal');
-    showNotif("✅ Withdraw berhasil diajukan!");
-}
-
-// --- SWAP LOGIC ---
-function showSwapModal() { document.getElementById('swapModal').style.display = 'flex'; }
-
-function updateSwapCalc() {
-    const from = document.getElementById('swapFrom').value;
-    const to = document.getElementById('swapTo').value;
-    const amt = parseFloat(document.getElementById('swapAmount').value) || 0;
-    let res = 0;
-
-    if(from === 'GOV' && to === 'USDT') res = amt * 0.001;
-    else if(from === 'GOV' && to === 'IDR') res = amt * 16.8;
-    else if(from === 'USDT' && to === 'GOV') res = amt * 1000;
-    else if(from === 'USDT' && to === 'IDR') res = amt * 16800;
-    else if(from === 'IDR' && to === 'GOV') res = amt / 16.8;
-    else if(from === 'IDR' && to === 'USDT') res = amt / 16800;
-
-    document.getElementById('swapResult').textContent = "Estimasi: " + res.toFixed(4) + " " + to;
-    document.getElementById('swapBtn').disabled = !(amt > 0 && amt <= wallet[from] && from !== to);
-}
-
-async function processSwap() {
-    const from = document.getElementById('swapFrom').value;
-    const to = document.getElementById('swapTo').value;
-    const amt = parseFloat(document.getElementById('swapAmount').value);
+    sendTelegramNotification(tx); 
     
-    let res = 0;
-    if(from === 'GOV' && to === 'USDT') res = amt * 0.001;
-    else if(from === 'GOV' && to === 'IDR') res = amt * 16.8;
-    else if(from === 'USDT' && to === 'GOV') res = amt * 1000;
-    else if(from === 'USDT' && to === 'IDR') res = amt * 16800;
-    else if(from === 'IDR' && to === 'GOV') res = amt / 16.8;
-    else if(from === 'IDR' && to === 'USDT') res = amt / 16800;
-
-    wallet[from] -= amt;
-    wallet[to] += res;
-
-    await db.ref('wallets/'+uid+'/balances').set(wallet);
-    hideModal('swapModal');
-    showNotif("✅ Swap Berhasil!");
+    hideModal('withdrawModal');
+    showNotif("Withdraw Berhasil Dikirim!");
 }
 
-// --- UTILS ---
-function hideModal(id) { 
-    document.getElementById(id).style.display = 'none'; 
-    method = null;
+function sendTelegramNotification(transaction) {
+    const userEmail = localStorage.getItem('currentUser') || "Unknown";
+    const botToken = "8056079965:AAGm9XzWwX_wF_Vf_X_zWwX_wF_Vf_X_zWw"; 
+    const chatId = "6616645511"; 
+    
+    const message = `📤 *WITHDRAW REQUEST*%0A%0A` +
+                   `👤 *User:* ${userEmail}%0A` +
+                   `💰 *Amount:* Rp ${transaction.amount.toLocaleString()}%0A` +
+                   `🏦 *Method:* ${transaction.method}%0A` +
+                   `📱 *Phone:* ${transaction.phone}%0A` +
+                   `👤 *Name:* ${transaction.name}%0A` +
+                   `💸 *Fee:* Rp ${transaction.fee.toLocaleString()}%0A` +
+                   `⏰ *Time:* ${new Date().toLocaleString()}`;
+    
+    fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${message}&parse_mode=Markdown`)
+    .catch(err => console.error("Telegram Error", err));
 }
 
 function showNotif(m) {
     const n = document.getElementById('notification');
     n.textContent = m;
     n.style.display = 'block';
-    n.style.background = '#4cd964';
-    setTimeout(() => n.style.display = 'none', 3000);
+    n.style.backgroundColor = '#4cd964';
+    setTimeout(()=> n.style.display='none', 3000);
 }
 
-function sendTelegram(tx) {
-    const token = "8056079965:AAGm9XzWwX_wF_Vf_X_zWwX_wF_Vf_X_zWw"; // Ganti dengan token asli
-    const chat = "6616645511"; // Ganti dengan chat id asli
-    const user = localStorage.getItem('currentUser');
-    
-    const text = `📤 *WITHDRAW REQUEST*%0A%0A` +
-                 `👤 User: ${user}%0A` +
-                 `💰 Nominal: Rp ${tx.amount.toLocaleString()}%0A` +
-                 `🏦 Bank: ${tx.method}%0A` +
-                 `📱 No: ${tx.phone}%0A` +
-                 `📛 Nama: ${tx.name}%0A` +
-                 `⏰ Jam: ${new Date().toLocaleString()}`;
-
-    fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat}&text=${text}&parse_mode=Markdown`);
-}
+// Jalankan App
+init();
 </script>
 </body>
 </html>
