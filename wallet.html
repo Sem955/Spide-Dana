@@ -27,6 +27,7 @@
             max-width: 480px; 
             margin: 0 auto;
             padding: 20px;
+            padding-bottom: 80px;
         }
         
         /* Header */
@@ -368,6 +369,10 @@
             white-space: nowrap;
         }
         
+        .max-btn:hover {
+            background: #5a6fd8;
+        }
+        
         .swap-rate {
             background: #f8f9fa;
             border: 2px dashed #e0e0e0;
@@ -418,6 +423,7 @@
             opacity: 0.5;
             cursor: not-allowed;
             transform: none;
+            box-shadow: none;
         }
         
         .secondary-btn {
@@ -454,6 +460,13 @@
             display: none;
             text-align: center;
             max-width: 90%;
+            animation: fadeInOut 3s ease-in-out forwards;
+        }
+        
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translate(-50%, -20px); }
+            10%, 90% { opacity: 1; transform: translate(-50%, 0); }
+            100% { opacity: 0; transform: translate(-50%, -20px); }
         }
         
         /* Payment Methods */
@@ -474,9 +487,15 @@
             transition: all 0.3s ease;
         }
         
+        .payment-method:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+        
         .payment-method.selected {
             border-color: #667eea;
             background: #f0f4ff;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
         }
         
         .payment-icon {
@@ -581,6 +600,14 @@
         .balance-value {
             font-weight: 600;
             color: #333;
+        }
+        
+        /* Success Message */
+        .success-message {
+            color: #4cd964;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
         }
     </style>
 </head>
@@ -714,12 +741,12 @@
             <label class="form-label">Jumlah Penarikan (IDR)</label>
             <div class="amount-group">
                 <input type="number" class="form-input" id="withdrawAmount" 
-                       placeholder="50000" min="10000" 
-                       oninput="validateWithdraw()" 
-                       onblur="validateWithdraw()">
+                       placeholder="10000" min="10000" 
+                       oninput="validateWithdrawAmount()">
                 <button type="button" class="max-btn" onclick="setMaxWithdraw()">MAX</button>
             </div>
             <div id="withdrawError" class="error-message"></div>
+            <div id="withdrawSuccess" class="success-message"></div>
             <div style="font-size: 12px; color: #666; margin-top: 5px;">
                 Minimal penarikan: Rp 10,000
             </div>
@@ -746,7 +773,7 @@
             <label class="form-label">Nomor Tujuan</label>
             <input type="tel" class="form-input" id="withdrawPhone" 
                    placeholder="0812xxxxxxxx" maxlength="13"
-                   oninput="validatePhone()">
+                   oninput="validateWithdrawPhone()">
             <div id="phoneError" class="error-message"></div>
         </div>
         
@@ -754,7 +781,7 @@
             <label class="form-label">Nama Penerima</label>
             <input type="text" class="form-input" id="withdrawName" 
                    placeholder="Nama sesuai akun DANA/GoPay"
-                   oninput="validateName()">
+                   oninput="validateWithdrawName()">
             <div id="nameError" class="error-message"></div>
         </div>
         
@@ -861,8 +888,7 @@
             <div class="amount-group">
                 <input type="number" class="form-input" id="swapAmount" 
                        placeholder="0" 
-                       oninput="validateSwap()"
-                       onblur="validateSwap()">
+                       oninput="validateSwap()">
                 <button type="button" class="max-btn" onclick="setMaxSwap()">MAX</button>
             </div>
             <div id="swapError" class="error-message"></div>
@@ -936,13 +962,15 @@ const EXCHANGE_RATES = {
     GOV_TO_IDR: 16.8        // 1 GOV = 16.8 IDR
 };
 
+let firebaseDb;
+
 // ===== INITIALIZE =====
 async function initializeWallet() {
     console.log("🚀 Initializing GOV Wallet...");
     
     try {
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
+        const app = firebase.initializeApp(firebaseConfig);
         firebaseDb = firebase.database();
         
         // Get current user
@@ -997,8 +1025,33 @@ async function loadWalletData() {
             // Data tidak ada, buat baru
             console.log("📝 Creating new wallet in Firebase");
             
-            // Coba ambil dari localStorage dulu
-            loadWalletDataFromLocalStorage();
+            // Cek apakah user baru
+            const userEmail = localStorage.getItem('currentUser');
+            const walletKey = `govWallet_${userEmail}`;
+            const savedData = localStorage.getItem(walletKey);
+            
+            if (!savedData) {
+                // User baru, set initial balance
+                walletData.balances = {
+                    GOV: 100,
+                    IDR: 50000,
+                    USDT: 10
+                };
+                
+                // Tambah transaksi deposit awal
+                walletData.transactions.push({
+                    id: Date.now(),
+                    type: 'DEPOSIT',
+                    amount: 100,
+                    description: 'Bonus pendaftaran',
+                    status: 'SUCCESS',
+                    timestamp: new Date().toISOString()
+                });
+                
+                console.log("🎉 New user wallet created with bonus");
+            } else {
+                loadWalletDataFromLocalStorage();
+            }
             
             // Simpan ke Firebase
             await saveWalletData();
@@ -1036,7 +1089,7 @@ async function syncWithDashboard() {
         
         const username = userEmail.split('@')[0];
         
-        // 1. Ambil GOV dari dashboard localStorage
+        // Ambil GOV dari dashboard localStorage
         const dashboardKey = `userData_${username}`;
         const dashboardData = localStorage.getItem(dashboardKey);
         
@@ -1045,16 +1098,6 @@ async function syncWithDashboard() {
         if (dashboardData) {
             const parsed = JSON.parse(dashboardData);
             govFromDashboard = parsed.saldoGOV || 0;
-        }
-        
-        // 2. Juga sync dari wallet localStorage dashboard
-        const walletDashboardKey = `walletData_${userEmail}`;
-        const walletDashboardData = localStorage.getItem(walletDashboardKey);
-        
-        if (walletDashboardData) {
-            const parsedWallet = JSON.parse(walletDashboardData);
-            const govFromWallet = parsedWallet.saldoGOV || 0;
-            govFromDashboard = Math.max(govFromDashboard, govFromWallet);
         }
         
         // Update GOV jika berbeda
@@ -1159,9 +1202,10 @@ function showModal(modalId) {
         el.textContent = '';
     });
     
-    // Enable all buttons
-    document.querySelectorAll('.primary-btn').forEach(btn => {
-        btn.disabled = true;
+    // Reset success messages
+    document.querySelectorAll('.success-message').forEach(el => {
+        el.style.display = 'none';
+        el.textContent = '';
     });
 }
 
@@ -1207,10 +1251,21 @@ function showHistoryModal() {
 
 // ===== WITHDRAW FUNCTIONS =====
 function setMaxWithdraw() {
-    const maxAmount = walletData.balances.IDR;
+    // Hitung maksimal yang bisa ditarik berdasarkan saldo dan metode yang dipilih
+    let maxAmount = walletData.balances.IDR;
+    
+    if (walletData.selectedPayment) {
+        const fee = walletData.selectedPayment === 'dana' ? 2000 : 2500;
+        maxAmount = Math.max(0, walletData.balances.IDR - fee);
+    }
+    
+    // Pastikan minimal 10000
+    if (maxAmount < 10000) {
+        maxAmount = 0;
+    }
+    
     document.getElementById('withdrawAmount').value = maxAmount;
-    validateWithdraw();
-    updateWithdrawTotal();
+    validateWithdrawAmount();
 }
 
 function selectPayment(method) {
@@ -1220,109 +1275,123 @@ function selectPayment(method) {
     });
     document.getElementById(method + 'Method').classList.add('selected');
     document.getElementById('paymentError').style.display = 'none';
-    validateWithdraw();
+    
+    // Validasi ulang amount setelah pilih metode
+    validateWithdrawAmount();
+    updateWithdrawTotal();
 }
 
 function updateWithdrawTotal() {
     const amount = parseFloat(document.getElementById('withdrawAmount').value) || 0;
-    if (!walletData.selectedPayment || amount <= 0) return;
+    if (!walletData.selectedPayment || amount <= 0) {
+        document.getElementById('withdrawTotal').textContent = 'Rp 0';
+        return;
+    }
     
     const fee = walletData.selectedPayment === 'dana' ? 2000 : 2500;
     const total = amount + fee;
     document.getElementById('withdrawTotal').textContent = `Rp ${total.toLocaleString('id-ID')}`;
 }
 
-function validateWithdraw() {
+function validateWithdrawAmount() {
     const amount = parseFloat(document.getElementById('withdrawAmount').value) || 0;
-    const phone = document.getElementById('withdrawPhone').value.trim();
-    const name = document.getElementById('withdrawName').value.trim();
-    
-    let isValid = true;
     const errorElement = document.getElementById('withdrawError');
+    const successElement = document.getElementById('withdrawSuccess');
     
-    // Validasi amount
+    // Reset messages
+    errorElement.style.display = 'none';
+    successElement.style.display = 'none';
+    
+    // Validasi dasar
     if (amount < 10000) {
         errorElement.textContent = '❌ Minimal penarikan Rp 10,000';
         errorElement.style.display = 'block';
-        isValid = false;
-    } else if (amount > walletData.balances.IDR) {
-        errorElement.textContent = '❌ Saldo IDR tidak mencukupi';
+        return false;
+    }
+    
+    if (amount <= 0) {
+        errorElement.textContent = '❌ Masukkan jumlah yang valid';
         errorElement.style.display = 'block';
-        isValid = false;
+        return false;
+    }
+    
+    // Jika sudah pilih metode, validasi dengan fee
+    if (walletData.selectedPayment) {
+        const fee = walletData.selectedPayment === 'dana' ? 2000 : 2500;
+        const totalAmount = amount + fee;
+        
+        if (totalAmount > walletData.balances.IDR) {
+            errorElement.textContent = `❌ Total (Rp ${totalAmount.toLocaleString('id-ID')}) melebihi saldo IDR`;
+            errorElement.style.display = 'block';
+            return false;
+        }
+        
+        // Tampilkan success message jika valid
+        successElement.textContent = `✅ Dengan biaya Rp ${fee.toLocaleString('id-ID')}, total: Rp ${totalAmount.toLocaleString('id-ID')}`;
+        successElement.style.display = 'block';
+    }
+    
+    updateWithdrawTotal();
+    validateWithdrawForm();
+    return true;
+}
+
+function validateWithdrawPhone() {
+    const phone = document.getElementById('withdrawPhone').value.trim();
+    const errorElement = document.getElementById('phoneError');
+    
+    if (!phone || phone.length < 10) {
+        errorElement.textContent = '❌ Masukkan nomor telepon yang valid (min 10 digit)';
+        errorElement.style.display = 'block';
+        return false;
     } else {
         errorElement.style.display = 'none';
+        validateWithdrawForm();
+        return true;
     }
+}
+
+function validateWithdrawName() {
+    const name = document.getElementById('withdrawName').value.trim();
+    const errorElement = document.getElementById('nameError');
     
-    // Validasi metode pembayaran
-    if (!walletData.selectedPayment) {
-        document.getElementById('paymentError').style.display = 'block';
-        isValid = false;
-    } else {
-        document.getElementById('paymentError').style.display = 'none';
-    }
-    
-    // Validasi nomor telepon
-    const phoneError = document.getElementById('phoneError');
-    if (!phone || phone.length < 10) {
-        phoneError.textContent = '❌ Masukkan nomor telepon yang valid';
-        phoneError.style.display = 'block';
-        isValid = false;
-    } else {
-        phoneError.style.display = 'none';
-    }
-    
-    // Validasi nama
-    const nameError = document.getElementById('nameError');
     if (!name) {
-        nameError.textContent = '❌ Masukkan nama penerima';
-        nameError.style.display = 'block';
-        isValid = false;
-    } else {
-        nameError.style.display = 'none';
-    }
-    
-    // Update total
-    updateWithdrawTotal();
-    
-    // Update fee
-    const fee = walletData.selectedPayment === 'dana' ? 2000 : 2500;
-    const totalAmount = amount + fee;
-    
-    // Validasi total dengan saldo
-    if (totalAmount > walletData.balances.IDR) {
-        errorElement.textContent = `❌ Total (Rp ${totalAmount.toLocaleString('id-ID')}) melebihi saldo IDR`;
+        errorElement.textContent = '❌ Masukkan nama penerima';
         errorElement.style.display = 'block';
-        isValid = false;
+        return false;
+    } else {
+        errorElement.style.display = 'none';
+        validateWithdrawForm();
+        return true;
+    }
+}
+
+function validateWithdrawForm() {
+    const amountValid = validateWithdrawAmount();
+    const phoneValid = validateWithdrawPhone();
+    const nameValid = validateWithdrawName();
+    const paymentValid = walletData.selectedPayment !== null;
+    
+    // Tampilkan error payment jika belum dipilih
+    const paymentError = document.getElementById('paymentError');
+    if (!paymentValid) {
+        paymentError.style.display = 'block';
+    } else {
+        paymentError.style.display = 'none';
     }
     
     // Enable/disable button
+    const isValid = amountValid && phoneValid && nameValid && paymentValid;
     document.getElementById('withdrawBtn').disabled = !isValid;
     
     return isValid;
 }
 
-function validatePhone() {
-    const phone = document.getElementById('withdrawPhone').value.trim();
-    const errorElement = document.getElementById('phoneError');
-    
-    if (phone && phone.length >= 10) {
-        errorElement.style.display = 'none';
-    }
-    validateWithdraw();
-}
-
-function validateName() {
-    const name = document.getElementById('withdrawName').value.trim();
-    const errorElement = document.getElementById('nameError');
-    
-    if (name) {
-        errorElement.style.display = 'none';
-    }
-    validateWithdraw();
-}
-
 async function processWithdraw() {
-    if (!validateWithdraw()) return;
+    if (!validateWithdrawForm()) {
+        showNotification("❌ Lengkapi semua data dengan benar", false);
+        return;
+    }
     
     const amount = parseFloat(document.getElementById('withdrawAmount').value);
     const phone = document.getElementById('withdrawPhone').value.trim();
@@ -1463,7 +1532,6 @@ async function processTransfer() {
 }
 
 function updateDashboardGOV(amount) {
-    // Simulasi pengurangan GOV di dashboard
     const userEmail = localStorage.getItem('currentUser');
     const username = userEmail.split('@')[0];
     const dashboardKey = `userData_${username}`;
@@ -1709,7 +1777,7 @@ function showNotification(message, isSuccess = true) {
     notification.style.background = isSuccess ? '#4cd964' : '#ff3b30';
     notification.style.display = 'block';
     
-    // Animate
+    // Reset animation
     notification.style.animation = 'none';
     setTimeout(() => {
         notification.style.animation = 'fadeInOut 3s ease-in-out forwards';
@@ -1735,86 +1803,12 @@ function sendTelegramNotification(transaction) {
                    `📝 *Please process this withdrawal request.*`;
     
     console.log("📤 Telegram Notification:", message);
-    
-    // Untuk implementasi real, Anda perlu:
-    // 1. Buat bot di Telegram via @BotFather
-    // 2. Dapatkan token bot
-    // 3. Dapatkan chat_id
-    // 4. Kirim request ke API Telegram:
-    
-    /*
-    const botToken = 'YOUR_BOT_TOKEN';
-    const chatId = 'YOUR_CHAT_ID';
-    
-    fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            chat_id: chatId,
-            text: message,
-            parse_mode: 'Markdown'
-        })
-    })
-    .then(response => response.json())
-    .then(data => console.log('Telegram notification sent:', data))
-    .catch(error => console.error('Error sending Telegram notification:', error));
-    */
 }
 
 // ===== INITIALIZE =====
 document.addEventListener('DOMContentLoaded', function() {
     console.log("💼 GOV Wallet Initializing...");
-    
-    // Set initial balances untuk user baru
-    const userEmail = localStorage.getItem('currentUser');
-    if (userEmail) {
-        // Cek apakah user baru
-        const walletKey = `govWallet_${userEmail}`;
-        const savedData = localStorage.getItem(walletKey);
-        
-        if (!savedData) {
-            // User baru, set initial balance
-            walletData.balances = {
-                GOV: 100,      // Sync dengan dashboard
-                IDR: 50000,    // Bonus awal
-                USDT: 10       // Bonus awal
-            };
-            
-            // Tambah transaksi deposit awal
-            walletData.transactions.push({
-                id: Date.now(),
-                type: 'DEPOSIT',
-                amount: 100,
-                description: 'Bonus pendaftaran',
-                status: 'SUCCESS',
-                timestamp: new Date().toISOString()
-            });
-            
-            console.log("🎉 New user wallet created with bonus");
-        }
-    }
-    
     initializeWallet();
-    
-    // Event listeners untuk input validation
-    document.getElementById('withdrawAmount').addEventListener('input', validateWithdraw);
-    document.getElementById('withdrawPhone').addEventListener('input', validatePhone);
-    document.getElementById('withdrawName').addEventListener('input', validateName);
-    
-    document.getElementById('transferUsername').addEventListener('input', validateTransfer);
-    document.getElementById('transferAmount').addEventListener('input', validateTransfer);
-    
-    document.getElementById('swapAmount').addEventListener('input', validateSwap);
-    document.getElementById('swapFrom').addEventListener('change', function() {
-        updateSwapCalculation();
-        validateSwap();
-    });
-    document.getElementById('swapTo').addEventListener('change', function() {
-        updateSwapCalculation();
-        validateSwap();
-    });
 });
 </script>
 
