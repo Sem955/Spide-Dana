@@ -3,56 +3,612 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GOV Wallet - Final Version</title>
+    <title>GOV Wallet</title>
     
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     
     <style>
-        /* CSS Tetap Sesuai Desain Asli */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; color: white; overflow-x: hidden; }
-        .container { max-width: 480px; margin: 0 auto; padding: 20px; padding-bottom: 80px; }
-        .wallet-header { padding: 30px 0 40px; text-align: center; }
-        .wallet-title { font-size: 36px; font-weight: 800; margin-bottom: 8px; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-        .wallet-subtitle { color: rgba(255,255,255,0.8); font-size: 14px; }
-        .balance-card { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(20px); border-radius: 24px; padding: 30px; margin-bottom: 25px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); text-align: center; border: 1px solid rgba(255,255,255,0.2); }
-        .total-balance-label { color: rgba(255,255,255,0.8); font-size: 16px; margin-bottom: 10px; }
-        .balance-amount { font-size: 32px; font-weight: 700; margin-bottom: 10px; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
-        .balance-in-idr { color: rgba(255,255,255,0.8); font-size: 16px; }
-        .action-buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 30px; }
-        .action-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 15px; padding: 15px 5px; text-align: center; color: white; cursor: pointer; transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-        .action-btn:hover { background: rgba(255, 255, 255, 0.2); transform: translateY(-3px); }
-        .action-btn-icon { font-size: 24px; }
-        .action-btn-text { font-size: 11px; font-weight: 600; }
-        .assets-section { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); border-radius: 20px; padding: 25px; margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.2); }
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .section-title { font-size: 20px; font-weight: 700; }
-        .refresh-btn { background: rgba(255,255,255,0.15); border: none; border-radius: 12px; padding: 8px 12px; color: white; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
-        .assets-list { display: flex; flex-direction: column; gap: 12px; }
-        .asset-item { background: rgba(255, 255, 255, 0.08); border-radius: 18px; padding: 15px; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(255,255,255,0.1); }
-        .asset-info { display: flex; align-items: center; gap: 12px; }
-        .asset-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; background: rgba(255,255,255,0.15); }
-        .asset-details { display: flex; flex-direction: column; }
-        .asset-name { font-size: 16px; font-weight: 600; }
-        .asset-balance { text-align: right; }
-        .balance-crypto { font-size: 16px; font-weight: 700; }
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+        }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .container { 
+            max-width: 480px; 
+            margin: 0 auto;
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+        
+        /* Header */
+        .wallet-header {
+            padding: 30px 0 40px;
+            text-align: center;
+        }
+        
+        .wallet-title {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .wallet-subtitle {
+            color: rgba(255,255,255,0.8);
+            font-size: 14px;
+        }
+        
+        /* Balance Card */
+        .balance-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .total-balance-label {
+            color: rgba(255,255,255,0.8);
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .balance-amount {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .balance-in-idr {
+            color: rgba(255,255,255,0.8);
+            font-size: 16px;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .action-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 18px 10px;
+            text-align: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        .action-btn-icon {
+            font-size: 26px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+        
+        .action-btn-text {
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        /* Assets Section */
+        .assets-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .refresh-btn {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            border-radius: 12px;
+            padding: 10px 15px;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .refresh-btn:hover {
+            background: rgba(255,255,255,0.25);
+        }
+        
+        /* Assets List */
+        .assets-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .asset-item {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .asset-item:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateX(5px);
+        }
+        
+        .asset-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .asset-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            background: rgba(255,255,255,0.15);
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        
+        .asset-details {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .asset-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .asset-change {
+            font-size: 14px;
+            color: #4cd964;
+        }
+        
+        .asset-change.negative {
+            color: #ff3b30;
+        }
+        
+        .asset-balance {
+            text-align: right;
+        }
+        
+        .balance-crypto {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .balance-fiat {
+            font-size: 14px;
+            color: rgba(255,255,255,0.8);
+        }
+        
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 480px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            border-radius: 25px 25px 0 0;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            color: rgba(255,255,255,0.7);
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item.active {
+            color: white;
+            background: rgba(255,255,255,0.15);
+        }
+        
+        .nav-item:hover {
+            color: white;
+        }
+        
+        .nav-icon {
+            font-size: 22px;
+        }
+        
+        .nav-label {
+            font-size: 12px;
+            font-weight: 600;
+        }
         
         /* Modal Styles */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.8); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(10px); padding: 20px; }
-        .modal-content { background: white; border-radius: 25px; width: 100%; max-width: 400px; padding: 25px; animation: modalSlideUp 0.3s ease; color: #333; }
-        @keyframes modalSlideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .form-group { margin-bottom: 15px; }
-        .form-label { display: block; margin-bottom: 5px; font-size: 13px; color: #666; font-weight: 600; }
-        .form-input { width: 100%; padding: 12px; background: #f5f5f7; border: 2px solid #eee; border-radius: 12px; font-size: 16px; outline: none; }
-        .form-input:focus { border-color: #667eea; }
-        .payment-methods { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; }
-        .payment-method { border: 2px solid #eee; border-radius: 12px; padding: 12px; text-align: center; cursor: pointer; font-size: 13px; }
-        .payment-method.selected { border-color: #667eea; background: #f0f4ff; color: #667eea; font-weight: bold; }
-        .primary-btn { width: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 12px; padding: 14px; font-weight: 600; cursor: pointer; transition: opacity 0.3s; }
-        .primary-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .secondary-btn { width: 100%; background: #f0f0f0; border: none; border-radius: 12px; padding: 14px; margin-top: 8px; cursor: pointer; color: #666; }
-        #notification { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 12px 25px; border-radius: 30px; color: white; z-index: 2000; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 25px;
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            animation: modalSlideUp 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        @keyframes modalSlideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 16px;
+            background: #f5f5f7;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            font-size: 16px;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+        }
+        
+        .amount-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .max-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        
+        .max-btn:hover {
+            background: #5a6fd8;
+        }
+        
+        .swap-rate {
+            background: #f8f9fa;
+            border: 2px dashed #e0e0e0;
+            border-radius: 15px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+            color: #333;
+        }
+        
+        .rate-text {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .rate-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #667eea;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .primary-btn {
+            flex: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 18px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .primary-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .secondary-btn {
+            flex: 1;
+            background: #f0f0f0;
+            color: #666;
+            border: none;
+            border-radius: 15px;
+            padding: 18px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .secondary-btn:hover {
+            background: #e0e0e0;
+        }
+        
+        /* Notification */
+        #notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #4cd964;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 2000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: none;
+            text-align: center;
+            max-width: 90%;
+            animation: fadeInOut 3s ease-in-out forwards;
+        }
+        
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translate(-50%, -20px); }
+            10%, 90% { opacity: 1; transform: translate(-50%, 0); }
+            100% { opacity: 0; transform: translate(-50%, -20px); }
+        }
+        
+        /* Payment Methods */
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .payment-method {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .payment-method:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+        
+        .payment-method.selected {
+            border-color: #667eea;
+            background: #f0f4ff;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+        
+        .payment-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .payment-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .payment-fee {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        /* Transaction History */
+        .transactions-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .transaction-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .transaction-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+        }
+        
+        .transaction-icon.deposit { background: #4cd964; }
+        .transaction-icon.withdraw { background: #ff3b30; }
+        .transaction-icon.swap { background: #007aff; }
+        .transaction-icon.transfer { background: #ff9500; }
+        
+        .transaction-details {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .transaction-type {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        
+        .transaction-date {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .transaction-amount {
+            font-weight: 700;
+            font-size: 18px;
+        }
+        
+        .transaction-amount.positive { color: #4cd964; }
+        .transaction-amount.negative { color: #ff3b30; }
+        
+        /* Error Message */
+        .error-message {
+            color: #ff3b30;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        /* Balance Info */
+        .balance-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .balance-label {
+            color: #666;
+        }
+        
+        .balance-value {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        /* Success Message */
+        .success-message {
+            color: #4cd964;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -60,19 +616,22 @@
 <div id="notification"></div>
 
 <div class="container">
+    <!-- Wallet Header -->
     <div class="wallet-header">
         <div class="wallet-title">GOV Wallet</div>
-        <div class="wallet-subtitle" id="userEmail">Memuat...</div>
+        <div class="wallet-subtitle" id="userEmail">user@email.com</div>
     </div>
     
+    <!-- Total Balance Card -->
     <div class="balance-card">
-        <div class="total-balance-label">Total Saldo Est.</div>
+        <div class="total-balance-label">Total Saldo</div>
         <div class="balance-amount" id="totalBalance">Rp 0</div>
         <div class="balance-in-idr" id="totalBalanceUSD">$0.00</div>
     </div>
     
+    <!-- Action Buttons -->
     <div class="action-buttons">
-        <div class="action-btn" onclick="showModal('transferModal')">
+        <div class="action-btn" onclick="showTransferModal()">
             <div class="action-btn-icon">💸</div>
             <div class="action-btn-text">Transfer</div>
         </div>
@@ -84,95 +643,296 @@
             <div class="action-btn-icon">🔄</div>
             <div class="action-btn-text">Swap</div>
         </div>
-        <div class="action-btn" onclick="showModal('historyModal')">
+        <div class="action-btn" onclick="showHistoryModal()">
             <div class="action-btn-icon">📋</div>
             <div class="action-btn-text">Riwayat</div>
         </div>
     </div>
     
+    <!-- Assets Section -->
     <div class="assets-section">
         <div class="section-header">
             <div class="section-title">Aset Anda</div>
-            <button class="refresh-btn" onclick="location.reload()">🔄 Refresh</button>
+            <button class="refresh-btn" onclick="syncWithDashboard()">
+                <span>🔄</span> Sync
+            </button>
         </div>
+        
         <div class="assets-list">
+            <!-- GOV Asset -->
             <div class="asset-item">
-                <div class="asset-info"><div class="asset-icon" style="background:#f3ba2f; color:white">G</div><div class="asset-details"><b class="asset-name">GOV</b></div></div>
-                <div class="asset-balance"><div class="balance-crypto" id="govBalance">0 GOV</div></div>
+                <div class="asset-info">
+                    <div class="asset-icon">G</div>
+                    <div class="asset-details">
+                        <div class="asset-name">GOV</div>
+                        <div class="asset-change" id="govChange">▲ 2.5%</div>
+                    </div>
+                </div>
+                <div class="asset-balance">
+                    <div class="balance-crypto" id="govBalance">0 GOV</div>
+                    <div class="balance-fiat" id="govValue">$0.00</div>
+                </div>
             </div>
+            
+            <!-- IDR Asset -->
             <div class="asset-item">
-                <div class="asset-info"><div class="asset-icon" style="background:#26a17b; color:white">$</div><div class="asset-details"><b class="asset-name">USDT</b></div></div>
-                <div class="asset-balance"><div class="balance-crypto" id="usdtBalance">0 USDT</div></div>
+                <div class="asset-info">
+                    <div class="asset-icon">Rp</div>
+                    <div class="asset-details">
+                        <div class="asset-name">IDR</div>
+                        <div class="asset-change">Stable</div>
+                    </div>
+                </div>
+                <div class="asset-balance">
+                    <div class="balance-crypto" id="idrBalance">Rp 0</div>
+                    <div class="balance-fiat" id="idrValue">$0.00</div>
+                </div>
             </div>
+            
+            <!-- USDT Asset -->
             <div class="asset-item">
-                <div class="asset-info"><div class="asset-icon" style="background:#0052ff; color:white">Rp</div><div class="asset-details"><b class="asset-name">IDR</b></div></div>
-                <div class="asset-balance"><div class="balance-crypto" id="idrBalance">Rp 0</div></div>
+                <div class="asset-info">
+                    <div class="asset-icon">$</div>
+                    <div class="asset-details">
+                        <div class="asset-name">USDT</div>
+                        <div class="asset-change">Stable</div>
+                    </div>
+                </div>
+                <div class="asset-balance">
+                    <div class="balance-crypto" id="usdtBalance">0 USDT</div>
+                    <div class="balance-fiat" id="usdtValue">$0.00</div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+    <div class="nav-item" onclick="window.location.href='dashboard.html'">
+        <div class="nav-icon">📊</div>
+        <div class="nav-label">Dashboard</div>
+    </div>
+    <div class="nav-item active">
+        <div class="nav-icon">💼</div>
+        <div class="nav-label">Wallet</div>
+    </div>
+    <div class="nav-item" onclick="showHistoryModal()">
+        <div class="nav-icon">📋</div>
+        <div class="nav-label">Riwayat</div>
+    </div>
+    <div class="nav-item" onclick="window.location.href='swap.html'">
+        <div class="nav-icon">⚙️</div>
+        <div class="nav-label">Swap</div>
+    </div>
+</div>
+
+<!-- Withdraw Modal -->
 <div id="withdrawModal" class="modal-overlay">
     <div class="modal-content">
-        <h3 style="margin-bottom:10px">📤 Withdraw IDR</h3>
-        <p style="font-size: 12px; margin-bottom: 15px; background: #fdf6e3; padding: 8px; border-radius: 8px;">Tersedia: <span id="availIDR" style="font-weight:bold">0</span></p>
+        <h3 class="modal-title">📤 Withdraw IDR</h3>
+        
+        <div class="balance-info">
+            <span class="balance-label">Saldo IDR Tersedia:</span>
+            <span class="balance-value" id="availableIDR">Rp 0</span>
+        </div>
         
         <div class="form-group">
-            <label class="form-label">Nominal (Min 10.000)</label>
-            <input type="number" id="wdAmount" class="form-input" placeholder="0" oninput="validateWD()">
+            <label class="form-label">Jumlah Penarikan (IDR)</label>
+            <div class="amount-group">
+                <input type="number" class="form-input" id="withdrawAmount" 
+                       placeholder="10000" min="10000" 
+                       oninput="validateWithdrawAmount()">
+                <button type="button" class="max-btn" onclick="setMaxWithdraw()">MAX</button>
+            </div>
+            <div id="withdrawError" class="error-message"></div>
+            <div id="withdrawSuccess" class="success-message"></div>
+            <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                Minimal penarikan: Rp 10,000
+            </div>
         </div>
         
-        <div class="payment-methods">
-            <div class="payment-method" id="m_dana" onclick="selPay('dana')">DANA<br><small>Fee 2rb</small></div>
-            <div class="payment-method" id="m_gopay" onclick="selPay('gopay')">GoPay<br><small>Fee 2.5rb</small></div>
-        </div>
-
         <div class="form-group">
-            <input type="tel" id="wdPhone" class="form-input" placeholder="Nomor HP (08...)" oninput="validateWD()">
+            <label class="form-label">Metode Penarikan</label>
+            <div class="payment-methods">
+                <div class="payment-method" onclick="selectPayment('dana')" id="danaMethod">
+                    <div class="payment-icon">💰</div>
+                    <div class="payment-name">DANA</div>
+                    <div class="payment-fee">Biaya: Rp 2,000</div>
+                </div>
+                <div class="payment-method" onclick="selectPayment('gopay')" id="gopayMethod">
+                    <div class="payment-icon">📱</div>
+                    <div class="payment-name">GoPay</div>
+                    <div class="payment-fee">Biaya: Rp 2,500</div>
+                </div>
+            </div>
+            <div id="paymentError" class="error-message">Pilih metode penarikan</div>
         </div>
+        
         <div class="form-group">
-            <input type="text" id="wdName" class="form-input" placeholder="Nama Akun Penerima" oninput="validateWD()">
+            <label class="form-label">Nomor Tujuan</label>
+            <input type="tel" class="form-input" id="withdrawPhone" 
+                   placeholder="0812xxxxxxxx" maxlength="13"
+                   oninput="validateWithdrawPhone()">
+            <div id="phoneError" class="error-message"></div>
         </div>
-
-        <button id="wdBtn" class="primary-btn" onclick="doWithdraw()" disabled>Proses Withdraw</button>
-        <button class="secondary-btn" onclick="hideModal('withdrawModal')">Batal</button>
+        
+        <div class="form-group">
+            <label class="form-label">Nama Penerima</label>
+            <input type="text" class="form-input" id="withdrawName" 
+                   placeholder="Nama sesuai akun DANA/GoPay"
+                   oninput="validateWithdrawName()">
+            <div id="nameError" class="error-message"></div>
+        </div>
+        
+        <div class="swap-rate">
+            <div class="rate-text">Total yang akan dikurangi dari saldo:</div>
+            <div class="rate-value" id="withdrawTotal">Rp 0</div>
+            <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                (Jumlah + Biaya administrasi)
+            </div>
+        </div>
+        
+        <div class="button-group">
+            <button class="primary-btn" id="withdrawBtn" onclick="processWithdraw()" disabled>
+                Withdraw Sekarang
+            </button>
+            <button class="secondary-btn" onclick="hideModal('withdrawModal')">Batal</button>
+        </div>
     </div>
 </div>
 
+<!-- Transfer Modal -->
+<div id="transferModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3 class="modal-title">💸 Transfer GOV</h3>
+        
+        <div class="balance-info">
+            <span class="balance-label">Saldo GOV Tersedia:</span>
+            <span class="balance-value" id="availableGOV">0 GOV</span>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">Username Penerima</label>
+            <input type="text" class="form-input" id="transferUsername" 
+                   placeholder="@username"
+                   oninput="validateTransfer()">
+            <div id="usernameError" class="error-message"></div>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">Jumlah GOV</label>
+            <div class="amount-group">
+                <input type="number" class="form-input" id="transferAmount" 
+                       placeholder="100" min="1" step="1"
+                       oninput="validateTransfer()">
+                <button type="button" class="max-btn" onclick="setMaxTransfer()">MAX</button>
+            </div>
+            <div id="transferAmountError" class="error-message"></div>
+        </div>
+        
+        <div class="swap-rate">
+            <div class="rate-text">Biaya transfer: 0.5%</div>
+            <div class="rate-value" id="transferFee">0 GOV</div>
+            <div class="rate-text" style="margin-top: 10px;">Total yang akan dikirim:</div>
+            <div class="rate-value" id="transferTotal">0 GOV</div>
+        </div>
+        
+        <div class="button-group">
+            <button class="primary-btn" id="transferBtn" onclick="processTransfer()" disabled>
+                Transfer Sekarang
+            </button>
+            <button class="secondary-btn" onclick="hideModal('transferModal')">Batal</button>
+        </div>
+    </div>
+</div>
+
+<!-- Swap Modal (FIXED VERSION) -->
 <div id="swapModal" class="modal-overlay">
     <div class="modal-content">
-        <h3 style="margin-bottom:15px">🔄 Swap Assets</h3>
+        <h3 class="modal-title">🔄 Swap Koin</h3>
+        
+        <div class="swap-rate" style="margin-bottom: 20px;">
+            <div class="rate-text">Rate tetap:</div>
+            <div class="rate-value">1000 GOV = 1 USDT</div>
+            <div class="rate-text">1 USDT = Rp 16,800</div>
+            <div class="rate-text">1 GOV = Rp 16.8</div>
+        </div>
+        
         <div class="form-group">
             <label class="form-label">Dari</label>
-            <select id="sFrom" class="form-input" onchange="updateSwap()">
+            <select class="form-input" id="swapFrom" onchange="updateSwapCalculation()">
                 <option value="GOV">GOV</option>
-                <option value="USDT">USDT</option>
                 <option value="IDR">IDR</option>
+                <option value="USDT">USDT</option>
             </select>
         </div>
+        
+        <div class="form-group">
+            <div class="balance-info">
+                <span class="balance-label">Saldo tersedia:</span>
+                <span class="balance-value" id="swapFromBalance">0</span>
+            </div>
+        </div>
+        
         <div class="form-group">
             <label class="form-label">Ke</label>
-            <select id="sTo" class="form-input" onchange="updateSwap()">
+            <select class="form-input" id="swapTo" onchange="updateSwapCalculation()">
                 <option value="USDT">USDT</option>
                 <option value="IDR">IDR</option>
                 <option value="GOV">GOV</option>
             </select>
         </div>
+        
         <div class="form-group">
             <label class="form-label">Jumlah</label>
-            <input type="number" id="sAmt" class="form-input" placeholder="0.00" oninput="updateSwap()">
+            <div class="amount-group">
+                <input type="number" class="form-input" id="swapAmount" 
+                       placeholder="0" step="any"
+                       oninput="updateSwapCalculation()">
+                <button type="button" class="max-btn" onclick="setMaxSwap()">MAX</button>
+            </div>
+            <div id="swapError" class="error-message"></div>
         </div>
-        <div id="sResBox" style="margin-bottom: 20px; padding: 12px; background: #f0f4ff; border-radius: 12px; border-left: 4px solid #667eea;">
-            <p style="font-size: 12px; color: #666;">Estimasi yang diterima:</p>
-            <p id="sRes" style="font-size: 18px; font-weight: bold; color: #333;">0</p>
+        
+        <div class="swap-rate">
+            <div class="rate-text">Anda akan menerima:</div>
+            <div class="rate-value" id="swapReceive">0</div>
+            <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                Tanpa biaya tambahan
+            </div>
         </div>
-        <button id="sBtn" class="primary-btn" onclick="doSwap()" disabled>Konfirmasi Swap</button>
-        <button class="secondary-btn" onclick="hideModal('swapModal')">Tutup</button>
+        
+        <div class="button-group">
+            <button class="primary-btn" id="swapBtn" onclick="processSwap()">
+                Swap Sekarang
+            </button>
+            <button class="secondary-btn" onclick="hideModal('swapModal')">Batal</button>
+        </div>
+    </div>
+</div>
+
+<!-- History Modal -->
+<div id="historyModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3 class="modal-title">📋 Riwayat Transaksi</h3>
+        
+        <div class="transactions-list" id="transactionsList">
+            <!-- Transactions will be loaded here -->
+            <div style="text-align: center; padding: 40px; color: #666;">
+                <div style="font-size: 24px; margin-bottom: 10px;">📊</div>
+                Belum ada transaksi
+            </div>
+        </div>
+        
+        <div class="button-group" style="margin-top: 20px;">
+            <button class="secondary-btn" onclick="hideModal('historyModal')">Tutup</button>
+        </div>
     </div>
 </div>
 
 <script>
-// KONFIGURASI FIREBASE
+// ===== FIREBASE CONFIG =====
 const firebaseConfig = {
     apiKey: "AIzaSyBY7wHgWh7_0HqRLHzDnwdfQOhv_ziqA3A",
     authDomain: "govin-28f84.firebaseapp.com",
@@ -180,179 +940,926 @@ const firebaseConfig = {
     projectId: "govin-28f84",
     storageBucket: "govin-28f84.firebasestorage.app",
     messagingSenderId: "833155210577",
-    appId: "1:833155210577:web:bc3ab48e50732670a77067"
+    appId: "1:833155210577:web:bc3ab48e50732670a77067",
+    measurementId: "G-GX8DEZ3QMV"
 };
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+// ===== WALLET DATA =====
+let walletData = {
+    balances: {
+        GOV: 0,
+        IDR: 0,
+        USDT: 0
+    },
+    userId: null,
+    selectedPayment: null,
+    transactions: []
+};
 
-let wallet = { GOV: 0, IDR: 0, USDT: 0 };
-let selectedMethod = null;
-const rates = { G_U: 0.001, U_I: 16800, G_I: 16.8 };
+// ===== EXCHANGE RATES FIXED =====
+const EXCHANGE_RATES = {
+    GOV_TO_USDT: 0.001,
+    USDT_TO_IDR: 16800,
+    GOV_TO_IDR: 16.8,
+    IDR_TO_USDT: 0.0000595,
+    IDR_TO_GOV: 0.0595,
+    USDT_TO_GOV: 1000
+};
 
-function showModal(id) { document.getElementById(id).style.display = 'flex'; }
-function hideModal(id) { document.getElementById(id).style.display = 'none'; }
+let firebaseDb;
 
-// INISIALISASI DATA
-async function init() {
-    const user = localStorage.getItem('currentUser') || "user@example.com";
-    document.getElementById('userEmail').textContent = user;
-    const uid = btoa(user).replace(/=/g,'');
+// ===== INITIALIZE =====
+async function initializeWallet() {
+    console.log("🚀 Initializing GOV Wallet...");
     
-    // Listen data dari firebase secara realtime
-    db.ref('wallets/' + uid + '/balances').on('value', snap => {
-        if(snap.exists()) {
-            wallet = snap.val();
-        } else {
-            // Jika user baru, buatkan saldo awal 0
-            db.ref('wallets/' + uid + '/balances').set({GOV: 0, IDR: 0, USDT: 0});
+    try {
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        firebaseDb = firebase.database();
+        
+        // Get current user
+        const userEmail = localStorage.getItem('currentUser');
+        if (!userEmail) {
+            showNotification("❌ Silakan login terlebih dahulu", false);
+            setTimeout(() => window.location.href = "index.html", 2000);
+            return;
         }
-        updateUI();
+        
+        // Set user email
+        document.getElementById('userEmail').textContent = userEmail;
+        walletData.userId = btoa(userEmail).replace(/[^a-zA-Z0-9]/g, '').substring(0, 20);
+        
+        // Load data dari Firebase
+        await loadWalletData();
+        
+        // Sync dengan dashboard
+        await syncWithDashboard();
+        
+        // Update display
+        updateWalletDisplay();
+        
+        // Load transaction history
+        loadTransactionHistory();
+        
+        // Auto-sync setiap 30 detik
+        setInterval(syncWithDashboard, 30000);
+        
+        console.log("✅ Wallet initialized successfully");
+        
+    } catch (error) {
+        console.error("❌ Error initializing wallet:", error);
+        
+        // Fallback ke localStorage
+        loadWalletDataFromLocalStorage();
+        showNotification("⚠️ Mode offline - menggunakan data lokal", false);
+    }
+}
+
+// ===== LOAD WALLET DATA =====
+async function loadWalletData() {
+    try {
+        const snapshot = await firebaseDb.ref(`wallets/${walletData.userId}`).once('value');
+        
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            walletData.balances = data.balances || walletData.balances;
+            walletData.transactions = data.transactions || [];
+            console.log("✅ Wallet data loaded from Firebase");
+        } else {
+            // Data tidak ada, buat baru
+            console.log("📝 Creating new wallet in Firebase");
+            
+            // Cek apakah user baru
+            const userEmail = localStorage.getItem('currentUser');
+            const walletKey = `govWallet_${userEmail}`;
+            const savedData = localStorage.getItem(walletKey);
+            
+            if (!savedData) {
+                // User baru, set initial balance
+                walletData.balances = {
+                    GOV: 100,
+                    IDR: 50000,
+                    USDT: 10
+                };
+                
+                // Tambah transaksi deposit awal
+                walletData.transactions.push({
+                    id: Date.now(),
+                    type: 'DEPOSIT',
+                    amount: 100,
+                    description: 'Bonus pendaftaran',
+                    status: 'SUCCESS',
+                    timestamp: new Date().toISOString()
+                });
+                
+                console.log("🎉 New user wallet created with bonus");
+            } else {
+                loadWalletDataFromLocalStorage();
+            }
+            
+            // Simpan ke Firebase
+            await saveWalletData();
+        }
+    } catch (error) {
+        console.error("❌ Error loading from Firebase:", error);
+        throw error;
+    }
+}
+
+function loadWalletDataFromLocalStorage() {
+    const userEmail = localStorage.getItem('currentUser');
+    if (!userEmail) return;
+    
+    try {
+        const walletKey = `govWallet_${userEmail}`;
+        const savedData = localStorage.getItem(walletKey);
+        
+        if (savedData) {
+            const data = JSON.parse(savedData);
+            walletData.balances = data.balances || walletData.balances;
+            walletData.transactions = data.transactions || [];
+            console.log("✅ Wallet data loaded from localStorage");
+        }
+    } catch (error) {
+        console.error("❌ Error loading from localStorage:", error);
+    }
+}
+
+// ===== SYNC DENGAN DASHBOARD =====
+async function syncWithDashboard() {
+    try {
+        const userEmail = localStorage.getItem('currentUser');
+        if (!userEmail) return;
+        
+        const username = userEmail.split('@')[0];
+        
+        // Ambil GOV dari dashboard localStorage
+        const dashboardKey = `userData_${username}`;
+        const dashboardData = localStorage.getItem(dashboardKey);
+        
+        let govFromDashboard = walletData.balances.GOV;
+        
+        if (dashboardData) {
+            const parsed = JSON.parse(dashboardData);
+            govFromDashboard = parsed.saldoGOV || 0;
+        }
+        
+        // Update GOV jika berbeda
+        if (govFromDashboard !== walletData.balances.GOV) {
+            const difference = govFromDashboard - walletData.balances.GOV;
+            walletData.balances.GOV = govFromDashboard;
+            
+            // Jika ada penambahan, buat transaksi
+            if (difference > 0) {
+                const transaction = {
+                    id: Date.now(),
+                    type: 'DEPOSIT',
+                    amount: difference,
+                    description: 'Sync dari dashboard',
+                    status: 'SUCCESS',
+                    timestamp: new Date().toISOString()
+                };
+                
+                walletData.transactions.unshift(transaction);
+            }
+            
+            await saveWalletData();
+            updateWalletDisplay();
+            loadTransactionHistory();
+            console.log(`✅ GOV synced: ${govFromDashboard} GOV`);
+        }
+        
+    } catch (error) {
+        console.error("❌ Error syncing with dashboard:", error);
+    }
+}
+
+// ===== SAVE WALLET DATA =====
+async function saveWalletData() {
+    try {
+        await firebaseDb.ref(`wallets/${walletData.userId}`).set({
+            balances: walletData.balances,
+            transactions: walletData.transactions,
+            lastUpdate: new Date().toISOString(),
+            email: localStorage.getItem('currentUser')
+        });
+        console.log("✅ Wallet data saved to Firebase");
+        
+        // Juga save ke localStorage
+        saveWalletDataToLocalStorage();
+        
+    } catch (error) {
+        console.error("❌ Error saving to Firebase:", error);
+        saveWalletDataToLocalStorage();
+    }
+}
+
+function saveWalletDataToLocalStorage() {
+    const userEmail = localStorage.getItem('currentUser');
+    if (!userEmail) return;
+    
+    try {
+        const walletKey = `govWallet_${userEmail}`;
+        localStorage.setItem(walletKey, JSON.stringify({
+            balances: walletData.balances,
+            transactions: walletData.transactions,
+            lastUpdate: new Date().toISOString()
+        }));
+        console.log("✅ Wallet data saved to localStorage");
+    } catch (error) {
+        console.error("❌ Error saving to localStorage:", error);
+    }
+}
+
+// ===== UPDATE DISPLAY =====
+function updateWalletDisplay() {
+    // Hitung total saldo dalam IDR
+    const totalIDR = 
+        (walletData.balances.GOV * EXCHANGE_RATES.GOV_TO_IDR) +
+        walletData.balances.IDR +
+        (walletData.balances.USDT * EXCHANGE_RATES.USDT_TO_IDR);
+    
+    const totalUSD = totalIDR / EXCHANGE_RATES.USDT_TO_IDR;
+    
+    // Update total balance
+    document.getElementById('totalBalance').textContent = `Rp ${totalIDR.toLocaleString('id-ID')}`;
+    document.getElementById('totalBalanceUSD').textContent = `$${totalUSD.toFixed(2)}`;
+    
+    // Update individual balances
+    document.getElementById('govBalance').textContent = `${walletData.balances.GOV.toLocaleString('id-ID')} GOV`;
+    document.getElementById('govValue').textContent = `$${(walletData.balances.GOV * EXCHANGE_RATES.GOV_TO_USDT).toFixed(4)}`;
+    
+    document.getElementById('idrBalance').textContent = `Rp ${walletData.balances.IDR.toLocaleString('id-ID')}`;
+    document.getElementById('idrValue').textContent = `$${(walletData.balances.IDR / EXCHANGE_RATES.USDT_TO_IDR).toFixed(2)}`;
+    
+    document.getElementById('usdtBalance').textContent = `${walletData.balances.USDT.toFixed(2)} USDT`;
+    document.getElementById('usdtValue').textContent = `$${walletData.balances.USDT.toFixed(2)}`;
+}
+
+// ===== MODAL FUNCTIONS =====
+function showModal(modalId) {
+    document.getElementById(modalId).style.display = 'flex';
+    
+    // Reset errors
+    document.querySelectorAll('.error-message').forEach(el => {
+        el.style.display = 'none';
+        el.textContent = '';
+    });
+    
+    // Reset success messages
+    document.querySelectorAll('.success-message').forEach(el => {
+        el.style.display = 'none';
+        el.textContent = '';
     });
 }
 
-function updateUI() {
-    // Tampilan saldo masing-masing
-    document.getElementById('govBalance').textContent = (wallet.GOV || 0).toLocaleString() + " GOV";
-    document.getElementById('idrBalance').textContent = "Rp " + (wallet.IDR || 0).toLocaleString();
-    document.getElementById('usdtBalance').textContent = (wallet.USDT || 0).toFixed(2) + " USDT";
-    
-    // Hitung Total (Konversi ke IDR)
-    const totalIDR = (wallet.GOV * rates.G_I) + wallet.IDR + (wallet.USDT * rates.U_I);
-    document.getElementById('totalBalance').textContent = "Rp " + Math.floor(totalIDR).toLocaleString();
-    document.getElementById('totalBalanceUSD').textContent = "$ " + (totalIDR / rates.U_I).toFixed(2);
+function hideModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+    walletData.selectedPayment = null;
+    document.querySelectorAll('.payment-method').forEach(el => {
+        el.classList.remove('selected');
+    });
 }
 
-// LOGIKA SWAP
-function showSwapModal() {
-    document.getElementById('sAmt').value = "";
-    updateSwap();
-    showModal('swapModal');
-}
-
-function updateSwap() {
-    const from = document.getElementById('sFrom').value;
-    const to = document.getElementById('sTo').value;
-    const amt = parseFloat(document.getElementById('sAmt').value) || 0;
-    let res = 0;
-
-    if(from === to) { res = amt; }
-    else if(from === 'GOV' && to === 'USDT') res = amt * rates.G_U;
-    else if(from === 'GOV' && to === 'IDR') res = amt * rates.G_I;
-    else if(from === 'USDT' && to === 'GOV') res = amt * 1000;
-    else if(from === 'USDT' && to === 'IDR') res = amt * rates.U_I;
-    else if(from === 'IDR' && to === 'GOV') res = amt / rates.G_I;
-    else if(from === 'IDR' && to === 'USDT') res = amt / rates.U_I;
-
-    document.getElementById('sRes').textContent = res.toLocaleString(undefined, {maximumFractionDigits: 5}) + " " + to;
-    
-    // Validasi tombol: Saldo cukup & nominal > 0 & mata uang beda
-    const canSwap = amt > 0 && amt <= wallet[from] && from !== to;
-    document.getElementById('sBtn').disabled = !canSwap;
-}
-
-async function doSwap() {
-    const from = document.getElementById('sFrom').value;
-    const to = document.getElementById('sTo').value;
-    const amt = parseFloat(document.getElementById('sAmt').value);
-    const user = localStorage.getItem('currentUser') || "user@example.com";
-    const uid = btoa(user).replace(/=/g,'');
-
-    // Hitung hasil
-    let res = 0;
-    if(from === 'GOV' && to === 'USDT') res = amt * rates.G_U;
-    else if(from === 'GOV' && to === 'IDR') res = amt * rates.G_I;
-    else if(from === 'USDT' && to === 'GOV') res = amt * 1000;
-    else if(from === 'USDT' && to === 'IDR') res = amt * rates.U_I;
-    else if(from === 'IDR' && to === 'GOV') res = amt / rates.G_I;
-    else if(from === 'IDR' && to === 'USDT') res = amt / rates.U_I;
-
-    // Update Object Lokal
-    wallet[from] -= amt;
-    wallet[to] += res;
-
-    // Simpan ke Firebase
-    await db.ref('wallets/'+uid+'/balances').set(wallet);
-    
-    hideModal('swapModal');
-    showNotif("Berhasil Swap " + from + " ke " + to);
-}
-
-// LOGIKA WITHDRAW
 function showWithdrawModal() {
-    document.getElementById('availIDR').textContent = "Rp " + (wallet.IDR || 0).toLocaleString();
     showModal('withdrawModal');
+    document.getElementById('availableIDR').textContent = `Rp ${walletData.balances.IDR.toLocaleString('id-ID')}`;
+    document.getElementById('withdrawAmount').value = '';
+    document.getElementById('withdrawPhone').value = '';
+    document.getElementById('withdrawName').value = '';
+    document.getElementById('withdrawTotal').textContent = 'Rp 0';
+    document.getElementById('withdrawBtn').disabled = true;
+    updateWithdrawTotal();
 }
 
-function selPay(m) {
-    selectedMethod = m;
-    document.getElementById('m_dana').className = 'payment-method' + (m==='dana'?' selected':'');
-    document.getElementById('m_gopay').className = 'payment-method' + (m==='gopay'?' selected':'');
-    validateWD();
+function showTransferModal() {
+    showModal('transferModal');
+    document.getElementById('availableGOV').textContent = `${walletData.balances.GOV.toLocaleString('id-ID')} GOV`;
+    document.getElementById('transferUsername').value = '';
+    document.getElementById('transferAmount').value = '';
+    document.getElementById('transferBtn').disabled = true;
+    updateTransferFee();
 }
 
-function validateWD() {
-    const amt = parseFloat(document.getElementById('wdAmount').value) || 0;
-    const phone = document.getElementById('wdPhone').value;
-    const name = document.getElementById('wdName').value;
-    const fee = selectedMethod === 'dana' ? 2000 : 2500;
+function showSwapModal() {
+    showModal('swapModal');
+    document.getElementById('swapAmount').value = '';
+    document.getElementById('swapBtn').disabled = false;
+    updateSwapCalculation();
+}
+
+function showHistoryModal() {
+    showModal('historyModal');
+    loadTransactionHistory();
+}
+
+// ===== WITHDRAW FUNCTIONS =====
+function setMaxWithdraw() {
+    // Hitung maksimal yang bisa ditarik berdasarkan saldo dan metode yang dipilih
+    let maxAmount = walletData.balances.IDR;
     
-    const valid = amt >= 10000 && (amt + fee) <= wallet.IDR && phone.length > 9 && name.length > 2 && selectedMethod;
-    document.getElementById('wdBtn').disabled = !valid;
+    if (walletData.selectedPayment) {
+        const fee = walletData.selectedPayment === 'dana' ? 2000 : 2500;
+        maxAmount = Math.max(0, walletData.balances.IDR - fee);
+    }
+    
+    // Pastikan minimal 10000
+    if (maxAmount < 10000) {
+        maxAmount = 0;
+    }
+    
+    document.getElementById('withdrawAmount').value = maxAmount;
+    validateWithdrawAmount();
 }
 
-async function doWithdraw() {
-    const amt = parseFloat(document.getElementById('wdAmount').value);
-    const fee = selectedMethod === 'dana' ? 2000 : 2500;
-    const user = localStorage.getItem('currentUser') || "user@example.com";
-    const uid = btoa(user).replace(/=/g,'');
+function selectPayment(method) {
+    walletData.selectedPayment = method;
+    document.querySelectorAll('.payment-method').forEach(el => {
+        el.classList.remove('selected');
+    });
+    document.getElementById(method + 'Method').classList.add('selected');
+    document.getElementById('paymentError').style.display = 'none';
+    
+    // Validasi ulang amount setelah pilih metode
+    validateWithdrawAmount();
+    updateWithdrawTotal();
+}
 
-    wallet.IDR -= (amt + fee);
-    const tx = {
-        type: "WITHDRAW",
-        amount: amt,
+function updateWithdrawTotal() {
+    const amount = parseFloat(document.getElementById('withdrawAmount').value) || 0;
+    if (!walletData.selectedPayment || amount <= 0) {
+        document.getElementById('withdrawTotal').textContent = 'Rp 0';
+        return;
+    }
+    
+    const fee = walletData.selectedPayment === 'dana' ? 2000 : 2500;
+    const total = amount + fee;
+    document.getElementById('withdrawTotal').textContent = `Rp ${total.toLocaleString('id-ID')}`;
+}
+
+function validateWithdrawAmount() {
+    const amount = parseFloat(document.getElementById('withdrawAmount').value) || 0;
+    const errorElement = document.getElementById('withdrawError');
+    const successElement = document.getElementById('withdrawSuccess');
+    
+    // Reset messages
+    errorElement.style.display = 'none';
+    successElement.style.display = 'none';
+    
+    // Validasi dasar
+    if (amount < 10000) {
+        errorElement.textContent = '❌ Minimal penarikan Rp 10,000';
+        errorElement.style.display = 'block';
+        return false;
+    }
+    
+    if (amount <= 0) {
+        errorElement.textContent = '❌ Masukkan jumlah yang valid';
+        errorElement.style.display = 'block';
+        return false;
+    }
+    
+    // Jika sudah pilih metode, validasi dengan fee
+    if (walletData.selectedPayment) {
+        const fee = walletData.selectedPayment === 'dana' ? 2000 : 2500;
+        const totalAmount = amount + fee;
+        
+        if (totalAmount > walletData.balances.IDR) {
+            errorElement.textContent = `❌ Total (Rp ${totalAmount.toLocaleString('id-ID')}) melebihi saldo IDR`;
+            errorElement.style.display = 'block';
+            return false;
+        }
+        
+        // Tampilkan success message jika valid
+        successElement.textContent = `✅ Dengan biaya Rp ${fee.toLocaleString('id-ID')}, total: Rp ${totalAmount.toLocaleString('id-ID')}`;
+        successElement.style.display = 'block';
+    }
+    
+    updateWithdrawTotal();
+    validateWithdrawForm();
+    return true;
+}
+
+function validateWithdrawPhone() {
+    const phone = document.getElementById('withdrawPhone').value.trim();
+    const errorElement = document.getElementById('phoneError');
+    
+    if (!phone || phone.length < 10) {
+        errorElement.textContent = '❌ Masukkan nomor telepon yang valid (min 10 digit)';
+        errorElement.style.display = 'block';
+        return false;
+    } else {
+        errorElement.style.display = 'none';
+        validateWithdrawForm();
+        return true;
+    }
+}
+
+function validateWithdrawName() {
+    const name = document.getElementById('withdrawName').value.trim();
+    const errorElement = document.getElementById('nameError');
+    
+    if (!name) {
+        errorElement.textContent = '❌ Masukkan nama penerima';
+        errorElement.style.display = 'block';
+        return false;
+    } else {
+        errorElement.style.display = 'none';
+        validateWithdrawForm();
+        return true;
+    }
+}
+
+function validateWithdrawForm() {
+    const amountValid = validateWithdrawAmount();
+    const phoneValid = validateWithdrawPhone();
+    const nameValid = validateWithdrawName();
+    const paymentValid = walletData.selectedPayment !== null;
+    
+    // Tampilkan error payment jika belum dipilih
+    const paymentError = document.getElementById('paymentError');
+    if (!paymentValid) {
+        paymentError.style.display = 'block';
+    } else {
+        paymentError.style.display = 'none';
+    }
+    
+    // Enable/disable button
+    const isValid = amountValid && phoneValid && nameValid && paymentValid;
+    document.getElementById('withdrawBtn').disabled = !isValid;
+    
+    return isValid;
+}
+
+async function processWithdraw() {
+    if (!validateWithdrawForm()) {
+        showNotification("❌ Lengkapi semua data dengan benar", false);
+        return;
+    }
+    
+    const amount = parseFloat(document.getElementById('withdrawAmount').value);
+    const phone = document.getElementById('withdrawPhone').value.trim();
+    const name = document.getElementById('withdrawName').value.trim();
+    const method = walletData.selectedPayment;
+    
+    const fee = method === 'dana' ? 2000 : 2500;
+    const totalAmount = amount + fee;
+    
+    // Kurangi saldo
+    walletData.balances.IDR -= totalAmount;
+    
+    // Tambah transaksi
+    const transaction = {
+        id: Date.now(),
+        type: 'WITHDRAW',
+        method: method.toUpperCase(),
+        amount: -amount,
         fee: fee,
-        method: selectedMethod.toUpperCase(),
-        phone: document.getElementById('wdPhone').value,
-        name: document.getElementById('wdName').value,
-        timestamp: Date.now()
+        total: -totalAmount,
+        phone: phone,
+        name: name,
+        status: 'PENDING',
+        timestamp: new Date().toISOString()
     };
-
-    await db.ref('wallets/'+uid+'/balances').set(wallet);
-    sendTelegramNotification(tx); 
     
+    walletData.transactions.unshift(transaction);
+    
+    // Simpan data
+    await saveWalletData();
+    updateWalletDisplay();
+    loadTransactionHistory();
+    
+    // Kirim notifikasi ke Telegram
+    sendTelegramNotification(transaction);
+    
+    // Tampilkan konfirmasi
+    showNotification(`✅ Withdraw Rp ${amount.toLocaleString('id-ID')} ke ${method.toUpperCase()} diproses`);
     hideModal('withdrawModal');
-    showNotif("Withdraw Berhasil Dikirim!");
+}
+
+// ===== TRANSFER FUNCTIONS =====
+function setMaxTransfer() {
+    document.getElementById('transferAmount').value = walletData.balances.GOV;
+    validateTransfer();
+    updateTransferFee();
+}
+
+function updateTransferFee() {
+    const amount = parseFloat(document.getElementById('transferAmount').value) || 0;
+    const fee = amount * 0.005;
+    const total = amount + fee;
+    
+    document.getElementById('transferFee').textContent = `${fee.toFixed(2)} GOV`;
+    document.getElementById('transferTotal').textContent = `${total.toFixed(2)} GOV`;
+}
+
+function validateTransfer() {
+    const username = document.getElementById('transferUsername').value.trim();
+    const amount = parseFloat(document.getElementById('transferAmount').value) || 0;
+    
+    let isValid = true;
+    
+    // Validasi username
+    const usernameError = document.getElementById('usernameError');
+    if (!username || !username.startsWith('@')) {
+        usernameError.textContent = '❌ Masukkan username yang valid (contoh: @username)';
+        usernameError.style.display = 'block';
+        isValid = false;
+    } else {
+        usernameError.style.display = 'none';
+    }
+    
+    // Validasi amount
+    const amountError = document.getElementById('transferAmountError');
+    if (amount < 1) {
+        amountError.textContent = '❌ Minimal transfer 1 GOV';
+        amountError.style.display = 'block';
+        isValid = false;
+    } else {
+        const fee = amount * 0.005;
+        const total = amount + fee;
+        
+        if (total > walletData.balances.GOV) {
+            amountError.textContent = `❌ Saldo GOV tidak mencukupi. Diperlukan: ${total.toFixed(2)} GOV`;
+            amountError.style.display = 'block';
+            isValid = false;
+        } else {
+            amountError.style.display = 'none';
+        }
+    }
+    
+    // Update fee dan total
+    updateTransferFee();
+    
+    // Enable/disable button
+    document.getElementById('transferBtn').disabled = !isValid;
+    
+    return isValid;
+}
+
+async function processTransfer() {
+    if (!validateTransfer()) return;
+    
+    const username = document.getElementById('transferUsername').value.trim();
+    const amount = parseFloat(document.getElementById('transferAmount').value);
+    
+    const fee = amount * 0.005;
+    const total = amount + fee;
+    
+    // Kurangi saldo pengirim
+    walletData.balances.GOV -= total;
+    
+    // Tambah transaksi
+    const transaction = {
+        id: Date.now(),
+        type: 'TRANSFER',
+        to: username,
+        amount: -amount,
+        fee: -fee,
+        total: -total,
+        status: 'SUCCESS',
+        timestamp: new Date().toISOString()
+    };
+    
+    walletData.transactions.unshift(transaction);
+    
+    // Simpan data
+    await saveWalletData();
+    updateWalletDisplay();
+    loadTransactionHistory();
+    
+    // Update dashboard GOV juga
+    updateDashboardGOV(amount);
+    
+    showNotification(`✅ Berhasil transfer ${amount} GOV ke ${username}`);
+    hideModal('transferModal');
+}
+
+function updateDashboardGOV(amount) {
+    const userEmail = localStorage.getItem('currentUser');
+    const username = userEmail.split('@')[0];
+    const dashboardKey = `userData_${username}`;
+    
+    const dashboardData = localStorage.getItem(dashboardKey);
+    if (dashboardData) {
+        const parsed = JSON.parse(dashboardData);
+        parsed.saldoGOV -= amount;
+        localStorage.setItem(dashboardKey, JSON.stringify(parsed));
+    }
+}
+
+// ===== SWAP FUNCTIONS FIXED =====
+function setMaxSwap() {
+    const from = document.getElementById('swapFrom').value;
+    const maxAmount = walletData.balances[from] || 0;
+    document.getElementById('swapAmount').value = maxAmount;
+    updateSwapCalculation();
+}
+
+function updateSwapCalculation() {
+    const from = document.getElementById('swapFrom').value;
+    const to = document.getElementById('swapTo').value;
+    let amount = parseFloat(document.getElementById('swapAmount').value) || 0;
+    
+    // Update saldo tersedia
+    const fromBalance = walletData.balances[from] || 0;
+    document.getElementById('swapFromBalance').textContent = 
+        from === 'IDR' ? `Rp ${fromBalance.toLocaleString('id-ID')}` : 
+        from === 'GOV' ? `${fromBalance.toLocaleString('id-ID')} ${from}` :
+        `${fromBalance.toFixed(2)} ${from}`;
+    
+    // Validasi input
+    const errorElement = document.getElementById('swapError');
+    const swapBtn = document.getElementById('swapBtn');
+    
+    // Reset error
+    errorElement.style.display = 'none';
+    errorElement.textContent = '';
+    swapBtn.disabled = false;
+    
+    // Cek jika from dan to sama
+    if (from === to) {
+        errorElement.textContent = '❌ Tidak bisa swap ke aset yang sama';
+        errorElement.style.display = 'block';
+        swapBtn.disabled = true;
+        document.getElementById('swapReceive').textContent = '0';
+        return;
+    }
+    
+    // Cek jika jumlah kosong atau 0
+    if (!amount || amount <= 0) {
+        document.getElementById('swapReceive').textContent = '0';
+        return;
+    }
+    
+    // Cek saldo cukup
+    if (amount > fromBalance) {
+        errorElement.textContent = `❌ Saldo ${from} tidak cukup. Maksimal: ${fromBalance}`;
+        errorElement.style.display = 'block';
+        swapBtn.disabled = true;
+        document.getElementById('swapReceive').textContent = '0';
+        return;
+    }
+    
+    // Hitung hasil swap
+    let result = 0;
+    
+    // GOV → USDT
+    if (from === 'GOV' && to === 'USDT') {
+        result = amount * EXCHANGE_RATES.GOV_TO_USDT;
+    }
+    // GOV → IDR
+    else if (from === 'GOV' && to === 'IDR') {
+        result = amount * EXCHANGE_RATES.GOV_TO_IDR;
+    }
+    // USDT → GOV
+    else if (from === 'USDT' && to === 'GOV') {
+        result = amount * EXCHANGE_RATES.USDT_TO_GOV;
+    }
+    // USDT → IDR
+    else if (from === 'USDT' && to === 'IDR') {
+        result = amount * EXCHANGE_RATES.USDT_TO_IDR;
+    }
+    // IDR → GOV
+    else if (from === 'IDR' && to === 'GOV') {
+        result = amount / EXCHANGE_RATES.GOV_TO_IDR;
+    }
+    // IDR → USDT
+    else if (from === 'IDR' && to === 'USDT') {
+        result = amount / EXCHANGE_RATES.USDT_TO_IDR;
+    }
+    
+    // Format hasil
+    let formattedResult = '';
+    if (to === 'IDR') {
+        formattedResult = `Rp ${result.toLocaleString('id-ID', {minimumFractionDigits: 0, maximumFractionDigits: 0})}`;
+    } else if (to === 'GOV') {
+        formattedResult = `${result.toLocaleString('id-ID', {minimumFractionDigits: 0, maximumFractionDigits: 2})} ${to}`;
+    } else {
+        formattedResult = `${result.toFixed(4)} ${to}`;
+    }
+    
+    document.getElementById('swapReceive').textContent = formattedResult;
+}
+
+async function processSwap() {
+    const from = document.getElementById('swapFrom').value;
+    const to = document.getElementById('swapTo').value;
+    const amount = parseFloat(document.getElementById('swapAmount').value) || 0;
+    
+    // Validasi
+    if (from === to) {
+        showNotification("❌ Tidak bisa swap ke aset yang sama", false);
+        return;
+    }
+    
+    if (!amount || amount <= 0) {
+        showNotification("❌ Masukkan jumlah yang valid", false);
+        return;
+    }
+    
+    const fromBalance = walletData.balances[from] || 0;
+    if (amount > fromBalance) {
+        showNotification(`❌ Saldo ${from} tidak cukup`, false);
+        return;
+    }
+    
+    // Hitung hasil swap
+    let result = 0;
+    let rateText = '';
+    
+    if (from === 'GOV' && to === 'USDT') {
+        result = amount * EXCHANGE_RATES.GOV_TO_USDT;
+        rateText = '1000 GOV = 1 USDT';
+    } else if (from === 'GOV' && to === 'IDR') {
+        result = amount * EXCHANGE_RATES.GOV_TO_IDR;
+        rateText = '1 GOV = Rp 16.8';
+    } else if (from === 'USDT' && to === 'GOV') {
+        result = amount * EXCHANGE_RATES.USDT_TO_GOV;
+        rateText = '1 USDT = 1000 GOV';
+    } else if (from === 'USDT' && to === 'IDR') {
+        result = amount * EXCHANGE_RATES.USDT_TO_IDR;
+        rateText = '1 USDT = Rp 16,800';
+    } else if (from === 'IDR' && to === 'GOV') {
+        result = amount / EXCHANGE_RATES.GOV_TO_IDR;
+        rateText = 'Rp 16.8 = 1 GOV';
+    } else if (from === 'IDR' && to === 'USDT') {
+        result = amount / EXCHANGE_RATES.USDT_TO_IDR;
+        rateText = 'Rp 16,800 = 1 USDT';
+    }
+    
+    // Update balances
+    walletData.balances[from] -= amount;
+    walletData.balances[to] += result;
+    
+    // Format amount untuk transaksi
+    const formattedAmount = from === 'IDR' ? 
+        `Rp ${amount.toLocaleString('id-ID')}` : 
+        from === 'GOV' ? `${amount} ${from}` : `${amount.toFixed(2)} ${from}`;
+    
+    const formattedResult = to === 'IDR' ? 
+        `Rp ${result.toLocaleString('id-ID', {minimumFractionDigits: 0, maximumFractionDigits: 0})}` : 
+        to === 'GOV' ? `${result.toFixed(2)} ${to}` : `${result.toFixed(4)} ${to}`;
+    
+    // Tambah transaksi
+    const transaction = {
+        id: Date.now(),
+        type: 'SWAP',
+        from: from,
+        to: to,
+        amount: -amount,
+        received: result,
+        rate: rateText,
+        status: 'SUCCESS',
+        timestamp: new Date().toISOString()
+    };
+    
+    walletData.transactions.unshift(transaction);
+    
+    // Simpan data
+    await saveWalletData();
+    updateWalletDisplay();
+    loadTransactionHistory();
+    
+    showNotification(`✅ Berhasil swap ${formattedAmount} → ${formattedResult}`);
+    hideModal('swapModal');
+}
+
+// ===== TRANSACTION HISTORY =====
+function loadTransactionHistory() {
+    const transactionsList = document.getElementById('transactionsList');
+    
+    if (walletData.transactions.length === 0) {
+        transactionsList.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: #666;">
+                <div style="font-size: 24px; margin-bottom: 10px;">📊</div>
+                Belum ada transaksi
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '';
+    
+    walletData.transactions.forEach(transaction => {
+        let icon = '';
+        let iconClass = '';
+        let typeText = '';
+        let details = '';
+        let amountClass = '';
+        let amountText = '';
+        
+        switch(transaction.type) {
+            case 'WITHDRAW':
+                icon = '📤';
+                iconClass = 'withdraw';
+                typeText = 'Withdraw';
+                details = `${transaction.method} • ${transaction.phone}`;
+                amountClass = 'negative';
+                amountText = `-Rp ${Math.abs(transaction.amount).toLocaleString('id-ID')}`;
+                break;
+                
+            case 'TRANSFER':
+                icon = '💸';
+                iconClass = 'transfer';
+                typeText = 'Transfer';
+                details = `Ke ${transaction.to}`;
+                amountClass = 'negative';
+                amountText = `-${Math.abs(transaction.amount)} GOV`;
+                break;
+                
+            case 'SWAP':
+                icon = '🔄';
+                iconClass = 'swap';
+                typeText = 'Swap';
+                details = `${transaction.from} → ${transaction.to}`;
+                amountClass = 'positive';
+                amountText = `+${transaction.received.toFixed(4)} ${transaction.to}`;
+                break;
+                
+            case 'DEPOSIT':
+                icon = '📥';
+                iconClass = 'deposit';
+                typeText = 'Deposit';
+                details = transaction.description || 'Dari dashboard';
+                amountClass = 'positive';
+                amountText = `+${transaction.amount} GOV`;
+                break;
+        }
+        
+        const date = new Date(transaction.timestamp).toLocaleDateString('id-ID', {
+            day: 'numeric',
+            month: 'short',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        html += `
+            <div class="transaction-item">
+                <div class="transaction-info">
+                    <div class="transaction-icon ${iconClass}">${icon}</div>
+                    <div class="transaction-details">
+                        <div class="transaction-type">${typeText}</div>
+                        <div class="transaction-date">${date} • ${details}</div>
+                        ${transaction.status === 'PENDING' ? 
+                          `<div style="color: #ff9500; font-size: 12px; margin-top: 2px;">⏳ ${transaction.status}</div>` : ''}
+                    </div>
+                </div>
+                <div class="transaction-amount ${amountClass}">${amountText}</div>
+            </div>
+        `;
+    });
+    
+    transactionsList.innerHTML = html;
+}
+
+// ===== UTILITY FUNCTIONS =====
+function showNotification(message, isSuccess = true) {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.style.background = isSuccess ? '#4cd964' : '#ff3b30';
+    notification.style.display = 'block';
+    
+    // Reset animation
+    notification.style.animation = 'none';
+    setTimeout(() => {
+        notification.style.animation = 'fadeInOut 3s ease-in-out forwards';
+    }, 10);
+    
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 3000);
 }
 
 function sendTelegramNotification(transaction) {
-    const userEmail = localStorage.getItem('currentUser') || "Unknown";
-    const botToken = "8056079965:AAGm9XzWwX_wF_Vf_X_zWwX_wF_Vf_X_zWw"; 
-    const chatId = "6616645511"; 
+    const userEmail = localStorage.getItem('currentUser');
     
-    const message = `📤 *WITHDRAW REQUEST*%0A%0A` +
-                   `👤 *User:* ${userEmail}%0A` +
-                   `💰 *Amount:* Rp ${transaction.amount.toLocaleString()}%0A` +
-                   `🏦 *Method:* ${transaction.method}%0A` +
-                   `📱 *Phone:* ${transaction.phone}%0A` +
-                   `👤 *Name:* ${transaction.name}%0A` +
-                   `💸 *Fee:* Rp ${transaction.fee.toLocaleString()}%0A` +
-                   `⏰ *Time:* ${new Date().toLocaleString()}`;
+    const message = `📤 *WITHDRAW REQUEST*\n\n` +
+                   `👤 *User:* ${userEmail}\n` +
+                   `💰 *Amount:* Rp ${Math.abs(transaction.amount).toLocaleString('id-ID')}\n` +
+                   `🏦 *Method:* ${transaction.method}\n` +
+                   `📱 *Phone:* ${transaction.phone}\n` +
+                   `👤 *Name:* ${transaction.name}\n` +
+                   `💸 *Fee:* Rp ${transaction.fee.toLocaleString('id-ID')}\n` +
+                   `📊 *Total:* Rp ${Math.abs(transaction.total).toLocaleString('id-ID')}\n` +
+                   `⏰ *Time:* ${new Date(transaction.timestamp).toLocaleString('id-ID')}\n\n` +
+                   `📝 *Please process this withdrawal request.*`;
     
-    fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${message}&parse_mode=Markdown`)
-    .catch(err => console.error("Telegram Error", err));
+    console.log("📤 Telegram Notification:", message);
 }
 
-function showNotif(m) {
-    const n = document.getElementById('notification');
-    n.textContent = m;
-    n.style.display = 'block';
-    n.style.backgroundColor = '#4cd964';
-    setTimeout(()=> n.style.display='none', 3000);
-}
-
-// Jalankan App
-init();
+// ===== INITIALIZE =====
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("💼 GOV Wallet Initializing...");
+    
+    // Setup event listeners untuk swap
+    document.getElementById('swapAmount').addEventListener('input', updateSwapCalculation);
+    document.getElementById('swapFrom').addEventListener('change', updateSwapCalculation);
+    document.getElementById('swapTo').addEventListener('change', updateSwapCalculation);
+    
+    initializeWallet();
+});
 </script>
+
 </body>
 </html>
