@@ -1552,7 +1552,14 @@ function updateDashboardGOV(amount) {
 function setMaxSwap() {
     const from = document.getElementById('swapFrom').value;
     const maxAmount = walletData.balances[from] || 0;
-    document.getElementById('swapAmount').value = maxAmount;
+    
+    // Untuk GOV, tampilkan tanpa desimal jika bilangan bulat
+    if (from === 'GOV' && maxAmount % 1 === 0) {
+        document.getElementById('swapAmount').value = maxAmount;
+    } else {
+        document.getElementById('swapAmount').value = maxAmount.toFixed(4);
+    }
+    
     updateSwapCalculation();
 }
 
@@ -1566,7 +1573,7 @@ function updateSwapCalculation() {
     document.getElementById('swapFromBalance').textContent = 
         from === 'IDR' ? `Rp ${fromBalance.toLocaleString('id-ID')}` : 
         from === 'GOV' ? `${fromBalance.toLocaleString('id-ID')} ${from}` :
-        `${fromBalance.toFixed(2)} ${from}`;
+        `${fromBalance.toFixed(4)} ${from}`;
     
     // Validasi input
     const errorElement = document.getElementById('swapError');
@@ -1604,37 +1611,37 @@ function updateSwapCalculation() {
     // Hitung hasil swap
     let result = 0;
     
-    // GOV → USDT
+    // GOV → USDT (1000 GOV = 1 USDT)
     if (from === 'GOV' && to === 'USDT') {
-        result = amount * EXCHANGE_RATES.GOV_TO_USDT;
+        result = amount / 1000; // 2600 GOV / 1000 = 2.6 USDT
     }
-    // GOV → IDR
+    // GOV → IDR (1 GOV = Rp 16.8)
     else if (from === 'GOV' && to === 'IDR') {
-        result = amount * EXCHANGE_RATES.GOV_TO_IDR;
+        result = amount * 16.8;
     }
-    // USDT → GOV
+    // USDT → GOV (1 USDT = 1000 GOV)
     else if (from === 'USDT' && to === 'GOV') {
-        result = amount * EXCHANGE_RATES.USDT_TO_GOV;
+        result = amount * 1000;
     }
-    // USDT → IDR
+    // USDT → IDR (1 USDT = Rp 16,800)
     else if (from === 'USDT' && to === 'IDR') {
-        result = amount * EXCHANGE_RATES.USDT_TO_IDR;
+        result = amount * 16800;
     }
-    // IDR → GOV
+    // IDR → GOV (Rp 16.8 = 1 GOV)
     else if (from === 'IDR' && to === 'GOV') {
-        result = amount / EXCHANGE_RATES.GOV_TO_IDR;
+        result = amount / 16.8;
     }
-    // IDR → USDT
+    // IDR → USDT (Rp 16,800 = 1 USDT)
     else if (from === 'IDR' && to === 'USDT') {
-        result = amount / EXCHANGE_RATES.USDT_TO_IDR;
+        result = amount / 16800;
     }
     
     // Format hasil
     let formattedResult = '';
     if (to === 'IDR') {
-        formattedResult = `Rp ${result.toLocaleString('id-ID', {minimumFractionDigits: 0, maximumFractionDigits: 0})}`;
+        formattedResult = `Rp ${Math.floor(result).toLocaleString('id-ID')}`;
     } else if (to === 'GOV') {
-        formattedResult = `${result.toLocaleString('id-ID', {minimumFractionDigits: 0, maximumFractionDigits: 2})} ${to}`;
+        formattedResult = `${result.toFixed(2)} ${to}`;
     } else {
         formattedResult = `${result.toFixed(4)} ${to}`;
     }
@@ -1669,22 +1676,22 @@ async function processSwap() {
     let rateText = '';
     
     if (from === 'GOV' && to === 'USDT') {
-        result = amount * EXCHANGE_RATES.GOV_TO_USDT;
+        result = amount / 1000; // 1000 GOV = 1 USDT
         rateText = '1000 GOV = 1 USDT';
     } else if (from === 'GOV' && to === 'IDR') {
-        result = amount * EXCHANGE_RATES.GOV_TO_IDR;
+        result = amount * 16.8; // 1 GOV = Rp 16.8
         rateText = '1 GOV = Rp 16.8';
     } else if (from === 'USDT' && to === 'GOV') {
-        result = amount * EXCHANGE_RATES.USDT_TO_GOV;
+        result = amount * 1000; // 1 USDT = 1000 GOV
         rateText = '1 USDT = 1000 GOV';
     } else if (from === 'USDT' && to === 'IDR') {
-        result = amount * EXCHANGE_RATES.USDT_TO_IDR;
+        result = amount * 16800; // 1 USDT = Rp 16,800
         rateText = '1 USDT = Rp 16,800';
     } else if (from === 'IDR' && to === 'GOV') {
-        result = amount / EXCHANGE_RATES.GOV_TO_IDR;
+        result = amount / 16.8; // Rp 16.8 = 1 GOV
         rateText = 'Rp 16.8 = 1 GOV';
     } else if (from === 'IDR' && to === 'USDT') {
-        result = amount / EXCHANGE_RATES.USDT_TO_IDR;
+        result = amount / 16800; // Rp 16,800 = 1 USDT
         rateText = 'Rp 16,800 = 1 USDT';
     }
     
@@ -1695,10 +1702,10 @@ async function processSwap() {
     // Format amount untuk transaksi
     const formattedAmount = from === 'IDR' ? 
         `Rp ${amount.toLocaleString('id-ID')}` : 
-        from === 'GOV' ? `${amount} ${from}` : `${amount.toFixed(2)} ${from}`;
+        from === 'GOV' ? `${amount} ${from}` : `${amount.toFixed(4)} ${from}`;
     
     const formattedResult = to === 'IDR' ? 
-        `Rp ${result.toLocaleString('id-ID', {minimumFractionDigits: 0, maximumFractionDigits: 0})}` : 
+        `Rp ${Math.floor(result).toLocaleString('id-ID')}` : 
         to === 'GOV' ? `${result.toFixed(2)} ${to}` : `${result.toFixed(4)} ${to}`;
     
     // Tambah transaksi
