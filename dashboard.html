@@ -143,35 +143,139 @@
             min-height: 24px;
         }
 
-        /* Ads Section */
-        .ads-section {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            padding: 0 20px;
+        /* Airdrop/Web3 Section */
+        .airdrop-section {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            margin: 20px;
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .airdrop-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .airdrop-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
             margin-bottom: 20px;
         }
 
-        .ad-btn {
-            flex: 1;
-            background: linear-gradient(135deg, #d32f2f, #b71c1c);
-            color: white;
-            border: none;
+        .airdrop-tasks {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .airdrop-task {
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
-            padding: 12px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .task-info {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            flex-grow: 1;
+        }
+
+        .task-name {
             font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+
+        .task-reward {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .task-status {
+            background: #00e676;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* Tap-to-Earn Section */
+        .tap-to-earn-section {
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            margin: 20px;
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .tap-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .tap-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .tap-button {
+            background: white;
+            color: #ff416c;
+            border: none;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 0 auto 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            cursor: pointer;
-            max-width: 160px;
-            font-size: 13px;
-            text-decoration: none;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
         }
 
-        .tiktok-btn {
-            background: black;
+        .tap-button:active {
+            transform: scale(0.95);
+        }
+
+        .tap-stats {
+            display: flex;
+            justify-content: space-around;
+            font-size: 14px;
+        }
+
+        .tap-stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.8;
         }
 
         /* Game Buttons */
@@ -381,16 +485,83 @@
     <!-- Status -->
     <div id="statusText" class="status-text">✅ Siap klaim sekarang!</div>
 
-    <!-- Ads Section -->
-    <div class="ads-section">
-        <a href="https://vast-size.com/ULT3Sw" target="_blank" class="ad-btn">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/video.png" width="20" height="20" alt="Video">
-            <span>700-1000 Riwed</span>
-        </a>
-        <button class="ad-btn tiktok-btn" id="tiktokBtn">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/tiktok.png" width="20" height="20" alt="TikTok">
-            <span>500-1000 Riwed</span>
-        </button>
+    <!-- Airdrop/Web3 Section -->
+    <div class="airdrop-section">
+        <div class="airdrop-title">Airdrop Web3</div>
+        <div class="airdrop-subtitle">Join our excited community and get your points. More activity and more reward!</div>
+        
+        <div class="airdrop-tasks">
+            <div class="airdrop-task">
+                <div class="task-info">
+                    <div class="task-name">Follow Unich on X</div>
+                    <div class="task-reward">+60 FD</div>
+                </div>
+                <div class="task-status">Claimed</div>
+            </div>
+            
+            <div class="airdrop-task">
+                <div class="task-info">
+                    <div class="task-name">Join Unich Discord</div>
+                    <div class="task-reward">+60 FD</div>
+                </div>
+                <div class="task-status">Claimed</div>
+            </div>
+            
+            <div class="airdrop-task">
+                <div class="task-info">
+                    <div class="task-name">Join Unich Telegram Channel</div>
+                    <div class="task-reward">+60 FD</div>
+                </div>
+                <div class="task-status">Claimed</div>
+            </div>
+            
+            <div class="airdrop-task">
+                <div class="task-info">
+                    <div class="task-name">Follow Unich Instagram</div>
+                    <div class="task-reward">+60 FD</div>
+                </div>
+                <div class="task-status">Claimed</div>
+            </div>
+            
+            <div class="airdrop-task">
+                <div class="task-info">
+                    <div class="task-name">Subscribe Unich Youtube</div>
+                    <div class="task-reward">+60 FD</div>
+                </div>
+                <div class="task-status">Claimed</div>
+            </div>
+            
+            <div class="airdrop-task">
+                <div class="task-info">
+                    <div class="task-name">Join the Freedom Family...</div>
+                    <div class="task-reward">+100 FD</div>
+                </div>
+                <div class="task-status">Claimed</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tap-to-Earn Section -->
+    <div class="tap-to-earn-section">
+        <div class="tap-title">Tap-to-Earn</div>
+        <div class="tap-subtitle">Tap untuk mendapatkan poin!</div>
+        
+        <button class="tap-button" id="tapButton">TAP</button>
+        
+        <div class="tap-stats">
+            <div class="tap-stat">
+                <div class="stat-value" id="tapCount">0</div>
+                <div class="stat-label">Total Tap</div>
+            </div>
+            <div class="tap-stat">
+                <div class="stat-value" id="tapPoints">0</div>
+                <div class="stat-label">Poin</div>
+            </div>
+            <div class="tap-stat">
+                <div class="stat-value" id="tapMultiplier">1x</div>
+                <div class="stat-label">Multiplier</div>
+            </div>
+        </div>
     </div>
 
     <!-- Game Buttons -->
@@ -481,7 +652,10 @@
             saldoUSDT: 0,
             lastClaimTime: null,
             referralPoints: 0,
-            referrals: []
+            referrals: [],
+            tapCount: 0,
+            tapPoints: 0,
+            tapMultiplier: 1
         };
 
         // ===== UTILITY FUNCTIONS =====
@@ -557,6 +731,9 @@
                     userData.lastClaimTime = parsed.lastClaimTime || null;
                     userData.referralPoints = parsed.referralPoints || 0;
                     userData.referrals = parsed.referrals || [];
+                    userData.tapCount = parsed.tapCount || 0;
+                    userData.tapPoints = parsed.tapPoints || 0;
+                    userData.tapMultiplier = parsed.tapMultiplier || 1;
                 } catch (e) {
                     console.log("Could not parse saved data");
                 }
@@ -565,6 +742,9 @@
                 userData.saldoGOV = 100;
                 userData.referralPoints = 0;
                 userData.lastClaimTime = null;
+                userData.tapCount = 0;
+                userData.tapPoints = 0;
+                userData.tapMultiplier = 1;
                 
                 // Save to localStorage
                 saveUserData();
@@ -578,6 +758,7 @@
             // Update UI
             updateUserInfo();
             updateUI();
+            updateTapUI();
             
             // Sync dengan wallet
             syncWithWallet();
@@ -604,6 +785,9 @@
                 lastClaimTime: userData.lastClaimTime,
                 referralPoints: userData.referralPoints,
                 referrals: userData.referrals,
+                tapCount: userData.tapCount,
+                tapPoints: userData.tapPoints,
+                tapMultiplier: userData.tapMultiplier,
                 lastUpdate: new Date().toISOString()
             }));
             
@@ -853,6 +1037,106 @@
             }
         }
 
+        // ===== TAP-TO-EARN SYSTEM =====
+        function updateTapUI() {
+            document.getElementById("tapCount").textContent = userData.tapCount.toLocaleString('id-ID');
+            document.getElementById("tapPoints").textContent = userData.tapPoints.toLocaleString('id-ID');
+            document.getElementById("tapMultiplier").textContent = userData.tapMultiplier + "x";
+        }
+
+        function handleTap() {
+            const tapButton = document.getElementById("tapButton");
+            
+            // Add animation
+            tapButton.style.transform = "scale(0.95)";
+            setTimeout(() => {
+                tapButton.style.transform = "scale(1)";
+            }, 100);
+            
+            // Calculate points earned (1-3 points per tap)
+            const basePoints = Math.floor(Math.random() * 3) + 1;
+            const pointsEarned = basePoints * userData.tapMultiplier;
+            
+            // Update tap stats
+            userData.tapCount++;
+            userData.tapPoints += pointsEarned;
+            
+            // Update GOV balance
+            userData.saldoGOV += pointsEarned;
+            
+            // Update UI
+            updateTapUI();
+            updateUI();
+            
+            // Save data
+            saveUserData();
+            
+            // Update wallet
+            updateWalletOnMining(pointsEarned);
+            
+            // Show floating point animation
+            showFloatingPoints(pointsEarned);
+            
+            // Check for multiplier upgrade
+            checkMultiplierUpgrade();
+        }
+
+        function showFloatingPoints(points) {
+            const floatingDiv = document.createElement("div");
+            floatingDiv.textContent = `+${points}`;
+            floatingDiv.style.position = "fixed";
+            floatingDiv.style.color = "#00e676";
+            floatingDiv.style.fontWeight = "bold";
+            floatingDiv.style.fontSize = "24px";
+            floatingDiv.style.pointerEvents = "none";
+            floatingDiv.style.zIndex = "2000";
+            
+            // Random position near tap button
+            const tapSection = document.querySelector(".tap-to-earn-section");
+            const rect = tapSection.getBoundingClientRect();
+            
+            floatingDiv.style.left = `${rect.left + Math.random() * rect.width}px`;
+            floatingDiv.style.top = `${rect.top + Math.random() * rect.height}px`;
+            
+            document.body.appendChild(floatingDiv);
+            
+            // Animate
+            let opacity = 1;
+            let posY = parseFloat(floatingDiv.style.top);
+            
+            const animate = () => {
+                opacity -= 0.02;
+                posY -= 1;
+                
+                floatingDiv.style.opacity = opacity;
+                floatingDiv.style.top = `${posY}px`;
+                
+                if (opacity > 0) {
+                    requestAnimationFrame(animate);
+                } else {
+                    document.body.removeChild(floatingDiv);
+                }
+            };
+            
+            requestAnimationFrame(animate);
+        }
+
+        function checkMultiplierUpgrade() {
+            // Upgrade multiplier based on tap count
+            if (userData.tapCount >= 1000 && userData.tapMultiplier < 5) {
+                userData.tapMultiplier = 5;
+                showNotification("🎉 Multiplier upgrade ke 5x!");
+            } else if (userData.tapCount >= 500 && userData.tapMultiplier < 3) {
+                userData.tapMultiplier = 3;
+                showNotification("🎉 Multiplier upgrade ke 3x!");
+            } else if (userData.tapCount >= 100 && userData.tapMultiplier < 2) {
+                userData.tapMultiplier = 2;
+                showNotification("🎉 Multiplier upgrade ke 2x!");
+            }
+            
+            updateTapUI();
+        }
+
         // ===== REFERRAL SYSTEM =====
         function showReferralModal() {
             const referralLink = `${window.location.origin}/index.html?ref=${userData.username}`;
@@ -1002,16 +1286,8 @@
             document.getElementById("referralBtn").addEventListener("click", showReferralModal);
             document.getElementById("claimRewardBtn").addEventListener("click", claimAdReward);
             
-            // TikTok button
-            document.getElementById("tiktokBtn").addEventListener("click", function() {
-                localStorage.setItem("watchedTikTok", "true");
-                window.open("https://www.profitableratecpm.com/mt7tws0f?key=28a564b0d68db558b31e19e77850b85e", "_blank");
-                
-                // Show reward modal after 30 seconds
-                setTimeout(() => {
-                    openModal("rewardModal");
-                }, 30000);
-            });
+            // Tap button
+            document.getElementById("tapButton").addEventListener("click", handleTap);
             
             // Profile picture click
             document.getElementById("userPhoto").addEventListener("click", editProfile);
