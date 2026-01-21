@@ -176,6 +176,14 @@
             text-align: center;
             box-shadow: 0 4px 15px rgba(0,0,0,0.4);
             border: 1px solid #333;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .tap-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+            background: linear-gradient(135deg, #222222, #333333);
         }
 
         .tap-title {
@@ -213,10 +221,6 @@
         .tap-button:hover {
             transform: scale(1.05);
             box-shadow: 0 10px 30px rgba(76, 175, 80, 0.4);
-        }
-
-        .tap-button:active {
-            transform: scale(0.95);
         }
 
         .tap-stats {
@@ -470,12 +474,12 @@
     <!-- Status -->
     <div id="statusText" class="status-text">✅ Siap klaim sekarang!</div>
 
-    <!-- Tap-to-Earn Section -->
-    <div class="tap-card">
+    <!-- Tap-to-Earn Card -->
+    <div class="tap-card" onclick="goToTapPage()">
         <div class="tap-title">Tap-to-Earn</div>
-        <div class="tap-subtitle">Tap tombol untuk mendapatkan poin!</div>
+        <div class="tap-subtitle">Klik untuk masuk ke halaman tap</div>
         
-        <button class="tap-button" id="tapButton">TAP</button>
+        <button class="tap-button">TAP</button>
         
         <div class="tap-stats">
             <div class="tap-stat">
@@ -535,9 +539,9 @@
             <img src="https://img.icons8.com/fluency/48/money.png" class="nav-icon" alt="Claim">
             <span>Claim</span>
         </button>
-        <button class="nav-btn" onclick="goToMyEarning()">
-            <img src="https://img.icons8.com/fluency/48/money-bag.png" class="nav-icon" alt="Earning">
-            <span>Earning</span>
+        <button class="nav-btn" onclick="goToTapPage()">
+            <img src="https://img.icons8.com/fluency/48/hand-tap.png" class="nav-icon" alt="Tap">
+            <span>Tap</span>
         </button>
         <a href="wallet.html" class="nav-btn">
             <img src="https://img.icons8.com/fluency/48/wallet.png" class="nav-icon" alt="Wallet">
@@ -564,17 +568,6 @@
                 <p style="margin-top: 15px; color: #e0e0e0;">Total Poin Referral: <span id="referralTotalPoin" style="font-weight:bold; color:#4CAF50;">0</span> Poin</p>
             </div>
             <button onclick="closeModal('referralModal')" style="width:100%; padding:10px; margin-top:15px; background:#d32f2f; color:white; border:none; border-radius:8px; cursor:pointer;">Tutup</button>
-        </div>
-    </div>
-
-    <!-- Reward Modal -->
-    <div id="rewardModal" class="modal">
-        <div class="modal-content">
-            <div style="text-align: center;">
-                <img src="https://i.postimg.cc/0KZ505rV/file-0000000084f062309e6fd2523e94f3de.png" alt="Reward" style="width: 80px; margin-bottom: 15px;">
-                <h3 style="color: #4CAF50; margin-bottom: 15px;">🎉 Dapat 300 Poin Riwed</h3>
-                <button id="claimRewardBtn" style="padding:12px 30px; background:#4CAF50; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">Klaim Sekarang</button>
-            </div>
         </div>
     </div>
 
@@ -938,101 +931,12 @@
             document.getElementById("tapMultiplier").textContent = userData.tapMultiplier + "x";
         }
 
-        function handleTap() {
-            const tapButton = document.getElementById("tapButton");
-            
-            // Add animation
-            tapButton.style.transform = "scale(0.95)";
-            setTimeout(() => {
-                tapButton.style.transform = "scale(1)";
-            }, 100);
-            
-            // Calculate points earned (1-3 points per tap)
-            const basePoints = Math.floor(Math.random() * 3) + 1;
-            const pointsEarned = basePoints * userData.tapMultiplier;
-            
-            // Update tap stats
-            userData.tapCount++;
-            userData.tapPoints += pointsEarned;
-            
-            // Update GOV balance
-            userData.saldoGOV += pointsEarned;
-            
-            // Update UI
-            updateTapUI();
-            updateUI();
-            
-            // Save data
-            saveUserData();
-            
-            // Update wallet
-            updateWalletOnMining(pointsEarned);
-            
-            // Show floating point animation
-            showFloatingPoints(pointsEarned);
-            
-            // Check for multiplier upgrade
-            checkMultiplierUpgrade();
-        }
-
-        function showFloatingPoints(points) {
-            const tapCard = document.querySelector(".tap-card");
-            const floatingDiv = document.createElement("div");
-            floatingDiv.textContent = `+${points} GOV`;
-            floatingDiv.style.position = "absolute";
-            floatingDiv.style.color = "#4CAF50";
-            floatingDiv.style.fontWeight = "bold";
-            floatingDiv.style.fontSize = "18px";
-            floatingDiv.style.pointerEvents = "none";
-            floatingDiv.style.zIndex = "2000";
-            
-            // Random position near tap button
-            const tapButton = document.getElementById("tapButton");
-            const rect = tapButton.getBoundingClientRect();
-            
-            floatingDiv.style.left = `${rect.left + Math.random() * 100 - 50}px`;
-            floatingDiv.style.top = `${rect.top - 30}px`;
-            
-            document.body.appendChild(floatingDiv);
-            
-            // Animate
-            let opacity = 1;
-            let posY = parseFloat(floatingDiv.style.top);
-            
-            const animate = () => {
-                opacity -= 0.02;
-                posY -= 1;
-                
-                floatingDiv.style.opacity = opacity;
-                floatingDiv.style.top = `${posY}px`;
-                
-                if (opacity > 0) {
-                    requestAnimationFrame(animate);
-                } else {
-                    document.body.removeChild(floatingDiv);
-                }
-            };
-            
-            requestAnimationFrame(animate);
-        }
-
-        function checkMultiplierUpgrade() {
-            // Upgrade multiplier based on tap count
-            if (userData.tapCount >= 1000 && userData.tapMultiplier < 5) {
-                userData.tapMultiplier = 5;
-                showNotification("🎉 Multiplier upgrade ke 5x!");
-            } else if (userData.tapCount >= 500 && userData.tapMultiplier < 3) {
-                userData.tapMultiplier = 3;
-                showNotification("🎉 Multiplier upgrade ke 3x!");
-            } else if (userData.tapCount >= 100 && userData.tapMultiplier < 2) {
-                userData.tapMultiplier = 2;
-                showNotification("🎉 Multiplier upgrade ke 2x!");
-            }
-            
-            updateTapUI();
-        }
-
         // ===== PAGE NAVIGATION FUNCTIONS =====
+        function goToTapPage() {
+            // Redirect ke halaman tap-to-earn baru
+            window.location.href = "tap-to-earn.html";
+        }
+
         function goToMyEarning() {
             showNotification("Membuka halaman My Earning...");
             // Buat halaman sederhana
@@ -1235,22 +1139,6 @@
             }
         }
 
-        // ===== ADS SYSTEM =====
-        function claimAdReward() {
-            const adReward = 300;
-            
-            userData.saldoGOV += adReward;
-            saveUserData();
-            
-            // Update wallet juga
-            updateWalletOnMining(adReward);
-            
-            updateUI();
-            
-            closeModal("rewardModal");
-            showNotification("✅ Berhasil klaim 300 GOV dari iklan!");
-        }
-
         // ===== PROFILE FUNCTIONS =====
         function editProfile() {
             const input = document.createElement("input");
@@ -1373,10 +1261,6 @@
             // Setup event listeners
             document.getElementById("claimBtn").addEventListener("click", claimMining);
             document.getElementById("referralBtn").addEventListener("click", showReferralModal);
-            document.getElementById("claimRewardBtn").addEventListener("click", claimAdReward);
-            
-            // Tap button
-            document.getElementById("tapButton").addEventListener("click", handleTap);
             
             // Profile picture click
             document.getElementById("userPhoto").addEventListener("click", editProfile);
