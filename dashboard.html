@@ -3,13 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Dashboard - UNICH</title>
     
     <style>
+        :root {
+            --primary-blue: #2196F3;
+            --light-blue: #E3F2FD;
+            --dark-blue: #1976D2;
+            --accent-blue: #03A9F4;
+            --gradient-blue: linear-gradient(135deg, #2196F3, #03A9F4);
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --medium-gray: #e0e0e0;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --shadow: 0 4px 20px rgba(33, 150, 243, 0.15);
+            --shadow-hover: 0 8px 30px rgba(33, 150, 243, 0.25);
+        }
+
         body {
-            background-color: #121212;
-            color: #e0e0e0;
-            font-family: Arial, sans-serif;
+            background-color: var(--white);
+            color: var(--text-dark);
+            font-family: 'Segoe UI', Arial, sans-serif;
             margin: 0;
             padding: 0;
             min-height: 100vh;
@@ -17,76 +34,86 @@
 
         /* Header */
         .header {
-            background: linear-gradient(135deg, #000000, #212121);
-            color: white;
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+            color: var(--white);
             padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            border-bottom: 1px solid #333;
+            box-shadow: 0 2px 10px rgba(33, 150, 243, 0.2);
         }
 
         .profile-section {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .profile-pic {
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
-            border: 2px solid #4CAF50;
+            border: 2px solid var(--white);
             object-fit: cover;
+            background: var(--light-blue);
         }
 
         .profile-name {
-            font-weight: bold;
-            font-size: 14px;
+            font-weight: 600;
+            font-size: 16px;
         }
 
         .profile-email {
             font-size: 12px;
-            opacity: 0.8;
-            color: #b0b0b0;
+            opacity: 0.9;
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .menu-btn {
-            background: none;
+            background: rgba(255, 255, 255, 0.2);
             border: none;
             color: white;
-            font-size: 24px;
+            font-size: 20px;
             cursor: pointer;
-            padding: 5px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .menu-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
 
         /* Menu Dropdown */
         .menu-dropdown {
             display: none;
             position: absolute;
-            top: 60px;
+            top: 70px;
             right: 20px;
-            background: #1e1e1e;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow-hover);
             z-index: 1000;
-            width: 180px;
+            width: 200px;
             padding: 10px 0;
-            border: 1px solid #333;
+            border: 1px solid var(--medium-gray);
         }
 
         .menu-dropdown a {
-            display: block;
-            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
             text-decoration: none;
-            color: #e0e0e0;
+            color: var(--text-dark);
             font-size: 14px;
-            border-bottom: 1px solid #333;
+            font-weight: 500;
+            transition: background 0.2s;
         }
 
         .menu-dropdown a:hover {
-            background: #2a2a2a;
+            background: var(--light-blue);
+            color: var(--primary-blue);
         }
 
         /* Rewards Section */
@@ -99,56 +126,67 @@
 
         .reward-card {
             flex: 1;
-            background: linear-gradient(135deg, #333333, #555555);
-            color: white;
-            padding: 15px;
-            border-radius: 12px;
+            background: var(--white);
+            color: var(--text-dark);
+            padding: 20px;
+            border-radius: 16px;
             text-align: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-            min-width: 140px;
-            max-width: 160px;
-            border: 1px solid #444;
+            box-shadow: var(--shadow);
+            min-width: 150px;
+            max-width: 180px;
+            border: 1px solid var(--medium-gray);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .reward-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
         }
 
         .reward-title {
             font-size: 14px;
-            margin-bottom: 5px;
-            opacity: 0.9;
-            color: #b0b0b0;
+            margin-bottom: 8px;
+            opacity: 0.8;
+            color: var(--text-light);
         }
 
         .reward-value {
-            font-size: 22px;
-            font-weight: bold;
-            color: #4CAF50;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-blue);
         }
 
-        /* Logo */
+        /* Logo Section */
         .logo-section {
             text-align: center;
-            padding: 10px 0;
+            padding: 15px 0;
         }
 
         .logo {
             width: 100px;
             height: auto;
-            animation: float 3s ease-in-out infinite;
-            filter: brightness(0.9);
+            animation: float 4s ease-in-out infinite;
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(2deg); }
+            50% { transform: translateY(-5px) rotate(-2deg); }
+            75% { transform: translateY(-8px) rotate(1deg); }
         }
 
         /* Status */
         .status-text {
             text-align: center;
-            padding: 10px;
-            font-weight: bold;
-            margin-bottom: 10px;
+            padding: 12px;
+            font-weight: 600;
+            margin-bottom: 5px;
             min-height: 24px;
-            color: #4CAF50;
+            color: var(--success);
+            background: var(--light-blue);
+            border-radius: 20px;
+            margin: 0 20px 15px;
+            font-size: 14px;
         }
 
         /* Mining Indicator */
@@ -156,99 +194,135 @@
             position: fixed;
             top: 10px;
             left: 10px;
-            background: #ff9800;
-            color: black;
-            padding: 5px 10px;
-            border-radius: 15px;
+            background: var(--warning);
+            color: var(--white);
+            padding: 6px 12px;
+            border-radius: 20px;
             font-size: 12px;
             z-index: 1000;
             display: none;
-            font-weight: bold;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(255, 152, 0, 0.3);
         }
 
         /* Tap-to-Earn Card */
         .tap-card {
-            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            background: linear-gradient(135deg, var(--white), var(--light-blue));
             margin: 20px;
             padding: 25px;
-            border-radius: 15px;
-            color: white;
+            border-radius: 20px;
+            color: var(--text-dark);
             text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            border: 1px solid #333;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .tap-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.5);
-            background: linear-gradient(135deg, #222222, #333333);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--medium-gray);
         }
 
         .tap-title {
             font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #4CAF50;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--primary-blue);
         }
 
         .tap-subtitle {
             font-size: 14px;
             opacity: 0.8;
             margin-bottom: 25px;
-            color: #b0b0b0;
+            color: var(--text-light);
+        }
+
+        .tap-button-container {
+            position: relative;
+            margin: 0 auto 30px;
+            width: 140px;
+            height: 140px;
         }
 
         .tap-button {
-            background: linear-gradient(135deg, #4CAF50, #2E7D32);
-            color: white;
+            background: var(--gradient-blue);
+            color: var(--white);
             border: none;
             border-radius: 50%;
-            width: 120px;
-            height: 120px;
+            width: 100%;
+            height: 100%;
             font-size: 20px;
-            font-weight: bold;
+            font-weight: 700;
             cursor: pointer;
-            margin: 0 auto 25px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+            box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);
             transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tap-button::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
         }
 
         .tap-button:hover {
             transform: scale(1.05);
-            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.4);
+            box-shadow: 0 12px 35px rgba(33, 150, 243, 0.5);
+        }
+
+        .tap-button:hover::before {
+            opacity: 1;
+        }
+
+        .tap-button:active {
+            transform: scale(0.95);
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+        }
+
+        .globe-icon {
+            width: 60px;
+            height: 60px;
+            filter: brightness(0) invert(1);
+            animation: spin 20s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         .tap-stats {
             display: flex;
             justify-content: space-around;
             font-size: 14px;
-            margin-top: 20px;
+            margin-top: 25px;
         }
 
         .tap-stat {
             text-align: center;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            min-width: 80px;
+            padding: 15px;
+            background: var(--white);
+            border-radius: 12px;
+            min-width: 90px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid var(--medium-gray);
         }
 
         .stat-value {
-            font-size: 20px;
-            font-weight: bold;
+            font-size: 22px;
+            font-weight: 700;
             margin-bottom: 5px;
-            color: #4CAF50;
+            color: var(--primary-blue);
         }
 
         .stat-label {
             font-size: 12px;
             opacity: 0.8;
-            color: #b0b0b0;
+            color: var(--text-light);
         }
 
         /* Menu Options Section */
@@ -261,23 +335,23 @@
         }
 
         .menu-card {
-            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
-            color: white;
-            border-radius: 15px;
+            background: var(--white);
+            color: var(--text-dark);
+            border-radius: 16px;
             padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            box-shadow: var(--shadow);
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
-            border: 1px solid #333;
+            border: 1px solid var(--medium-gray);
         }
 
         .menu-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
-            background: linear-gradient(135deg, #222222, #333333);
+            box-shadow: var(--shadow-hover);
+            background: var(--light-blue);
         }
 
         .menu-info {
@@ -288,38 +362,46 @@
         }
 
         .menu-icon {
-            background: #4CAF50;
+            background: var(--gradient-blue);
             width: 50px;
             height: 50px;
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 22px;
+            color: var(--white);
         }
 
         .menu-title {
-            font-weight: bold;
+            font-weight: 600;
             font-size: 16px;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
+            color: var(--text-dark);
         }
 
         .menu-subtitle {
             font-size: 13px;
             opacity: 0.7;
-            color: #b0b0b0;
+            color: var(--text-light);
         }
 
         .arrow-btn {
-            background: #333;
-            color: white;
+            background: var(--light-blue);
+            color: var(--primary-blue);
             border: none;
             border-radius: 10px;
             padding: 10px 15px;
-            font-weight: bold;
+            font-weight: 600;
             font-size: 16px;
             cursor: pointer;
-            border: 1px solid #444;
+            border: 1px solid var(--medium-gray);
+            transition: background 0.2s;
+        }
+
+        .arrow-btn:hover {
+            background: var(--primary-blue);
+            color: var(--white);
         }
 
         /* Bottom Navigation */
@@ -328,43 +410,51 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            background: #000000;
+            background: var(--white);
             display: flex;
             justify-content: space-around;
-            padding: 10px 0;
+            padding: 12px 0;
             z-index: 1000;
-            border-top: 1px solid #333;
+            box-shadow: 0 -2px 20px rgba(0,0,0,0.1);
+            border-top: 1px solid var(--medium-gray);
         }
 
         .nav-btn {
             background: none;
             border: none;
-            color: #b0b0b0;
+            color: var(--text-light);
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
             font-size: 11px;
             cursor: pointer;
             text-decoration: none;
-            opacity: 0.7;
-            transition: opacity 0.2s, color 0.2s;
+            transition: color 0.2s;
+            padding: 5px 10px;
+            border-radius: 10px;
         }
 
         .nav-btn.active {
-            opacity: 1;
-            color: #4CAF50;
+            color: var(--primary-blue);
+            background: var(--light-blue);
+            font-weight: 600;
         }
 
         .nav-btn:hover {
-            opacity: 1;
-            color: white;
+            color: var(--primary-blue);
         }
 
         .nav-icon {
-            width: 24px;
-            height: 24px;
-            filter: brightness(0.8);
+            width: 22px;
+            height: 22px;
+            filter: brightness(0.7);
+            transition: filter 0.2s;
+        }
+
+        .nav-btn.active .nav-icon,
+        .nav-btn:hover .nav-icon {
+            filter: brightness(1) sepia(1) saturate(5) hue-rotate(180deg);
         }
 
         /* Notification */
@@ -373,15 +463,16 @@
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: #4caf50;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
+            background: var(--primary-blue);
+            color: var(--white);
+            padding: 12px 25px;
+            border-radius: 12px;
             z-index: 3000;
             display: none;
-            font-weight: bold;
+            font-weight: 600;
             max-width: 90%;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            box-shadow: var(--shadow);
+            text-align: center;
         }
 
         /* Modals */
@@ -392,21 +483,34 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.7);
             z-index: 2000;
             justify-content: center;
             align-items: center;
+            backdrop-filter: blur(3px);
         }
 
         .modal-content {
-            background: #1e1e1e;
-            border-radius: 15px;
-            padding: 20px;
+            background: var(--white);
+            border-radius: 20px;
+            padding: 25px;
             width: 90%;
-            max-width: 350px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            border: 1px solid #333;
-            color: #e0e0e0;
+            max-width: 380px;
+            box-shadow: var(--shadow-hover);
+            border: 1px solid var(--medium-gray);
+            color: var(--text-dark);
+            animation: modalAppear 0.3s ease-out;
+        }
+
+        @keyframes modalAppear {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         /* Sync Status */
@@ -414,13 +518,73 @@
             position: fixed;
             top: 10px;
             right: 10px;
-            background: #4caf50;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 15px;
+            background: var(--success);
+            color: var(--white);
+            padding: 6px 12px;
+            border-radius: 20px;
             font-size: 12px;
             z-index: 1000;
             display: none;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(76, 175, 80, 0.3);
+        }
+
+        /* Button Styles */
+        button {
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        input, button {
+            outline: none;
+        }
+
+        /* Progress Ring */
+        .progress-ring {
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            width: calc(100% + 10px);
+            height: calc(100% + 10px);
+        }
+
+        .progress-ring-circle {
+            fill: none;
+            stroke: var(--accent-blue);
+            stroke-width: 3;
+            stroke-linecap: round;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+            transition: stroke-dashoffset 0.5s;
+        }
+
+        /* Particles Effect */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: particle-float 1s ease-out forwards;
+        }
+
+        @keyframes particle-float {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx), var(--ty)) scale(0);
+            }
         }
     </style>
 </head>
@@ -474,12 +638,21 @@
     <!-- Status -->
     <div id="statusText" class="status-text">✅ Siap klaim sekarang!</div>
 
-    <!-- Tap-to-Earn Card -->
-    <div class="tap-card" onclick="goToTapPage()">
+    <!-- Tap-to-Earn Section -->
+    <div class="tap-card">
         <div class="tap-title">Tap-to-Earn</div>
-        <div class="tap-subtitle">Klik untuk masuk ke halaman tap</div>
+        <div class="tap-subtitle">Tap bola dunia untuk mendapatkan poin!</div>
         
-        <button class="tap-button">TAP</button>
+        <div class="tap-button-container">
+            <svg class="progress-ring" viewBox="0 0 100 100">
+                <circle class="progress-ring-circle" cx="50" cy="50" r="45" 
+                        stroke-dasharray="283" stroke-dashoffset="283"></circle>
+            </svg>
+            <button class="tap-button" id="tapButton">
+                <img src="https://img.icons8.com/fluency/96/globe.png" alt="Globe" class="globe-icon">
+            </button>
+            <div class="particles" id="particles"></div>
+        </div>
         
         <div class="tap-stats">
             <div class="tap-stat">
@@ -539,9 +712,9 @@
             <img src="https://img.icons8.com/fluency/48/money.png" class="nav-icon" alt="Claim">
             <span>Claim</span>
         </button>
-        <button class="nav-btn" onclick="goToTapPage()">
-            <img src="https://img.icons8.com/fluency/48/hand-tap.png" class="nav-icon" alt="Tap">
-            <span>Tap</span>
+        <button class="nav-btn" onclick="goToMyEarning()">
+            <img src="https://img.icons8.com/fluency/48/money-bag.png" class="nav-icon" alt="Earning">
+            <span>Earning</span>
         </button>
         <a href="wallet.html" class="nav-btn">
             <img src="https://img.icons8.com/fluency/48/wallet.png" class="nav-icon" alt="Wallet">
@@ -556,18 +729,31 @@
     <!-- Referral Modal -->
     <div id="referralModal" class="modal">
         <div class="modal-content">
-            <h3 style="margin-top: 0; color: #4CAF50;">Referral Kamu</h3>
-            <p style="color: #b0b0b0;">Bagikan link ini ke temanmu:</p>
-            <input type="text" id="referralLink" readonly style="width:100%; padding:10px; margin:10px 0; border:1px solid #444; border-radius:8px; background:#2a2a2a; color:#e0e0e0;">
-            <button onclick="copyReferralLink()" style="width:100%; padding:12px; background:#4CAF50; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">Salin Link</button>
-            <div style="margin-top: 20px;">
-                <h4 style="color: #e0e0e0;">Orang yang Kamu Undang:</h4>
-                <ul id="referralList" style="padding-left: 20px; color: #b0b0b0;">
+            <h3 style="margin-top: 0; color: var(--primary-blue);">Referral Kamu</h3>
+            <p style="color: var(--text-light);">Bagikan link ini ke temanmu:</p>
+            <input type="text" id="referralLink" readonly style="width:100%; padding:12px; margin:10px 0; border:2px solid var(--medium-gray); border-radius:10px; background:var(--light-gray); color:var(--text-dark); font-size:14px;">
+            <button onclick="copyReferralLink()" style="width:100%; padding:14px; background:var(--gradient-blue); color:var(--white); border:none; border-radius:10px; font-weight:600; cursor:pointer; font-size:14px; margin-top:10px;">Salin Link</button>
+            <div style="margin-top: 25px;">
+                <h4 style="color: var(--text-dark);">Orang yang Kamu Undang:</h4>
+                <ul id="referralList" style="padding-left: 20px; color: var(--text-light); margin:10px 0; max-height:150px; overflow-y:auto;">
                     <li>Belum ada referral</li>
                 </ul>
-                <p style="margin-top: 15px; color: #e0e0e0;">Total Poin Referral: <span id="referralTotalPoin" style="font-weight:bold; color:#4CAF50;">0</span> Poin</p>
+                <p style="margin-top: 20px; color: var(--text-dark); padding:12px; background:var(--light-blue); border-radius:10px; font-weight:600;">
+                    Total Poin Referral: <span id="referralTotalPoin" style="color:var(--primary-blue);">0</span> Poin
+                </p>
             </div>
-            <button onclick="closeModal('referralModal')" style="width:100%; padding:10px; margin-top:15px; background:#d32f2f; color:white; border:none; border-radius:8px; cursor:pointer;">Tutup</button>
+            <button onclick="closeModal('referralModal')" style="width:100%; padding:12px; margin-top:15px; background:var(--text-light); color:var(--white); border:none; border-radius:10px; font-weight:600; cursor:pointer;">Tutup</button>
+        </div>
+    </div>
+
+    <!-- Reward Modal -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <div style="text-align: center;">
+                <img src="https://i.postimg.cc/0KZ505rV/file-0000000084f062309e6fd2523e94f3de.png" alt="Reward" style="width: 80px; margin-bottom: 15px;">
+                <h3 style="color: var(--primary-blue); margin-bottom: 15px;">🎉 Dapat 300 Poin Riwed</h3>
+                <button id="claimRewardBtn" style="padding:14px 40px; background:var(--gradient-blue); color:var(--white); border:none; border-radius:10px; font-weight:600; cursor:pointer; font-size:16px;">Klaim Sekarang</button>
+            </div>
         </div>
     </div>
 
@@ -595,7 +781,7 @@
         function showNotification(message, isSuccess = true) {
             const notification = document.getElementById("notification");
             notification.textContent = message;
-            notification.style.background = isSuccess ? "#4CAF50" : "#d32f2f";
+            notification.style.background = isSuccess ? "var(--primary-blue)" : "#d32f2f";
             notification.style.display = "block";
             setTimeout(() => {
                 notification.style.display = "none";
@@ -636,6 +822,42 @@
                 menu.style.display = "none";
             }
         });
+
+        // ===== PARTICLE EFFECT =====
+        function createParticles(x, y) {
+            const particlesContainer = document.getElementById("particles");
+            const colors = ["#2196F3", "#03A9F4", "#64B5F6", "#90CAF9"];
+            
+            for (let i = 0; i < 12; i++) {
+                const particle = document.createElement("div");
+                particle.className = "particle";
+                
+                // Random color
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Random direction and distance
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 30 + Math.random() * 50;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+                
+                particle.style.setProperty("--tx", `${tx}px`);
+                particle.style.setProperty("--ty", `${ty}px`);
+                
+                // Position at click point
+                particle.style.left = `${x}px`;
+                particle.style.top = `${y}px`;
+                
+                particlesContainer.appendChild(particle);
+                
+                // Remove after animation
+                setTimeout(() => {
+                    if (particle.parentNode === particlesContainer) {
+                        particlesContainer.removeChild(particle);
+                    }
+                }, 1000);
+            }
+        }
 
         // ===== LOAD USER FROM LOCALSTORAGE =====
         function loadUser() {
@@ -788,7 +1010,7 @@
             if (isCompleted) {
                 // Mining sudah selesai, siap untuk claim
                 document.getElementById("statusText").textContent = "✅ Siap klaim sekarang!";
-                document.getElementById("statusText").style.color = "#4CAF50";
+                document.getElementById("statusText").style.color = "var(--success)";
                 document.getElementById("claimBtn").disabled = false;
                 showMiningIndicator(false);
                 return;
@@ -828,7 +1050,7 @@
                 // Belum mulai mining
                 document.getElementById("dailyRewards").textContent = "0";
                 document.getElementById("statusText").textContent = "⏳ Mulai mining...";
-                document.getElementById("statusText").style.color = "#ff9800";
+                document.getElementById("statusText").style.color = "var(--warning)";
                 document.getElementById("claimBtn").disabled = true;
                 showMiningIndicator(false);
                 return;
@@ -843,7 +1065,7 @@
                 document.getElementById("dailyRewards").textContent = CLAIM_REWARD.toLocaleString('id-ID');
                 document.getElementById("claimBtn").disabled = false;
                 document.getElementById("statusText").textContent = "✅ Siap klaim sekarang!";
-                document.getElementById("statusText").style.color = "#4CAF50";
+                document.getElementById("statusText").style.color = "var(--success)";
                 showMiningIndicator(false);
                 
                 // Tandai mining selesai
@@ -868,7 +1090,7 @@
                     document.getElementById("statusText").textContent = 
                         `⏳ ${minutes}m ${seconds}s lagi`;
                 }
-                document.getElementById("statusText").style.color = "#ff9800";
+                document.getElementById("statusText").style.color = "var(--warning)";
                 showMiningIndicator(true);
             }
         }
@@ -931,41 +1153,148 @@
             document.getElementById("tapMultiplier").textContent = userData.tapMultiplier + "x";
         }
 
-        // ===== PAGE NAVIGATION FUNCTIONS =====
-        function goToTapPage() {
-            // Redirect ke halaman tap-to-earn baru
-            window.location.href = "tap-to-earn.html";
+        function handleTap(event) {
+            const tapButton = document.getElementById("tapButton");
+            
+            // Get click position relative to button
+            const rect = tapButton.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            
+            // Create particle effect
+            createParticles(x, y);
+            
+            // Add animation
+            tapButton.style.transform = "scale(0.95)";
+            setTimeout(() => {
+                tapButton.style.transform = "scale(1)";
+            }, 100);
+            
+            // Animate progress ring
+            const circle = document.querySelector('.progress-ring-circle');
+            circle.style.strokeDashoffset = '0';
+            setTimeout(() => {
+                circle.style.strokeDashoffset = '283';
+            }, 300);
+            
+            // Calculate points earned (1-3 points per tap)
+            const basePoints = Math.floor(Math.random() * 3) + 1;
+            const pointsEarned = basePoints * userData.tapMultiplier;
+            
+            // Update tap stats
+            userData.tapCount++;
+            userData.tapPoints += pointsEarned;
+            
+            // Update GOV balance
+            userData.saldoGOV += pointsEarned;
+            
+            // Update UI
+            updateTapUI();
+            updateUI();
+            
+            // Save data
+            saveUserData();
+            
+            // Update wallet
+            updateWalletOnMining(pointsEarned);
+            
+            // Show floating point animation
+            showFloatingPoints(pointsEarned, x, y);
+            
+            // Check for multiplier upgrade
+            checkMultiplierUpgrade();
         }
 
+        function showFloatingPoints(points, x, y) {
+            const tapCard = document.querySelector(".tap-card");
+            const floatingDiv = document.createElement("div");
+            floatingDiv.textContent = `+${points} GOV`;
+            floatingDiv.style.position = "absolute";
+            floatingDiv.style.color = "var(--primary-blue)";
+            floatingDiv.style.fontWeight = "bold";
+            floatingDiv.style.fontSize = "18px";
+            floatingDiv.style.pointerEvents = "none";
+            floatingDiv.style.zIndex = "2000";
+            floatingDiv.style.textShadow = "0 2px 4px rgba(255, 255, 255, 0.8)";
+            
+            // Position relative to tap button
+            const tapButton = document.getElementById("tapButton");
+            const rect = tapButton.getBoundingClientRect();
+            
+            floatingDiv.style.left = `${rect.left + x - 30}px`;
+            floatingDiv.style.top = `${rect.top + y - 15}px`;
+            
+            document.body.appendChild(floatingDiv);
+            
+            // Animate
+            let opacity = 1;
+            let posY = parseFloat(floatingDiv.style.top);
+            
+            const animate = () => {
+                opacity -= 0.02;
+                posY -= 1.5;
+                
+                floatingDiv.style.opacity = opacity;
+                floatingDiv.style.top = `${posY}px`;
+                
+                if (opacity > 0) {
+                    requestAnimationFrame(animate);
+                } else {
+                    if (floatingDiv.parentNode) {
+                        document.body.removeChild(floatingDiv);
+                    }
+                }
+            };
+            
+            requestAnimationFrame(animate);
+        }
+
+        function checkMultiplierUpgrade() {
+            // Upgrade multiplier based on tap count
+            if (userData.tapCount >= 1000 && userData.tapMultiplier < 5) {
+                userData.tapMultiplier = 5;
+                showNotification("🎉 Multiplier upgrade ke 5x!");
+            } else if (userData.tapCount >= 500 && userData.tapMultiplier < 3) {
+                userData.tapMultiplier = 3;
+                showNotification("🎉 Multiplier upgrade ke 3x!");
+            } else if (userData.tapCount >= 100 && userData.tapMultiplier < 2) {
+                userData.tapMultiplier = 2;
+                showNotification("🎉 Multiplier upgrade ke 2x!");
+            }
+            
+            updateTapUI();
+        }
+
+        // ===== PAGE NAVIGATION FUNCTIONS =====
         function goToMyEarning() {
             showNotification("Membuka halaman My Earning...");
             // Buat halaman sederhana
             const earningModalContent = `
                 <div class="modal-content">
-                    <h3 style="color: #4CAF50; margin-top: 0;">My Earning</h3>
+                    <h3 style="color: var(--primary-blue); margin-top: 0;">My Earning</h3>
                     
-                    <div style="background: linear-gradient(135deg, #333, #555); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; text-align: center; border: 1px solid #444;">
-                        <div style="font-size: 14px; opacity: 0.9; color: #b0b0b0;">Total Pendapatan</div>
-                        <div style="font-size: 32px; font-weight: bold; color: #4CAF50;">${userData.saldoGOV.toLocaleString('id-ID')} GOV</div>
+                    <div style="background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue)); color: white; padding: 25px; border-radius: 16px; margin-bottom: 25px; text-align: center; box-shadow: var(--shadow);">
+                        <div style="font-size: 14px; opacity: 0.9;">Total Pendapatan</div>
+                        <div style="font-size: 36px; font-weight: bold;">${userData.saldoGOV.toLocaleString('id-ID')} GOV</div>
                     </div>
                     
-                    <div style="margin-bottom: 20px;">
-                        <h4 style="color: #e0e0e0;">Statistik Pendapatan</h4>
-                        <div style="display: flex; justify-content: space-between; margin: 10px 0; padding: 10px; background: #2a2a2a; border-radius: 8px;">
-                            <span style="color: #b0b0b0;">Hari Ini:</span>
-                            <span style="font-weight: bold; color: #4CAF50;">500 GOV</span>
+                    <div style="margin-bottom: 25px;">
+                        <h4 style="color: var(--text-dark);">Statistik Pendapatan</h4>
+                        <div style="display: flex; justify-content: space-between; margin: 12px 0; padding: 15px; background: var(--light-blue); border-radius: 12px; border: 1px solid var(--medium-gray);">
+                            <span style="color: var(--text-light);">Hari Ini:</span>
+                            <span style="font-weight: bold; color: var(--primary-blue);">500 GOV</span>
                         </div>
-                        <div style="display: flex; justify-content: space-between; margin: 10px 0; padding: 10px; background: #2a2a2a; border-radius: 8px;">
-                            <span style="color: #b0b0b0;">Minggu Ini:</span>
-                            <span style="font-weight: bold; color: #4CAF50;">3,500 GOV</span>
+                        <div style="display: flex; justify-content: space-between; margin: 12px 0; padding: 15px; background: var(--light-blue); border-radius: 12px; border: 1px solid var(--medium-gray);">
+                            <span style="color: var(--text-light);">Minggu Ini:</span>
+                            <span style="font-weight: bold; color: var(--primary-blue);">3,500 GOV</span>
                         </div>
-                        <div style="display: flex; justify-content: space-between; margin: 10px 0; padding: 10px; background: #2a2a2a; border-radius: 8px;">
-                            <span style="color: #b0b0b0;">Bulan Ini:</span>
-                            <span style="font-weight: bold; color: #4CAF50;">15,000 GOV</span>
+                        <div style="display: flex; justify-content: space-between; margin: 12px 0; padding: 15px; background: var(--light-blue); border-radius: 12px; border: 1px solid var(--medium-gray);">
+                            <span style="color: var(--text-light);">Bulan Ini:</span>
+                            <span style="font-weight: bold; color: var(--primary-blue);">15,000 GOV</span>
                         </div>
                     </div>
                     
-                    <button onclick="closeModal('earningModal')" style="width:100%; padding:12px; background:#d32f2f; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">Tutup</button>
+                    <button onclick="closeModal('earningModal')" style="width:100%; padding:14px; background:var(--text-light); color:white; border:none; border-radius:12px; font-weight:600; cursor:pointer;">Tutup</button>
                 </div>
             `;
             
@@ -983,44 +1312,44 @@
             // Buat halaman sederhana
             const historyModalContent = `
                 <div class="modal-content">
-                    <h3 style="color: #4CAF50; margin-top: 0;">History</h3>
-                    <p style="color: #b0b0b0; margin-bottom: 20px;">Riwayat transaksi dan aktivitas</p>
+                    <h3 style="color: var(--primary-blue); margin-top: 0;">History</h3>
+                    <p style="color: var(--text-light); margin-bottom: 20px;">Riwayat transaksi dan aktivitas</p>
                     
-                    <div style="max-height: 300px; overflow-y: auto;">
-                        <div style="background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #333;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                <span style="font-weight: bold; color: #e0e0e0;">Mining Reward</span>
-                                <span style="color: #4CAF50; font-weight: bold;">+500 GOV</span>
+                    <div style="max-height: 300px; overflow-y: auto; padding-right: 5px;">
+                        <div style="background: var(--light-blue); padding: 18px; border-radius: 12px; margin-bottom: 12px; border: 1px solid var(--medium-gray);">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="font-weight: 600; color: var(--text-dark);">Mining Reward</span>
+                                <span style="color: var(--success); font-weight: bold;">+500 GOV</span>
                             </div>
-                            <div style="font-size: 12px; color: #b0b0b0;">Hari ini, 10:30</div>
+                            <div style="font-size: 12px; color: var(--text-light);">Hari ini, 10:30</div>
                         </div>
                         
-                        <div style="background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #333;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                <span style="font-weight: bold; color: #e0e0e0;">Referral Bonus</span>
-                                <span style="color: #4CAF50; font-weight: bold;">+1000 GOV</span>
+                        <div style="background: var(--light-blue); padding: 18px; border-radius: 12px; margin-bottom: 12px; border: 1px solid var(--medium-gray);">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="font-weight: 600; color: var(--text-dark);">Referral Bonus</span>
+                                <span style="color: var(--success); font-weight: bold;">+1000 GOV</span>
                             </div>
-                            <div style="font-size: 12px; color: #b0b0b0;">Kemarin, 14:20</div>
+                            <div style="font-size: 12px; color: var(--text-light);">Kemarin, 14:20</div>
                         </div>
                         
-                        <div style="background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #333;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                <span style="font-weight: bold; color: #e0e0e0;">Tap-to-Earn</span>
-                                <span style="color: #4CAF50; font-weight: bold;">+150 GOV</span>
+                        <div style="background: var(--light-blue); padding: 18px; border-radius: 12px; margin-bottom: 12px; border: 1px solid var(--medium-gray);">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="font-weight: 600; color: var(--text-dark);">Tap-to-Earn</span>
+                                <span style="color: var(--success); font-weight: bold;">+150 GOV</span>
                             </div>
-                            <div style="font-size: 12px; color: #b0b0b0;">2 hari lalu, 09:15</div>
+                            <div style="font-size: 12px; color: var(--text-light);">2 hari lalu, 09:15</div>
                         </div>
                         
-                        <div style="background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #333;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                <span style="font-weight: bold; color: #e0e0e0;">Bonus Pendaftaran</span>
-                                <span style="color: #4CAF50; font-weight: bold;">+100 GOV</span>
+                        <div style="background: var(--light-blue); padding: 18px; border-radius: 12px; margin-bottom: 12px; border: 1px solid var(--medium-gray);">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="font-weight: 600; color: var(--text-dark);">Bonus Pendaftaran</span>
+                                <span style="color: var(--success); font-weight: bold;">+100 GOV</span>
                             </div>
-                            <div style="font-size: 12px; color: #b0b0b0;">3 hari lalu, 11:45</div>
+                            <div style="font-size: 12px; color: var(--text-light);">3 hari lalu, 11:45</div>
                         </div>
                     </div>
                     
-                    <button onclick="closeModal('historyModal')" style="width:100%; padding:12px; margin-top:20px; background:#d32f2f; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">Tutup</button>
+                    <button onclick="closeModal('historyModal')" style="width:100%; padding:14px; margin-top:20px; background:var(--text-light); color:white; border:none; border-radius:12px; font-weight:600; cursor:pointer;">Tutup</button>
                 </div>
             `;
             
@@ -1038,40 +1367,40 @@
             // Buat halaman sederhana
             const settingsModalContent = `
                 <div class="modal-content">
-                    <h3 style="color: #4CAF50; margin-top: 0;">Setting</h3>
+                    <h3 style="color: var(--primary-blue); margin-top: 0;">Setting</h3>
                     
-                    <div style="margin-bottom: 20px;">
-                        <h4 style="color: #e0e0e0;">Akun</h4>
-                        <div style="background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; border: 1px solid #333;" onclick="editProfile()">
-                            <div style="font-weight: bold; color: #e0e0e0;">Ubah Foto Profil</div>
-                            <div style="font-size: 12px; color: #b0b0b0;">Klik untuk mengubah foto profil</div>
+                    <div style="margin-bottom: 25px;">
+                        <h4 style="color: var(--text-dark);">Akun</h4>
+                        <div style="background: var(--light-blue); padding: 18px; border-radius: 12px; margin-bottom: 12px; cursor: pointer; border: 1px solid var(--medium-gray);" onclick="editProfile()">
+                            <div style="font-weight: 600; color: var(--text-dark);">Ubah Foto Profil</div>
+                            <div style="font-size: 13px; color: var(--text-light);">Klik untuk mengubah foto profil</div>
                         </div>
                         
-                        <div style="background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #333;">
-                            <div style="font-weight: bold; color: #e0e0e0;">Notifikasi</div>
-                            <div style="font-size: 12px; color: #b0b0b0;">
-                                <label style="display: flex; justify-content: space-between; align-items: center; margin-top: 5px;">
+                        <div style="background: var(--light-blue); padding: 18px; border-radius: 12px; margin-bottom: 12px; border: 1px solid var(--medium-gray);">
+                            <div style="font-weight: 600; color: var(--text-dark);">Notifikasi</div>
+                            <div style="font-size: 13px; color: var(--text-light); margin-top: 8px;">
+                                <label style="display: flex; justify-content: space-between; align-items: center; padding: 5px 0;">
                                     <span>Notifikasi Reward</span>
-                                    <input type="checkbox" checked style="transform: scale(1.2);">
+                                    <input type="checkbox" checked style="transform: scale(1.3); accent-color: var(--primary-blue);">
                                 </label>
                             </div>
                         </div>
                     </div>
                     
-                    <div style="margin-bottom: 20px;">
-                        <h4 style="color: #e0e0e0;">Aplikasi</h4>
-                        <div style="background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #333;">
-                            <div style="font-weight: bold; color: #e0e0e0;">Versi Aplikasi</div>
-                            <div style="font-size: 12px; color: #b0b0b0;">v1.0.0</div>
+                    <div style="margin-bottom: 25px;">
+                        <h4 style="color: var(--text-dark);">Aplikasi</h4>
+                        <div style="background: var(--light-blue); padding: 18px; border-radius: 12px; margin-bottom: 12px; border: 1px solid var(--medium-gray);">
+                            <div style="font-weight: 600; color: var(--text-dark);">Versi Aplikasi</div>
+                            <div style="font-size: 13px; color: var(--text-light);">v1.0.0</div>
                         </div>
                         
-                        <div style="background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #333;">
-                            <div style="font-weight: bold; color: #e0e0e0;">Bantuan & Dukungan</div>
-                            <div style="font-size: 12px; color: #b0b0b0;">support@unich.com</div>
+                        <div style="background: var(--light-blue); padding: 18px; border-radius: 12px; margin-bottom: 12px; border: 1px solid var(--medium-gray);">
+                            <div style="font-weight: 600; color: var(--text-dark);">Bantuan & Dukungan</div>
+                            <div style="font-size: 13px; color: var(--text-light);">support@unich.com</div>
                         </div>
                     </div>
                     
-                    <button onclick="closeModal('settingsModal')" style="width:100%; padding:12px; background:#d32f2f; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">Tutup</button>
+                    <button onclick="closeModal('settingsModal')" style="width:100%; padding:14px; background:var(--text-light); color:white; border:none; border-radius:12px; font-weight:600; cursor:pointer;">Tutup</button>
                 </div>
             `;
             
@@ -1137,6 +1466,22 @@
                     window.history.replaceState({}, document.title, window.location.pathname);
                 }
             }
+        }
+
+        // ===== ADS SYSTEM =====
+        function claimAdReward() {
+            const adReward = 300;
+            
+            userData.saldoGOV += adReward;
+            saveUserData();
+            
+            // Update wallet juga
+            updateWalletOnMining(adReward);
+            
+            updateUI();
+            
+            closeModal("rewardModal");
+            showNotification("✅ Berhasil klaim 300 GOV dari iklan!");
         }
 
         // ===== PROFILE FUNCTIONS =====
@@ -1261,6 +1606,10 @@
             // Setup event listeners
             document.getElementById("claimBtn").addEventListener("click", claimMining);
             document.getElementById("referralBtn").addEventListener("click", showReferralModal);
+            document.getElementById("claimRewardBtn").addEventListener("click", claimAdReward);
+            
+            // Tap button with click position tracking
+            document.getElementById("tapButton").addEventListener("click", handleTap);
             
             // Profile picture click
             document.getElementById("userPhoto").addEventListener("click", editProfile);
