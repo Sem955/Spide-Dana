@@ -97,19 +97,22 @@
             display: flex;
             gap: 15px;
             justify-content: center;
+            background: linear-gradient(135deg, #ffffff, #e3f2fd);
+            margin: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(30, 60, 114, 0.1);
+            border: 1px solid #bbdefb;
         }
 
         .reward-card {
             flex: 1;
-            background: linear-gradient(135deg, #ffffff, #e3f2fd);
+            background: transparent;
             color: #1e3c72;
             padding: 15px;
             border-radius: 12px;
             text-align: center;
-            box-shadow: 0 4px 8px rgba(30, 60, 114, 0.1);
             min-width: 140px;
             max-width: 160px;
-            border: 1px solid #bbdefb;
         }
 
         .reward-title {
@@ -117,6 +120,7 @@
             margin-bottom: 5px;
             opacity: 0.8;
             color: #1e3c72;
+            font-weight: bold;
         }
 
         .reward-value {
@@ -143,29 +147,42 @@
             50% { transform: translateY(-10px); }
         }
 
-        /* Status */
-        .status-text {
+        /* Status Section */
+        .status-section {
+            background: linear-gradient(135deg, #ffffff, #e8f4fd);
+            margin: 15px;
+            padding: 15px;
+            border-radius: 15px;
             text-align: center;
-            padding: 10px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            min-height: 24px;
-            color: #2196F3;
+            box-shadow: 0 4px 15px rgba(30, 60, 114, 0.1);
+            border: 1px solid #bbdefb;
         }
 
-        /* Mining Indicator */
-        .mining-indicator {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            background: #ff9800;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 12px;
-            z-index: 1000;
-            display: none;
+        .mining-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #ff9800;
             font-weight: bold;
+        }
+
+        .mining-icon {
+            font-size: 18px;
+        }
+
+        .status-text {
+            font-weight: bold;
+            min-height: 24px;
+            color: #ff9800;
+            font-size: 16px;
+            padding: 8px;
+            background: rgba(255, 152, 0, 0.1);
+            border-radius: 8px;
+            display: inline-block;
+            margin: 5px 0;
         }
 
         /* Tap-to-Earn Card */
@@ -183,7 +200,7 @@
         .tap-title {
             font-size: 24px;
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             color: #2196F3;
         }
 
@@ -195,9 +212,9 @@
         }
 
         .tap-button {
-            background: linear-gradient(135deg, #2196F3, #1976D2);
-            color: white;
-            border: none;
+            background: white;
+            color: #2196F3;
+            border: 4px solid #2196F3;
             border-radius: 50%;
             width: 120px;
             height: 120px;
@@ -209,16 +226,25 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 8px 25px rgba(33, 150, 243, 0.3);
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+            overflow: hidden;
+            padding: 0;
         }
 
         .tap-button:hover {
             transform: scale(1.05);
             box-shadow: 0 10px 30px rgba(33, 150, 243, 0.4);
+            background: #e3f2fd;
         }
 
         .tap-button:active {
             transform: scale(0.95);
+        }
+
+        .tap-button img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
         }
 
         .tap-stats {
@@ -351,6 +377,7 @@
             text-decoration: none;
             opacity: 0.7;
             transition: opacity 0.2s, color 0.2s;
+            width: 60px;
         }
 
         .nav-btn.active {
@@ -424,6 +451,40 @@
             z-index: 1000;
             display: none;
         }
+
+        /* Mining Indicator */
+        .mining-indicator {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: #ff9800;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            z-index: 1000;
+            display: none;
+            font-weight: bold;
+        }
+
+        /* GOV Balance Display */
+        .gov-balance {
+            text-align: center;
+            margin: 10px 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+            border-radius: 12px;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
+        }
+
+        .gov-balance span {
+            font-size: 24px;
+            display: block;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
@@ -456,11 +517,26 @@
         <a href="#" onclick="logout()">🚪 Logout</a>
     </div>
 
+    <!-- GOV Balance Display -->
+    <div class="gov-balance" id="govBalanceDisplay">
+        GOV Balance
+        <span id="currentGovBalance">0</span>
+    </div>
+
+    <!-- Status Section -->
+    <div class="status-section">
+        <div class="mining-status">
+            <span class="mining-icon">⛏️</span>
+            <span>Mining berjalan...</span>
+        </div>
+        <div id="statusText" class="status-text">37m 3s lagi</div>
+    </div>
+
     <!-- Rewards Section -->
     <div class="rewards-section">
         <div class="reward-card">
             <div class="reward-title">GOV</div>
-            <div class="reward-value" id="totalRewards">0</div>
+            <div class="reward-value" id="totalRewards">4.278</div>
         </div>
         <div class="reward-card">
             <div class="reward-title">1JAM REWARD</div>
@@ -473,27 +549,26 @@
         <img src="https://i.postimg.cc/x8XVRwZS/file-00000000f3d06230a63b9cde063aaecc-1.png" alt="Logo" class="logo">
     </div>
 
-    <!-- Status -->
-    <div id="statusText" class="status-text">✅ Siap klaim sekarang!</div>
-
     <!-- Tap-to-Earn Section -->
     <div class="tap-card">
         <div class="tap-title">Tap-to-Earn</div>
         <div class="tap-subtitle">Tap tombol untuk mendapatkan poin!</div>
         
-        <button class="tap-button" id="tapButton">TAP</button>
+        <button class="tap-button" id="tapButton">
+            <img src="https://img.icons8.com/color/96/earth-planet.png" alt="Dunia">
+        </button>
         
         <div class="tap-stats">
             <div class="tap-stat">
-                <div class="stat-value" id="tapCount">0</div>
+                <div class="stat-value" id="tapCount">4.278</div>
                 <div class="stat-label">Total Tap</div>
             </div>
             <div class="tap-stat">
-                <div class="stat-value" id="tapPoints">0</div>
+                <div class="stat-value" id="tapPoints">37.328</div>
                 <div class="stat-label">Poin</div>
             </div>
             <div class="tap-stat">
-                <div class="stat-value" id="tapMultiplier">1x</div>
+                <div class="stat-value" id="tapMultiplier">5x</div>
                 <div class="stat-label">Multiplier</div>
             </div>
         </div>
@@ -599,9 +674,9 @@
             lastClaimTime: null,
             referralPoints: 0,
             referrals: [],
-            tapCount: 0,
-            tapPoints: 0,
-            tapMultiplier: 1
+            tapCount: 4278,
+            tapPoints: 37328,
+            tapMultiplier: 5
         };
 
         // ===== UTILITY FUNCTIONS =====
@@ -673,13 +748,13 @@
             if (savedData) {
                 try {
                     const parsed = JSON.parse(savedData);
-                    userData.saldoGOV = parsed.saldoGOV || 0;
+                    userData.saldoGOV = parsed.saldoGOV || 4278;
                     userData.lastClaimTime = parsed.lastClaimTime || null;
                     userData.referralPoints = parsed.referralPoints || 0;
                     userData.referrals = parsed.referrals || [];
-                    userData.tapCount = parsed.tapCount || 0;
-                    userData.tapPoints = parsed.tapPoints || 0;
-                    userData.tapMultiplier = parsed.tapMultiplier || 1;
+                    userData.tapCount = parsed.tapCount || 4278;
+                    userData.tapPoints = parsed.tapPoints || 37328;
+                    userData.tapMultiplier = parsed.tapMultiplier || 5;
                 } catch (e) {
                     console.log("Could not parse saved data");
                 }
@@ -705,6 +780,7 @@
             updateUserInfo();
             updateUI();
             updateTapUI();
+            updateGovBalance();
             
             // Sync dengan wallet
             syncWithWallet();
@@ -721,6 +797,11 @@
             if (savedPhoto) {
                 document.getElementById("userPhoto").src = savedPhoto;
             }
+        }
+
+        function updateGovBalance() {
+            document.getElementById("currentGovBalance").textContent = 
+                userData.saldoGOV.toLocaleString('id-ID');
         }
 
         function saveUserData() {
@@ -785,6 +866,7 @@
                 userData.saldoGOV = walletData.saldoGOV;
                 saveUserData();
                 updateUI();
+                updateGovBalance();
                 console.log("🔄 Dashboard synced with wallet:", walletData.saldoGOV, "GOV");
             }
         }
@@ -800,6 +882,8 @@
             
             if (isCompleted) {
                 // Mining sudah selesai, siap untuk claim
+                document.querySelector(".mining-status span:last-child").textContent = "✅ Mining selesai!";
+                document.querySelector(".mining-status").style.color = "#2196F3";
                 document.getElementById("statusText").textContent = "✅ Siap klaim sekarang!";
                 document.getElementById("statusText").style.color = "#2196F3";
                 document.getElementById("claimBtn").disabled = false;
@@ -840,6 +924,8 @@
             if (miningStartTime === 0) {
                 // Belum mulai mining
                 document.getElementById("dailyRewards").textContent = "0";
+                document.querySelector(".mining-status span:last-child").textContent = "Mulai mining...";
+                document.querySelector(".mining-status").style.color = "#ff9800";
                 document.getElementById("statusText").textContent = "⏳ Mulai mining...";
                 document.getElementById("statusText").style.color = "#ff9800";
                 document.getElementById("claimBtn").disabled = true;
@@ -849,11 +935,13 @@
             
             // Update total GOV
             document.getElementById("totalRewards").textContent = 
-                userData.saldoGOV.toLocaleString('id-ID');
+                userData.tapCount.toLocaleString('id-ID');
             
             if (elapsed >= COOLDOWN_MS) {
                 // Mining selesai
                 document.getElementById("dailyRewards").textContent = CLAIM_REWARD.toLocaleString('id-ID');
+                document.querySelector(".mining-status span:last-child").textContent = "✅ Mining selesai!";
+                document.querySelector(".mining-status").style.color = "#2196F3";
                 document.getElementById("claimBtn").disabled = false;
                 document.getElementById("statusText").textContent = "✅ Siap klaim sekarang!";
                 document.getElementById("statusText").style.color = "#2196F3";
@@ -882,6 +970,7 @@
                         `⏳ ${minutes}m ${seconds}s lagi`;
                 }
                 document.getElementById("statusText").style.color = "#ff9800";
+                document.querySelector(".mining-status").style.color = "#ff9800";
                 showMiningIndicator(true);
             }
         }
@@ -917,6 +1006,7 @@
             
             // Update UI
             updateUI();
+            updateGovBalance();
             
             showNotification(`✅ Berhasil klaim ${miningReward} GOV!`);
             
@@ -931,7 +1021,7 @@
         function updateUI() {
             // Update total GOV
             document.getElementById("totalRewards").textContent = 
-                userData.saldoGOV.toLocaleString('id-ID');
+                userData.tapCount.toLocaleString('id-ID');
             
             // Check mining status
             checkAndStartMining();
@@ -967,6 +1057,7 @@
             // Update UI
             updateTapUI();
             updateUI();
+            updateGovBalance();
             
             // Save data
             saveUserData();
@@ -1252,6 +1343,7 @@
             updateWalletOnMining(adReward);
             
             updateUI();
+            updateGovBalance();
             
             closeModal("rewardModal");
             showNotification("✅ Berhasil klaim 300 GOV dari iklan!");
@@ -1299,6 +1391,7 @@
                     userData.saldoGOV = walletData.saldoGOV;
                     saveUserData();
                     updateUI();
+                    updateGovBalance();
                     console.log("🔄 Auto-synced with wallet");
                 }
             }
