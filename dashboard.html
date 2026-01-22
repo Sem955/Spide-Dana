@@ -7,9 +7,9 @@
     
     <style>
         body {
-            background-color: #f8fafc;
-            color: #334155;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             min-height: 100vh;
@@ -17,14 +17,14 @@
 
         /* Header */
         .header {
-            background: linear-gradient(135deg, #ffffff 0%, #e0f2fe 100%);
-            color: #0c4a6e;
+            background: linear-gradient(135deg, #000000, #212121);
+            color: white;
             padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(14, 165, 233, 0.1);
-            border-bottom: 1px solid #bae6fd;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            border-bottom: 1px solid #333;
         }
 
         .profile-section {
@@ -37,36 +37,28 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            border: 2px solid #0ea5e9;
+            border: 2px solid #4CAF50;
             object-fit: cover;
-            background-color: #e0f2fe;
         }
 
         .profile-name {
             font-weight: bold;
             font-size: 14px;
-            color: #0c4a6e;
         }
 
         .profile-email {
             font-size: 12px;
             opacity: 0.8;
-            color: #64748b;
+            color: #b0b0b0;
         }
 
         .menu-btn {
             background: none;
             border: none;
-            color: #0ea5e9;
+            color: white;
             font-size: 24px;
             cursor: pointer;
             padding: 5px;
-            border-radius: 5px;
-            transition: background-color 0.2s;
-        }
-
-        .menu-btn:hover {
-            background-color: #e0f2fe;
         }
 
         /* Menu Dropdown */
@@ -75,28 +67,26 @@
             position: absolute;
             top: 60px;
             right: 20px;
-            background: #ffffff;
+            background: #1e1e1e;
             border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.15);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
             z-index: 1000;
             width: 180px;
             padding: 10px 0;
-            border: 1px solid #bae6fd;
+            border: 1px solid #333;
         }
 
         .menu-dropdown a {
             display: block;
             padding: 12px 15px;
             text-decoration: none;
-            color: #475569;
+            color: #e0e0e0;
             font-size: 14px;
-            border-bottom: 1px solid #f1f5f9;
-            transition: background-color 0.2s;
+            border-bottom: 1px solid #333;
         }
 
         .menu-dropdown a:hover {
-            background: #f0f9ff;
-            color: #0ea5e9;
+            background: #2a2a2a;
         }
 
         /* Rewards Section */
@@ -109,28 +99,28 @@
 
         .reward-card {
             flex: 1;
-            background: linear-gradient(135deg, #ffffff 0%, #e0f2fe 100%);
-            color: #0c4a6e;
+            background: linear-gradient(135deg, #333333, #555555);
+            color: white;
             padding: 15px;
             border-radius: 12px;
             text-align: center;
-            box-shadow: 0 4px 8px rgba(14, 165, 233, 0.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
             min-width: 140px;
             max-width: 160px;
-            border: 1px solid #bae6fd;
+            border: 1px solid #444;
         }
 
         .reward-title {
             font-size: 14px;
             margin-bottom: 5px;
             opacity: 0.9;
-            color: #64748b;
+            color: #b0b0b0;
         }
 
         .reward-value {
             font-size: 22px;
             font-weight: bold;
-            color: #0ea5e9;
+            color: #4CAF50;
         }
 
         /* Logo */
@@ -143,7 +133,7 @@
             width: 100px;
             height: auto;
             animation: float 3s ease-in-out infinite;
-            filter: brightness(1.1);
+            filter: brightness(0.9);
         }
 
         @keyframes float {
@@ -158,7 +148,7 @@
             font-weight: bold;
             margin-bottom: 10px;
             min-height: 24px;
-            color: #10b981;
+            color: #4CAF50;
         }
 
         /* Mining Indicator */
@@ -166,45 +156,44 @@
             position: fixed;
             top: 10px;
             left: 10px;
-            background: #f59e0b;
-            color: white;
+            background: #ff9800;
+            color: black;
             padding: 5px 10px;
             border-radius: 15px;
             font-size: 12px;
             z-index: 1000;
             display: none;
             font-weight: bold;
-            box-shadow: 0 2px 5px rgba(245, 158, 11, 0.3);
         }
 
         /* Tap-to-Earn Card */
         .tap-card {
-            background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
             margin: 20px;
             padding: 25px;
             border-radius: 15px;
-            color: #0c4a6e;
+            color: white;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.1);
-            border: 1px solid #bae6fd;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            border: 1px solid #333;
         }
 
         .tap-title {
             font-size: 24px;
             font-weight: bold;
             margin-bottom: 10px;
-            color: #0ea5e9;
+            color: #4CAF50;
         }
 
         .tap-subtitle {
             font-size: 14px;
             opacity: 0.8;
             margin-bottom: 25px;
-            color: #64748b;
+            color: #b0b0b0;
         }
 
         .tap-button {
-            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
             color: white;
             border: none;
             border-radius: 50%;
@@ -217,13 +206,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 8px 25px rgba(14, 165, 233, 0.3);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
         .tap-button:hover {
             transform: scale(1.05);
-            box-shadow: 0 10px 30px rgba(14, 165, 233, 0.4);
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.4);
         }
 
         .tap-button:active {
@@ -240,23 +229,22 @@
         .tap-stat {
             text-align: center;
             padding: 10px;
-            background: rgba(14, 165, 233, 0.05);
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 10px;
             min-width: 80px;
-            border: 1px solid #e0f2fe;
         }
 
         .stat-value {
             font-size: 20px;
             font-weight: bold;
             margin-bottom: 5px;
-            color: #0ea5e9;
+            color: #4CAF50;
         }
 
         .stat-label {
             font-size: 12px;
             opacity: 0.8;
-            color: #64748b;
+            color: #b0b0b0;
         }
 
         /* Menu Options Section */
@@ -269,23 +257,23 @@
         }
 
         .menu-card {
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-            color: #0c4a6e;
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            color: white;
             border-radius: 15px;
             padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 10px rgba(14, 165, 233, 0.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
-            border: 1px solid #bae6fd;
+            border: 1px solid #333;
         }
 
         .menu-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(14, 165, 233, 0.15);
-            background: linear-gradient(135deg, #ffffff 0%, #e0f2fe 100%);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+            background: linear-gradient(135deg, #222222, #333333);
         }
 
         .menu-info {
@@ -296,7 +284,7 @@
         }
 
         .menu-icon {
-            background: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 100%);
+            background: #4CAF50;
             width: 50px;
             height: 50px;
             border-radius: 12px;
@@ -304,37 +292,30 @@
             align-items: center;
             justify-content: center;
             font-size: 24px;
-            color: white;
         }
 
         .menu-title {
             font-weight: bold;
             font-size: 16px;
             margin-bottom: 5px;
-            color: #0c4a6e;
         }
 
         .menu-subtitle {
             font-size: 13px;
             opacity: 0.7;
-            color: #64748b;
+            color: #b0b0b0;
         }
 
         .arrow-btn {
-            background: #e0f2fe;
-            color: #0ea5e9;
+            background: #333;
+            color: white;
             border: none;
             border-radius: 10px;
             padding: 10px 15px;
             font-weight: bold;
             font-size: 16px;
             cursor: pointer;
-            border: 1px solid #bae6fd;
-            transition: background-color 0.2s;
-        }
-
-        .arrow-btn:hover {
-            background-color: #bae6fd;
+            border: 1px solid #444;
         }
 
         /* Bottom Navigation */
@@ -343,19 +324,18 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            background: #ffffff;
+            background: #000000;
             display: flex;
             justify-content: space-around;
             padding: 10px 0;
             z-index: 1000;
-            border-top: 1px solid #bae6fd;
-            box-shadow: 0 -2px 10px rgba(14, 165, 233, 0.1);
+            border-top: 1px solid #333;
         }
 
         .nav-btn {
             background: none;
             border: none;
-            color: #64748b;
+            color: #b0b0b0;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -365,25 +345,22 @@
             text-decoration: none;
             opacity: 0.7;
             transition: opacity 0.2s, color 0.2s;
-            padding: 5px;
-            border-radius: 8px;
         }
 
         .nav-btn.active {
             opacity: 1;
-            color: #0ea5e9;
-            background-color: #f0f9ff;
+            color: #4CAF50;
         }
 
         .nav-btn:hover {
             opacity: 1;
-            color: #0ea5e9;
+            color: white;
         }
 
         .nav-icon {
             width: 24px;
             height: 24px;
-            filter: brightness(0.9);
+            filter: brightness(0.8);
         }
 
         /* Notification */
@@ -392,7 +369,7 @@
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: #0ea5e9;
+            background: #4caf50;
             color: white;
             padding: 12px 20px;
             border-radius: 8px;
@@ -400,7 +377,7 @@
             display: none;
             font-weight: bold;
             max-width: 90%;
-            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
         /* Modals */
@@ -411,22 +388,21 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(14, 165, 233, 0.1);
-            backdrop-filter: blur(5px);
+            background: rgba(0,0,0,0.8);
             z-index: 2000;
             justify-content: center;
             align-items: center;
         }
 
         .modal-content {
-            background: #ffffff;
+            background: #1e1e1e;
             border-radius: 15px;
             padding: 20px;
             width: 90%;
             max-width: 350px;
-            box-shadow: 0 10px 30px rgba(14, 165, 233, 0.2);
-            border: 1px solid #bae6fd;
-            color: #334155;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid #333;
+            color: #e0e0e0;
         }
         
         /* Sync Status */
@@ -434,39 +410,13 @@
             position: fixed;
             top: 10px;
             right: 10px;
-            background: #0ea5e9;
+            background: #4caf50;
             color: white;
             padding: 5px 10px;
             border-radius: 15px;
             font-size: 12px;
             z-index: 1000;
             display: none;
-            box-shadow: 0 2px 5px rgba(14, 165, 233, 0.3);
-        }
-        
-        /* Input styling for modals */
-        input, textarea, select {
-            border: 1px solid #bae6fd !important;
-            background-color: #f8fafc !important;
-            color: #334155 !important;
-        }
-        
-        /* Scrollbar styling */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: #f1f5f9;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #bae6fd;
-            border-radius: 4px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: #7dd3fc;
         }
     </style>
 </head>
@@ -602,18 +552,18 @@
     <!-- Referral Modal -->
     <div id="referralModal" class="modal">
         <div class="modal-content">
-            <h3 style="margin-top: 0; color: #0ea5e9;">Referral Kamu</h3>
-            <p style="color: #64748b;">Bagikan link ini ke temanmu:</p>
-            <input type="text" id="referralLink" readonly style="width:100%; padding:10px; margin:10px 0; border:1px solid #bae6fd; border-radius:8px; background:#f8fafc; color:#334155;">
-            <button onclick="copyReferralLink()" style="width:100%; padding:12px; background:linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">Salin Link</button>
+            <h3 style="margin-top: 0; color: #4CAF50;">Referral Kamu</h3>
+            <p style="color: #b0b0b0;">Bagikan link ini ke temanmu:</p>
+            <input type="text" id="referralLink" readonly style="width:100%; padding:10px; margin:10px 0; border:1px solid #444; border-radius:8px; background:#2a2a2a; color:#e0e0e0;">
+            <button onclick="copyReferralLink()" style="width:100%; padding:12px; background:#4CAF50; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">Salin Link</button>
             <div style="margin-top: 20px;">
-                <h4 style="color: #334155;">Orang yang Kamu Undang:</h4>
-                <ul id="referralList" style="padding-left: 20px; color: #64748b;">
+                <h4 style="color: #e0e0e0;">Orang yang Kamu Undang:</h4>
+                <ul id="referralList" style="padding-left: 20px; color: #b0b0b0;">
                     <li>Belum ada referral</li>
                 </ul>
-                <p style="margin-top: 15px; color: #334155;">Total Poin Referral: <span id="referralTotalPoin" style="font-weight:bold; color:#0ea5e9;">0</span> Poin</p>
+                <p style="margin-top: 15px; color: #e0e0e0;">Total Poin Referral: <span id="referralTotalPoin" style="font-weight:bold; color:#4CAF50;">0</span> Poin</p>
             </div>
-            <button onclick="closeModal('referralModal')" style="width:100%; padding:10px; margin-top:15px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">Tutup</button>
+            <button onclick="closeModal('referralModal')" style="width:100%; padding:10px; margin-top:15px; background:#d32f2f; color:white; border:none; border-radius:8px; cursor:pointer;">Tutup</button>
         </div>
     </div>
 
@@ -622,8 +572,8 @@
         <div class="modal-content">
             <div style="text-align: center;">
                 <img src="https://i.postimg.cc/0KZ505rV/file-0000000084f062309e6fd2523e94f3de.png" alt="Reward" style="width: 80px; margin-bottom: 15px;">
-                <h3 style="color: #0ea5e9; margin-bottom: 15px;">🎉 Dapat 300 Poin Riwed</h3>
-                <button id="claimRewardBtn" style="padding:12px 30px; background:linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">Klaim Sekarang</button>
+                <h3 style="color: #4CAF50; margin-bottom: 15px;">🎉 Dapat 300 Poin Riwed</h3>
+                <button id="claimRewardBtn" style="padding:12px 30px; background:#4CAF50; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">Klaim Sekarang</button>
             </div>
         </div>
     </div>
@@ -652,7 +602,7 @@
         function showNotification(message, isSuccess = true) {
             const notification = document.getElementById("notification");
             notification.textContent = message;
-            notification.style.background = isSuccess ? "#0ea5e9" : "#ef4444";
+            notification.style.background = isSuccess ? "#4CAF50" : "#d32f2f";
             notification.style.display = "block";
             setTimeout(() => {
                 notification.style.display = "none";
@@ -707,217 +657,763 @@
                 return false;
             }
             
-            // Load user data
-            const savedUserData = localStorage.getItem(`userData_${userEmail}`);
-            if (savedUserData) {
-                userData = JSON.parse(savedUserData);
+            // Set user data
+            userData.email = userEmail;
+            userData.username = userEmail.split("@")[0];
+            
+            // Try to load saved data from localStorage
+            const savedData = localStorage.getItem("userData_" + userData.username);
+            
+            if (savedData) {
+                try {
+                    const parsed = JSON.parse(savedData);
+                    userData.saldoGOV = parsed.saldoGOV || 0;
+                    userData.lastClaimTime = parsed.lastClaimTime || null;
+                    userData.referralPoints = parsed.referralPoints || 0;
+                    userData.referrals = parsed.referrals || [];
+                    userData.tapCount = parsed.tapCount || 0;
+                    userData.tapPoints = parsed.tapPoints || 0;
+                    userData.tapMultiplier = parsed.tapMultiplier || 1;
+                } catch (e) {
+                    console.log("Could not parse saved data");
+                }
             } else {
-                // Initialize new user
-                userData.email = userEmail;
-                userData.username = userEmail.split('@')[0];
-                userData.saldoGOV = 1000;
-                userData.saldoIDR = 0;
-                userData.saldoUSDT = 0;
-                userData.lastClaimTime = null;
+                // USER BARU: Beri 100 GOV
+                userData.saldoGOV = 100;
                 userData.referralPoints = 0;
-                userData.referrals = [];
+                userData.lastClaimTime = null;
                 userData.tapCount = 0;
                 userData.tapPoints = 0;
                 userData.tapMultiplier = 1;
+                
+                // Save to localStorage
                 saveUserData();
+                
+                // Buat wallet untuk user baru dengan 100 GOV
+                createWalletForNewUser();
+                
+                showNotification("🎉 Selamat! Anda mendapatkan 100 GOV bonus!");
             }
             
-            // Update UI with user data
-            updateUserUI();
-            updateClaimStatus();
+            // Update UI
+            updateUserInfo();
+            updateUI();
+            updateTapUI();
+            
+            // Sync dengan wallet
+            syncWithWallet();
             
             return true;
         }
 
-        function updateUserUI() {
-            document.getElementById("usernameDisplay").textContent = `@${userData.username}`;
+        function updateUserInfo() {
+            document.getElementById("usernameDisplay").textContent = "@" + userData.username;
             document.getElementById("userEmail").textContent = userData.email;
-            document.getElementById("totalRewards").textContent = userData.saldoGOV.toLocaleString();
-            document.getElementById("tapCount").textContent = userData.tapCount.toLocaleString();
-            document.getElementById("tapPoints").textContent = userData.tapPoints.toLocaleString();
-            document.getElementById("tapMultiplier").textContent = `${userData.tapMultiplier}x`;
             
-            // Update referral list
-            updateReferralList();
+            // Load profile picture
+            const savedPhoto = localStorage.getItem("userPhoto");
+            if (savedPhoto) {
+                document.getElementById("userPhoto").src = savedPhoto;
+            }
         }
 
         function saveUserData() {
-            localStorage.setItem(`userData_${userData.email}`, JSON.stringify(userData));
+            localStorage.setItem("userData_" + userData.username, JSON.stringify({
+                saldoGOV: userData.saldoGOV,
+                saldoIDR: userData.saldoIDR,
+                saldoUSDT: userData.saldoUSDT,
+                lastClaimTime: userData.lastClaimTime,
+                referralPoints: userData.referralPoints,
+                referrals: userData.referrals,
+                tapCount: userData.tapCount,
+                tapPoints: userData.tapPoints,
+                tapMultiplier: userData.tapMultiplier,
+                lastUpdate: new Date().toISOString()
+            }));
+            
+            console.log("✅ Dashboard data saved:", userData.saldoGOV, "GOV");
         }
 
-        // ===== CLAIM FUNCTIONALITY =====
-        function updateClaimStatus() {
-            const statusText = document.getElementById("statusText");
-            const claimBtn = document.getElementById("claimBtn");
+        // ===== CREATE WALLET FOR NEW USER =====
+        function createWalletForNewUser() {
+            const userEmail = localStorage.getItem("currentUser");
+            if (!userEmail) return;
             
-            if (!userData.lastClaimTime) {
-                statusText.textContent = "✅ Siap klaim sekarang!";
-                claimBtn.disabled = false;
+            const walletKey = `walletData_${userEmail}`;
+            
+            // Cek apakah wallet sudah ada
+            const existingWallet = localStorage.getItem(walletKey);
+            if (!existingWallet) {
+                // BUAT WALLET BARU DENGAN 100 GOV (SAMA DENGAN DASHBOARD)
+                const newWallet = {
+                    saldoGOV: 100,
+                    saldoIDR: 0,
+                    saldoUSDT: 0,
+                    transactions: [{
+                        type: "BONUS",
+                        description: "Bonus pendaftaran baru",
+                        amount: 100,
+                        timestamp: new Date().toISOString()
+                    }],
+                    withdrawHistory: [],
+                    lastSync: new Date().toISOString(),
+                    isNewUser: true
+                };
+                
+                localStorage.setItem(walletKey, JSON.stringify(newWallet));
+                console.log("✅ New wallet created with 100 GOV");
+                showSyncStatus("✅ Wallet dibuat");
+            }
+        }
+
+        // ===== SYNC WITH WALLET =====
+        function syncWithWallet() {
+            const userEmail = localStorage.getItem("currentUser");
+            if (!userEmail) return;
+            
+            const walletKey = `walletData_${userEmail}`;
+            const walletData = JSON.parse(localStorage.getItem(walletKey));
+            
+            if (walletData) {
+                // Sync dashboard dengan wallet
+                userData.saldoGOV = walletData.saldoGOV;
+                saveUserData();
+                updateUI();
+                console.log("🔄 Dashboard synced with wallet:", walletData.saldoGOV, "GOV");
+            }
+        }
+
+        // ===== MINING SYSTEM (SYNCED ACROSS DEVICES) =====
+        function checkAndStartMining() {
+            const miningStartKey = `miningStart_${userData.username}`;
+            const miningCompletedKey = `miningCompleted_${userData.username}`;
+            const now = Date.now();
+            
+            // Cek apakah mining sudah selesai
+            const isCompleted = localStorage.getItem(miningCompletedKey) === "true";
+            
+            if (isCompleted) {
+                // Mining sudah selesai, siap untuk claim
+                document.getElementById("statusText").textContent = "✅ Siap klaim sekarang!";
+                document.getElementById("statusText").style.color = "#4CAF50";
+                document.getElementById("claimBtn").disabled = false;
+                showMiningIndicator(false);
                 return;
             }
             
-            const now = new Date().getTime();
-            const lastClaim = new Date(userData.lastClaimTime).getTime();
-            const timeSinceLastClaim = now - lastClaim;
+            // Cek apakah mining sedang berjalan
+            let miningStartTime = localStorage.getItem(miningStartKey);
             
-            if (timeSinceLastClaim >= COOLDOWN_MS) {
-                statusText.textContent = "✅ Siap klaim sekarang!";
+            if (!miningStartTime) {
+                // Belum ada mining yang berjalan
+                // Cek waktu claim terakhir dari userData
+                if (userData.lastClaimTime) {
+                    // Gunakan waktu claim terakhir
+                    miningStartTime = userData.lastClaimTime;
+                    localStorage.setItem(miningStartKey, miningStartTime);
+                } else {
+                    // Mulai mining baru
+                    miningStartTime = now.toString();
+                    localStorage.setItem(miningStartKey, miningStartTime);
+                    userData.lastClaimTime = miningStartTime;
+                    saveUserData();
+                    console.log("⛏️ Mining dimulai di device ini");
+                }
+            }
+            
+            // Update mining progress
+            updateMiningProgress();
+        }
+
+        function updateMiningProgress() {
+            const miningStartKey = `miningStart_${userData.username}`;
+            const miningStartTime = parseInt(localStorage.getItem(miningStartKey) || "0");
+            const now = Date.now();
+            const elapsed = now - miningStartTime;
+            
+            if (miningStartTime === 0) {
+                // Belum mulai mining
+                document.getElementById("dailyRewards").textContent = "0";
+                document.getElementById("statusText").textContent = "⏳ Mulai mining...";
+                document.getElementById("statusText").style.color = "#ff9800";
+                document.getElementById("claimBtn").disabled = true;
+                showMiningIndicator(false);
+                return;
+            }
+            
+            // Update total GOV
+            document.getElementById("totalRewards").textContent = 
+                userData.saldoGOV.toLocaleString('id-ID');
+            
+            if (elapsed >= COOLDOWN_MS) {
+                // Mining selesai
+                document.getElementById("dailyRewards").textContent = CLAIM_REWARD.toLocaleString('id-ID');
+                document.getElementById("claimBtn").disabled = false;
+                document.getElementById("statusText").textContent = "✅ Siap klaim sekarang!";
+                document.getElementById("statusText").style.color = "#4CAF50";
+                showMiningIndicator(false);
+                
+                // Tandai mining selesai
+                localStorage.setItem(`miningCompleted_${userData.username}`, "true");
+            } else {
+                // Mining masih berjalan
+                const progress = elapsed / COOLDOWN_MS;
+                const currentReward = Math.floor(CLAIM_REWARD * progress);
+                document.getElementById("dailyRewards").textContent = 
+                    currentReward.toLocaleString('id-ID');
+                document.getElementById("claimBtn").disabled = true;
+                
+                const remaining = COOLDOWN_MS - elapsed;
+                const hours = Math.floor(remaining / (1000 * 60 * 60));
+                const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+                
+                if (hours > 0) {
+                    document.getElementById("statusText").textContent = 
+                        `⏳ ${hours}j ${minutes}m ${seconds}s lagi`;
+                } else {
+                    document.getElementById("statusText").textContent = 
+                        `⏳ ${minutes}m ${seconds}s lagi`;
+                }
+                document.getElementById("statusText").style.color = "#ff9800";
+                showMiningIndicator(true);
+            }
+        }
+
+        function claimMining() {
+            const miningStartKey = `miningStart_${userData.username}`;
+            const miningCompletedKey = `miningCompleted_${userData.username}`;
+            const miningStartTime = parseInt(localStorage.getItem(miningStartKey) || "0");
+            const now = Date.now();
+            const elapsed = now - miningStartTime;
+            
+            // Validasi apakah mining sudah selesai
+            if (elapsed < COOLDOWN_MS) {
+                showNotification("❌ Mining belum selesai!", false);
+                return;
+            }
+            
+            const miningReward = CLAIM_REWARD;
+            
+            // Update saldo user
+            userData.saldoGOV += miningReward;
+            
+            // Reset mining
+            localStorage.removeItem(miningStartKey);
+            localStorage.removeItem(miningCompletedKey);
+            userData.lastClaimTime = null;
+            
+            // Save data
+            saveUserData();
+            
+            // Update wallet
+            updateWalletOnMining(miningReward);
+            
+            // Update UI
+            updateUI();
+            
+            showNotification(`✅ Berhasil klaim ${miningReward} GOV!`);
+            
+            // Disable button for 1 second
+            const claimBtn = document.getElementById("claimBtn");
+            claimBtn.disabled = true;
+            setTimeout(() => {
                 claimBtn.disabled = false;
-            } else {
-                const remainingTime = COOLDOWN_MS - timeSinceLastClaim;
-                const minutes = Math.floor(remainingTime / 60000);
-                const seconds = Math.floor((remainingTime % 60000) / 1000);
-                
-                statusText.textContent = `⏳ Klaim tersedia dalam ${minutes}:${seconds.toString().padStart(2, '0')}`;
-                claimBtn.disabled = true;
-                
-                // Update countdown every second
-                setTimeout(updateClaimStatus, 1000);
-            }
+            }, 1000);
         }
 
-        function claimRewards() {
-            if (!userData.lastClaimTime || (new Date().getTime() - new Date(userData.lastClaimTime).getTime()) >= COOLDOWN_MS) {
-                // Update user data
-                userData.saldoGOV += CLAIM_REWARD;
-                userData.lastClaimTime = new Date().toISOString();
-                
-                // Save and update UI
-                saveUserData();
-                updateUserUI();
-                updateClaimStatus();
-                
-                // Show notification
-                showNotification(`🎉 Berhasil klaim ${CLAIM_REWARD} GOV!`);
-                showSyncStatus("✅ Data tersimpan");
-                
-                // Show reward modal
-                openModal('rewardModal');
-            } else {
-                showNotification("⏳ Masih dalam cooldown!", false);
-            }
+        function updateUI() {
+            // Update total GOV
+            document.getElementById("totalRewards").textContent = 
+                userData.saldoGOV.toLocaleString('id-ID');
+            
+            // Check mining status
+            checkAndStartMining();
         }
 
-        // ===== TAP FUNCTIONALITY =====
-        function setupTapButton() {
+        // ===== TAP-TO-EARN SYSTEM =====
+        function updateTapUI() {
+            document.getElementById("tapCount").textContent = userData.tapCount.toLocaleString('id-ID');
+            document.getElementById("tapPoints").textContent = userData.tapPoints.toLocaleString('id-ID');
+            document.getElementById("tapMultiplier").textContent = userData.tapMultiplier + "x";
+        }
+
+        function handleTap() {
             const tapButton = document.getElementById("tapButton");
             
-            tapButton.addEventListener("click", function() {
-                // Update tap data
-                userData.tapCount++;
-                userData.tapPoints += Math.floor(Math.random() * 10) + 1 * userData.tapMultiplier;
+            // Add animation
+            tapButton.style.transform = "scale(0.95)";
+            setTimeout(() => {
+                tapButton.style.transform = "scale(1)";
+            }, 100);
+            
+            // Calculate points earned (1-3 points per tap)
+            const basePoints = Math.floor(Math.random() * 3) + 1;
+            const pointsEarned = basePoints * userData.tapMultiplier;
+            
+            // Update tap stats
+            userData.tapCount++;
+            userData.tapPoints += pointsEarned;
+            
+            // Update GOV balance
+            userData.saldoGOV += pointsEarned;
+            
+            // Update UI
+            updateTapUI();
+            updateUI();
+            
+            // Save data
+            saveUserData();
+            
+            // Update wallet
+            updateWalletOnMining(pointsEarned);
+            
+            // Show floating point animation
+            showFloatingPoints(pointsEarned);
+            
+            // Check for multiplier upgrade
+            checkMultiplierUpgrade();
+        }
+
+        function showFloatingPoints(points) {
+            const tapCard = document.querySelector(".tap-card");
+            const floatingDiv = document.createElement("div");
+            floatingDiv.textContent = `+${points} GOV`;
+            floatingDiv.style.position = "absolute";
+            floatingDiv.style.color = "#4CAF50";
+            floatingDiv.style.fontWeight = "bold";
+            floatingDiv.style.fontSize = "18px";
+            floatingDiv.style.pointerEvents = "none";
+            floatingDiv.style.zIndex = "2000";
+            
+            // Random position near tap button
+            const tapButton = document.getElementById("tapButton");
+            const rect = tapButton.getBoundingClientRect();
+            
+            floatingDiv.style.left = `${rect.left + Math.random() * 100 - 50}px`;
+            floatingDiv.style.top = `${rect.top - 30}px`;
+            
+            document.body.appendChild(floatingDiv);
+            
+            // Animate
+            let opacity = 1;
+            let posY = parseFloat(floatingDiv.style.top);
+            
+            const animate = () => {
+                opacity -= 0.02;
+                posY -= 1;
                 
-                // Random chance to increase multiplier
-                if (Math.random() < 0.1) {
-                    userData.tapMultiplier++;
-                    showNotification(`🎉 Multiplier meningkat menjadi ${userData.tapMultiplier}x!`);
+                floatingDiv.style.opacity = opacity;
+                floatingDiv.style.top = `${posY}px`;
+                
+                if (opacity > 0) {
+                    requestAnimationFrame(animate);
+                } else {
+                    document.body.removeChild(floatingDiv);
                 }
-                
-                // Save and update UI
-                saveUserData();
-                updateUserUI();
-                
-                // Button animation
-                tapButton.style.transform = "scale(0.9)";
-                setTimeout(() => {
-                    tapButton.style.transform = "scale(1)";
-                }, 100);
-            });
+            };
+            
+            requestAnimationFrame(animate);
         }
 
-        // ===== REFERRAL FUNCTIONALITY =====
-        function setupReferralModal() {
-            const referralBtn = document.getElementById("referralBtn");
-            
-            referralBtn.addEventListener("click", function() {
-                // Generate referral link
-                const referralLink = `https://app.example.com/ref/${userData.username}`;
-                document.getElementById("referralLink").value = referralLink;
-                document.getElementById("referralTotalPoin").textContent = userData.referralPoints.toLocaleString();
-                
-                openModal('referralModal');
-            });
-            
-            // Claim reward button in modal
-            document.getElementById("claimRewardBtn").addEventListener("click", function() {
-                userData.saldoGOV += 300;
-                saveUserData();
-                updateUserUI();
-                closeModal('rewardModal');
-                showNotification("🎉 Berhasil klaim 300 Poin Riwed!");
-            });
-        }
-
-        function copyReferralLink() {
-            const referralLink = document.getElementById("referralLink");
-            referralLink.select();
-            document.execCommand("copy");
-            showNotification("✅ Link referral disalin!");
-        }
-
-        function updateReferralList() {
-            const referralList = document.getElementById("referralList");
-            
-            if (userData.referrals.length === 0) {
-                referralList.innerHTML = "<li>Belum ada referral</li>";
-            } else {
-                referralList.innerHTML = userData.referrals
-                    .map(ref => `<li>${ref}</li>`)
-                    .join('');
+        function checkMultiplierUpgrade() {
+            // Upgrade multiplier based on tap count
+            if (userData.tapCount >= 1000 && userData.tapMultiplier < 5) {
+                userData.tapMultiplier = 5;
+                showNotification("🎉 Multiplier upgrade ke 5x!");
+            } else if (userData.tapCount >= 500 && userData.tapMultiplier < 3) {
+                userData.tapMultiplier = 3;
+                showNotification("🎉 Multiplier upgrade ke 3x!");
+            } else if (userData.tapCount >= 100 && userData.tapMultiplier < 2) {
+                userData.tapMultiplier = 2;
+                showNotification("🎉 Multiplier upgrade ke 2x!");
             }
+            
+            updateTapUI();
         }
 
-        // ===== NAVIGATION FUNCTIONS =====
+        // ===== PAGE NAVIGATION FUNCTIONS =====
         function goToMyEarning() {
-            showNotification("Mengarahkan ke My Earning...");
-            // window.location.href = "earning.html";
+            showNotification("Membuka halaman My Earning...");
+            // Buat halaman sederhana
+            const earningModalContent = `
+                <div class="modal-content">
+                    <h3 style="color: #4CAF50; margin-top: 0;">My Earning</h3>
+                    
+                    <div style="background: linear-gradient(135deg, #333, #555); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; text-align: center; border: 1px solid #444;">
+                        <div style="font-size: 14px; opacity: 0.9; color: #b0b0b0;">Total Pendapatan</div>
+                        <div style="font-size: 32px; font-weight: bold; color: #4CAF50;">${userData.saldoGOV.toLocaleString('id-ID')} GOV</div>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #e0e0e0;">Statistik Pendapatan</h4>
+                        <div style="display: flex; justify-content: space-between; margin: 10px 0; padding: 10px; background: #2a2a2a; border-radius: 8px;">
+                            <span style="color: #b0b0b0;">Hari Ini:</span>
+                            <span style="font-weight: bold; color: #4CAF50;">500 GOV</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin: 10px 0; padding: 10px; background: #2a2a2a; border-radius: 8px;">
+                            <span style="color: #b0b0b0;">Minggu Ini:</span>
+                            <span style="font-weight: bold; color: #4CAF50;">3,500 GOV</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin: 10px 0; padding: 10px; background: #2a2a2a; border-radius: 8px;">
+                            <span style="color: #b0b0b0;">Bulan Ini:</span>
+                            <span style="font-weight: bold; color: #4CAF50;">15,000 GOV</span>
+                        </div>
+                    </div>
+                    
+                    <button onclick="closeModal('earningModal')" style="width:100%; padding:12px; background:#d32f2f; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">Tutup</button>
+                </div>
+            `;
+            
+            const earningModal = document.createElement('div');
+            earningModal.id = 'earningModal';
+            earningModal.className = 'modal';
+            earningModal.style.display = 'flex';
+            earningModal.innerHTML = earningModalContent;
+            
+            document.body.appendChild(earningModal);
         }
 
         function goToHistory() {
-            showNotification("Mengarahkan ke History...");
-            // window.location.href = "history.html";
+            showNotification("Membuka halaman History...");
+            // Buat halaman sederhana
+            const historyModalContent = `
+                <div class="modal-content">
+                    <h3 style="color: #4CAF50; margin-top: 0;">History</h3>
+                    <p style="color: #b0b0b0; margin-bottom: 20px;">Riwayat transaksi dan aktivitas</p>
+                    
+                    <div style="max-height: 300px; overflow-y: auto;">
+                        <div style="background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #333;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                <span style="font-weight: bold; color: #e0e0e0;">Mining Reward</span>
+                                <span style="color: #4CAF50; font-weight: bold;">+500 GOV</span>
+                            </div>
+                            <div style="font-size: 12px; color: #b0b0b0;">Hari ini, 10:30</div>
+                        </div>
+                        
+                        <div style="background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #333;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                <span style="font-weight: bold; color: #e0e0e0;">Referral Bonus</span>
+                                <span style="color: #4CAF50; font-weight: bold;">+1000 GOV</span>
+                            </div>
+                            <div style="font-size: 12px; color: #b0b0b0;">Kemarin, 14:20</div>
+                        </div>
+                        
+                        <div style="background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #333;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                <span style="font-weight: bold; color: #e0e0e0;">Tap-to-Earn</span>
+                                <span style="color: #4CAF50; font-weight: bold;">+150 GOV</span>
+                            </div>
+                            <div style="font-size: 12px; color: #b0b0b0;">2 hari lalu, 09:15</div>
+                        </div>
+                        
+                        <div style="background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #333;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                <span style="font-weight: bold; color: #e0e0e0;">Bonus Pendaftaran</span>
+                                <span style="color: #4CAF50; font-weight: bold;">+100 GOV</span>
+                            </div>
+                            <div style="font-size: 12px; color: #b0b0b0;">3 hari lalu, 11:45</div>
+                        </div>
+                    </div>
+                    
+                    <button onclick="closeModal('historyModal')" style="width:100%; padding:12px; margin-top:20px; background:#d32f2f; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">Tutup</button>
+                </div>
+            `;
+            
+            const historyModal = document.createElement('div');
+            historyModal.id = 'historyModal';
+            historyModal.className = 'modal';
+            historyModal.style.display = 'flex';
+            historyModal.innerHTML = historyModalContent;
+            
+            document.body.appendChild(historyModal);
         }
 
         function goToSettings() {
-            showNotification("Mengarahkan ke Settings...");
-            // window.location.href = "settings.html";
+            showNotification("Membuka halaman Setting...");
+            // Buat halaman sederhana
+            const settingsModalContent = `
+                <div class="modal-content">
+                    <h3 style="color: #4CAF50; margin-top: 0;">Setting</h3>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #e0e0e0;">Akun</h4>
+                        <div style="background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; border: 1px solid #333;" onclick="editProfile()">
+                            <div style="font-weight: bold; color: #e0e0e0;">Ubah Foto Profil</div>
+                            <div style="font-size: 12px; color: #b0b0b0;">Klik untuk mengubah foto profil</div>
+                        </div>
+                        
+                        <div style="background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #333;">
+                            <div style="font-weight: bold; color: #e0e0e0;">Notifikasi</div>
+                            <div style="font-size: 12px; color: #b0b0b0;">
+                                <label style="display: flex; justify-content: space-between; align-items: center; margin-top: 5px;">
+                                    <span>Notifikasi Reward</span>
+                                    <input type="checkbox" checked style="transform: scale(1.2);">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #e0e0e0;">Aplikasi</h4>
+                        <div style="background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #333;">
+                            <div style="font-weight: bold; color: #e0e0e0;">Versi Aplikasi</div>
+                            <div style="font-size: 12px; color: #b0b0b0;">v1.0.0</div>
+                        </div>
+                        
+                        <div style="background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #333;">
+                            <div style="font-weight: bold; color: #e0e0e0;">Bantuan & Dukungan</div>
+                            <div style="font-size: 12px; color: #b0b0b0;">support@unich.com</div>
+                        </div>
+                    </div>
+                    
+                    <button onclick="closeModal('settingsModal')" style="width:100%; padding:12px; background:#d32f2f; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">Tutup</button>
+                </div>
+            `;
+            
+            const settingsModal = document.createElement('div');
+            settingsModal.id = 'settingsModal';
+            settingsModal.className = 'modal';
+            settingsModal.style.display = 'flex';
+            settingsModal.innerHTML = settingsModalContent;
+            
+            document.body.appendChild(settingsModal);
+        }
+
+        // ===== REFERRAL SYSTEM =====
+        function showReferralModal() {
+            const referralLink = `${window.location.origin}/index.html?ref=${userData.username}`;
+            document.getElementById("referralLink").value = referralLink;
+            
+            // Update referral list
+            const listEl = document.getElementById("referralList");
+            if (userData.referrals.length === 0) {
+                listEl.innerHTML = "<li>Belum ada yang diundang</li>";
+            } else {
+                listEl.innerHTML = userData.referrals.map(r => `<li>${r}</li>`).join("");
+            }
+            
+            // Update total points
+            document.getElementById("referralTotalPoin").textContent = 
+                userData.referralPoints.toLocaleString('id-ID');
+            
+            openModal("referralModal");
+        }
+
+        function copyReferralLink() {
+            const input = document.getElementById("referralLink");
+            input.select();
+            input.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(input.value);
+            showNotification("✅ Link referral disalin!");
+        }
+
+        // Process referral from URL
+        function processUrlReferral() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const refUsername = urlParams.get("ref");
+            
+            if (refUsername && refUsername !== userData.username) {
+                // Check if already referred this user
+                if (!userData.referrals.includes("@" + refUsername)) {
+                    // Add referral bonus
+                    userData.referralPoints += 1000;
+                    userData.saldoGOV += 1000; // Tambah ke saldo juga
+                    userData.referrals.push("@" + refUsername);
+                    
+                    // Save data
+                    saveUserData();
+                    
+                    // Update wallet juga
+                    updateWalletOnMining(1000);
+                    
+                    showNotification("🎉 Selamat! Kamu dapat bonus referral 1000 GOV!");
+                    
+                    // Clean URL
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }
+            }
+        }
+
+        // ===== ADS SYSTEM =====
+        function claimAdReward() {
+            const adReward = 300;
+            
+            userData.saldoGOV += adReward;
+            saveUserData();
+            
+            // Update wallet juga
+            updateWalletOnMining(adReward);
+            
+            updateUI();
+            
+            closeModal("rewardModal");
+            showNotification("✅ Berhasil klaim 300 GOV dari iklan!");
+        }
+
+        // ===== PROFILE FUNCTIONS =====
+        function editProfile() {
+            const input = document.createElement("input");
+            input.type = "file";
+            input.accept = "image/*";
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById("userPhoto").src = event.target.result;
+                    localStorage.setItem("userPhoto", event.target.result);
+                    showNotification("✅ Foto profil diperbarui!");
+                };
+                reader.readAsDataURL(file);
+            };
+            input.click();
         }
 
         function logout() {
             localStorage.removeItem("currentUser");
-            showNotification("Berhasil logout!");
+            showNotification("👋 Berhasil logout!");
             setTimeout(() => {
                 window.location.href = "index.html";
-            }, 1000);
+            }, 1500);
+        }
+
+        // ===== AUTO SYNC WITH WALLET =====
+        function autoSyncWithWallet() {
+            const userEmail = localStorage.getItem("currentUser");
+            if (!userEmail) return;
+            
+            const walletKey = `walletData_${userEmail}`;
+            const walletData = JSON.parse(localStorage.getItem(walletKey));
+            
+            if (walletData) {
+                // Jika saldo wallet berbeda dengan dashboard, sync
+                if (Math.abs(userData.saldoGOV - walletData.saldoGOV) > 0) {
+                    userData.saldoGOV = walletData.saldoGOV;
+                    saveUserData();
+                    updateUI();
+                    console.log("🔄 Auto-synced with wallet");
+                }
+            }
+        }
+
+        // ===== CHECK MINING FROM OTHER DEVICES =====
+        function checkMiningFromOtherDevices() {
+            const miningStartKey = `miningStart_${userData.username}`;
+            const storedStartTime = localStorage.getItem(miningStartKey);
+            
+            if (storedStartTime) {
+                const now = Date.now();
+                const elapsed = now - parseInt(storedStartTime);
+                
+                // Jika mining masih berjalan, update UI
+                if (elapsed < COOLDOWN_MS) {
+                    console.log("📱 Mining berjalan dari device lain");
+                    updateMiningProgress();
+                }
+            }
+        }
+
+        // ===== UPDATE WALLET WHEN MINING =====
+        function updateWalletOnMining(amount) {
+            const userEmail = localStorage.getItem("currentUser");
+            if (!userEmail) return;
+            
+            const walletKey = `walletData_${userEmail}`;
+            
+            try {
+                // Load current wallet
+                let walletData = JSON.parse(localStorage.getItem(walletKey)) || {
+                    saldoGOV: userData.saldoGOV || 0,
+                    saldoIDR: 0,
+                    saldoUSDT: 0,
+                    transactions: [],
+                    lastSync: new Date().toISOString()
+                };
+                
+                // Update balance SAMA DENGAN DASHBOARD
+                walletData.saldoGOV = userData.saldoGOV;
+                
+                // Add transaction for mining
+                walletData.transactions.unshift({
+                    type: "MINING",
+                    description: `Hasil mining dari dashboard`,
+                    amount: amount,
+                    timestamp: new Date().toISOString()
+                });
+                
+                // Keep only last 50 transactions
+                if (walletData.transactions.length > 50) {
+                    walletData.transactions = walletData.transactions.slice(0, 50);
+                }
+                
+                walletData.lastSync = new Date().toISOString();
+                
+                // Save wallet
+                localStorage.setItem(walletKey, JSON.stringify(walletData));
+                
+                console.log(`✅ Wallet updated on mining: ${walletData.saldoGOV} GOV`);
+                showSyncStatus("✅ Wallet diupdate");
+                
+            } catch (error) {
+                console.error("❌ Error updating wallet:", error);
+            }
         }
 
         // ===== INITIALIZATION =====
         document.addEventListener("DOMContentLoaded", function() {
+            console.log("Dashboard initialized");
+            
             // Load user data
             if (!loadUser()) {
                 return;
             }
             
             // Setup event listeners
-            setupTapButton();
-            setupReferralModal();
+            document.getElementById("claimBtn").addEventListener("click", claimMining);
+            document.getElementById("referralBtn").addEventListener("click", showReferralModal);
+            document.getElementById("claimRewardBtn").addEventListener("click", claimAdReward);
             
-            // Claim button event
-            document.getElementById("claimBtn").addEventListener("click", claimRewards);
+            // Tap button
+            document.getElementById("tapButton").addEventListener("click", handleTap);
             
-            // Auto-save every 30 seconds
-            setInterval(saveUserData, 30000);
+            // Profile picture click
+            document.getElementById("userPhoto").addEventListener("click", editProfile);
             
-            // Show welcome notification
-            setTimeout(() => {
-                showNotification(`Selamat datang, ${userData.username}!`);
-            }, 500);
+            // Process URL referral
+            processUrlReferral();
+            
+            // Check mining status from other devices
+            checkMiningFromOtherDevices();
+            
+            // Start UI updates
+            setInterval(updateMiningProgress, 1000);
+            
+            // Auto sync with wallet every 30 seconds
+            setInterval(autoSyncWithWallet, 30000);
+            
+            // Check mining from other devices every 10 seconds
+            setInterval(checkMiningFromOtherDevices, 10000);
+            
+            showNotification("✅ Dashboard siap digunakan!");
         });
+
     </script>
+    
+    <!-- Ads -->
+    <script type='text/javascript' src='//pl27331380.profitableratecpm.com/8b/a8/2b/8ba82b25b1bd88c46aa90ed2f191719a.js'></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3665788659374137" crossorigin="anonymous"></script>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-3665788659374137"
+         data-ad-slot="3774844382"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+    
 </body>
 </html>
+
