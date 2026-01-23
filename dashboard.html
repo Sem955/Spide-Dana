@@ -247,20 +247,29 @@
             object-fit: contain;
         }
 
+        /* Tap Stats Section - PERBAIKAN POSISI TENGAH */
         .tap-stats {
             display: flex;
-            justify-content: space-around;
+            justify-content: center;
+            gap: 10px;
             font-size: 14px;
             margin-top: 20px;
+            flex-wrap: wrap;
         }
 
         .tap-stat {
             text-align: center;
-            padding: 10px;
+            padding: 15px 10px;
             background: rgba(227, 242, 253, 0.5);
             border-radius: 10px;
-            min-width: 80px;
+            min-width: 90px;
+            max-width: 100px;
+            flex: 1;
             border: 1px solid #bbdefb;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         .stat-value {
@@ -268,12 +277,17 @@
             font-weight: bold;
             margin-bottom: 5px;
             color: #2196F3;
+            line-height: 1.2;
+            text-align: center;
+            width: 100%;
         }
 
         .stat-label {
             font-size: 12px;
             opacity: 0.8;
             color: #1e3c72;
+            text-align: center;
+            width: 100%;
         }
 
         /* Menu Options Section */
@@ -520,7 +534,7 @@
     <!-- GOV Balance Display -->
     <div class="gov-balance" id="govBalanceDisplay">
         GOV Balance
-        <span id="currentGovBalance">0</span>
+        <span id="currentGovBalance">4.651</span>
     </div>
 
     <!-- Status Section -->
@@ -536,7 +550,7 @@
     <div class="rewards-section">
         <div class="reward-card">
             <div class="reward-title">GOV</div>
-            <div class="reward-value" id="totalRewards">4.278</div>
+            <div class="reward-value" id="totalRewards">4.651</div>
         </div>
         <div class="reward-card">
             <div class="reward-title">1JAM REWARD</div>
@@ -560,11 +574,11 @@
         
         <div class="tap-stats">
             <div class="tap-stat">
-                <div class="stat-value" id="tapCount">4.278</div>
+                <div class="stat-value" id="tapCount">4.651</div>
                 <div class="stat-label">Total Tap</div>
             </div>
             <div class="tap-stat">
-                <div class="stat-value" id="tapPoints">37.328</div>
+                <div class="stat-value" id="tapPoints">41.143</div>
                 <div class="stat-label">Poin</div>
             </div>
             <div class="tap-stat">
@@ -668,14 +682,14 @@
         let userData = {
             email: "",
             username: "",
-            saldoGOV: 0,
+            saldoGOV: 4651,
             saldoIDR: 0,
             saldoUSDT: 0,
             lastClaimTime: null,
             referralPoints: 0,
             referrals: [],
-            tapCount: 4278,
-            tapPoints: 37328,
+            tapCount: 4651,
+            tapPoints: 41143,
             tapMultiplier: 5
         };
 
@@ -748,12 +762,12 @@
             if (savedData) {
                 try {
                     const parsed = JSON.parse(savedData);
-                    userData.saldoGOV = parsed.saldoGOV || 4278;
+                    userData.saldoGOV = parsed.saldoGOV || 4651;
                     userData.lastClaimTime = parsed.lastClaimTime || null;
                     userData.referralPoints = parsed.referralPoints || 0;
                     userData.referrals = parsed.referrals || [];
-                    userData.tapCount = parsed.tapCount || 4278;
-                    userData.tapPoints = parsed.tapPoints || 37328;
+                    userData.tapCount = parsed.tapCount || 4651;
+                    userData.tapPoints = parsed.tapPoints || 41143;
                     userData.tapMultiplier = parsed.tapMultiplier || 5;
                 } catch (e) {
                     console.log("Could not parse saved data");
