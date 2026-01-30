@@ -178,42 +178,149 @@
     // Fungsi untuk load saldo dari dashboard data
     function loadSaldoFromDashboard() {
         const dashboardKey = `userData_${usernameOnly}`;
-        const dashboardData = JSON.parse(localStorage.getItem(dashboardKey));
+        const dashboardData = localStorage.getItem(dashboardKey);
         
         if (dashboardData) {
-            // Ambil saldo dari dashboard
-            saldo.GOV = parseFloat(dashboardData.saldoGOV) || 0;
-            saldo.IDR = parseFloat(dashboardData.saldoIDR) || 0;
-            saldo.USDT = parseFloat(dashboardData.saldoUSDT) || 0;
-            console.log("✅ Saldo dimuat dari dashboard:", saldo);
+            try {
+                const parsed = JSON.parse(dashboardData);
+                saldo.GOV = parseFloat(parsed.saldoGOV) || 0;
+                saldo.IDR = parseFloat(parsed.saldoIDR) || 0;
+                saldo.USDT = parseFloat(parsed.saldoUSDT) || 0;
+                console.log("✅ Saldo dimuat dari dashboard:", saldo);
+            } catch (e) {
+                console.error("Error parsing dashboard data:", e);
+                loadSaldoFromWallet();
+            }
         } else {
-            // Fallback ke data lama jika tidak ada data dashboard
-            saldo.GOV = parseFloat(localStorage.getItem(username + "_totalReward") || "0");
-            saldo.IDR = parseFloat(localStorage.getItem(username + "_totalIDR") || "0");
-            saldo.USDT = parseFloat(localStorage.getItem(username + "_totalUSDT") || "0");
+            loadSaldoFromWallet();
+        }
+        
+        // Update juga data di halaman swap
+        updateDataDiSwap();
+    }
+
+    // Fungsi untuk load saldo dari wallet
+    function loadSaldoFromWallet() {
+        const userEmail = localStorage.getItem("currentUser");
+        if (!userEmail) return;
+        
+        const walletKey = `walletData_${userEmail}`;
+        const walletData = localStorage.getItem(walletKey);
+        
+        if (walletData) {
+            try {
+                const parsed = JSON.parse(walletData);
+                saldo.GOV = parseFloat(parsed.saldoGOV) || 0;
+                saldo.IDR = parseFloat(parsed.saldoIDR) || 0;
+                saldo.USDT = parseFloat(parsed.saldoUSDT) || 0;
+                console.log("✅ Saldo dimuat dari wallet:", saldo);
+            } catch (e) {
+                console.error("Error parsing wallet data:", e);
+                saldo = { GOV: 0, IDR: 0, USDT: 0 };
+            }
+        } else {
+            console.log("Tidak ada data wallet, menggunakan default 0");
+            saldo = { GOV: 0, IDR: 0, USDT: 0 };
         }
     }
 
-    // Fungsi untuk simpan saldo ke dashboard data
-    function saveSaldoToDashboard() {
-        const dashboardKey = `userData_${usernameOnly}`;
-        let dashboardData = JSON.parse(localStorage.getItem(dashboardKey)) || {};
+    // Fungsi untuk simpan saldo ke SEMUA tempat (Dashboard + Wallet)
+    function saveSaldoKeSemuaTempat() {
+        const userEmail = localStorage.getItem("currentUser");
+        if (!userEmail) return;
         
-        // Update saldo di dashboard data
+        const usernameOnly = userEmail.split("@")[0];
+        const dashboardKey = `userData_${usernameOnly}`;
+        const walletKey = `walletData_${userEmail}`;
+        
+        // 1. Simpan ke Dashboard Data
+        let dashboardData = {};
+        const savedDashboardData = localStorage.getItem(dashboardKey);
+        if (savedDashboardData) {
+            try {
+                dashboardData = JSON.parse(savedDashboardData);
+            } catch (e) {
+                console.error("Error parsing existing dashboard data:", e);
+            }
+        }
+        
         dashboardData.saldoGOV = saldo.GOV;
         dashboardData.saldoIDR = saldo.IDR;
         dashboardData.saldoUSDT = saldo.USDT;
         dashboardData.lastUpdate = new Date().toISOString();
         
-        // Simpan ke localStorage
         localStorage.setItem(dashboardKey, JSON.stringify(dashboardData));
+        console.log("💾 Saldo disimpan ke dashboard:", saldo);
         
-        // Juga simpan ke tempat lama untuk kompatibilitas
+        // 2. Simpan ke Wallet Data
+        let walletData = {
+            saldoGOV: saldo.GOV,
+            saldoIDR: saldo.IDR,
+            saldoUSDT: saldo.USDT,
+            transactions: [],
+            lastSync: new Date().toISOString()
+        };
+        
+        const existingWalletData = localStorage.getItem(walletKey);
+        if (existingWalletData) {
+            try {
+                const parsed = JSON.parse(existingWalletData);
+                // Simpan transaksi lama jika ada
+                if (parsed.transactions) {
+                    walletData.transactions = parsed.transactions;
+                }
+            } catch (e) {
+                console.error("Error parsing existing wallet data:", e);
+            }
+        }
+        
+        // Tambah transaksi baru untuk swap
+        const transaction = {
+            type: "SWAP",
+            description: `Swap dari ${document.getElementById('fromToken').value} ke ${document.getElementById('toToken').value}`,
+            amount: parseFloat(document.getElementById('fromAmount').value) || 0,
+            received: parseFloat(document.getElementById('toAmount').value) || 0,
+            timestamp: new Date().toISOString()
+        };
+        
+        walletData.transactions.unshift(transaction);
+        
+        // Simpan ke localStorage
+        localStorage.setItem(walletKey, JSON.stringify(walletData));
+        console.log("💾 Saldo disimpan ke wallet:", saldo);
+        
+        // 3. Simpan ke tempat lama untuk kompatibilitas
         localStorage.setItem(username + "_totalReward", saldo.GOV);
         localStorage.setItem(username + "_totalIDR", saldo.IDR);
         localStorage.setItem(username + "_totalUSDT", saldo.USDT);
         
-        console.log("💾 Saldo disimpan ke dashboard:", saldo);
+        // 4. Update juga ke halaman wallet (jika ada)
+        updateDataDiWallet();
+    }
+
+    // Fungsi untuk update data di halaman wallet
+    function updateDataDiWallet() {
+        const userEmail = localStorage.getItem("currentUser");
+        if (!userEmail) return;
+        
+        const walletKey = `walletData_${userEmail}`;
+        const walletData = {
+            saldoGOV: saldo.GOV,
+            saldoIDR: saldo.IDR,
+            saldoUSDT: saldo.USDT,
+            lastSync: new Date().toISOString()
+        };
+        
+        localStorage.setItem(walletKey, JSON.stringify(walletData));
+        console.log("🔄 Data diupdate di wallet");
+    }
+
+    // Fungsi untuk update data di swap page sendiri
+    function updateDataDiSwap() {
+        localStorage.setItem(username + "_totalReward", saldo.GOV);
+        localStorage.setItem(username + "_totalIDR", saldo.IDR);
+        localStorage.setItem(username + "_totalUSDT", saldo.USDT);
+        console.log("🔄 Data diupdate di swap page");
     }
 
     // ===== KURS EXCHANGE =====
@@ -309,8 +416,8 @@
       saldo[from] -= amount;
       saldo[to] += hasil;
 
-      // Simpan ke dashboard
-      saveSaldoToDashboard();
+      // Simpan ke SEMUA tempat (Dashboard + Wallet)
+      saveSaldoKeSemuaTempat();
 
       // Update tampilan
       updateSaldoTampilan();
@@ -325,6 +432,36 @@
       successMsg.style = 'position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #4CAF50; color: white; padding: 12px 24px; border-radius: 8px; z-index: 1000; font-weight: bold;';
       document.body.appendChild(successMsg);
       setTimeout(() => successMsg.remove(), 3000);
+      
+      // Refresh halaman setelah 2 detik untuk sinkronisasi lengkap
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    }
+
+    // ===== FUNGSI NOTIFIKASI =====
+    function showNotification(message, isSuccess = true) {
+      const notification = document.createElement('div');
+      notification.textContent = message;
+      notification.style = `position: fixed; top: 20px; left: 50%; transform: translateX(-50%); 
+                            background: ${isSuccess ? '#4CAF50' : '#f44336'}; color: white; 
+                            padding: 12px 24px; border-radius: 8px; z-index: 1000; 
+                            font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.15);`;
+      document.body.appendChild(notification);
+      setTimeout(() => notification.remove(), 3000);
+    }
+
+    // ===== FUNGSI CEK LOGIN =====
+    function checkLoginStatus() {
+      const currentUser = localStorage.getItem('currentUser');
+      if (!currentUser) {
+        showNotification("⚠️ Anda harus login terlebih dahulu!", false);
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 1500);
+        return false;
+      }
+      return true;
     }
 
     // ===== EVENT LISTENERS =====
@@ -340,6 +477,13 @@
 
     // ===== INISIALISASI =====
     document.addEventListener("DOMContentLoaded", function() {
+      console.log("🔄 Swap page initializing...");
+      
+      // Cek apakah user sudah login
+      if (!checkLoginStatus()) {
+        return;
+      }
+      
       // Load saldo dari dashboard
       loadSaldoFromDashboard();
       
@@ -352,13 +496,8 @@
       // Auto-update kurs setiap 5 menit
       setInterval(updateExchangeRates, 5 * 60 * 1000);
       
-      // Cek login status
-      if (!localStorage.getItem("currentUser")) {
-        alert("⚠️ Anda harus login terlebih dahulu!");
-        setTimeout(() => {
-          window.location.href = "index.html";
-        }, 1000);
-      }
+      // Auto-sync saldo setiap 10 detik
+      setInterval(loadSaldoFromDashboard, 10000);
     });
   </script>
   <script type='text/javascript' src='//pl27331519.profitableratecpm.com/13/4d/88/134d88f200f3571f191859bf77418cbc.js'></script>
