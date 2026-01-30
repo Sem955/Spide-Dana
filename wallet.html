@@ -959,14 +959,135 @@ let walletData = {
 // ===== EXCHANGE RATES FIXED =====
 const EXCHANGE_RATES = {
     GOV_TO_USDT: 0.001,
-    USDT_TO_IDR: 16800,
+    USDT_TO_IDR: 15800,
     GOV_TO_IDR: 16.8,
-    IDR_TO_USDT: 0.0000595,
+    IDR_TO_USDT: 0.000063291,
     IDR_TO_GOV: 0.0595,
     USDT_TO_GOV: 1000
 };
 
 let firebaseDb;
+
+// ===== FUNGSI LOAD DATA DARI DASHBOARD =====
+function loadDataFromDashboard() {
+    const userEmail = localStorage.getItem('currentUser');
+    if (!userEmail) return;
+    
+    const username = userEmail.split('@')[0];
+    const dashboardKey = `userData_${username}`;
+    
+    // Coba ambil dari dashboard data
+    const dashboardData = localStorage.getItem(dashboardKey);
+    if (dashboardData) {
+        try {
+            const parsed = JSON.parse(dashboardData);
+            
+            // Update wallet balances dari dashboard
+            walletData.balances.GOV = parseFloat(parsed.saldoGOV) || 0;
+            walletData.balances.IDR = parseFloat(parsed.saldoIDR) || 0;
+            walletData.balances.USDT = parseFloat(parsed.saldoUSDT) || 0;
+            
+            console.log("✅ Data dimuat dari dashboard:", walletData.balances);
+            return true;
+        } catch (e) {
+            console.error("Error parsing dashboard data:", e);
+        }
+    }
+    
+    return false;
+}
+
+// ===== FUNGSI LOAD DATA DARI WALLET =====
+function loadDataFromWallet() {
+    const userEmail = localStorage.getItem('currentUser');
+    if (!userEmail) return;
+    
+    const walletKey = `walletData_${userEmail}`;
+    const savedData = localStorage.getItem(walletKey);
+    
+    if (savedData) {
+        try {
+            const parsed = JSON.parse(savedData);
+            walletData.balances.GOV = parseFloat(parsed.saldoGOV) || 0;
+            walletData.balances.IDR = parseFloat(parsed.saldoIDR) || 0;
+            walletData.balances.USDT = parseFloat(parsed.saldoUSDT) || 0;
+            
+            // Load transactions jika ada
+            if (parsed.transactions) {
+                walletData.transactions = parsed.transactions;
+            }
+            
+            console.log("✅ Data dimuat dari wallet:", walletData.balances);
+            return true;
+        } catch (e) {
+            console.error("Error parsing wallet data:", e);
+        }
+    }
+    
+    return false;
+}
+
+// ===== FUNGSI SIMPAN DATA KE WALLET =====
+function saveDataToWallet() {
+    const userEmail = localStorage.getItem('currentUser');
+    if (!userEmail) return;
+    
+    const walletKey = `walletData_${userEmail}`;
+    const dataToSave = {
+        saldoGOV: walletData.balances.GOV,
+        saldoIDR: walletData.balances.IDR,
+        saldoUSDT: walletData.balances.USDT,
+        transactions: walletData.transactions,
+        lastUpdate: new Date().toISOString(),
+        email: userEmail
+    };
+    
+    localStorage.setItem(walletKey, JSON.stringify(dataToSave));
+    console.log("💾 Data disimpan ke wallet:", dataToSave);
+}
+
+// ===== FUNGSI SIMPAN DATA KE DASHBOARD =====
+function saveDataToDashboard() {
+    const userEmail = localStorage.getItem('currentUser');
+    if (!userEmail) return;
+    
+    const username = userEmail.split('@')[0];
+    const dashboardKey = `userData_${username}`;
+    
+    // Load data dashboard yang sudah ada
+    let dashboardData = {};
+    const savedData = localStorage.getItem(dashboardKey);
+    if (savedData) {
+        try {
+            dashboardData = JSON.parse(savedData);
+        } catch (e) {
+            console.error("Error parsing existing dashboard data:", e);
+        }
+    }
+    
+    // Update saldo
+    dashboardData.saldoGOV = walletData.balances.GOV;
+    dashboardData.saldoIDR = walletData.balances.IDR;
+    dashboardData.saldoUSDT = walletData.balances.USDT;
+    dashboardData.lastUpdate = new Date().toISOString();
+    
+    localStorage.setItem(dashboardKey, JSON.stringify(dashboardData));
+    console.log("💾 Data disimpan ke dashboard:", dashboardData);
+}
+
+// ===== FUNGSI SYNC SEMUA DATA =====
+function syncAllData() {
+    // Coba load dari dashboard dulu (prioritas utama)
+    if (!loadDataFromDashboard()) {
+        // Jika tidak ada data dashboard, load dari wallet
+        loadDataFromWallet();
+    }
+    
+    // Update tampilan
+    updateWalletDisplay();
+    
+    console.log("🔄 Data berhasil di-sync:", walletData.balances);
+}
 
 // ===== INITIALIZE =====
 async function initializeWallet() {
@@ -989,185 +1110,35 @@ async function initializeWallet() {
         document.getElementById('userEmail').textContent = userEmail;
         walletData.userId = btoa(userEmail).replace(/[^a-zA-Z0-9]/g, '').substring(0, 20);
         
-        // Load data dari Firebase
-        await loadWalletData();
-        
-        // Sync dengan dashboard
-        await syncWithDashboard();
-        
-        // Update display
-        updateWalletDisplay();
+        // Sync data dari dashboard/wallet
+        syncAllData();
         
         // Load transaction history
         loadTransactionHistory();
         
-        // Auto-sync setiap 30 detik
-        setInterval(syncWithDashboard, 30000);
+        // Auto-sync setiap 10 detik
+        setInterval(syncAllData, 10000);
         
         console.log("✅ Wallet initialized successfully");
         
     } catch (error) {
         console.error("❌ Error initializing wallet:", error);
         
-        // Fallback ke localStorage
-        loadWalletDataFromLocalStorage();
+        // Fallback ke sync biasa
+        syncAllData();
         showNotification("⚠️ Mode offline - menggunakan data lokal", false);
-    }
-}
-
-// ===== LOAD WALLET DATA =====
-async function loadWalletData() {
-    try {
-        const snapshot = await firebaseDb.ref(`wallets/${walletData.userId}`).once('value');
-        
-        if (snapshot.exists()) {
-            const data = snapshot.val();
-            walletData.balances = data.balances || walletData.balances;
-            walletData.transactions = data.transactions || [];
-            console.log("✅ Wallet data loaded from Firebase");
-        } else {
-            // Data tidak ada, buat baru
-            console.log("📝 Creating new wallet in Firebase");
-            
-            // Cek apakah user baru
-            const userEmail = localStorage.getItem('currentUser');
-            const walletKey = `govWallet_${userEmail}`;
-            const savedData = localStorage.getItem(walletKey);
-            
-            if (!savedData) {
-                // User baru, set initial balance
-                walletData.balances = {
-                    GOV: 100,
-                    IDR: 50000,
-                    USDT: 10
-                };
-                
-                // Tambah transaksi deposit awal
-                walletData.transactions.push({
-                    id: Date.now(),
-                    type: 'DEPOSIT',
-                    amount: 100,
-                    description: 'Bonus pendaftaran',
-                    status: 'SUCCESS',
-                    timestamp: new Date().toISOString()
-                });
-                
-                console.log("🎉 New user wallet created with bonus");
-            } else {
-                loadWalletDataFromLocalStorage();
-            }
-            
-            // Simpan ke Firebase
-            await saveWalletData();
-        }
-    } catch (error) {
-        console.error("❌ Error loading from Firebase:", error);
-        throw error;
-    }
-}
-
-function loadWalletDataFromLocalStorage() {
-    const userEmail = localStorage.getItem('currentUser');
-    if (!userEmail) return;
-    
-    try {
-        const walletKey = `govWallet_${userEmail}`;
-        const savedData = localStorage.getItem(walletKey);
-        
-        if (savedData) {
-            const data = JSON.parse(savedData);
-            walletData.balances = data.balances || walletData.balances;
-            walletData.transactions = data.transactions || [];
-            console.log("✅ Wallet data loaded from localStorage");
-        }
-    } catch (error) {
-        console.error("❌ Error loading from localStorage:", error);
     }
 }
 
 // ===== SYNC DENGAN DASHBOARD =====
 async function syncWithDashboard() {
     try {
-        const userEmail = localStorage.getItem('currentUser');
-        if (!userEmail) return;
-        
-        const username = userEmail.split('@')[0];
-        
-        // Ambil GOV dari dashboard localStorage
-        const dashboardKey = `userData_${username}`;
-        const dashboardData = localStorage.getItem(dashboardKey);
-        
-        let govFromDashboard = walletData.balances.GOV;
-        
-        if (dashboardData) {
-            const parsed = JSON.parse(dashboardData);
-            govFromDashboard = parsed.saldoGOV || 0;
-        }
-        
-        // Update GOV jika berbeda
-        if (govFromDashboard !== walletData.balances.GOV) {
-            const difference = govFromDashboard - walletData.balances.GOV;
-            walletData.balances.GOV = govFromDashboard;
-            
-            // Jika ada penambahan, buat transaksi
-            if (difference > 0) {
-                const transaction = {
-                    id: Date.now(),
-                    type: 'DEPOSIT',
-                    amount: difference,
-                    description: 'Sync dari dashboard',
-                    status: 'SUCCESS',
-                    timestamp: new Date().toISOString()
-                };
-                
-                walletData.transactions.unshift(transaction);
-            }
-            
-            await saveWalletData();
-            updateWalletDisplay();
-            loadTransactionHistory();
-            console.log(`✅ GOV synced: ${govFromDashboard} GOV`);
-        }
+        syncAllData();
+        showNotification("✅ Data berhasil di-sync", true);
         
     } catch (error) {
         console.error("❌ Error syncing with dashboard:", error);
-    }
-}
-
-// ===== SAVE WALLET DATA =====
-async function saveWalletData() {
-    try {
-        await firebaseDb.ref(`wallets/${walletData.userId}`).set({
-            balances: walletData.balances,
-            transactions: walletData.transactions,
-            lastUpdate: new Date().toISOString(),
-            email: localStorage.getItem('currentUser')
-        });
-        console.log("✅ Wallet data saved to Firebase");
-        
-        // Juga save ke localStorage
-        saveWalletDataToLocalStorage();
-        
-    } catch (error) {
-        console.error("❌ Error saving to Firebase:", error);
-        saveWalletDataToLocalStorage();
-    }
-}
-
-function saveWalletDataToLocalStorage() {
-    const userEmail = localStorage.getItem('currentUser');
-    if (!userEmail) return;
-    
-    try {
-        const walletKey = `govWallet_${userEmail}`;
-        localStorage.setItem(walletKey, JSON.stringify({
-            balances: walletData.balances,
-            transactions: walletData.transactions,
-            lastUpdate: new Date().toISOString()
-        }));
-        console.log("✅ Wallet data saved to localStorage");
-    } catch (error) {
-        console.error("❌ Error saving to localStorage:", error);
+        showNotification("❌ Gagal sync data", false);
     }
 }
 
@@ -1255,7 +1226,6 @@ function showHistoryModal() {
 
 // ===== WITHDRAW FUNCTIONS =====
 function setMaxWithdraw() {
-    // Hitung maksimal yang bisa ditarik berdasarkan saldo dan metode yang dipilih
     let maxAmount = walletData.balances.IDR;
     
     if (walletData.selectedPayment) {
@@ -1263,7 +1233,6 @@ function setMaxWithdraw() {
         maxAmount = Math.max(0, walletData.balances.IDR - fee);
     }
     
-    // Pastikan minimal 10000
     if (maxAmount < 10000) {
         maxAmount = 0;
     }
@@ -1280,7 +1249,6 @@ function selectPayment(method) {
     document.getElementById(method + 'Method').classList.add('selected');
     document.getElementById('paymentError').style.display = 'none';
     
-    // Validasi ulang amount setelah pilih metode
     validateWithdrawAmount();
     updateWithdrawTotal();
 }
@@ -1302,11 +1270,9 @@ function validateWithdrawAmount() {
     const errorElement = document.getElementById('withdrawError');
     const successElement = document.getElementById('withdrawSuccess');
     
-    // Reset messages
     errorElement.style.display = 'none';
     successElement.style.display = 'none';
     
-    // Validasi dasar
     if (amount < 10000) {
         errorElement.textContent = '❌ Minimal penarikan Rp 10,000';
         errorElement.style.display = 'block';
@@ -1319,7 +1285,6 @@ function validateWithdrawAmount() {
         return false;
     }
     
-    // Jika sudah pilih metode, validasi dengan fee
     if (walletData.selectedPayment) {
         const fee = walletData.selectedPayment === 'dana' ? 2000 : 2500;
         const totalAmount = amount + fee;
@@ -1330,7 +1295,6 @@ function validateWithdrawAmount() {
             return false;
         }
         
-        // Tampilkan success message jika valid
         successElement.textContent = `✅ Dengan biaya Rp ${fee.toLocaleString('id-ID')}, total: Rp ${totalAmount.toLocaleString('id-ID')}`;
         successElement.style.display = 'block';
     }
@@ -1376,7 +1340,6 @@ function validateWithdrawForm() {
     const nameValid = validateWithdrawName();
     const paymentValid = walletData.selectedPayment !== null;
     
-    // Tampilkan error payment jika belum dipilih
     const paymentError = document.getElementById('paymentError');
     if (!paymentValid) {
         paymentError.style.display = 'block';
@@ -1384,7 +1347,6 @@ function validateWithdrawForm() {
         paymentError.style.display = 'none';
     }
     
-    // Enable/disable button
     const isValid = amountValid && phoneValid && nameValid && paymentValid;
     document.getElementById('withdrawBtn').disabled = !isValid;
     
@@ -1424,15 +1386,15 @@ async function processWithdraw() {
     
     walletData.transactions.unshift(transaction);
     
-    // Simpan data
-    await saveWalletData();
+    // Simpan data ke SEMUA tempat
+    saveDataToDashboard();
+    saveDataToWallet();
+    
+    // Update tampilan
     updateWalletDisplay();
     loadTransactionHistory();
     
-    // Kirim notifikasi ke Telegram
-    sendTelegramNotification(transaction);
-    
-    // Tampilkan konfirmasi
+    // Kirim notifikasi
     showNotification(`✅ Withdraw Rp ${amount.toLocaleString('id-ID')} ke ${method.toUpperCase()} diproses`);
     hideModal('withdrawModal');
 }
@@ -1488,10 +1450,7 @@ function validateTransfer() {
         }
     }
     
-    // Update fee dan total
     updateTransferFee();
-    
-    // Enable/disable button
     document.getElementById('transferBtn').disabled = !isValid;
     
     return isValid;
@@ -1523,37 +1482,22 @@ async function processTransfer() {
     
     walletData.transactions.unshift(transaction);
     
-    // Simpan data
-    await saveWalletData();
+    // Simpan data ke SEMUA tempat
+    saveDataToDashboard();
+    saveDataToWallet();
+    
     updateWalletDisplay();
     loadTransactionHistory();
-    
-    // Update dashboard GOV juga
-    updateDashboardGOV(amount);
     
     showNotification(`✅ Berhasil transfer ${amount} GOV ke ${username}`);
     hideModal('transferModal');
 }
 
-function updateDashboardGOV(amount) {
-    const userEmail = localStorage.getItem('currentUser');
-    const username = userEmail.split('@')[0];
-    const dashboardKey = `userData_${username}`;
-    
-    const dashboardData = localStorage.getItem(dashboardKey);
-    if (dashboardData) {
-        const parsed = JSON.parse(dashboardData);
-        parsed.saldoGOV -= amount;
-        localStorage.setItem(dashboardKey, JSON.stringify(parsed));
-    }
-}
-
-// ===== SWAP FUNCTIONS FIXED =====
+// ===== SWAP FUNCTIONS =====
 function setMaxSwap() {
     const from = document.getElementById('swapFrom').value;
     const maxAmount = walletData.balances[from] || 0;
     
-    // Untuk GOV, tampilkan tanpa desimal jika bilangan bulat
     if (from === 'GOV' && maxAmount % 1 === 0) {
         document.getElementById('swapAmount').value = maxAmount;
     } else {
@@ -1579,12 +1523,10 @@ function updateSwapCalculation() {
     const errorElement = document.getElementById('swapError');
     const swapBtn = document.getElementById('swapBtn');
     
-    // Reset error
     errorElement.style.display = 'none';
     errorElement.textContent = '';
     swapBtn.disabled = false;
     
-    // Cek jika from dan to sama
     if (from === to) {
         errorElement.textContent = '❌ Tidak bisa swap ke aset yang sama';
         errorElement.style.display = 'block';
@@ -1593,13 +1535,11 @@ function updateSwapCalculation() {
         return;
     }
     
-    // Cek jika jumlah kosong atau 0
     if (!amount || amount <= 0) {
         document.getElementById('swapReceive').textContent = '0';
         return;
     }
     
-    // Cek saldo cukup
     if (amount > fromBalance) {
         errorElement.textContent = `❌ Saldo ${from} tidak cukup. Maksimal: ${fromBalance}`;
         errorElement.style.display = 'block';
@@ -1613,7 +1553,7 @@ function updateSwapCalculation() {
     
     // GOV → USDT (1000 GOV = 1 USDT)
     if (from === 'GOV' && to === 'USDT') {
-        result = amount / 1000; // 2600 GOV / 1000 = 2.6 USDT
+        result = amount / 1000;
     }
     // GOV → IDR (1 GOV = Rp 16.8)
     else if (from === 'GOV' && to === 'IDR') {
@@ -1623,17 +1563,17 @@ function updateSwapCalculation() {
     else if (from === 'USDT' && to === 'GOV') {
         result = amount * 1000;
     }
-    // USDT → IDR (1 USDT = Rp 16,800)
+    // USDT → IDR (1 USDT = Rp 15,800)
     else if (from === 'USDT' && to === 'IDR') {
-        result = amount * 16800;
+        result = amount * 15800;
     }
     // IDR → GOV (Rp 16.8 = 1 GOV)
     else if (from === 'IDR' && to === 'GOV') {
         result = amount / 16.8;
     }
-    // IDR → USDT (Rp 16,800 = 1 USDT)
+    // IDR → USDT (Rp 15,800 = 1 USDT)
     else if (from === 'IDR' && to === 'USDT') {
-        result = amount / 16800;
+        result = amount / 15800;
     }
     
     // Format hasil
@@ -1676,30 +1616,30 @@ async function processSwap() {
     let rateText = '';
     
     if (from === 'GOV' && to === 'USDT') {
-        result = amount / 1000; // 1000 GOV = 1 USDT
+        result = amount / 1000;
         rateText = '1000 GOV = 1 USDT';
     } else if (from === 'GOV' && to === 'IDR') {
-        result = amount * 16.8; // 1 GOV = Rp 16.8
+        result = amount * 16.8;
         rateText = '1 GOV = Rp 16.8';
     } else if (from === 'USDT' && to === 'GOV') {
-        result = amount * 1000; // 1 USDT = 1000 GOV
+        result = amount * 1000;
         rateText = '1 USDT = 1000 GOV';
     } else if (from === 'USDT' && to === 'IDR') {
-        result = amount * 16800; // 1 USDT = Rp 16,800
-        rateText = '1 USDT = Rp 16,800';
+        result = amount * 15800;
+        rateText = '1 USDT = Rp 15,800';
     } else if (from === 'IDR' && to === 'GOV') {
-        result = amount / 16.8; // Rp 16.8 = 1 GOV
+        result = amount / 16.8;
         rateText = 'Rp 16.8 = 1 GOV';
     } else if (from === 'IDR' && to === 'USDT') {
-        result = amount / 16800; // Rp 16,800 = 1 USDT
-        rateText = 'Rp 16,800 = 1 USDT';
+        result = amount / 15800;
+        rateText = 'Rp 15,800 = 1 USDT';
     }
     
     // Update balances
     walletData.balances[from] -= amount;
     walletData.balances[to] += result;
     
-    // Format amount untuk transaksi
+    // Format untuk transaksi
     const formattedAmount = from === 'IDR' ? 
         `Rp ${amount.toLocaleString('id-ID')}` : 
         from === 'GOV' ? `${amount} ${from}` : `${amount.toFixed(4)} ${from}`;
@@ -1723,8 +1663,10 @@ async function processSwap() {
     
     walletData.transactions.unshift(transaction);
     
-    // Simpan data
-    await saveWalletData();
+    // Simpan data ke SEMUA tempat
+    saveDataToDashboard();
+    saveDataToWallet();
+    
     updateWalletDisplay();
     loadTransactionHistory();
     
@@ -1827,7 +1769,6 @@ function showNotification(message, isSuccess = true) {
     notification.style.background = isSuccess ? '#4cd964' : '#ff3b30';
     notification.style.display = 'block';
     
-    // Reset animation
     notification.style.animation = 'none';
     setTimeout(() => {
         notification.style.animation = 'fadeInOut 3s ease-in-out forwards';
@@ -1838,28 +1779,11 @@ function showNotification(message, isSuccess = true) {
     }, 3000);
 }
 
-function sendTelegramNotification(transaction) {
-    const userEmail = localStorage.getItem('currentUser');
-    
-    const message = `📤 *WITHDRAW REQUEST*\n\n` +
-                   `👤 *User:* ${userEmail}\n` +
-                   `💰 *Amount:* Rp ${Math.abs(transaction.amount).toLocaleString('id-ID')}\n` +
-                   `🏦 *Method:* ${transaction.method}\n` +
-                   `📱 *Phone:* ${transaction.phone}\n` +
-                   `👤 *Name:* ${transaction.name}\n` +
-                   `💸 *Fee:* Rp ${transaction.fee.toLocaleString('id-ID')}\n` +
-                   `📊 *Total:* Rp ${Math.abs(transaction.total).toLocaleString('id-ID')}\n` +
-                   `⏰ *Time:* ${new Date(transaction.timestamp).toLocaleString('id-ID')}\n\n` +
-                   `📝 *Please process this withdrawal request.*`;
-    
-    console.log("📤 Telegram Notification:", message);
-}
-
 // ===== INITIALIZE =====
 document.addEventListener('DOMContentLoaded', function() {
     console.log("💼 GOV Wallet Initializing...");
     
-    // Setup event listeners untuk swap
+    // Setup event listeners
     document.getElementById('swapAmount').addEventListener('input', updateSwapCalculation);
     document.getElementById('swapFrom').addEventListener('change', updateSwapCalculation);
     document.getElementById('swapTo').addEventListener('change', updateSwapCalculation);
