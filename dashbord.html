@@ -9,7 +9,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-
     <style>
         :root {
             --bg-dark: #080d1a;
@@ -17,18 +16,15 @@
             --bg-card2: #111a2e;
             --accent: #3b82f6;
             --accent2: #60a5fa;
-            --accent-glow: rgba(59, 130, 246, 0.25);
             --accent-green: #10b981;
             --accent-orange: #f59e0b;
             --text-primary: #f0f6ff;
             --text-muted: #6b7fa3;
             --text-sub: #94a3b8;
-            --border: rgba(59, 130, 246, 0.15);
+            --border: rgba(59,130,246,0.15);
             --border-soft: rgba(255,255,255,0.06);
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         body {
             background: var(--bg-dark);
             color: var(--text-primary);
@@ -36,558 +32,341 @@
             min-height: 100vh;
             overflow-x: hidden;
         }
-
         body::before {
             content: '';
-            position: fixed;
-            inset: 0;
+            position: fixed; inset: 0;
             background-image:
                 linear-gradient(rgba(59,130,246,0.04) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(59,130,246,0.04) 1px, transparent 1px);
             background-size: 40px 40px;
-            pointer-events: none;
-            z-index: 0;
+            pointer-events: none; z-index: 0;
         }
-
         body::after {
             content: '';
             position: fixed;
-            top: -120px;
-            right: -80px;
-            width: 400px;
-            height: 400px;
+            top: -120px; right: -80px;
+            width: 400px; height: 400px;
             background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 0;
+            pointer-events: none; z-index: 0;
         }
-
         .notification {
             position: fixed;
-            top: 16px;
-            left: 50%;
+            top: 16px; left: 50%;
             transform: translateX(-50%) translateY(-80px);
-            background: rgba(14, 22, 40, 0.95);
+            background: rgba(14,22,40,0.95);
             color: var(--text-primary);
             padding: 12px 20px;
             border-radius: 12px;
-            z-index: 3000;
-            font-size: 14px;
-            font-weight: 500;
+            z-index: 3000; font-size: 14px; font-weight: 500;
             max-width: 90%;
             border: 1px solid var(--border);
             backdrop-filter: blur(10px);
             box-shadow: 0 4px 30px rgba(0,0,0,0.4);
-            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
         }
         .notification.show { transform: translateX(-50%) translateY(0); }
-
         .sync-status {
-            position: fixed;
-            top: 12px; right: 12px;
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--accent-green);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            z-index: 1000;
-            display: none;
-            border: 1px solid rgba(16, 185, 129, 0.3);
+            position: fixed; top: 12px; right: 12px;
+            background: rgba(16,185,129,0.15); color: var(--accent-green);
+            padding: 4px 12px; border-radius: 20px;
+            font-size: 11px; font-weight: 600;
+            z-index: 1000; display: none;
+            border: 1px solid rgba(16,185,129,0.3);
         }
-
         .mining-indicator {
-            position: fixed;
-            top: 12px; left: 12px;
-            background: rgba(245, 158, 11, 0.15);
-            color: var(--accent-orange);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            z-index: 1000;
-            display: none;
-            border: 1px solid rgba(245, 158, 11, 0.3);
+            position: fixed; top: 12px; left: 12px;
+            background: rgba(245,158,11,0.15); color: var(--accent-orange);
+            padding: 4px 12px; border-radius: 20px;
+            font-size: 11px; font-weight: 600;
+            z-index: 1000; display: none;
+            border: 1px solid rgba(245,158,11,0.3);
         }
-
         .header {
-            position: relative;
-            z-index: 10;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            position: relative; z-index: 10;
+            display: flex; justify-content: space-between; align-items: center;
             padding: 16px 20px;
-            background: rgba(8, 13, 26, 0.8);
+            background: rgba(8,13,26,0.85);
             backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--border-soft);
         }
-
         .profile-section { display: flex; align-items: center; gap: 12px; }
-
         .profile-pic-wrap { position: relative; }
-
         .profile-pic {
-            width: 42px; height: 42px;
-            border-radius: 50%;
+            width: 42px; height: 42px; border-radius: 50%;
             object-fit: cover;
-            border: 2px solid rgba(59, 130, 246, 0.5);
-            cursor: pointer;
-            display: block;
+            border: 2px solid rgba(59,130,246,0.5);
+            cursor: pointer; display: block;
         }
-
         .online-dot {
-            position: absolute;
-            bottom: 1px; right: 1px;
+            position: absolute; bottom: 1px; right: 1px;
             width: 10px; height: 10px;
             background: var(--accent-green);
-            border-radius: 50%;
-            border: 2px solid var(--bg-dark);
+            border-radius: 50%; border: 2px solid var(--bg-dark);
         }
-
         .profile-name {
             font-family: 'Syne', sans-serif;
-            font-weight: 700;
-            font-size: 15px;
-            color: var(--text-primary);
+            font-weight: 700; font-size: 15px; color: var(--text-primary);
         }
-
         .profile-email { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
-
         .menu-btn {
             background: rgba(59,130,246,0.1);
-            border: 1px solid var(--border);
-            color: var(--accent2);
-            width: 38px; height: 38px;
-            border-radius: 10px;
+            border: 1px solid var(--border); color: var(--accent2);
+            width: 38px; height: 38px; border-radius: 10px;
             display: flex; align-items: center; justify-content: center;
-            cursor: pointer;
-            font-size: 18px;
-            transition: background 0.2s;
+            cursor: pointer; font-size: 18px; transition: background 0.2s;
         }
         .menu-btn:hover { background: rgba(59,130,246,0.2); }
-
         .menu-dropdown {
-            display: none;
-            position: absolute;
+            display: none; position: absolute;
             top: 68px; right: 16px;
             background: var(--bg-card2);
             border: 1px solid var(--border);
-            border-radius: 14px;
-            z-index: 1000;
-            width: 190px;
+            border-radius: 14px; z-index: 1000; width: 190px;
             overflow: hidden;
             box-shadow: 0 20px 60px rgba(0,0,0,0.5);
             backdrop-filter: blur(16px);
         }
-
         .menu-dropdown a {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 13px 18px;
-            text-decoration: none;
-            color: var(--text-sub);
-            font-size: 14px;
-            font-weight: 500;
+            display: flex; align-items: center; gap: 10px;
+            padding: 13px 18px; text-decoration: none;
+            color: var(--text-sub); font-size: 14px; font-weight: 500;
             transition: background 0.15s, color 0.15s;
             border-bottom: 1px solid var(--border-soft);
         }
         .menu-dropdown a:last-child { border-bottom: none; }
         .menu-dropdown a:hover { background: rgba(59,130,246,0.1); color: var(--accent2); }
-
         .balance-hero {
             position: relative; z-index: 1;
             margin: 20px 16px 0;
             background: linear-gradient(135deg, #0d1b38 0%, #091425 100%);
             border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 24px 22px;
-            overflow: hidden;
+            border-radius: 20px; padding: 24px 22px; overflow: hidden;
         }
-
         .balance-hero::before {
-            content: '';
-            position: absolute;
+            content: ''; position: absolute;
             top: -40px; right: -40px;
             width: 180px; height: 180px;
             background: radial-gradient(circle, rgba(59,130,246,0.18) 0%, transparent 70%);
         }
-
         .balance-label {
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--text-muted);
-            margin-bottom: 6px;
+            font-size: 12px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 1.5px;
+            color: var(--text-muted); margin-bottom: 6px;
         }
-
         .balance-amount {
             font-family: 'Syne', sans-serif;
-            font-size: 38px;
-            font-weight: 800;
-            color: var(--text-primary);
-            line-height: 1;
+            font-size: 38px; font-weight: 800;
+            color: var(--text-primary); line-height: 1;
         }
-
-        .balance-amount span {
-            font-size: 18px;
-            color: var(--accent2);
-            margin-left: 6px;
-            font-weight: 600;
-        }
-
-        .balance-change {
-            margin-top: 10px;
-            font-size: 13px;
-            color: var(--accent-green);
-            font-weight: 500;
-        }
-
+        .balance-amount span { font-size: 18px; color: var(--accent2); margin-left: 6px; font-weight: 600; }
+        .balance-change { margin-top: 10px; font-size: 13px; color: var(--accent-green); font-weight: 500; }
         .stats-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin: 14px 16px 0;
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 12px; margin: 14px 16px 0;
             position: relative; z-index: 1;
         }
-
         .stat-card {
             background: var(--bg-card);
             border: 1px solid var(--border-soft);
-            border-radius: 16px;
-            padding: 18px 16px;
+            border-radius: 16px; padding: 18px 16px;
             transition: border-color 0.2s, transform 0.2s;
         }
         .stat-card:hover { border-color: var(--border); transform: translateY(-2px); }
-
         .stat-card-icon { font-size: 22px; margin-bottom: 8px; }
-
-        .stat-card-value {
-            font-family: 'Syne', sans-serif;
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .stat-card-label {
-            font-size: 11px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 3px;
-        }
-
+        .stat-card-value { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; color: var(--text-primary); }
+        .stat-card-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 3px; }
         .mining-card {
             position: relative; z-index: 1;
             margin: 14px 16px 0;
             background: var(--bg-card);
             border: 1px solid var(--border-soft);
-            border-radius: 20px;
-            padding: 20px;
+            border-radius: 20px; padding: 20px;
         }
-
         .mining-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: flex; justify-content: space-between; align-items: center;
             margin-bottom: 14px;
         }
-
         .mining-title {
             font-family: 'Syne', sans-serif;
-            font-size: 15px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-size: 15px; font-weight: 700;
+            display: flex; align-items: center; gap: 8px;
         }
-
         .mining-badge {
-            background: rgba(245, 158, 11, 0.15);
-            color: var(--accent-orange);
-            font-size: 10px;
-            font-weight: 700;
-            padding: 3px 8px;
-            border-radius: 20px;
-            border: 1px solid rgba(245, 158, 11, 0.3);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            background: rgba(245,158,11,0.15); color: var(--accent-orange);
+            font-size: 10px; font-weight: 700;
+            padding: 3px 8px; border-radius: 20px;
+            border: 1px solid rgba(245,158,11,0.3);
+            text-transform: uppercase; letter-spacing: 0.5px;
         }
-
         .mining-badge.done {
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--accent-green);
-            border-color: rgba(16, 185, 129, 0.3);
+            background: rgba(16,185,129,0.15); color: var(--accent-green);
+            border-color: rgba(16,185,129,0.3);
         }
-
         .status-text { font-size: 14px; font-weight: 600; color: var(--accent-orange); }
-
         .mining-progress-bar {
-            height: 6px;
-            background: rgba(255,255,255,0.07);
-            border-radius: 100px;
-            overflow: hidden;
-            margin-top: 14px;
+            height: 6px; background: rgba(255,255,255,0.07);
+            border-radius: 100px; overflow: hidden; margin-top: 14px;
         }
-
         .mining-progress-fill {
             height: 100%;
             background: linear-gradient(90deg, var(--accent), #818cf8);
-            border-radius: 100px;
-            transition: width 1s linear;
-            width: 0%;
+            border-radius: 100px; transition: width 1s linear; width: 0%;
         }
-
         .mining-meta {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-            font-size: 12px;
-            color: var(--text-muted);
+            display: flex; justify-content: space-between;
+            margin-top: 10px; font-size: 12px; color: var(--text-muted);
         }
-
         .logo-section {
             position: relative; z-index: 1;
-            text-align: center;
-            padding: 20px 0 6px;
+            text-align: center; padding: 20px 0 6px;
         }
-
         .logo {
             width: 80px; height: auto;
             animation: float 4s ease-in-out infinite;
             filter: drop-shadow(0 0 16px rgba(59,130,246,0.4));
         }
-
         @keyframes float {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-8px); }
         }
-
         .section-label {
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
+            font-size: 11px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1.5px;
             color: var(--text-muted);
             margin: 18px 16px 8px;
             position: relative; z-index: 1;
         }
-
         .menu-options {
             position: relative; z-index: 1;
             padding: 0 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+            display: flex; flex-direction: column; gap: 12px;
             margin-bottom: 110px;
         }
-
         .menu-card {
             background: var(--bg-card);
             border: 1px solid var(--border-soft);
-            border-radius: 16px;
-            padding: 16px 18px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            border-radius: 16px; padding: 16px 18px;
+            display: flex; justify-content: space-between; align-items: center;
             cursor: pointer;
             transition: background 0.2s, border-color 0.2s, transform 0.2s;
         }
         .menu-card:hover { background: var(--bg-card2); border-color: var(--border); transform: translateY(-2px); }
-
         .menu-info { display: flex; align-items: center; gap: 14px; }
-
         .menu-icon {
-            background: rgba(59,130,246,0.12);
-            color: var(--accent2);
-            width: 46px; height: 46px;
-            border-radius: 12px;
+            background: rgba(59,130,246,0.12); color: var(--accent2);
+            width: 46px; height: 46px; border-radius: 12px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 20px;
-            border: 1px solid rgba(59,130,246,0.15);
-            flex-shrink: 0;
+            font-size: 20px; border: 1px solid rgba(59,130,246,0.15); flex-shrink: 0;
         }
-
-        .menu-title {
-            font-family: 'Syne', sans-serif;
-            font-weight: 700;
-            font-size: 15px;
-            color: var(--text-primary);
-        }
-
+        .menu-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; color: var(--text-primary); }
         .menu-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-
         .arrow-btn {
-            background: rgba(59,130,246,0.1);
-            border: 1px solid var(--border);
-            color: var(--accent2);
-            width: 32px; height: 32px;
-            border-radius: 8px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 14px;
-            flex-shrink: 0;
+            background: rgba(59,130,246,0.1); border: 1px solid var(--border);
+            color: var(--accent2); width: 32px; height: 32px;
+            border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            font-size: 14px; flex-shrink: 0;
         }
-
         .bottom-nav {
-            position: fixed;
-            bottom: 0; left: 0;
-            width: 100%;
-            background: rgba(8, 13, 26, 0.92);
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: rgba(8,13,26,0.92);
             backdrop-filter: blur(20px);
-            display: flex;
-            justify-content: space-around;
+            display: flex; justify-content: space-around;
             padding: 10px 0 max(10px, env(safe-area-inset-bottom));
-            z-index: 1000;
-            border-top: 1px solid var(--border-soft);
+            z-index: 1000; border-top: 1px solid var(--border-soft);
         }
-
         .nav-btn {
-            background: none; border: none;
-            color: var(--text-muted);
-            display: flex; flex-direction: column;
-            align-items: center; gap: 4px;
-            font-size: 11px; cursor: pointer;
-            text-decoration: none;
-            width: 64px;
-            font-family: 'DM Sans', sans-serif;
-            font-weight: 500;
+            background: none; border: none; color: var(--text-muted);
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            font-size: 11px; cursor: pointer; text-decoration: none;
+            width: 64px; font-family: 'DM Sans', sans-serif; font-weight: 500;
             transition: color 0.2s;
         }
         .nav-btn.active { color: var(--accent2); }
         .nav-btn:hover { color: var(--accent2); }
-
         .nav-icon-wrap {
             width: 44px; height: 32px;
             display: flex; align-items: center; justify-content: center;
-            border-radius: 10px;
-            transition: background 0.2s;
+            border-radius: 10px; transition: background 0.2s;
         }
         .nav-btn.active .nav-icon-wrap { background: rgba(59,130,246,0.15); }
-
-        .nav-icon {
-            width: 22px; height: 22px;
-            filter: brightness(0.6);
-            transition: filter 0.2s;
+        .nav-icon { width: 22px; height: 22px; filter: brightness(0.6); transition: filter 0.2s; }
+        .nav-btn.active .nav-icon, .nav-btn:hover .nav-icon {
+            filter: brightness(1) drop-shadow(0 0 6px rgba(96,165,250,0.5));
         }
-        .nav-btn.active .nav-icon,
-        .nav-btn:hover .nav-icon { filter: brightness(1) drop-shadow(0 0 6px rgba(96,165,250,0.5)); }
-
         .modal {
-            display: none;
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.7);
-            z-index: 2000;
-            justify-content: center;
-            align-items: flex-end;
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.7); z-index: 2000;
+            justify-content: center; align-items: flex-end;
             backdrop-filter: blur(4px);
         }
-
         .modal-content {
-            background: var(--bg-card2);
-            border: 1px solid var(--border);
+            background: var(--bg-card2); border: 1px solid var(--border);
             border-radius: 24px 24px 0 0;
-            padding: 24px 22px 32px;
-            width: 100%; max-width: 480px;
+            padding: 24px 22px 32px; width: 100%; max-width: 480px;
             box-shadow: 0 -20px 60px rgba(0,0,0,0.5);
-            color: var(--text-primary);
-            max-height: 85vh;
-            overflow-y: auto;
+            color: var(--text-primary); max-height: 85vh; overflow-y: auto;
         }
-
         .modal-handle {
             width: 40px; height: 4px;
             background: rgba(255,255,255,0.15);
-            border-radius: 100px;
-            margin: 0 auto 18px;
+            border-radius: 100px; margin: 0 auto 18px;
         }
-
         .modal-title {
             font-family: 'Syne', sans-serif;
             font-size: 18px; font-weight: 700;
-            margin-bottom: 18px;
-            color: var(--text-primary);
+            margin-bottom: 18px; color: var(--text-primary);
         }
-
         .modal-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 13px 0;
-            border-bottom: 1px solid var(--border-soft);
-            font-size: 14px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 13px 0; border-bottom: 1px solid var(--border-soft); font-size: 14px;
         }
         .modal-row:last-of-type { border-bottom: none; }
         .modal-row-label { color: var(--text-sub); }
         .modal-row-value { font-weight: 600; color: var(--accent2); }
-
         .btn-primary {
-            width: 100%; padding: 14px;
-            background: var(--accent);
-            color: white; border: none;
-            border-radius: 12px;
-            font-weight: 700; font-size: 15px;
-            cursor: pointer;
+            width: 100%; padding: 14px; background: var(--accent);
+            color: white; border: none; border-radius: 12px;
+            font-weight: 700; font-size: 15px; cursor: pointer;
             font-family: 'DM Sans', sans-serif;
-            transition: background 0.2s, transform 0.1s;
-            margin-top: 16px;
+            transition: background 0.2s, transform 0.1s; margin-top: 16px;
         }
         .btn-primary:hover { background: var(--accent2); }
         .btn-primary:active { transform: scale(0.98); }
-
         .btn-danger {
             width: 100%; padding: 13px;
-            background: rgba(239,68,68,0.12);
-            color: #f87171;
-            border: 1px solid rgba(239,68,68,0.25);
-            border-radius: 12px;
-            font-weight: 600; font-size: 14px;
-            cursor: pointer;
+            background: rgba(239,68,68,0.12); color: #f87171;
+            border: 1px solid rgba(239,68,68,0.25); border-radius: 12px;
+            font-weight: 600; font-size: 14px; cursor: pointer;
             font-family: 'DM Sans', sans-serif;
-            transition: background 0.2s;
-            margin-top: 10px;
+            transition: background 0.2s; margin-top: 10px;
         }
         .btn-danger:hover { background: rgba(239,68,68,0.2); }
-
         .input-field {
             width: 100%; padding: 12px 14px;
             background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            color: var(--text-primary);
-            font-size: 13px;
-            font-family: 'DM Sans', sans-serif;
-            margin: 8px 0;
+            border: 1px solid var(--border); border-radius: 10px;
+            color: var(--text-primary); font-size: 13px;
+            font-family: 'DM Sans', sans-serif; margin: 8px 0;
         }
-
         .referral-list { list-style: none; margin: 8px 0; }
         .referral-list li {
             padding: 10px 12px;
             background: rgba(59,130,246,0.06);
-            border: 1px solid var(--border-soft);
-            border-radius: 8px;
-            font-size: 13px; color: var(--text-sub);
-            margin-bottom: 6px;
+            border: 1px solid var(--border-soft); border-radius: 8px;
+            font-size: 13px; color: var(--text-sub); margin-bottom: 6px;
         }
-
         .history-item {
-            padding: 14px 0;
-            border-bottom: 1px solid var(--border-soft);
+            padding: 14px 0; border-bottom: 1px solid var(--border-soft);
             display: flex; justify-content: space-between; align-items: center;
         }
         .history-item:last-child { border-bottom: none; }
         .history-item-info .name { font-weight: 600; font-size: 14px; }
         .history-item-info .time { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
         .history-item-amount { font-weight: 700; color: var(--accent-green); font-size: 15px; }
-
-        .settings-item {
-            padding: 14px 0;
-            border-bottom: 1px solid var(--border-soft);
-            cursor: pointer;
-        }
+        .settings-item { padding: 14px 0; border-bottom: 1px solid var(--border-soft); cursor: pointer; }
         .settings-item:last-child { border-bottom: none; }
         .settings-item .s-name { font-weight: 600; font-size: 14px; }
         .settings-item .s-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(59,130,246,0.3); border-radius: 4px; }
@@ -595,552 +374,549 @@
 </head>
 <body>
 
-    <div id="notification" class="notification"></div>
-    <div id="syncStatus" class="sync-status">⟳ Syncing...</div>
-    <div id="miningIndicator" class="mining-indicator">⛏ Mining berjalan</div>
+<div id="notification" class="notification"></div>
+<div id="syncStatus" class="sync-status">⟳ Syncing...</div>
+<div id="miningIndicator" class="mining-indicator">⛏ Mining berjalan</div>
 
-    <div class="header">
-        <div class="profile-section">
-            <div class="profile-pic-wrap">
-                <img id="userPhoto" src="https://i.postimg.cc/N0yJZkQv/default-avatar.png" alt="Profile" class="profile-pic">
-                <div class="online-dot"></div>
-            </div>
+<!-- HEADER -->
+<div class="header">
+    <div class="profile-section">
+        <div class="profile-pic-wrap">
+            <img id="userPhoto" src="https://i.postimg.cc/N0yJZkQv/default-avatar.png" alt="Profile" class="profile-pic">
+            <div class="online-dot"></div>
+        </div>
+        <div>
+            <div class="profile-name" id="usernameDisplay">@user</div>
+            <div class="profile-email" id="userEmail">user@email.com</div>
+        </div>
+    </div>
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+</div>
+
+<div id="menuDropdown" class="menu-dropdown">
+    <a href="swap.html">🔁 Swap Koin</a>
+    <a href="wallet.html">💼 Dompet Saya</a>
+    <a href="#" onclick="logout()">🚪 Logout</a>
+</div>
+
+<!-- BALANCE -->
+<div class="balance-hero">
+    <div class="balance-label">GOV Balance</div>
+    <div class="balance-amount" id="currentGovBalance">0 <span>GOV</span></div>
+    <div class="balance-change">▲ Mining aktif · reward tiap jam</div>
+</div>
+
+<!-- STATS -->
+<div class="stats-row">
+    <div class="stat-card">
+        <div class="stat-card-icon">🪙</div>
+        <div class="stat-card-value" id="totalRewards">0</div>
+        <div class="stat-card-label">Total GOV</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-icon">⚡</div>
+        <div class="stat-card-value" id="dailyRewards">0</div>
+        <div class="stat-card-label">1 Jam Reward</div>
+    </div>
+</div>
+
+<!-- MINING CARD -->
+<div class="mining-card">
+    <div class="mining-header">
+        <div class="mining-title">
+            ⛏ Mining
+            <span id="miningBadge" class="mining-badge">Berjalan</span>
+        </div>
+        <div id="statusText" class="status-text">Menghitung...</div>
+    </div>
+    <div class="mining-progress-bar">
+        <div id="miningProgressFill" class="mining-progress-fill"></div>
+    </div>
+    <div class="mining-meta">
+        <span>Reward: 500 GOV / jam</span>
+        <span id="miningPercent">0%</span>
+    </div>
+</div>
+
+<!-- LOGO -->
+<div class="logo-section">
+    <img src="https://i.postimg.cc/x8XVRwZS/file-00000000f3d06230a63b9cde063aaecc-1.png" alt="Logo" class="logo">
+</div>
+
+<!-- MENU -->
+<div class="section-label">Menu</div>
+<div class="menu-options">
+    <div class="menu-card" onclick="goToMyEarning()">
+        <div class="menu-info">
+            <div class="menu-icon">💰</div>
             <div>
-                <div class="profile-name" id="usernameDisplay">@user</div>
-                <div class="profile-email" id="userEmail">user@email.com</div>
+                <div class="menu-title">My Earning</div>
+                <div class="menu-subtitle">Lihat total pendapatan Anda</div>
             </div>
         </div>
-        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+        <div class="arrow-btn">→</div>
     </div>
-
-    <div id="menuDropdown" class="menu-dropdown">
-        <a href="swap.html">🔁 Swap Koin</a>
-        <a href="wallet.html">💼 Dompet Saya</a>
-        <a href="#" onclick="logout()">🚪 Logout</a>
+    <div class="menu-card" onclick="goToHistory()">
+        <div class="menu-info">
+            <div class="menu-icon">📊</div>
+            <div>
+                <div class="menu-title">History</div>
+                <div class="menu-subtitle">Riwayat transaksi & aktivitas</div>
+            </div>
+        </div>
+        <div class="arrow-btn">→</div>
     </div>
-
-    <div class="balance-hero">
-        <div class="balance-label">GOV Balance</div>
-        <div class="balance-amount" id="currentGovBalance">0 <span>GOV</span></div>
-        <div class="balance-change">▲ Mining aktif · reward tiap jam</div>
+    <div class="menu-card" onclick="goToSettings()">
+        <div class="menu-info">
+            <div class="menu-icon">⚙️</div>
+            <div>
+                <div class="menu-title">Setting</div>
+                <div class="menu-subtitle">Pengaturan akun dan aplikasi</div>
+            </div>
+        </div>
+        <div class="arrow-btn">→</div>
     </div>
+</div>
 
-    <div class="stats-row">
-        <div class="stat-card">
-            <div class="stat-card-icon">🪙</div>
-            <div class="stat-card-value" id="totalRewards">0</div>
-            <div class="stat-card-label">Total GOV</div>
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+    <button class="nav-btn active" id="claimBtn">
+        <div class="nav-icon-wrap">
+            <img src="https://img.icons8.com/fluency/48/money.png" class="nav-icon" alt="Claim">
         </div>
-        <div class="stat-card">
-            <div class="stat-card-icon">⚡</div>
-            <div class="stat-card-value" id="dailyRewards">0</div>
-            <div class="stat-card-label">1 Jam Reward</div>
+        <span>Claim</span>
+    </button>
+    <button class="nav-btn" onclick="goToMyEarning()">
+        <div class="nav-icon-wrap">
+            <img src="https://img.icons8.com/fluency/48/money-bag.png" class="nav-icon" alt="Earning">
         </div>
+        <span>Earning</span>
+    </button>
+    <a href="wallet.html" class="nav-btn">
+        <div class="nav-icon-wrap">
+            <img src="https://img.icons8.com/fluency/48/wallet.png" class="nav-icon" alt="Wallet">
+        </div>
+        <span>Dompet</span>
+    </a>
+    <button class="nav-btn" id="referralBtn">
+        <div class="nav-icon-wrap">
+            <img src="https://img.icons8.com/fluency/48/invite.png" class="nav-icon" alt="Invite">
+        </div>
+        <span>Invite</span>
+    </button>
+</div>
+
+<!-- REFERRAL MODAL -->
+<div id="referralModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-handle"></div>
+        <div class="modal-title">Referral Kamu 🎁</div>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:14px;">Bagikan link ini dan dapatkan 1000 GOV per referral!</p>
+        <input type="text" id="referralLink" readonly class="input-field" placeholder="Link referral...">
+        <button onclick="copyReferralLink()" class="btn-primary">Salin Link Referral</button>
+        <div style="margin-top:20px;">
+            <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:10px;">Teman yang diundang</div>
+            <ul id="referralList" class="referral-list"><li>Belum ada referral</li></ul>
+            <div class="modal-row">
+                <span class="modal-row-label">Total Poin Referral</span>
+                <span class="modal-row-value"><span id="referralTotalPoin">0</span> GOV</span>
+            </div>
+        </div>
+        <button onclick="closeModal('referralModal')" class="btn-danger">Tutup</button>
     </div>
+</div>
 
-    <div class="mining-card">
-        <div class="mining-header">
-            <div class="mining-title">
-                ⛏ Mining
-                <span id="miningBadge" class="mining-badge">Berjalan</span>
-            </div>
-            <div id="statusText" class="status-text">Menghitung...</div>
-        </div>
-        <div class="mining-progress-bar">
-            <div id="miningProgressFill" class="mining-progress-fill"></div>
-        </div>
-        <div class="mining-meta">
-            <span>Reward: 500 GOV / jam</span>
-            <span id="miningPercent">0%</span>
-        </div>
-    </div>
+<script>
+    const CLAIM_REWARD = 500;
+    const COOLDOWN_MS = 1 * 60 * 60 * 1000; // 1 jam
 
-    <div class="logo-section">
-        <img src="https://i.postimg.cc/x8XVRwZS/file-00000000f3d06230a63b9cde063aaecc-1.png" alt="Logo" class="logo">
-    </div>
+    // =============================================
+    // GANTI NAMA FILE LOGIN DI SINI JIKA BERBEDA
+    const LOGIN_PAGE = "login.html";
+    // =============================================
 
-    <div class="section-label">Menu</div>
-    <div class="menu-options">
-        <div class="menu-card" onclick="goToMyEarning()">
-            <div class="menu-info">
-                <div class="menu-icon">💰</div>
-                <div>
-                    <div class="menu-title">My Earning</div>
-                    <div class="menu-subtitle">Lihat total pendapatan Anda</div>
-                </div>
-            </div>
-            <div class="arrow-btn">→</div>
-        </div>
-        <div class="menu-card" onclick="goToHistory()">
-            <div class="menu-info">
-                <div class="menu-icon">📊</div>
-                <div>
-                    <div class="menu-title">History</div>
-                    <div class="menu-subtitle">Riwayat transaksi & aktivitas</div>
-                </div>
-            </div>
-            <div class="arrow-btn">→</div>
-        </div>
-        <div class="menu-card" onclick="goToSettings()">
-            <div class="menu-info">
-                <div class="menu-icon">⚙️</div>
-                <div>
-                    <div class="menu-title">Setting</div>
-                    <div class="menu-subtitle">Pengaturan akun dan aplikasi</div>
-                </div>
-            </div>
-            <div class="arrow-btn">→</div>
-        </div>
-    </div>
+    let userData = {
+        email: "", username: "",
+        saldoGOV: 0, saldoIDR: 0, saldoUSDT: 0,
+        lastClaimTime: null,
+        referralPoints: 0, referrals: []
+    };
 
-    <div class="bottom-nav">
-        <button class="nav-btn active" id="claimBtn">
-            <div class="nav-icon-wrap">
-                <img src="https://img.icons8.com/fluency/48/money.png" class="nav-icon" alt="Claim">
-            </div>
-            <span>Claim</span>
-        </button>
-        <button class="nav-btn" onclick="goToMyEarning()">
-            <div class="nav-icon-wrap">
-                <img src="https://img.icons8.com/fluency/48/money-bag.png" class="nav-icon" alt="Earning">
-            </div>
-            <span>Earning</span>
-        </button>
-        <a href="wallet.html" class="nav-btn">
-            <div class="nav-icon-wrap">
-                <img src="https://img.icons8.com/fluency/48/wallet.png" class="nav-icon" alt="Wallet">
-            </div>
-            <span>Dompet</span>
-        </a>
-        <button class="nav-btn" id="referralBtn">
-            <div class="nav-icon-wrap">
-                <img src="https://img.icons8.com/fluency/48/invite.png" class="nav-icon" alt="Invite">
-            </div>
-            <span>Invite</span>
-        </button>
-    </div>
+    function showNotification(message, isSuccess = true) {
+        const el = document.getElementById("notification");
+        el.textContent = message;
+        el.style.borderColor = isSuccess ? "rgba(59,130,246,0.4)" : "rgba(239,68,68,0.4)";
+        el.classList.add("show");
+        setTimeout(() => el.classList.remove("show"), 3000);
+    }
 
-    <div id="referralModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-handle"></div>
-            <div class="modal-title">Referral Kamu 🎁</div>
-            <p style="font-size:13px;color:var(--text-muted);margin-bottom:14px;">Bagikan link ini ke temanmu dan dapatkan 1000 GOV per referral!</p>
-            <input type="text" id="referralLink" readonly class="input-field" placeholder="Link referral...">
-            <button onclick="copyReferralLink()" class="btn-primary">Salin Link Referral</button>
-            <div style="margin-top:20px;">
-                <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:10px;">Teman yang diundang</div>
-                <ul id="referralList" class="referral-list"><li>Belum ada referral</li></ul>
-                <div class="modal-row">
-                    <span class="modal-row-label">Total Poin Referral</span>
-                    <span class="modal-row-value"><span id="referralTotalPoin">0</span> GOV</span>
-                </div>
-            </div>
-            <button onclick="closeModal('referralModal')" class="btn-danger">Tutup</button>
-        </div>
-    </div>
+    function showSyncStatus(msg) {
+        const el = document.getElementById("syncStatus");
+        el.textContent = msg; el.style.display = "block";
+        setTimeout(() => el.style.display = "none", 2000);
+    }
 
-    <script>
-        const CLAIM_REWARD = 500;
-        const COOLDOWN_MS = 1 * 60 * 60 * 1000;
+    function showMiningIndicator(show) {
+        document.getElementById("miningIndicator").style.display = show ? "block" : "none";
+    }
 
-        let userData = {
-            email: "", username: "",
-            saldoGOV: 4651, saldoIDR: 0, saldoUSDT: 0,
-            lastClaimTime: null,
-            referralPoints: 0, referrals: []
-        };
+    function openModal(id) { document.getElementById(id).style.display = "flex"; }
+    function closeModal(id) { document.getElementById(id).style.display = "none"; }
 
-        function showNotification(message, isSuccess = true) {
-            const el = document.getElementById("notification");
-            el.textContent = message;
-            el.style.borderColor = isSuccess ? "rgba(59,130,246,0.4)" : "rgba(239,68,68,0.4)";
-            el.classList.add("show");
-            setTimeout(() => el.classList.remove("show"), 3000);
+    function toggleMenu() {
+        const m = document.getElementById("menuDropdown");
+        m.style.display = m.style.display === "block" ? "none" : "block";
+    }
+
+    document.addEventListener("click", function(e) {
+        const m = document.getElementById("menuDropdown");
+        if (m && !m.contains(e.target) && !e.target.classList.contains("menu-btn")) {
+            m.style.display = "none";
+        }
+    });
+
+    // ===== LOAD USER =====
+    function loadUser() {
+        const userEmail = localStorage.getItem("currentUser");
+
+        if (!userEmail) {
+            showNotification("Silakan login terlebih dahulu...", false);
+            setTimeout(() => {
+                window.location.href = LOGIN_PAGE;
+            }, 1500);
+            return false;
         }
 
-        function showSyncStatus(msg) {
-            const el = document.getElementById("syncStatus");
-            el.textContent = msg;
-            el.style.display = "block";
-            setTimeout(() => el.style.display = "none", 2000);
+        userData.email = userEmail;
+        userData.username = userEmail.split("@")[0];
+
+        const saved = localStorage.getItem("userData_" + userData.username);
+        if (saved) {
+            try {
+                const p = JSON.parse(saved);
+                userData.saldoGOV = p.saldoGOV || 0;
+                userData.lastClaimTime = p.lastClaimTime || null;
+                userData.referralPoints = p.referralPoints || 0;
+                userData.referrals = p.referrals || [];
+            } catch(e) {}
+        } else {
+            userData.saldoGOV = 100;
+            saveUserData();
+            createWalletForNewUser();
+            showNotification("🎉 Selamat! Anda mendapatkan 100 GOV bonus!");
         }
 
-        function showMiningIndicator(show) {
-            document.getElementById("miningIndicator").style.display = show ? "block" : "none";
-        }
+        updateUserInfo();
+        updateUI();
+        updateGovBalance();
+        syncWithWallet();
+        return true;
+    }
 
-        function openModal(id) { document.getElementById(id).style.display = "flex"; }
-        function closeModal(id) { document.getElementById(id).style.display = "none"; }
+    function updateUserInfo() {
+        document.getElementById("usernameDisplay").textContent = "@" + userData.username;
+        document.getElementById("userEmail").textContent = userData.email;
+        const photo = localStorage.getItem("userPhoto_" + userData.username);
+        if (photo) document.getElementById("userPhoto").src = photo;
+    }
 
-        function toggleMenu() {
-            const m = document.getElementById("menuDropdown");
-            m.style.display = m.style.display === "block" ? "none" : "block";
-        }
+    function updateGovBalance() {
+        document.getElementById("currentGovBalance").innerHTML =
+            userData.saldoGOV.toLocaleString('id-ID') + ' <span>GOV</span>';
+    }
 
-        document.addEventListener("click", function(e) {
-            const m = document.getElementById("menuDropdown");
-            if (m && !m.contains(e.target) && !e.target.classList.contains("menu-btn")) {
-                m.style.display = "none";
-            }
-        });
+    function saveUserData() {
+        localStorage.setItem("userData_" + userData.username, JSON.stringify({
+            saldoGOV: userData.saldoGOV,
+            saldoIDR: userData.saldoIDR,
+            saldoUSDT: userData.saldoUSDT,
+            lastClaimTime: userData.lastClaimTime,
+            referralPoints: userData.referralPoints,
+            referrals: userData.referrals,
+            lastUpdate: new Date().toISOString()
+        }));
+    }
 
-        function loadUser() {
-            const userEmail = localStorage.getItem("currentUser");
-            if (!userEmail) {
-                setTimeout(() => window.location.href = "index.html", 1000);
-                return false;
-            }
-            userData.email = userEmail;
-            userData.username = userEmail.split("@")[0];
-
-            const saved = localStorage.getItem("userData_" + userData.username);
-            if (saved) {
-                try {
-                    const p = JSON.parse(saved);
-                    userData.saldoGOV = p.saldoGOV || 4651;
-                    userData.lastClaimTime = p.lastClaimTime || null;
-                    userData.referralPoints = p.referralPoints || 0;
-                    userData.referrals = p.referrals || [];
-                } catch(e) {}
-            } else {
-                userData.saldoGOV = 100;
-                saveUserData();
-                createWalletForNewUser();
-                showNotification("🎉 Selamat! Anda mendapatkan 100 GOV bonus!");
-            }
-
-            updateUserInfo();
-            updateUI();
-            updateGovBalance();
-            syncWithWallet();
-            return true;
-        }
-
-        function updateUserInfo() {
-            document.getElementById("usernameDisplay").textContent = "@" + userData.username;
-            document.getElementById("userEmail").textContent = userData.email;
-            const photo = localStorage.getItem("userPhoto");
-            if (photo) document.getElementById("userPhoto").src = photo;
-        }
-
-        function updateGovBalance() {
-            document.getElementById("currentGovBalance").innerHTML =
-                userData.saldoGOV.toLocaleString('id-ID') + ' <span>GOV</span>';
-        }
-
-        function saveUserData() {
-            localStorage.setItem("userData_" + userData.username, JSON.stringify({
-                saldoGOV: userData.saldoGOV,
-                saldoIDR: userData.saldoIDR,
-                saldoUSDT: userData.saldoUSDT,
-                lastClaimTime: userData.lastClaimTime,
-                referralPoints: userData.referralPoints,
-                referrals: userData.referrals,
-                lastUpdate: new Date().toISOString()
+    function createWalletForNewUser() {
+        const email = localStorage.getItem("currentUser");
+        if (!email) return;
+        const key = "walletData_" + email;
+        if (!localStorage.getItem(key)) {
+            localStorage.setItem(key, JSON.stringify({
+                saldoGOV: 100, saldoIDR: 0, saldoUSDT: 0,
+                transactions: [{ type:"BONUS", description:"Bonus pendaftaran", amount:100, timestamp: new Date().toISOString() }],
+                withdrawHistory: [], lastSync: new Date().toISOString()
             }));
         }
+    }
 
-        function createWalletForNewUser() {
-            const userEmail = localStorage.getItem("currentUser");
-            if (!userEmail) return;
-            const key = "walletData_" + userEmail;
-            if (!localStorage.getItem(key)) {
-                localStorage.setItem(key, JSON.stringify({
-                    saldoGOV: 100, saldoIDR: 0, saldoUSDT: 0,
-                    transactions: [{ type:"BONUS", description:"Bonus pendaftaran", amount:100, timestamp: new Date().toISOString() }],
-                    withdrawHistory: [], lastSync: new Date().toISOString(), isNewUser: true
-                }));
-            }
-        }
-
-        function syncWithWallet() {
-            const email = localStorage.getItem("currentUser");
-            if (!email) return;
+    function syncWithWallet() {
+        const email = localStorage.getItem("currentUser");
+        if (!email) return;
+        try {
             const w = JSON.parse(localStorage.getItem("walletData_" + email));
-            if (w) {
+            if (w && w.saldoGOV !== undefined) {
                 userData.saldoGOV = w.saldoGOV;
                 saveUserData(); updateUI(); updateGovBalance();
             }
+        } catch(e) {}
+    }
+
+    // ===== MINING =====
+    function checkAndStartMining() {
+        const startKey = "miningStart_" + userData.username;
+        const doneKey = "miningCompleted_" + userData.username;
+        const isDone = localStorage.getItem(doneKey) === "true";
+
+        if (isDone) {
+            setMiningUI("done");
+            document.getElementById("claimBtn").disabled = false;
+            showMiningIndicator(false);
+            return;
         }
 
-        function checkAndStartMining() {
-            const startKey = "miningStart_" + userData.username;
-            const doneKey = "miningCompleted_" + userData.username;
-            const isDone = localStorage.getItem(doneKey) === "true";
+        let miningStart = localStorage.getItem(startKey);
+        if (!miningStart) {
+            miningStart = Date.now().toString();
+            localStorage.setItem(startKey, miningStart);
+        }
+        updateMiningProgress();
+    }
 
-            if (isDone) {
-                setMiningUI("done");
-                document.getElementById("claimBtn").disabled = false;
-                showMiningIndicator(false);
-                return;
-            }
+    function updateMiningProgress() {
+        const startKey = "miningStart_" + userData.username;
+        const miningStart = parseInt(localStorage.getItem(startKey) || "0");
+        const elapsed = Date.now() - miningStart;
 
-            let miningStart = localStorage.getItem(startKey);
-            if (!miningStart) {
-                miningStart = userData.lastClaimTime || Date.now().toString();
-                localStorage.setItem(startKey, miningStart);
-                userData.lastClaimTime = miningStart;
-                saveUserData();
-            }
-            updateMiningProgress();
+        document.getElementById("totalRewards").textContent =
+            userData.saldoGOV.toLocaleString('id-ID');
+
+        if (miningStart === 0) {
+            setMiningUI("idle"); return;
         }
 
-        function updateMiningProgress() {
-            const startKey = "miningStart_" + userData.username;
-            const miningStart = parseInt(localStorage.getItem(startKey) || "0");
-            const now = Date.now();
-            const elapsed = now - miningStart;
+        if (elapsed >= COOLDOWN_MS) {
+            document.getElementById("dailyRewards").textContent = CLAIM_REWARD.toLocaleString('id-ID');
+            setMiningUI("done");
+            document.getElementById("claimBtn").disabled = false;
+            showMiningIndicator(false);
+            localStorage.setItem("miningCompleted_" + userData.username, "true");
+        } else {
+            const progress = elapsed / COOLDOWN_MS;
+            document.getElementById("dailyRewards").textContent =
+                Math.floor(CLAIM_REWARD * progress).toLocaleString('id-ID');
+            document.getElementById("claimBtn").disabled = true;
 
-            document.getElementById("totalRewards").textContent =
-                userData.saldoGOV.toLocaleString('id-ID');
+            const rem = COOLDOWN_MS - elapsed;
+            const h = Math.floor(rem / 3600000);
+            const m = Math.floor((rem % 3600000) / 60000);
+            const s = Math.floor((rem % 60000) / 1000);
+            document.getElementById("statusText").textContent =
+                (h > 0 ? h+"j " : "") + m+"m "+s+"s lagi";
 
-            if (miningStart === 0) {
-                setMiningUI("idle");
-                document.getElementById("claimBtn").disabled = true;
-                showMiningIndicator(false);
-                return;
-            }
+            const pct = Math.round(progress * 100);
+            document.getElementById("miningProgressFill").style.width = pct + "%";
+            document.getElementById("miningPercent").textContent = pct + "%";
+            setMiningUI("running");
+            showMiningIndicator(true);
+        }
+    }
 
-            if (elapsed >= COOLDOWN_MS) {
-                document.getElementById("dailyRewards").textContent = CLAIM_REWARD.toLocaleString('id-ID');
-                setMiningUI("done");
-                document.getElementById("claimBtn").disabled = false;
-                showMiningIndicator(false);
-                localStorage.setItem("miningCompleted_" + userData.username, "true");
-            } else {
-                const progress = elapsed / COOLDOWN_MS;
-                const cur = Math.floor(CLAIM_REWARD * progress);
-                document.getElementById("dailyRewards").textContent = cur.toLocaleString('id-ID');
-                document.getElementById("claimBtn").disabled = true;
+    function setMiningUI(state) {
+        const badge = document.getElementById("miningBadge");
+        const status = document.getElementById("statusText");
+        if (state === "done") {
+            badge.textContent = "Selesai ✓"; badge.className = "mining-badge done";
+            status.textContent = "Siap diklaim!"; status.style.color = "var(--accent-green)";
+            document.getElementById("miningProgressFill").style.width = "100%";
+            document.getElementById("miningPercent").textContent = "100%";
+        } else if (state === "running") {
+            badge.textContent = "Berjalan"; badge.className = "mining-badge";
+            status.style.color = "var(--accent-orange)";
+        } else {
+            badge.textContent = "Standby"; badge.className = "mining-badge";
+            status.textContent = "Memulai..."; status.style.color = "var(--text-muted)";
+        }
+    }
 
-                const rem = COOLDOWN_MS - elapsed;
-                const h = Math.floor(rem / 3600000);
-                const m = Math.floor((rem % 3600000) / 60000);
-                const s = Math.floor((rem % 60000) / 1000);
-                const timeStr = h > 0 ? h+"j "+m+"m "+s+"s" : m+"m "+s+"s";
-                document.getElementById("statusText").textContent = timeStr + " lagi";
+    function claimMining() {
+        const startKey = "miningStart_" + userData.username;
+        const doneKey = "miningCompleted_" + userData.username;
+        const miningStart = parseInt(localStorage.getItem(startKey) || "0");
 
-                const pct = Math.round(progress * 100);
-                document.getElementById("miningProgressFill").style.width = pct + "%";
-                document.getElementById("miningPercent").textContent = pct + "%";
-
-                setMiningUI("running");
-                showMiningIndicator(true);
-            }
+        if (Date.now() - miningStart < COOLDOWN_MS) {
+            showNotification("❌ Mining belum selesai!", false); return;
         }
 
-        function setMiningUI(state) {
-            const badge = document.getElementById("miningBadge");
-            const status = document.getElementById("statusText");
-            if (state === "done") {
-                badge.textContent = "Selesai ✓";
-                badge.className = "mining-badge done";
-                status.textContent = "Siap diklaim!";
-                status.style.color = "var(--accent-green)";
-                document.getElementById("miningProgressFill").style.width = "100%";
-                document.getElementById("miningPercent").textContent = "100%";
-            } else if (state === "running") {
-                badge.textContent = "Berjalan";
-                badge.className = "mining-badge";
-                status.style.color = "var(--accent-orange)";
-            } else {
-                badge.textContent = "Standby";
-                badge.className = "mining-badge";
-                status.textContent = "Memulai...";
-                status.style.color = "var(--text-muted)";
+        userData.saldoGOV += CLAIM_REWARD;
+        localStorage.removeItem(startKey);
+        localStorage.removeItem(doneKey);
+        saveUserData();
+        updateWalletBalance(CLAIM_REWARD);
+        updateUI(); updateGovBalance();
+        showNotification("✅ Berhasil klaim " + CLAIM_REWARD + " GOV!");
+    }
+
+    function updateUI() {
+        document.getElementById("totalRewards").textContent =
+            userData.saldoGOV.toLocaleString('id-ID');
+        checkAndStartMining();
+    }
+
+    function updateWalletBalance(amount) {
+        const email = localStorage.getItem("currentUser");
+        if (!email) return;
+        try {
+            let w = JSON.parse(localStorage.getItem("walletData_" + email)) ||
+                    { saldoGOV:0, transactions:[] };
+            w.saldoGOV = userData.saldoGOV;
+            w.transactions.unshift({ type:"MINING", description:"Hasil mining", amount,
+                timestamp: new Date().toISOString() });
+            if (w.transactions.length > 50) w.transactions = w.transactions.slice(0,50);
+            w.lastSync = new Date().toISOString();
+            localStorage.setItem("walletData_" + email, JSON.stringify(w));
+            showSyncStatus("✅ Wallet diupdate");
+        } catch(e) {}
+    }
+
+    function autoSyncWithWallet() {
+        const email = localStorage.getItem("currentUser");
+        if (!email) return;
+        try {
+            const w = JSON.parse(localStorage.getItem("walletData_" + email));
+            if (w && w.saldoGOV !== userData.saldoGOV) {
+                userData.saldoGOV = w.saldoGOV;
+                saveUserData(); updateUI(); updateGovBalance();
             }
-        }
+        } catch(e) {}
+    }
 
-        function claimMining() {
-            const startKey = "miningStart_" + userData.username;
-            const doneKey = "miningCompleted_" + userData.username;
-            const miningStart = parseInt(localStorage.getItem(startKey) || "0");
-            const elapsed = Date.now() - miningStart;
+    // ===== REFERRAL =====
+    function showReferralModal() {
+        document.getElementById("referralLink").value =
+            window.location.origin + "/login.html?ref=" + userData.username;
+        const list = document.getElementById("referralList");
+        list.innerHTML = userData.referrals.length === 0
+            ? "<li>Belum ada yang diundang</li>"
+            : userData.referrals.map(r => "<li>" + r + "</li>").join("");
+        document.getElementById("referralTotalPoin").textContent =
+            userData.referralPoints.toLocaleString('id-ID');
+        openModal("referralModal");
+    }
 
-            if (elapsed < COOLDOWN_MS) {
-                showNotification("❌ Mining belum selesai!", false);
-                return;
-            }
+    function copyReferralLink() {
+        const input = document.getElementById("referralLink");
+        input.select();
+        navigator.clipboard.writeText(input.value);
+        showNotification("✅ Link referral disalin!");
+    }
 
-            userData.saldoGOV += CLAIM_REWARD;
-            localStorage.removeItem(startKey);
-            localStorage.removeItem(doneKey);
-            userData.lastClaimTime = null;
+    function processUrlReferral() {
+        const ref = new URLSearchParams(window.location.search).get("ref");
+        if (ref && ref !== userData.username && !userData.referrals.includes("@"+ref)) {
+            userData.referralPoints += 1000;
+            userData.saldoGOV += 1000;
+            userData.referrals.push("@"+ref);
             saveUserData();
-            updateWalletOnMining(CLAIM_REWARD);
-            updateUI();
-            updateGovBalance();
-            showNotification("✅ Berhasil klaim " + CLAIM_REWARD + " GOV!");
-
-            const btn = document.getElementById("claimBtn");
-            btn.disabled = true;
-            setTimeout(() => btn.disabled = false, 1000);
+            updateWalletBalance(1000);
+            showNotification("🎉 Bonus referral 1000 GOV!");
+            window.history.replaceState({}, document.title, window.location.pathname);
         }
+    }
 
-        function updateUI() {
-            document.getElementById("totalRewards").textContent =
-                userData.saldoGOV.toLocaleString('id-ID');
-            checkAndStartMining();
-        }
-
-        function updateWalletOnMining(amount) {
-            const email = localStorage.getItem("currentUser");
-            if (!email) return;
-            const key = "walletData_" + email;
-            try {
-                let w = JSON.parse(localStorage.getItem(key)) || { saldoGOV:0, saldoIDR:0, saldoUSDT:0, transactions:[] };
-                w.saldoGOV = userData.saldoGOV;
-                w.transactions.unshift({ type:"MINING", description:"Hasil mining", amount, timestamp: new Date().toISOString() });
-                if (w.transactions.length > 50) w.transactions = w.transactions.slice(0, 50);
-                w.lastSync = new Date().toISOString();
-                localStorage.setItem(key, JSON.stringify(w));
-                showSyncStatus("✅ Wallet diupdate");
-            } catch(e) {}
-        }
-
-        function autoSyncWithWallet() {
-            const email = localStorage.getItem("currentUser");
-            if (!email) return;
-            const w = JSON.parse(localStorage.getItem("walletData_" + email));
-            if (w && Math.abs(userData.saldoGOV - w.saldoGOV) > 0) {
-                userData.saldoGOV = w.saldoGOV;
-                saveUserData(); updateUI(); updateGovBalance();
-            }
-        }
-
-        function showReferralModal() {
-            const link = window.location.origin + "/index.html?ref=" + userData.username;
-            document.getElementById("referralLink").value = link;
-            const list = document.getElementById("referralList");
-            list.innerHTML = userData.referrals.length === 0
-                ? "<li>Belum ada yang diundang</li>"
-                : userData.referrals.map(r => "<li>" + r + "</li>").join("");
-            document.getElementById("referralTotalPoin").textContent =
-                userData.referralPoints.toLocaleString('id-ID');
-            openModal("referralModal");
-        }
-
-        function copyReferralLink() {
-            const input = document.getElementById("referralLink");
-            input.select();
-            navigator.clipboard.writeText(input.value);
-            showNotification("✅ Link referral disalin!");
-        }
-
-        function processUrlReferral() {
-            const ref = new URLSearchParams(window.location.search).get("ref");
-            if (ref && ref !== userData.username && !userData.referrals.includes("@" + ref)) {
-                userData.referralPoints += 1000;
-                userData.saldoGOV += 1000;
-                userData.referrals.push("@" + ref);
-                saveUserData();
-                updateWalletOnMining(1000);
-                showNotification("🎉 Bonus referral 1000 GOV!");
-                window.history.replaceState({}, document.title, window.location.pathname);
-            }
-        }
-
-        function editProfile() {
-            const input = document.createElement("input");
-            input.type = "file";
-            input.accept = "image/*";
-            input.onchange = e => {
-                const file = e.target.files[0];
-                if (!file) return;
-                const reader = new FileReader();
-                reader.onload = ev => {
-                    document.getElementById("userPhoto").src = ev.target.result;
-                    localStorage.setItem("userPhoto", ev.target.result);
-                    showNotification("✅ Foto profil diperbarui!");
-                };
-                reader.readAsDataURL(file);
+    // ===== PROFILE =====
+    function editProfile() {
+        const input = document.createElement("input");
+        input.type = "file"; input.accept = "image/*";
+        input.onchange = e => {
+            const file = e.target.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = ev => {
+                document.getElementById("userPhoto").src = ev.target.result;
+                localStorage.setItem("userPhoto_" + userData.username, ev.target.result);
+                showNotification("✅ Foto profil diperbarui!");
             };
-            input.click();
-        }
+            reader.readAsDataURL(file);
+        };
+        input.click();
+    }
 
-        function logout() {
-            localStorage.removeItem("currentUser");
-            showNotification("👋 Berhasil logout!");
-            setTimeout(() => window.location.href = "index.html", 1500);
-        }
+    function logout() {
+        localStorage.removeItem("currentUser");
+        showNotification("👋 Berhasil logout!");
+        setTimeout(() => window.location.href = LOGIN_PAGE, 1500);
+    }
 
-        function goToMyEarning() {
-            if (document.getElementById("earningModal")) return;
-            const modal = document.createElement("div");
-            modal.id = "earningModal";
-            modal.className = "modal";
-            modal.style.display = "flex";
-            modal.innerHTML = `
-                <div class="modal-content">
-                    <div class="modal-handle"></div>
-                    <div class="modal-title">My Earning 💰</div>
-                    <div style="background:rgba(59,130,246,0.08);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center;margin-bottom:20px;">
-                        <div style="font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Total Pendapatan</div>
-                        <div style="font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:var(--accent2);">${userData.saldoGOV.toLocaleString('id-ID')} <span style="font-size:16px;">GOV</span></div>
+    // ===== MODALS =====
+    function goToMyEarning() {
+        if (document.getElementById("earningModal")) return;
+        const modal = document.createElement("div");
+        modal.id = "earningModal"; modal.className = "modal"; modal.style.display = "flex";
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-handle"></div>
+                <div class="modal-title">My Earning 💰</div>
+                <div style="background:rgba(59,130,246,0.08);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center;margin-bottom:20px;">
+                    <div style="font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Total Pendapatan</div>
+                    <div style="font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:var(--accent2);">${userData.saldoGOV.toLocaleString('id-ID')} <span style="font-size:16px;">GOV</span></div>
+                </div>
+                <div class="modal-row"><span class="modal-row-label">Hari Ini</span><span class="modal-row-value">500 GOV</span></div>
+                <div class="modal-row"><span class="modal-row-label">Minggu Ini</span><span class="modal-row-value">3,500 GOV</span></div>
+                <div class="modal-row"><span class="modal-row-label">Bulan Ini</span><span class="modal-row-value">15,000 GOV</span></div>
+                <button onclick="this.closest('.modal').remove()" class="btn-danger">Tutup</button>
+            </div>`;
+        document.body.appendChild(modal);
+    }
+
+    function goToHistory() {
+        if (document.getElementById("historyModal")) return;
+        const modal = document.createElement("div");
+        modal.id = "historyModal"; modal.className = "modal"; modal.style.display = "flex";
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-handle"></div>
+                <div class="modal-title">History 📊</div>
+                <div class="history-item"><div class="history-item-info"><div class="name">Mining Reward</div><div class="time">Hari ini</div></div><div class="history-item-amount">+500 GOV</div></div>
+                <div class="history-item"><div class="history-item-info"><div class="name">Referral Bonus</div><div class="time">Kemarin</div></div><div class="history-item-amount">+1,000 GOV</div></div>
+                <div class="history-item"><div class="history-item-info"><div class="name">Bonus Pendaftaran</div><div class="time">3 hari lalu</div></div><div class="history-item-amount">+100 GOV</div></div>
+                <button onclick="this.closest('.modal').remove()" class="btn-danger" style="margin-top:16px;">Tutup</button>
+            </div>`;
+        document.body.appendChild(modal);
+    }
+
+    function goToSettings() {
+        if (document.getElementById("settingsModal")) return;
+        const modal = document.createElement("div");
+        modal.id = "settingsModal"; modal.className = "modal"; modal.style.display = "flex";
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-handle"></div>
+                <div class="modal-title">Setting ⚙️</div>
+                <div class="settings-item" onclick="editProfile()"><div class="s-name">Ubah Foto Profil</div><div class="s-desc">Klik untuk mengganti foto</div></div>
+                <div class="settings-item">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <div><div class="s-name">Notifikasi Reward</div><div class="s-desc">Aktifkan notifikasi mining</div></div>
+                        <input type="checkbox" checked style="transform:scale(1.3);accent-color:var(--accent);">
                     </div>
-                    <div class="modal-row"><span class="modal-row-label">Hari Ini</span><span class="modal-row-value">500 GOV</span></div>
-                    <div class="modal-row"><span class="modal-row-label">Minggu Ini</span><span class="modal-row-value">3,500 GOV</span></div>
-                    <div class="modal-row"><span class="modal-row-label">Bulan Ini</span><span class="modal-row-value">15,000 GOV</span></div>
-                    <button onclick="this.closest('.modal').remove()" class="btn-danger">Tutup</button>
-                </div>`;
-            document.body.appendChild(modal);
-        }
+                </div>
+                <div class="modal-row"><span class="modal-row-label">Versi</span><span class="modal-row-value">v1.0.0</span></div>
+                <div class="modal-row"><span class="modal-row-label">Support</span><span class="modal-row-value" style="font-size:12px;">support@unich.com</span></div>
+                <button onclick="this.closest('.modal').remove()" class="btn-danger" style="margin-top:16px;">Tutup</button>
+            </div>`;
+        document.body.appendChild(modal);
+    }
 
-        function goToHistory() {
-            if (document.getElementById("historyModal")) return;
-            const modal = document.createElement("div");
-            modal.id = "historyModal";
-            modal.className = "modal";
-            modal.style.display = "flex";
-            modal.innerHTML = `
-                <div class="modal-content">
-                    <div class="modal-handle"></div>
-                    <div class="modal-title">History 📊</div>
-                    <div class="history-item"><div class="history-item-info"><div class="name">Mining Reward</div><div class="time">Hari ini, 10:30</div></div><div class="history-item-amount">+500 GOV</div></div>
-                    <div class="history-item"><div class="history-item-info"><div class="name">Referral Bonus</div><div class="time">Kemarin, 14:20</div></div><div class="history-item-amount">+1,000 GOV</div></div>
-                    <div class="history-item"><div class="history-item-info"><div class="name">Bonus Pendaftaran</div><div class="time">3 hari lalu, 11:45</div></div><div class="history-item-amount">+100 GOV</div></div>
-                    <button onclick="this.closest('.modal').remove()" class="btn-danger" style="margin-top:16px;">Tutup</button>
-                </div>`;
-            document.body.appendChild(modal);
-        }
-
-        function goToSettings() {
-            if (document.getElementById("settingsModal")) return;
-            const modal = document.createElement("div");
-            modal.id = "settingsModal";
-            modal.className = "modal";
-            modal.style.display = "flex";
-            modal.innerHTML = `
-                <div class="modal-content">
-                    <div class="modal-handle"></div>
-                    <div class="modal-title">Setting ⚙️</div>
-                    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:12px;">Akun</div>
-                    <div class="settings-item" onclick="editProfile()"><div class="s-name">Ubah Foto Profil</div><div class="s-desc">Klik untuk mengubah foto profil</div></div>
-                    <div class="settings-item">
-                        <div style="display:flex;justify-content:space-between;align-items:center;">
-                            <div><div class="s-name">Notifikasi Reward</div><div class="s-desc">Aktifkan notifikasi mining</div></div>
-                            <input type="checkbox" checked style="transform:scale(1.3);accent-color:var(--accent);">
-                        </div>
-                    </div>
-                    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:16px 0 12px;">Aplikasi</div>
-                    <div class="modal-row"><span class="modal-row-label">Versi Aplikasi</span><span class="modal-row-value">v1.0.0</span></div>
-                    <div class="modal-row"><span class="modal-row-label">Support</span><span class="modal-row-value" style="font-size:12px;">support@unich.com</span></div>
-                    <button onclick="this.closest('.modal').remove()" class="btn-danger" style="margin-top:16px;">Tutup</button>
-                </div>`;
-            document.body.appendChild(modal);
-        }
-
-        document.addEventListener("DOMContentLoaded", function() {
-            if (!loadUser()) return;
-            document.getElementById("claimBtn").addEventListener("click", claimMining);
-            document.getElementById("referralBtn").addEventListener("click", showReferralModal);
-            document.getElementById("userPhoto").addEventListener("click", editProfile);
-            processUrlReferral();
-            setInterval(updateMiningProgress, 1000);
-            setInterval(autoSyncWithWallet, 30000);
-            showNotification("✅ Dashboard siap digunakan!");
-        });
-    </script>
+    // ===== INIT =====
+    document.addEventListener("DOMContentLoaded", function() {
+        if (!loadUser()) return;
+        document.getElementById("claimBtn").addEventListener("click", claimMining);
+        document.getElementById("referralBtn").addEventListener("click", showReferralModal);
+        document.getElementById("userPhoto").addEventListener("click", editProfile);
+        processUrlReferral();
+        setInterval(updateMiningProgress, 1000);
+        setInterval(autoSyncWithWallet, 30000);
+    });
+</script>
 
 </body>
 </html>
